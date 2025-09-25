@@ -149,7 +149,7 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                         exit={{ opacity: 0, scale: 0.9 }}
                         transition={{ duration: 0.3, delay: index * 0.05 }}
                     >
-                        <Link href={`/product?id=${product.id}`}>
+                        <Link href={`/product?id=${product.id}`} prefetch={false}>
                             <Card className="product-card group hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer">
                                 <div className="relative overflow-hidden">
                                     <Image
@@ -186,9 +186,20 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                                         </Badge>
                                     </div>
 
-                                    <h3 className="font-semibold text-lg text-gray-900 mb-2 group-hover:text-[#4A6741] transition-colors line-clamp-2">
-                                        {product.name}
-                                    </h3>
+                                    <div className="flex items-start justify-between gap-2 mb-2">
+                                        <h3 className="font-semibold text-lg text-gray-900 group-hover:text-[#4A6741] transition-colors line-clamp-2 flex-1">
+                                            {product.name}
+                                        </h3>
+                                        <button
+                                            onClick={(e) => toggleWishlist(product, e)}
+                                            className={`p-1 rounded transition-colors ${isInWishlist(product.id) 
+                                                ? 'text-red-500' 
+                                                : 'text-gray-400 hover:text-red-500'
+                                            }`}
+                                        >
+                                            <Heart className={`w-5 h-5 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
+                                        </button>
+                                    </div>
 
                                     <p className="text-gray-700 text-sm mb-4 line-clamp-2">
                                         {product.description}
@@ -214,15 +225,6 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                                         </div>
 
                                         <div className="flex items-center gap-2">
-                                            <Button
-                                                size="icon"
-                                                className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white transition-all duration-200 border-0"
-                                                onClick={(e) => toggleWishlist(product, e)}
-                                            >
-                                                <Heart className={`w-4 h-4 ${isInWishlist(product.id) ? 'fill-white' : ''
-                                                    }`} />
-                                            </Button>
-
                                             <Button
                                                 onClick={(e) => addToCart(product, e)}
                                                 className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white flex-1"
@@ -254,7 +256,7 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                         exit={{ opacity: 0, x: -20 }}
                         transition={{ duration: 0.3, delay: index * 0.05 }}
                     >
-                        <Link href={`/product?id=${product.id}`}>
+                        <Link href={`/product?id=${product.id}`} prefetch={false}>
                             <Card className="product-card group hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer">
                                 <div className="flex">
                                     <div className="relative w-48 h-32 overflow-hidden">
@@ -281,9 +283,20 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                                                 </Badge>
                                             </div>
 
-                                            <h3 className="font-semibold text-xl text-gray-900 mb-2 group-hover:text-[#4A6741] transition-colors">
-                                                {product.name}
-                                            </h3>
+                                            <div className="flex items-start justify-between gap-2 mb-2">
+                                                <h3 className="font-semibold text-xl text-gray-900 group-hover:text-[#4A6741] transition-colors flex-1">
+                                                    {product.name}
+                                                </h3>
+                                                <button
+                                                    onClick={(e) => toggleWishlist(product, e)}
+                                                    className={`p-1 rounded transition-colors ${isInWishlist(product.id) 
+                                                        ? 'text-red-500' 
+                                                        : 'text-gray-400 hover:text-red-500'
+                                                    }`}
+                                                >
+                                                    <Heart className={`w-5 h-5 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
+                                                </button>
+                                            </div>
 
                                             <p className="text-gray-700 mb-4 line-clamp-2">
                                                 {product.description}
@@ -324,15 +337,6 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                                             </div>
 
                                             <div className="flex items-center gap-2">
-                                                <Button
-                                                    size="icon"
-                                                    className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white transition-all duration-200 border-0"
-                                                    onClick={(e) => toggleWishlist(product, e)}
-                                                >
-                                                    <Heart className={`w-4 h-4 ${isInWishlist(product.id) ? 'fill-white' : ''
-                                                        }`} />
-                                                </Button>
-
                                                 <Button
                                                     onClick={(e) => addToCart(product, e)}
                                                     className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white"

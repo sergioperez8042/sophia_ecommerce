@@ -258,7 +258,7 @@ export default function ContactPage() {
                                                 name="name"
                                                 value={formData.name}
                                                 onChange={handleChange}
-                                                className="border-2 border-gray-200 focus:border-[#4A6741] rounded-lg p-4 text-lg"
+                                                className="border-2 border-gray-200 focus:border-[#4A6741] rounded-lg p-4 text-lg placeholder:text-gray-600 text-gray-800"
                                                 placeholder="Tu nombre"
                                                 required
                                             />
@@ -276,7 +276,7 @@ export default function ContactPage() {
                                                 name="email"
                                                 value={formData.email}
                                                 onChange={handleChange}
-                                                className="border-2 border-gray-200 focus:border-[#4A6741] rounded-lg p-4 text-lg"
+                                                className="border-2 border-gray-200 focus:border-[#4A6741] rounded-lg p-4 text-lg placeholder:text-gray-600 text-gray-800"
                                                 placeholder="tu@email.com"
                                                 required
                                             />
@@ -295,7 +295,7 @@ export default function ContactPage() {
                                             name="subject"
                                             value={formData.subject}
                                             onChange={handleChange}
-                                            className="border-2 border-gray-200 focus:border-[#4A6741] rounded-lg p-4 text-lg"
+                                            className="border-2 border-gray-200 focus:border-[#4A6741] rounded-lg p-4 text-lg placeholder:text-gray-600 text-gray-800"
                                             placeholder="¿En qué podemos ayudarte?"
                                             required
                                         />
@@ -313,7 +313,7 @@ export default function ContactPage() {
                                             value={formData.message}
                                             onChange={handleChange}
                                             rows={6}
-                                            className="w-full border-2 border-gray-200 focus:border-[#4A6741] rounded-lg p-4 text-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#4A6741]/20"
+                                            className="w-full border-2 border-gray-200 focus:border-[#4A6741] rounded-lg p-4 text-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#4A6741]/20 placeholder:text-gray-600 text-gray-800"
                                             placeholder="Cuéntanos más detalles..."
                                             required
                                         />

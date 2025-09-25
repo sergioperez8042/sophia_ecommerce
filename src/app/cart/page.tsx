@@ -210,14 +210,14 @@ export default function CartPage() {
                                                         className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600 text-gray-400"
                                                         onClick={() => removeItem(item.id)}
                                                     >
-                                                        <Trash2 className="h-4 w-4" />
+                                                        <Trash2 className="h-5 w-5" />
                                                     </Button>
                                                     <Button
                                                         variant="ghost"
                                                         size="sm"
                                                         className="h-8 w-8 p-0 hover:bg-pink-50 hover:text-pink-600 text-gray-400"
                                                     >
-                                                        <Heart className="h-4 w-4" />
+                                                        <Heart className="h-7 w-7" />
                                                     </Button>
                                                 </div>
                                             </motion.div>

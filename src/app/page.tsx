@@ -360,7 +360,7 @@ export default function Home() {
                 viewport={{ once: true }}
                 whileHover={{ y: -10, scale: 1.02 }}
               >
-                <Link href={`/products/${product.id}`} className="block h-full">
+                <Link href={`/products/${product.id}`} className="block h-full" prefetch={false}>
                   <Card className="product-card border-0 overflow-hidden group cursor-pointer h-full hover:shadow-xl transition-shadow duration-300">
                     <motion.div className="p-6">
                       <motion.div

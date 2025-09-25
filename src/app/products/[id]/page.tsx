@@ -282,39 +282,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     </Link>
                                 </motion.div>
 
-                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                    <Button
-                                        size="lg"
-                                        onClick={() => setIsWishlisted(!isWishlisted)}
-                                        className="h-12 w-12 p-0 bg-[#4A6741] hover:bg-[#3F5D4C] text-white group relative shadow-md flex items-center justify-center border-0"
-                                        title="Añadir a favoritos"
-                                    >
-                                        <Heart
-                                            className={`h-6 w-6 stroke-2 transition-colors ${isWishlisted
-                                                    ? 'fill-white text-white'
-                                                    : 'text-white'
-                                                }`}
-                                        />
-                                        {/* Tooltip mejorado */}
-                                        <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-3 py-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap shadow-lg z-50 pointer-events-none">
-                                            {isWishlisted ? 'Quitar de favoritos' : 'Añadir a favoritos'}
-                                        </div>
-                                    </Button>
-                                </motion.div>
 
-                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                    <Button
-                                        size="lg"
-                                        className="h-12 w-12 p-0 bg-[#4A6741] hover:bg-[#3F5D4C] text-white group relative shadow-md flex items-center justify-center border-0"
-                                        title="Compartir producto"
-                                    >
-                                        <Share2 className="h-6 w-6 stroke-2 text-white" />
-                                        {/* Tooltip mejorado */}
-                                        <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-3 py-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap shadow-lg z-50 pointer-events-none">
-                                            Compartir producto
-                                        </div>
-                                    </Button>
-                                </motion.div>
+
                             </div>
                         </div>
 

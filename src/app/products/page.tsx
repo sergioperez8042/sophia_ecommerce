@@ -559,7 +559,7 @@ export default function ProductsPage() {
                   <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white group">
                     <CardContent className="p-0 relative">
                       <div className="relative aspect-square bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
-                        <Link href={`/products/${product.id}`}>
+                        <Link href={`/products/${product.id}`} prefetch={false}>
                           <Image
                             src={product.image}
                             alt={product.name}
@@ -609,7 +609,7 @@ export default function ProductsPage() {
                                 }`}
                             />
                           </button>
-                        </div>                        <Link href={`/products/${product.id}`}>
+                        </div>                        <Link href={`/products/${product.id}`} prefetch={false}>
                           <h3 className="text-lg font-bold text-[#4A6741] mb-2 hover:text-[#3F5D4C] transition-colors cursor-pointer line-clamp-2">
                             {product.name}
                           </h3>

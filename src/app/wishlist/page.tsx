@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Heart, Star, ShoppingBag, ArrowLeft, X } from "lucide-react";
+import { Heart, Star, ShoppingBag, ArrowLeft, X, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,7 +11,53 @@ import Link from "next/link";
 import Breadcrumb from "@/components/ui/breadcrumb";
 
 export default function WishlistPage() {
-    const [wishlistItems, setWishlistItems] = useState<any[]>([]);
+    // Productos de ejemplo para mostrar
+    const sampleProducts = [
+        {
+            id: "1",
+            name: "Crema Hidratante Natural",
+            description: "Hidratación profunda con aloe vera y aceite de jojoba",
+            price: 25.99,
+            originalPrice: 32.99,
+            rating: 4.8,
+            reviews: 124,
+            image: "/product1.png",
+            category: "Cuidado Facial",
+            brand: "Sophia Natural",
+            inStock: true,
+            isBestseller: true
+        },
+        {
+            id: "3",
+            name: "Mascarilla Purificante",
+            description: "Limpieza profunda con arcilla y extractos naturales",
+            price: 18.99,
+            originalPrice: 24.99,
+            rating: 4.7,
+            reviews: 156,
+            image: "/product3.png",
+            category: "Mascarillas",
+            brand: "Sophia Natural",
+            inStock: true,
+            isBestseller: false
+        },
+        {
+            id: "2",
+            name: "Serum Vitamina C",
+            description: "Serum antioxidante para iluminar y rejuvenecer tu piel",
+            price: 35.99,
+            originalPrice: 45.99,
+            rating: 4.9,
+            reviews: 89,
+            image: "/product2.png",
+            category: "Tratamiento",
+            brand: "Sophia Natural",
+            inStock: true,
+            isNew: true
+        }
+    ];
+
+    const [wishlistItems, setWishlistItems] = useState<any[]>(sampleProducts);
 
     console.log('WishlistPage component rendered. Current wishlistItems:', wishlistItems);
 
@@ -27,14 +73,24 @@ export default function WishlistPage() {
                     const parsedWishlist = JSON.parse(savedWishlist);
                     console.log('Parsed wishlist:', parsedWishlist);
                     console.log('Parsed wishlist length:', parsedWishlist.length);
-                    setWishlistItems(parsedWishlist);
+                    
+                    // Combinar productos de ejemplo con productos reales del localStorage
+                    // Evitar duplicados basado en el ID
+                    const combinedProducts = [...sampleProducts];
+                    parsedWishlist.forEach((product: any) => {
+                        if (!combinedProducts.find(item => item.id === product.id)) {
+                            combinedProducts.push(product);
+                        }
+                    });
+                    
+                    setWishlistItems(combinedProducts);
                 } else {
-                    console.log('No wishlist data found in localStorage');
-                    setWishlistItems([]);
+                    console.log('No wishlist data found in localStorage, showing sample products');
+                    setWishlistItems(sampleProducts);
                 }
             } catch (error) {
                 console.error('Error loading wishlist:', error);
-                setWishlistItems([]);
+                setWishlistItems(sampleProducts);
             }
         };
 
@@ -73,13 +129,65 @@ export default function WishlistPage() {
         };
     }, []);
 
-    const removeFromWishlist = (id: string) => {
-        const updatedWishlist = wishlistItems.filter(item => item.id !== id);
-        setWishlistItems(updatedWishlist);
-        localStorage.setItem('sophia_wishlist', JSON.stringify(updatedWishlist));
+    const toggleWishlist = (product: any) => {
+        const isCurrentlyInWishlist = wishlistItems.some(item => item.id === product.id);
+        
+        if (isCurrentlyInWishlist) {
+            // Quitar de favoritos
+            const updatedWishlist = wishlistItems.filter(item => item.id !== product.id);
+            setWishlistItems(updatedWishlist);
+            
+            // Solo guardar en localStorage los productos que no son de ejemplo
+            const nonSampleProducts = updatedWishlist.filter(item => 
+                !sampleProducts.find(sample => sample.id === item.id)
+            );
+            localStorage.setItem('sophia_wishlist', JSON.stringify(nonSampleProducts));
+        } else {
+            // Agregar a favoritos
+            const updatedWishlist = [...wishlistItems, product];
+            setWishlistItems(updatedWishlist);
+            
+            // Solo guardar en localStorage los productos que no son de ejemplo
+            const nonSampleProducts = updatedWishlist.filter(item => 
+                !sampleProducts.find(sample => sample.id === item.id)
+            );
+            localStorage.setItem('sophia_wishlist', JSON.stringify(nonSampleProducts));
+        }
 
         // Disparar evento personalizado para notificar cambios
         window.dispatchEvent(new CustomEvent('wishlistChanged'));
+    };
+
+    const removeFromWishlist = (id: string) => {
+        const updatedWishlist = wishlistItems.filter(item => item.id !== id);
+        setWishlistItems(updatedWishlist);
+        
+        // Solo guardar en localStorage los productos que no son de ejemplo
+        const nonSampleProducts = updatedWishlist.filter(item => 
+            !sampleProducts.find(sample => sample.id === item.id)
+        );
+        localStorage.setItem('sophia_wishlist', JSON.stringify(nonSampleProducts));
+
+        // Disparar evento personalizado para notificar cambios
+        window.dispatchEvent(new CustomEvent('wishlistChanged'));
+    };
+
+    const addToCart = (product: any) => {
+        const savedCart = localStorage.getItem('sophia_cart');
+        const currentCart = savedCart ? JSON.parse(savedCart) : [];
+
+        const existingItem = currentCart.find((item: any) => item.id === product.id);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            currentCart.push({ ...product, quantity: 1 });
+        }
+
+        localStorage.setItem('sophia_cart', JSON.stringify(currentCart));
+        window.dispatchEvent(new Event('cartUpdate'));
+        
+        // Mostrar feedback visual temporal
+        console.log(`${product.name} agregado al carrito`);
     };
 
     const containerVariants = {
@@ -199,6 +307,7 @@ export default function WishlistPage() {
                                                     className="absolute top-3 right-3 z-10 bg-white/90 hover:bg-white text-gray-600 hover:text-red-500 rounded-full p-2 shadow-md transition-all duration-200"
                                                     whileHover={{ scale: 1.1 }}
                                                     whileTap={{ scale: 0.9 }}
+                                                    title="Eliminar producto"
                                                 >
                                                     <X className="h-4 w-4" />
                                                 </motion.button>
@@ -228,14 +337,29 @@ export default function WishlistPage() {
 
                                                 {/* Información del producto */}
                                                 <div className="p-6">
-                                                    <Link href={`/products/${product.id}`}>
-                                                        <motion.h3
-                                                            className="text-xl font-bold text-[#4A6741] mb-2 hover:text-[#3F5D4C] transition-colors cursor-pointer"
-                                                            whileHover={{ scale: 1.02 }}
+                                                    <div className="flex items-start justify-between gap-2 mb-2">
+                                                        <Link href={`/products/${product.id}`} className="flex-1">
+                                                            <motion.h3
+                                                                className="text-xl font-bold text-[#4A6741] hover:text-[#3F5D4C] transition-colors cursor-pointer"
+                                                                whileHover={{ scale: 1.02 }}
+                                                            >
+                                                                {product.name || 'Producto Sin Nombre'}
+                                                            </motion.h3>
+                                                        </Link>
+                                                        
+                                                        <motion.button
+                                                            onClick={() => toggleWishlist(product)}
+                                                            className={`p-1 rounded transition-colors ${wishlistItems.some(item => item.id === product.id) 
+                                                                ? 'text-red-500 hover:bg-red-50' 
+                                                                : 'text-gray-400 hover:text-red-500 hover:bg-red-50'
+                                                            }`}
+                                                            whileHover={{ scale: 1.1 }}
+                                                            whileTap={{ scale: 0.9 }}
+                                                            title={wishlistItems.some(item => item.id === product.id) ? "Quitar de favoritos" : "Agregar a favoritos"}
                                                         >
-                                                            {product.name || 'Producto Sin Nombre'}
-                                                        </motion.h3>
-                                                    </Link>
+                                                            <Heart className={`h-5 w-5 ${wishlistItems.some(item => item.id === product.id) ? 'fill-current' : ''}`} />
+                                                        </motion.button>
+                                                    </div>
 
                                                     <p className="text-gray-700 font-medium mb-4 line-clamp-2">
                                                         {product.description || 'Sin descripción disponible'}
@@ -278,26 +402,27 @@ export default function WishlistPage() {
                                                     </div>
 
                                                     {/* Botones de acción */}
-                                                    <div className="flex gap-2">
-                                                        <Link href={`/products/${product.id}`} className="flex-1">
-                                                            <Button
-                                                                className="w-full bg-[#4A6741] hover:bg-[#3F5D4C] text-white font-bold shadow-md"
-                                                                disabled={product.inStock === false || (product.stock !== undefined && product.stock <= 0)}
-                                                            >
-                                                                <ShoppingBag className="h-4 w-4 mr-2" />
-                                                                {(product.inStock !== false && (product.stock === undefined || product.stock > 0)) ? 'Ver Producto' : 'No Disponible'}
-                                                            </Button>
-                                                        </Link>
-
-                                                        <motion.button
-                                                            onClick={() => removeFromWishlist(product.id)}
-                                                            className="p-3 border-2 border-red-200 text-red-500 hover:bg-red-50 hover:border-red-300 rounded-md transition-colors"
-                                                            whileHover={{ scale: 1.05 }}
-                                                            whileTap={{ scale: 0.95 }}
-                                                            title="Quitar de favoritos"
+                                                    <div className="flex flex-col gap-2">
+                                                        <Button
+                                                            onClick={() => addToCart(product)}
+                                                            className="w-full bg-[#4A6741] hover:bg-[#3F5D4C] text-white font-bold shadow-md"
+                                                            disabled={product.inStock === false || (product.stock !== undefined && product.stock <= 0)}
                                                         >
-                                                            <Heart className="h-4 w-4 fill-current" />
-                                                        </motion.button>
+                                                            <ShoppingBag className="h-4 w-4 mr-2" />
+                                                            {(product.inStock !== false && (product.stock === undefined || product.stock > 0)) ? 'Agregar al Carrito' : 'No Disponible'}
+                                                        </Button>
+                                                        
+                                                        <div className="flex gap-2">
+                                                            <Link href={`/products/${product.id}`} className="flex-1">
+                                                                <Button
+                                                                    variant="outline"
+                                                                    className="w-full border-[#4A6741] text-[#4A6741] hover:bg-[#4A6741] hover:text-white"
+                                                                >
+                                                                    <Eye className="h-4 w-4 mr-2" />
+                                                                    Ver Detalles
+                                                                </Button>
+                                                            </Link>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </CardContent>
