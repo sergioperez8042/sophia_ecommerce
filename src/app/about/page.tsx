@@ -155,8 +155,8 @@ export default function AboutPage() {
                                     <Image
                                         src="/sophia-founder.jpg"
                                         alt="Sophia, fundadora de Sophia Natural"
-                                        width={600}
-                                        height={700}
+                                        width={300}
+                                        height={400}
                                         className="rounded-2xl object-cover w-full h-auto"
                                         priority
                                     />

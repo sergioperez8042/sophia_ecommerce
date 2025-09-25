@@ -4,12 +4,14 @@ import { useState, useEffect } from "react";
 import { Leaf, Heart, ShoppingBag, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [wishlistCount, setWishlistCount] = useState(0);
     const [cartCount, setCartCount] = useState(0);
+    const pathname = usePathname();
 
     // Actualizar contadores desde localStorage
     useEffect(() => {
@@ -17,7 +19,12 @@ export default function Header() {
             // Contador de wishlist
             const savedWishlist = localStorage.getItem('sophia_wishlist');
             const wishlistItems = savedWishlist ? JSON.parse(savedWishlist) : [];
-            setWishlistCount(wishlistItems.length);
+            
+            // Si estamos en la página de wishlist, agregar los productos de ejemplo al contador
+            const sampleProductsCount = 3; // Los 3 productos de ejemplo que siempre están
+            const totalWishlistCount = wishlistItems.length + sampleProductsCount;
+            
+            setWishlistCount(totalWishlistCount);
 
             // Contador de carrito
             const savedCart = localStorage.getItem('sophia_cart');
@@ -104,21 +111,28 @@ export default function Header() {
                             { name: "Categorías", href: "/categories" },
                             { name: "Nosotros", href: "/about" },
                             { name: "Contacto", href: "/contact" }
-                        ].map((item, index) => (
-                            <motion.div
-                                key={item.name}
-                                whileHover={{ scale: 1.05 }}
-                                transition={{ duration: 0.2 }}
-                            >
-                                <Link
-                                    href={item.href}
-                                    className="text-gray-700 hover:text-[#4A6741] font-medium transition-colors duration-200 relative group"
+                        ].map((item, index) => {
+                            const isActive = pathname === item.href;
+                            return (
+                                <motion.div
+                                    key={item.name}
+                                    whileHover={{ scale: 1.05 }}
+                                    transition={{ duration: 0.2 }}
                                 >
-                                    {item.name}
-                                    <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-[#4A6741] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
-                                </Link>
-                            </motion.div>
-                        ))}
+                                    <Link
+                                        href={item.href}
+                                        className={`font-medium transition-colors duration-200 relative group ${
+                                            isActive ? 'text-[#4A6741]' : 'text-gray-700 hover:text-[#4A6741]'
+                                        }`}
+                                    >
+                                        {item.name}
+                                        <span className={`absolute inset-x-0 -bottom-1 h-0.5 bg-[#4A6741] transform transition-transform duration-200 ${
+                                            isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                                        }`}></span>
+                                    </Link>
+                                </motion.div>
+                            );
+                        })}
                     </motion.nav>
 
                     {/* Actions */}

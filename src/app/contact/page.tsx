@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Mail, Phone, MapPin, Clock, Send, Heart, Leaf, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,6 +12,7 @@ import Breadcrumb from "@/components/ui/breadcrumb";
 export default function ContactPage() {
     const heroRef = useRef<HTMLDivElement>(null);
     const formRef = useRef<HTMLDivElement>(null);
+    const [isHydrated, setIsHydrated] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -21,6 +22,10 @@ export default function ContactPage() {
 
     const heroInView = useInView(heroRef, { once: true, amount: 0.3 });
     const formInView = useInView(formRef, { once: true, amount: 0.2 });
+
+    useEffect(() => {
+        setIsHydrated(true);
+    }, []);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -261,6 +266,8 @@ export default function ContactPage() {
                                                 className="border-2 border-gray-200 focus:border-[#4A6741] rounded-lg p-4 text-lg placeholder:text-gray-600 text-gray-800"
                                                 placeholder="Tu nombre"
                                                 required
+                                                autoComplete="name"
+                                                data-lpignore="true"
                                             />
                                         </motion.div>
 
@@ -279,6 +286,10 @@ export default function ContactPage() {
                                                 className="border-2 border-gray-200 focus:border-[#4A6741] rounded-lg p-4 text-lg placeholder:text-gray-600 text-gray-800"
                                                 placeholder="tu@email.com"
                                                 required
+                                                autoComplete="email"
+                                                data-lpignore="true"
+                                                data-form-type="other"
+                                                suppressHydrationWarning={true}
                                             />
                                         </motion.div>
                                     </div>
@@ -298,6 +309,7 @@ export default function ContactPage() {
                                             className="border-2 border-gray-200 focus:border-[#4A6741] rounded-lg p-4 text-lg placeholder:text-gray-600 text-gray-800"
                                             placeholder="¿En qué podemos ayudarte?"
                                             required
+                                            data-lpignore="true"
                                         />
                                     </motion.div>
 
@@ -316,6 +328,7 @@ export default function ContactPage() {
                                             className="w-full border-2 border-gray-200 focus:border-[#4A6741] rounded-lg p-4 text-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#4A6741]/20 placeholder:text-gray-600 text-gray-800"
                                             placeholder="Cuéntanos más detalles..."
                                             required
+                                            data-lpignore="true"
                                         />
                                     </motion.div>
 
