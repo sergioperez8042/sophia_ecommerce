@@ -23,7 +23,7 @@ export default function RootLayout({
       <head>
         <meta name="description" content="Cosmética natural artesanal con ingredientes orgánicos de la más alta calidad" />
       </head>
-      <body className="antialiased">
+      <body className="antialiased" suppressHydrationWarning={true}>
         <Header />
         <div className="min-h-screen bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8]">
           {children}

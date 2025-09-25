@@ -318,89 +318,89 @@ export default function Home() {
               >
                 <Link href={`/products/${product.id}`} className="block h-full">
                   <Card className="product-card border-0 overflow-hidden group cursor-pointer h-full hover:shadow-xl transition-shadow duration-300">
-                  <motion.div className="p-6">
-                    <motion.div
-                      className="aspect-square bg-gradient-to-br from-[#F5F1E8] to-white rounded-lg mb-4 overflow-hidden relative group-hover:bg-gradient-to-br group-hover:from-[#4A6741]/10 group-hover:to-[#3F5D4C]/10 transition-all duration-300"
-                      whileHover={{ rotate: [0, -2, 2, 0] }}
-                      transition={{ duration: 0.3 }}
-                    >
+                    <motion.div className="p-6">
                       <motion.div
-                        className="w-full h-full relative"
-                        animate={{
-                          scale: [1, 1.05, 1]
-                        }}
-                        transition={{
-                          duration: 4,
-                          repeat: Infinity,
-                          delay: index * 0.5
-                        }}
+                        className="aspect-square bg-gradient-to-br from-[#F5F1E8] to-white rounded-lg mb-4 overflow-hidden relative group-hover:bg-gradient-to-br group-hover:from-[#4A6741]/10 group-hover:to-[#3F5D4C]/10 transition-all duration-300"
+                        whileHover={{ rotate: [0, -2, 2, 0] }}
+                        transition={{ duration: 0.3 }}
                       >
-                        <Image
-                          src={product.image}
-                          alt={product.title}
-                          width={300}
-                          height={300}
-                          className="object-cover w-full h-full rounded-lg"
-                          priority={index < 3}
-                        />
+                        <motion.div
+                          className="w-full h-full relative"
+                          animate={{
+                            scale: [1, 1.05, 1]
+                          }}
+                          transition={{
+                            duration: 4,
+                            repeat: Infinity,
+                            delay: index * 0.5
+                          }}
+                        >
+                          <Image
+                            src={product.image}
+                            alt={product.title}
+                            width={300}
+                            height={300}
+                            className="object-cover w-full h-full rounded-lg"
+                            priority={index < 3}
+                          />
+                        </motion.div>
+                      </motion.div>
+
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.4, delay: product.delay + 0.2 }}
+                        viewport={{ once: true }}
+                      >
+                        <Badge variant="secondary" className="mb-2">{product.badge}</Badge>
+                      </motion.div>
+
+                      <motion.h3
+                        className="text-xl font-semibold text-[#4A6741] mb-2 group-hover:text-[#3F5D4C] transition-colors"
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.4, delay: product.delay + 0.3 }}
+                        viewport={{ once: true }}
+                      >
+                        {product.title}
+                      </motion.h3>
+
+                      <motion.p
+                        className="text-gray-700 mb-4"
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.4, delay: product.delay + 0.4 }}
+                        viewport={{ once: true }}
+                      >
+                        {product.desc}
+                      </motion.p>
+
+                      <motion.div
+                        className="flex items-center justify-between"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, delay: product.delay + 0.5 }}
+                        viewport={{ once: true }}
+                      >
+                        <motion.span
+                          className="text-2xl font-bold text-[#4A6741]"
+                          whileHover={{ scale: 1.1 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          {product.price}
+                        </motion.span>
+                        <div className="flex items-center gap-1">
+                          <motion.div
+                            animate={{ rotate: [0, 360] }}
+                            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                          >
+                            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                          </motion.div>
+                          <span className="text-sm text-gray-700">{product.rating}</span>
+                        </div>
                       </motion.div>
                     </motion.div>
-
-                    <motion.div
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.4, delay: product.delay + 0.2 }}
-                      viewport={{ once: true }}
-                    >
-                      <Badge variant="secondary" className="mb-2">{product.badge}</Badge>
-                    </motion.div>
-
-                    <motion.h3
-                      className="text-xl font-semibold text-[#4A6741] mb-2 group-hover:text-[#3F5D4C] transition-colors"
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.4, delay: product.delay + 0.3 }}
-                      viewport={{ once: true }}
-                    >
-                      {product.title}
-                    </motion.h3>
-
-                    <motion.p
-                      className="text-gray-700 mb-4"
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.4, delay: product.delay + 0.4 }}
-                      viewport={{ once: true }}
-                    >
-                      {product.desc}
-                    </motion.p>
-
-                    <motion.div
-                      className="flex items-center justify-between"
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.4, delay: product.delay + 0.5 }}
-                      viewport={{ once: true }}
-                    >
-                      <motion.span
-                        className="text-2xl font-bold text-[#4A6741]"
-                        whileHover={{ scale: 1.1 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        {product.price}
-                      </motion.span>
-                      <div className="flex items-center gap-1">
-                        <motion.div
-                          animate={{ rotate: [0, 360] }}
-                          transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                        >
-                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        </motion.div>
-                        <span className="text-sm text-gray-700">{product.rating}</span>
-                      </div>
-                    </motion.div>
-                  </motion.div>
-                </Card>
+                  </Card>
                 </Link>
               </motion.div>
             ))}
