@@ -11,8 +11,8 @@ import Link from "next/link";
 import dynamic from 'next/dynamic';
 
 // Importar Breadcrumb dinámicamente para evitar problemas de SSR
-const Breadcrumb = dynamic(() => import("@/components/ui/breadcrumb"), { 
-    ssr: false 
+const Breadcrumb = dynamic(() => import("@/components/ui/breadcrumb"), {
+    ssr: false
 });
 
 // Simulando datos del producto basándose en el ID
@@ -167,8 +167,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                         key={index}
                                         onClick={() => setSelectedImage(index)}
                                         className={`w-2 h-2 rounded-full transition-all duration-300 ${selectedImage === index
-                                                ? 'bg-white w-6'
-                                                : 'bg-white/50 hover:bg-white/75'
+                                            ? 'bg-white w-6'
+                                            : 'bg-white/50 hover:bg-white/75'
                                             }`}
                                     />
                                 ))}
@@ -191,8 +191,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     whileTap={{ scale: 0.95 }}
                                     onClick={() => setSelectedImage(index)}
                                     className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all duration-300 ${selectedImage === index
-                                            ? 'border-[#4A6741] shadow-md'
-                                            : 'border-gray-200 hover:border-[#4A6741]/50'
+                                        ? 'border-[#4A6741] shadow-md'
+                                        : 'border-gray-200 hover:border-[#4A6741]/50'
                                         }`}
                                 >
                                     <Image
@@ -224,8 +224,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     <Star
                                         key={i}
                                         className={`h-5 w-5 stroke-1 ${i < Math.floor(product.rating)
-                                                ? 'text-yellow-500 fill-yellow-400'
-                                                : 'text-gray-300 fill-gray-200'
+                                            ? 'text-yellow-500 fill-yellow-400'
+                                            : 'text-gray-300 fill-gray-200'
                                             }`}
                                     />
                                 ))}
@@ -290,11 +290,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                         title="Añadir a favoritos"
                                     >
                                         <Heart
-                                            className={`h-6 w-6 stroke-2 transition-colors ${
-                                                isWishlisted 
-                                                    ? 'fill-white text-white' 
+                                            className={`h-6 w-6 stroke-2 transition-colors ${isWishlisted
+                                                    ? 'fill-white text-white'
                                                     : 'text-white'
-                                            }`}
+                                                }`}
                                         />
                                         {/* Tooltip mejorado */}
                                         <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-3 py-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap shadow-lg z-50 pointer-events-none">
@@ -363,8 +362,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id)}
                                         className={`flex-1 py-6 px-6 font-semibold text-lg transition-all duration-300 relative ${activeTab === tab.id
-                                                ? 'text-[#4A6741] bg-white'
-                                                : 'text-gray-600 hover:text-[#4A6741] hover:bg-white/50'
+                                            ? 'text-[#4A6741] bg-white'
+                                            : 'text-gray-600 hover:text-[#4A6741] hover:bg-white/50'
                                             }`}
                                     >
                                         {tab.label}

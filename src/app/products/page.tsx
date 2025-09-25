@@ -263,11 +263,11 @@ export default function ProductsPage() {
 
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Sidebar de filtros - Desktop */}
-          <div className="hidden lg:block w-64 flex-shrink-0">
+          <div className="hidden mt-5 lg:block w-64 flex-shrink-0">
             <Card className="sticky top-6 shadow-lg border-0 bg-white">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-lg font-bold text-gray-900 flex items-center">
+                  <h2 className="text-lg font-bold mt-4 text-gray-900 flex items-center">
                     <SlidersHorizontal className="h-5 w-5 mr-2 text-[#4A6741]" />
                     Filtros
                   </h2>
@@ -387,10 +387,10 @@ export default function ProductsPage() {
           {/* Contenido principal */}
           <div className="flex-1">
             {/* Header con controles */}
-            <Card className="mb-6 shadow-sm border-0 bg-white">
-              <CardContent className="p-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div className="flex items-center gap-4">
+            <Card className="mb-8 mt-5 shadow-sm border-0 bg-white">
+              <CardContent className="py-5 px-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-center sm:justify-between gap-4">
+                  <div className="flex items-center mt-5 justify-center sm:justify-start gap-4">
                     <h1 className="text-xl font-bold text-gray-900">
                       Resultados
                     </h1>
@@ -409,18 +409,18 @@ export default function ProductsPage() {
                     </Button>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center sm:justify-end gap-3">
                     <Select value={sortBy} onValueChange={setSortBy}>
-                      <SelectTrigger className="w-48">
-                        <SelectValue placeholder="Ordenar por" />
+                      <SelectTrigger className="w-48 border-[#4A6741] text-gray-900 bg-white hover:border-[#3F5D4C] focus:border-[#4A6741] focus:ring-[#4A6741]/20">
+                        <SelectValue placeholder="Ordenar por" className="text-gray-600" />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="featured">Destacados</SelectItem>
-                        <SelectItem value="price-low">Precio: menor a mayor</SelectItem>
-                        <SelectItem value="price-high">Precio: mayor a menor</SelectItem>
-                        <SelectItem value="rating">Mejor valorados</SelectItem>
-                        <SelectItem value="reviews">Más reseñas</SelectItem>
-                        <SelectItem value="newest">Más nuevos</SelectItem>
+                      <SelectContent className="bg-white border mt-4 border-gray-200 shadow-lg">
+                        <SelectItem value="featured" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Destacados</SelectItem>
+                        <SelectItem value="price-low" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Precio: menor a mayor</SelectItem>
+                        <SelectItem value="price-high" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Precio: mayor a menor</SelectItem>
+                        <SelectItem value="rating" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Mejor valorados</SelectItem>
+                        <SelectItem value="reviews" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Más reseñas</SelectItem>
+                        <SelectItem value="newest" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Más nuevos</SelectItem>
                       </SelectContent>
                     </Select>
 
@@ -447,7 +447,7 @@ export default function ProductsPage() {
 
                 {/* Filtros activos */}
                 {activeFiltersCount > 0 && (
-                  <div className="mt-4 flex flex-wrap gap-2">
+                  <div className="mt-4 flex flex-wrap justify-center sm:justify-start gap-2">
                     {selectedCategories.map(category => (
                       <Badge key={category} variant="secondary" className="bg-[#4A6741]/10 text-[#4A6741] flex items-center gap-1">
                         {category}
@@ -491,7 +491,7 @@ export default function ProductsPage() {
 
             {/* Grid de productos */}
             <motion.div
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3 }}

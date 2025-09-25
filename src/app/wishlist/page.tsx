@@ -69,7 +69,7 @@ export default function WishlistPage() {
         const updatedWishlist = wishlistItems.filter(item => item.id !== id);
         setWishlistItems(updatedWishlist);
         localStorage.setItem('sophia_wishlist', JSON.stringify(updatedWishlist));
-        
+
         // Disparar evento personalizado para notificar cambios
         window.dispatchEvent(new CustomEvent('wishlistChanged'));
     };

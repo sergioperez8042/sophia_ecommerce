@@ -23,13 +23,13 @@ export default function Home() {
 
   // Toggle wishlist function
   const toggleWishlist = (productId: string) => {
-    const newWishlist = wishlist.includes(productId) 
+    const newWishlist = wishlist.includes(productId)
       ? wishlist.filter(id => id !== productId)
       : [...wishlist, productId];
-    
+
     setWishlist(newWishlist);
     localStorage.setItem('sophia_wishlist', JSON.stringify(newWishlist));
-    
+
     // Dispatch custom event to update other components
     window.dispatchEvent(new CustomEvent('wishlistChanged'));
   };
@@ -38,17 +38,17 @@ export default function Home() {
   const addToCart = (productId: string) => {
     const savedCart = localStorage.getItem('sophia_cart');
     const cart = savedCart ? JSON.parse(savedCart) : [];
-    
+
     const existingItem = cart.find((item: any) => item.id === productId);
-    
+
     if (existingItem) {
       existingItem.quantity += 1;
     } else {
       cart.push({ id: productId, quantity: 1 });
     }
-    
+
     localStorage.setItem('sophia_cart', JSON.stringify(cart));
-    
+
     // Dispatch custom event to update other components
     window.dispatchEvent(new CustomEvent('cartChanged'));
   };
@@ -397,7 +397,7 @@ export default function Home() {
                         viewport={{ once: true }}
                         className="flex items-center justify-between mb-2"
                       >
-                        <Badge 
+                        <Badge
                           className="bg-[#4A6741] text-white hover:bg-[#3F5D4C] border-none font-medium"
                         >
                           {product.badge}
@@ -412,12 +412,11 @@ export default function Home() {
                           }}
                           className="p-2 h-auto hover:bg-[#4A6741]/10"
                         >
-                          <Heart 
-                            className={`w-5 h-5 transition-colors ${
-                              wishlist.includes(product.id) 
-                                ? 'fill-red-500 text-red-500' 
+                          <Heart
+                            className={`w-5 h-5 transition-colors ${wishlist.includes(product.id)
+                                ? 'fill-red-500 text-red-500'
                                 : 'text-gray-400 hover:text-red-400'
-                            }`}
+                              }`}
                           />
                         </Button>
                       </motion.div>
@@ -473,7 +472,7 @@ export default function Home() {
                         transition={{ duration: 0.4, delay: product.delay + 0.6 }}
                         viewport={{ once: true }}
                       >
-                        <Button 
+                        <Button
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
