@@ -12,16 +12,24 @@ import Breadcrumb from "@/components/ui/breadcrumb";
 
 export default function WishlistPage() {
     const [wishlistItems, setWishlistItems] = useState<any[]>([]);
+    
+    console.log('WishlistPage component rendered. Current wishlistItems:', wishlistItems);
 
     // Cargar favoritos del localStorage
     useEffect(() => {
         const loadWishlist = () => {
             try {
+                console.log('Loading wishlist from localStorage...');
                 const savedWishlist = localStorage.getItem('sophia_wishlist');
+                console.log('Raw localStorage data:', savedWishlist);
+                
                 if (savedWishlist) {
                     const parsedWishlist = JSON.parse(savedWishlist);
+                    console.log('Parsed wishlist:', parsedWishlist);
+                    console.log('Parsed wishlist length:', parsedWishlist.length);
                     setWishlistItems(parsedWishlist);
                 } else {
+                    console.log('No wishlist data found in localStorage');
                     setWishlistItems([]);
                 }
             } catch (error) {
@@ -170,16 +178,21 @@ export default function WishlistPage() {
                             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
                             variants={containerVariants}
                         >
-                            {wishlistItems.map((product, index) => (
-                                <motion.div
-                                    key={`wishlist-${product.id}-${index}`}
-                                    variants={itemVariants}
-                                    exit="exit"
-                                    layout
-                                    className="group"
-                                >
-                                    <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/95 backdrop-blur-sm">
-                                        <CardContent className="p-0 relative">
+                            {wishlistItems.length === 0 ? (
+                                <div className="col-span-full text-center py-12">
+                                    <div className="text-gray-500 text-lg">No hay productos en tu lista de favoritos</div>
+                                </div>
+                            ) : (
+                                wishlistItems.map((product, index) => (
+                                    <motion.div
+                                        key={`wishlist-${product.id}-${index}`}
+                                        variants={itemVariants}
+                                        exit="exit"
+                                        layout
+                                        className="group"
+                                    >
+                                        <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/95 backdrop-blur-sm">
+                                            <CardContent className="p-0 relative">
                                             {/* Botón eliminar */}
                                             <motion.button
                                                 onClick={() => removeFromWishlist(product.id)}
@@ -198,7 +211,7 @@ export default function WishlistPage() {
                                             >
                                                 <Link href={`/products/${product.id}`}>
                                                     <Image
-                                                        src={product.image_url || product.image || 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop'}
+                                                        src={product.image || product.image_url || '/product1.png'}
                                                         alt={product.name || 'Producto'}
                                                         fill
                                                         className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -290,7 +303,8 @@ export default function WishlistPage() {
                                         </CardContent>
                                     </Card>
                                 </motion.div>
-                            ))}
+                                ))
+                            )}
                         </motion.div>
                     </AnimatePresence>
 

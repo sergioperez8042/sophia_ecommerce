@@ -72,20 +72,20 @@ export default function AboutPage() {
                     variants={containerVariants}
                     initial="hidden"
                     animate={heroInView ? "visible" : "hidden"}
-                    className="container mx-auto px-4 py-16 relative z-10"
+                    className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 relative z-10"
                 >
-                    <div className="grid lg:grid-cols-2 gap-16 items-center">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
                         {/* Text Content */}
-                        <motion.div variants={itemVariants} className="space-y-8">
+                        <motion.div variants={itemVariants} className="space-y-6 sm:space-y-8 text-center lg:text-left">
                             <motion.div
                                 initial={{ opacity: 0, x: -50 }}
                                 animate={heroInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
                                 transition={{ duration: 0.8, delay: 0.2 }}
                             >
-                                <Badge className="bg-[#4A6741]/10 text-[#4A6741] font-bold text-lg px-6 py-2 mb-6">
+                                <Badge className="bg-[#4A6741]/10 text-[#4A6741] font-bold text-sm sm:text-base lg:text-lg px-4 sm:px-6 py-2 mb-4 sm:mb-6">
                                     Nuestra Historia
                                 </Badge>
-                                <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 leading-tight">
+                                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-gray-900 leading-tight">
                                     De Cuba a
                                     <span className="bg-gradient-to-r from-[#4A6741] to-[#6B8E5A] bg-clip-text text-transparent"> Europa</span>
                                 </h1>
@@ -93,20 +93,20 @@ export default function AboutPage() {
 
                             <motion.p
                                 variants={itemVariants}
-                                className="text-xl text-gray-700 font-medium leading-relaxed"
+                                className="text-base sm:text-lg lg:text-xl text-gray-700 font-medium leading-relaxed"
                             >
                                 La historia de <strong className="text-[#4A6741]">Sophia Natural</strong> es la historia de una mujer valiente que transformó su pasión por la belleza natural en un imperio de bienestar que ahora cruza océanos.
                             </motion.p>
 
-                            <motion.div variants={itemVariants} className="flex gap-4">
+                            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
                                 <Link href="/products">
-                                    <Button className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white font-bold px-8 py-4 text-lg shadow-lg">
+                                    <Button className="w-full sm:w-auto bg-[#4A6741] hover:bg-[#3F5D4C] text-white font-bold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg shadow-lg">
                                         Descubre Nuestros Productos
                                     </Button>
                                 </Link>
                                 <Button
                                     variant="outline"
-                                    className="border-[#4A6741] text-[#4A6741] hover:bg-[#4A6741] hover:text-white font-bold px-8 py-4 text-lg"
+                                    className="w-full sm:w-auto border-[#4A6741] text-[#4A6741] hover:bg-[#4A6741] hover:text-white font-bold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg"
                                     onClick={() => storyRef.current?.scrollIntoView({ behavior: 'smooth' })}
                                 >
                                     Conoce la Historia
@@ -170,7 +170,7 @@ export default function AboutPage() {
             {/* Story Section */}
             <motion.section
                 ref={storyRef}
-                className="py-32 relative overflow-hidden"
+                className="py-16 sm:py-24 lg:py-32 relative overflow-hidden"
             >
                 <div className="absolute inset-0 bg-gradient-to-r from-[#4A6741]/5 to-transparent" />
 
@@ -178,18 +178,18 @@ export default function AboutPage() {
                     variants={containerVariants}
                     initial="hidden"
                     animate={storyInView ? "visible" : "hidden"}
-                    className="container mx-auto px-4 relative z-10"
+                    className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
                 >
-                    <motion.div variants={itemVariants} className="text-center mb-20">
-                        <h2 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
+                    <motion.div variants={itemVariants} className="text-center mb-12 sm:mb-16 lg:mb-20">
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6">
                             Una Historia de <span className="text-[#4A6741]">Determinación</span>
                         </h2>
-                        <p className="text-xl text-gray-700 max-w-3xl mx-auto font-medium">
+                        <p className="text-base sm:text-lg lg:text-xl text-gray-700 max-w-3xl mx-auto font-medium leading-relaxed">
                             Desde las calles de La Habana hasta las capitales europeas, esta es la historia de cómo la pasión y la perseverancia pueden cambiar el mundo.
                         </p>
                     </motion.div>
 
-                    <div className="grid lg:grid-cols-2 gap-16 items-center mb-20">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center mb-12 sm:mb-16 lg:mb-20">
                         {/* Story Content */}
                         <motion.div variants={itemVariants} className="space-y-8">
                             <div className="space-y-6">

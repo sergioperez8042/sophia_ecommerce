@@ -148,20 +148,22 @@ export default function FeaturedProducts({ products, isLoading }: FeaturedProduc
                                         <Badge variant="outline" className="text-[#4A6741] border-[#4A6741]/30 text-xs">
                                             {product.category_name || 'Sin categoría'}
                                         </Badge>
-
+                                        
                                         {/* Botón de favoritos al lado del badge */}
                                         <button
-                                            onClick={(e) => toggleWishlist(product, e)}
-                                            className="p-1 rounded-full hover:bg-gray-100 transition-all duration-200 group/heart"
+                                            onClick={(e) => {
+                                                console.log('Heart button clicked in FeaturedProducts!', product.name);
+                                                toggleWishlist(product, e);
+                                            }}
+                                            className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200 group/heart border border-gray-200"
+                                            title={wishlistItems.includes(product.id) ? 'Remover de favoritos' : 'Agregar a favoritos'}
                                         >
                                             <Heart className={`w-4 h-4 transition-colors duration-200 ${wishlistItems.includes(product.id)
-                                                ? 'text-red-500 fill-red-500'
-                                                : 'text-gray-400 hover:text-red-500 group-hover/heart:scale-110'
+                                                    ? 'text-red-500 fill-red-500'
+                                                    : 'text-gray-400 hover:text-red-500 group-hover/heart:scale-110'
                                                 }`} />
                                         </button>
-                                    </div>
-
-                                    <Link href={`/product?id=${product.id}`}>
+                                    </div>                                    <Link href={`/product?id=${product.id}`}>
                                         <h3 className="font-semibold text-lg text-gray-900 mb-2 hover:text-[#4A6741] transition-colors">
                                             {product.name}
                                         </h3>

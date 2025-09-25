@@ -191,30 +191,66 @@ export default function ProductsPage() {
 
   const activeFiltersCount = selectedCategories.length + selectedBrands.length + selectedPriceRanges.length + (inStockOnly ? 1 : 0);
 
-  const addToCart = (product: any, e: any) => {
+  const [addingToCart, setAddingToCart] = useState<string | null>(null);
+
+  const addToCart = async (product: any, e: any) => {
     e.preventDefault();
     e.stopPropagation();
 
-    const savedCart = localStorage.getItem('sophia_cart');
-    const currentCart = savedCart ? JSON.parse(savedCart) : [];
+    console.log('Adding to cart:', product);
+    
+    setAddingToCart(product.id);
 
-    const existingItem = currentCart.find((item: any) => item.id === product.id);
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      currentCart.push({ ...product, quantity: 1 });
+    try {
+      const savedCart = localStorage.getItem('sophia_cart');
+      const currentCart = savedCart ? JSON.parse(savedCart) : [];
+
+      const existingItem = currentCart.find((item: any) => item.id === product.id);
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        currentCart.push({ ...product, quantity: 1 });
+      }
+
+      localStorage.setItem('sophia_cart', JSON.stringify(currentCart));
+      console.log('Cart updated:', currentCart);
+      
+      window.dispatchEvent(new Event('cartUpdate'));
+      
+      // Dar feedback visual por 1 segundo
+      setTimeout(() => {
+        setAddingToCart(null);
+      }, 1000);
+      
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      setAddingToCart(null);
     }
-
-    localStorage.setItem('sophia_cart', JSON.stringify(currentCart));
-    window.dispatchEvent(new Event('cartUpdate'));
   };
 
   // Cargar favoritos del localStorage al montar el componente
   useEffect(() => {
     const savedWishlist = localStorage.getItem('sophia_wishlist');
     if (savedWishlist) {
-      const wishlistProducts = JSON.parse(savedWishlist);
-      setWishlistItems(wishlistProducts.map((item: any) => item.id));
+      try {
+        const wishlistProducts = JSON.parse(savedWishlist);
+        // Filtrar solo objetos válidos con id
+        const validProducts = wishlistProducts.filter((item: any) => 
+          item && typeof item === 'object' && item.id
+        );
+        
+        // Si había datos corruptos, limpiar el localStorage
+        if (validProducts.length !== wishlistProducts.length) {
+          localStorage.setItem('sophia_wishlist', JSON.stringify(validProducts));
+        }
+        
+        setWishlistItems(validProducts.map((item: any) => item.id));
+        console.log('Loaded wishlist items:', validProducts.map((item: any) => item.id));
+      } catch (error) {
+        console.error('Error loading wishlist:', error);
+        localStorage.removeItem('sophia_wishlist');
+        setWishlistItems([]);
+      }
     }
   }, []);
 
@@ -222,15 +258,29 @@ export default function ProductsPage() {
     e.preventDefault();
     e.stopPropagation();
 
+    console.log('Toggling wishlist for product:', product);
+
     const savedWishlist = localStorage.getItem('sophia_wishlist');
-    const currentWishlist = savedWishlist ? JSON.parse(savedWishlist) : [];
+    let currentWishlist = savedWishlist ? JSON.parse(savedWishlist) : [];
+    
+    // Limpiar datos corruptos - solo mantener objetos válidos
+    currentWishlist = currentWishlist.filter((item: any) => 
+      item && typeof item === 'object' && item.id
+    );
+
+    console.log('Cleaned current wishlist:', currentWishlist);
+    console.log('Current wishlistItems state:', wishlistItems);
 
     const isInWishlist = wishlistItems.includes(product.id);
+
+    console.log('Is product in wishlist?', isInWishlist);
 
     if (isInWishlist) {
       // Remover de favoritos
       const updatedWishlist = currentWishlist.filter((item: any) => item.id !== product.id);
       const updatedWishlistIds = wishlistItems.filter(id => id !== product.id);
+
+      console.log('Removing from wishlist. Updated wishlist:', updatedWishlist);
 
       localStorage.setItem('sophia_wishlist', JSON.stringify(updatedWishlist));
       setWishlistItems(updatedWishlistIds);
@@ -241,6 +291,8 @@ export default function ProductsPage() {
       // Agregar a favoritos
       const updatedWishlist = [...currentWishlist, product];
       const updatedWishlistIds = [...wishlistItems, product.id];
+
+      console.log('Adding to wishlist. Updated wishlist:', updatedWishlist);
 
       localStorage.setItem('sophia_wishlist', JSON.stringify(updatedWishlist));
       setWishlistItems(updatedWishlistIds);
@@ -540,11 +592,15 @@ export default function ProductsPage() {
                           <Badge variant="secondary" className="text-xs bg-[#4A6741]/10 text-[#4A6741]">
                             {product.category}
                           </Badge>
-
+                          
                           {/* Botón de favoritos al lado del badge */}
                           <button
-                            onClick={(e) => toggleWishlist(product, e)}
-                            className="p-1 rounded-full hover:bg-gray-100 transition-all duration-200 group/heart"
+                            onClick={(e) => {
+                              console.log('Heart button clicked!', product.name);
+                              toggleWishlist(product, e);
+                            }}
+                            className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200 group/heart border border-gray-200"
+                            title={wishlistItems.includes(product.id) ? 'Remover de favoritos' : 'Agregar a favoritos'}
                           >
                             <Heart
                               className={`h-5 w-5 transition-all duration-200 ${wishlistItems.includes(product.id)
@@ -553,9 +609,7 @@ export default function ProductsPage() {
                                 }`}
                             />
                           </button>
-                        </div>
-
-                        <Link href={`/products/${product.id}`}>
+                        </div>                        <Link href={`/products/${product.id}`}>
                           <h3 className="text-lg font-bold text-[#4A6741] mb-2 hover:text-[#3F5D4C] transition-colors cursor-pointer line-clamp-2">
                             {product.name}
                           </h3>
@@ -590,12 +644,19 @@ export default function ProductsPage() {
                         </div>
 
                         <Button
-                          className="w-full bg-[#4A6741] hover:bg-[#3F5D4C] text-white font-semibold"
-                          disabled={!product.inStock}
+                          className={`w-full font-semibold transition-all duration-200 ${
+                            addingToCart === product.id 
+                              ? 'bg-green-600 hover:bg-green-700' 
+                              : 'bg-[#4A6741] hover:bg-[#3F5D4C]'
+                          } text-white`}
+                          disabled={!product.inStock || addingToCart === product.id}
                           onClick={(e) => addToCart(product, e)}
                         >
                           <ShoppingBag className="h-4 w-4 mr-2" />
-                          {product.inStock ? 'Agregar al carrito' : 'No disponible'}
+                          {addingToCart === product.id 
+                            ? '¡Agregado!' 
+                            : (product.inStock ? 'Agregar al carrito' : 'No disponible')
+                          }
                         </Button>
                       </div>
                     </CardContent>
