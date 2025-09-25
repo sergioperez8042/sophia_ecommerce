@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Product, Category } from "@/entities/all";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import EmailInput from "@/components/ui/email-input";
 import { Leaf, ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -137,10 +138,9 @@ export default function HomePage() {
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                            <input
-                                type="email"
+                            <EmailInput
                                 placeholder="Tu email"
-                                className="flex-1 px-6 py-3 rounded-lg border-2 border-white/30 bg-white text-gray-900 placeholder-gray-600 focus:ring-2 focus:ring-white focus:border-white transition-colors"
+                                className="flex-1 px-6 py-3 rounded-lg border-2 border-white/60 bg-white/95 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-white focus:border-white focus:bg-white transition-all duration-200 shadow-sm"
                             />
                             <Button className="bg-white text-[#4A6741] hover:bg-gray-100 px-8 py-3 font-semibold">
                                 Suscribirme

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import "./globals.css";
+import Header from "@/components/Header";
 
 export default function RootLayout({
   children,
@@ -23,6 +24,7 @@ export default function RootLayout({
         <meta name="description" content="Cosmética natural artesanal con ingredientes orgánicos de la más alta calidad" />
       </head>
       <body className="antialiased">
+        <Header />
         <div className="min-h-screen bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8]">
           {children}
         </div>

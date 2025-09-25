@@ -6,8 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import EmailInput from "@/components/ui/email-input";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
+import Breadcrumb from "@/components/ui/breadcrumb";
 
 const products = [
     {
@@ -125,6 +128,15 @@ const products = [
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#F5F1E8] to-white">
+            {/* Breadcrumb */}
+            <div className="container mx-auto px-4 py-6">
+                <Breadcrumb 
+                    items={[
+                        { label: 'Productos' }
+                    ]}
+                />
+            </div>
+
             {/* Header */}
             <motion.section
                 className="py-16 bg-white/80 backdrop-blur-sm relative overflow-hidden"
@@ -202,13 +214,13 @@ const products = [
                             whileHover={{ scale: 1.02 }}
                             transition={{ duration: 0.2 }}
                         >
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
                             <Input
                                 type="text"
                                 placeholder="Buscar productos..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="pl-10 pr-4 py-2 w-full focus:ring-2 focus:ring-[#4A6741] transition-all duration-200"
+                                className="pl-10 pr-4 py-2 w-full border-2 border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#4A6741] focus:border-[#4A6741] transition-all duration-200 shadow-sm"
                             />
                         </motion.div>
 
@@ -222,7 +234,7 @@ const products = [
                             <motion.select
                                 value={selectedCategory}
                                 onChange={(e) => setSelectedCategory(e.target.value)}
-                                className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4A6741] transition-all duration-200"
+                                className="px-4 py-2 border-2 border-gray-300 bg-white text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4A6741] focus:border-[#4A6741] transition-all duration-200 shadow-sm"
                                 whileHover={{ scale: 1.02 }}
                                 whileFocus={{ scale: 1.02 }}
                             >
@@ -235,7 +247,7 @@ const products = [
                             <motion.select
                                 value={sortBy}
                                 onChange={(e) => setSortBy(e.target.value)}
-                                className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4A6741] transition-all duration-200"
+                                className="px-4 py-2 border-2 border-gray-300 bg-white text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4A6741] focus:border-[#4A6741] transition-all duration-200 shadow-sm"
                                 whileHover={{ scale: 1.02 }}
                                 whileFocus={{ scale: 1.02 }}
                             >
@@ -313,8 +325,9 @@ const products = [
                                 }}
                                 whileTap={{ scale: 0.98 }}
                             >
-                                <Card className="product-card border-0 overflow-hidden group cursor-pointer h-full">
-                                    {viewMode === 'grid' ? (
+                                <Link href={`/products/${product.id}`} className="block h-full">
+                                    <Card className="product-card border-0 overflow-hidden group cursor-pointer h-full">
+                                        {viewMode === 'grid' ? (
                                         <>
                                             <div className="relative aspect-square overflow-hidden">
                                                 <motion.div
@@ -642,6 +655,7 @@ const products = [
                                         </motion.div>
                                     )}
                                 </Card>
+                                </Link>
                             </motion.div>
                         ))}
                     </motion.div>
