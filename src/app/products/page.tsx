@@ -540,18 +540,17 @@ export default function ProductsPage() {
                           <Badge variant="secondary" className="text-xs bg-[#4A6741]/10 text-[#4A6741]">
                             {product.category}
                           </Badge>
-                          
+
                           {/* Botón de favoritos al lado del badge */}
                           <button
                             onClick={(e) => toggleWishlist(product, e)}
                             className="p-1 rounded-full hover:bg-gray-100 transition-all duration-200 group/heart"
                           >
                             <Heart
-                              className={`h-5 w-5 transition-all duration-200 ${
-                                wishlistItems.includes(product.id)
+                              className={`h-5 w-5 transition-all duration-200 ${wishlistItems.includes(product.id)
                                   ? 'text-red-500 fill-red-500'
                                   : 'text-gray-400 hover:text-red-500 group-hover/heart:scale-110'
-                              }`}
+                                }`}
                             />
                           </button>
                         </div>
