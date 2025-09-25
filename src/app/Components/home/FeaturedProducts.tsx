@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,49 @@ interface FeaturedProductsProps {
 }
 
 export default function FeaturedProducts({ products, isLoading }: FeaturedProductsProps) {
+    const [wishlistItems, setWishlistItems] = useState<string[]>([]);
+
+    // Cargar favoritos del localStorage al montar el componente
+    useEffect(() => {
+        const savedWishlist = localStorage.getItem('sophia_wishlist');
+        if (savedWishlist) {
+            const wishlistProducts = JSON.parse(savedWishlist);
+            setWishlistItems(wishlistProducts.map((item: any) => item.id));
+        }
+    }, []);
+
+    const toggleWishlist = (product: any, e: any) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const savedWishlist = localStorage.getItem('sophia_wishlist');
+        const currentWishlist = savedWishlist ? JSON.parse(savedWishlist) : [];
+
+        const isInWishlist = wishlistItems.includes(product.id);
+
+        if (isInWishlist) {
+            // Remover de favoritos
+            const updatedWishlist = currentWishlist.filter((item: any) => item.id !== product.id);
+            const updatedWishlistIds = wishlistItems.filter(id => id !== product.id);
+
+            localStorage.setItem('sophia_wishlist', JSON.stringify(updatedWishlist));
+            setWishlistItems(updatedWishlistIds);
+
+            // Disparar evento personalizado para notificar cambios
+            window.dispatchEvent(new CustomEvent('wishlistChanged'));
+        } else {
+            // Agregar a favoritos
+            const updatedWishlist = [...currentWishlist, product];
+            const updatedWishlistIds = [...wishlistItems, product.id];
+
+            localStorage.setItem('sophia_wishlist', JSON.stringify(updatedWishlist));
+            setWishlistItems(updatedWishlistIds);
+
+            // Disparar evento personalizado para notificar cambios
+            window.dispatchEvent(new CustomEvent('wishlistChanged'));
+        }
+    };
+
     const addToCart = (product: any) => {
         const savedCart = localStorage.getItem('sophia_cart');
         const currentCart = savedCart ? JSON.parse(savedCart) : [];
@@ -98,20 +141,24 @@ export default function FeaturedProducts({ products, isLoading }: FeaturedProduc
                                         </Badge>
                                     )}
 
-                                    <Button
-                                        size="icon"
-                                        variant="ghost"
-                                        className="absolute top-4 right-4 bg-white/90 hover:bg-white transition-all duration-200 opacity-0 group-hover:opacity-100"
-                                    >
-                                        <Heart className="w-4 h-4 text-gray-700" />
-                                    </Button>
                                 </div>
 
                                 <CardContent className="p-6">
-                                    <div className="mb-2">
+                                    <div className="flex items-center justify-between mb-2">
                                         <Badge variant="outline" className="text-[#4A6741] border-[#4A6741]/30 text-xs">
                                             {product.category_name || 'Sin categoría'}
                                         </Badge>
+                                        
+                                        {/* Botón de favoritos al lado del badge */}
+                                        <button
+                                            onClick={(e) => toggleWishlist(product, e)}
+                                            className="p-1 rounded-full hover:bg-gray-100 transition-all duration-200 group/heart"
+                                        >
+                                            <Heart className={`w-4 h-4 transition-colors duration-200 ${wishlistItems.includes(product.id)
+                                                    ? 'text-red-500 fill-red-500'
+                                                    : 'text-gray-400 hover:text-red-500 group-hover/heart:scale-110'
+                                                }`} />
+                                        </button>
                                     </div>
 
                                     <Link href={`/product?id=${product.id}`}>

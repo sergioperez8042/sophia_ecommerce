@@ -533,29 +533,28 @@ export default function ProductsPage() {
                             </Badge>
                           )}
                         </div>
-
-                        <div className="absolute top-3 right-3">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className={`h-8 w-8 p-0 bg-white/90 hover:bg-white rounded-full shadow-md transition-colors ${wishlistItems.includes(product.id)
-                              ? 'text-red-500 hover:text-red-600'
-                              : 'text-gray-600 hover:text-red-500'
-                              }`}
-                            onClick={(e) => toggleWishlist(product, e)}
-                          >
-                            <Heart
-                              className={`h-4 w-4 ${wishlistItems.includes(product.id) ? 'fill-current' : ''
-                                }`}
-                            />
-                          </Button>
-                        </div>
                       </div>
 
                       <div className="p-4">
-                        <Badge variant="secondary" className="text-xs mb-2 bg-[#4A6741]/10 text-[#4A6741]">
-                          {product.category}
-                        </Badge>
+                        <div className="flex items-center justify-between mb-2">
+                          <Badge variant="secondary" className="text-xs bg-[#4A6741]/10 text-[#4A6741]">
+                            {product.category}
+                          </Badge>
+                          
+                          {/* Botón de favoritos al lado del badge */}
+                          <button
+                            onClick={(e) => toggleWishlist(product, e)}
+                            className="p-1 rounded-full hover:bg-gray-100 transition-all duration-200 group/heart"
+                          >
+                            <Heart
+                              className={`h-5 w-5 transition-all duration-200 ${
+                                wishlistItems.includes(product.id)
+                                  ? 'text-red-500 fill-red-500'
+                                  : 'text-gray-400 hover:text-red-500 group-hover/heart:scale-110'
+                              }`}
+                            />
+                          </button>
+                        </div>
 
                         <Link href={`/products/${product.id}`}>
                           <h3 className="text-lg font-bold text-[#4A6741] mb-2 hover:text-[#3F5D4C] transition-colors cursor-pointer line-clamp-2">
