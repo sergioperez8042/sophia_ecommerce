@@ -236,7 +236,7 @@ export default function CategoriesPage() {
         <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100">
             <div className="container mx-auto px-4 py-8">
                 {/* Breadcrumb */}
-                <div className="mb-6">
+                <div className="mt-12 sm:mt-16 mb-10 sm:mb-12">
                     <Breadcrumb
                         items={[
                             { label: 'Categorías de Productos' }
@@ -399,67 +399,67 @@ export default function CategoriesPage() {
                                                     </div>
 
                                                     {/* Información del producto */}
-                                    <div className="p-3 sm:p-4 md:p-6">
-                                        <div className="flex items-start justify-between gap-2 mb-2">
-                                            <Link href={`/products/${product.id}`} prefetch={false} className="flex-1">
-                                                <h3 className="font-semibold text-sm sm:text-base md:text-lg text-gray-900 group-hover:text-[#4A6741] transition-colors line-clamp-2">
-                                                    {product.name}
-                                                </h3>
-                                            </Link>
-                                            <button
-                                                onClick={() => toggleWishlist(product.id)}
-                                                className={`p-1 rounded transition-colors ${wishlist.includes(product.id)
-                                                    ? 'text-red-500'
-                                                    : 'text-gray-400 hover:text-red-500'
-                                                    }`}
-                                            >
-                                                <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${wishlist.includes(product.id) ? 'fill-current' : ''}`} />
-                                            </button>
-                                        </div>
+                                                    <div className="p-3 sm:p-4 md:p-6">
+                                                        <div className="flex items-start justify-between gap-2 mb-2">
+                                                            <Link href={`/products/${product.id}`} prefetch={false} className="flex-1">
+                                                                <h3 className="font-semibold text-sm sm:text-base md:text-lg text-gray-900 group-hover:text-[#4A6741] transition-colors line-clamp-2">
+                                                                    {product.name}
+                                                                </h3>
+                                                            </Link>
+                                                            <button
+                                                                onClick={() => toggleWishlist(product.id)}
+                                                                className={`p-1 rounded transition-colors ${wishlist.includes(product.id)
+                                                                    ? 'text-red-500'
+                                                                    : 'text-gray-400 hover:text-red-500'
+                                                                    }`}
+                                                            >
+                                                                <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${wishlist.includes(product.id) ? 'fill-current' : ''}`} />
+                                                            </button>
+                                                        </div>
 
-                                        <p className="text-gray-700 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">
-                                            {product.description}
-                                        </p>
+                                                        <p className="text-gray-700 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">
+                                                            {product.description}
+                                                        </p>
 
-                                        {/* Rating */}
-                                        <div className="flex items-center gap-1 mb-3 sm:mb-4">
-                                            {[...Array(5)].map((_, i) => (
-                                                <Star key={i} className="w-3 h-3 sm:w-4 sm:h-4 fill-[#D4AF37] text-[#D4AF37]" />
-                                            ))}
-                                            <span className="text-xs sm:text-sm text-gray-600 ml-1 sm:ml-2">
-                                                {product.rating} ({product.reviews})
-                                            </span>
-                                        </div>
+                                                        {/* Rating */}
+                                                        <div className="flex items-center gap-1 mb-3 sm:mb-4">
+                                                            {[...Array(5)].map((_, i) => (
+                                                                <Star key={i} className="w-3 h-3 sm:w-4 sm:h-4 fill-[#D4AF37] text-[#D4AF37]" />
+                                                            ))}
+                                                            <span className="text-xs sm:text-sm text-gray-600 ml-1 sm:ml-2">
+                                                                {product.rating} ({product.reviews})
+                                                            </span>
+                                                        </div>
 
-                                        {/* Precio */}
-                                        <div className="flex items-center justify-between mb-3 sm:mb-4">
-                                            <div className="flex items-center gap-1 sm:gap-2">
-                                                <span className="text-lg sm:text-xl md:text-2xl font-bold text-[#4A6741]">
-                                                    €{product.price.toFixed(2)}
-                                                </span>
-                                                {product.originalPrice && (
-                                                    <span className="text-sm sm:text-base md:text-lg text-gray-600 line-through">
-                                                        €{product.originalPrice.toFixed(2)}
-                                                    </span>
-                                                )}
-                                            </div>
-                                            <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs sm:text-sm">
-                                                En stock
-                                            </Badge>
-                                        </div>
+                                                        {/* Precio */}
+                                                        <div className="flex items-center justify-between mb-3 sm:mb-4">
+                                                            <div className="flex items-center gap-1 sm:gap-2">
+                                                                <span className="text-lg sm:text-xl md:text-2xl font-bold text-[#4A6741]">
+                                                                    €{product.price.toFixed(2)}
+                                                                </span>
+                                                                {product.originalPrice && (
+                                                                    <span className="text-sm sm:text-base md:text-lg text-gray-600 line-through">
+                                                                        €{product.originalPrice.toFixed(2)}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                            <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs sm:text-sm">
+                                                                En stock
+                                                            </Badge>
+                                                        </div>
 
-                                        {/* Botón de agregar al carrito */}
-                                        <Button
-                                            onClick={() => addToCart(product)}
-                                            className="w-full bg-[#4A6741] hover:bg-[#3F5D4C] text-white text-sm sm:text-base"
-                                        >
-                                            <ShoppingBag className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                                            Agregar al Carrito
-                                        </Button>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </motion.div>
+                                                        {/* Botón de agregar al carrito */}
+                                                        <Button
+                                                            onClick={() => addToCart(product)}
+                                                            className="w-full bg-[#4A6741] hover:bg-[#3F5D4C] text-white text-sm sm:text-base"
+                                                        >
+                                                            <ShoppingBag className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                                                            Agregar al Carrito
+                                                        </Button>
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
+                                        </motion.div>
                                     ))}
                                 </motion.div>
                             </AnimatePresence>

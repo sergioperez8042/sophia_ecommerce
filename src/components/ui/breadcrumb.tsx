@@ -14,14 +14,14 @@ interface BreadcrumbProps {
 export default function Breadcrumb({ items }: BreadcrumbProps) {
     return (
         <motion.nav
-            className="flex items-center space-x-2 text-sm"
+            className="flex items-center space-x-2 text-sm sm:text-base"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
         >
             {/* Home icon */}
-            <Link href="/" className="flex items-center text-gray-600 hover:text-[#4A6741] transition-colors duration-200">
-                <Home className="w-4 h-4" />
+            <Link href="/" className="flex items-center text-gray-800 hover:text-[#4A6741] transition-colors duration-200">
+                <Home className="w-4 h-4 sm:w-5 sm:h-5" />
             </Link>
 
             {items.map((item, index) => (
@@ -32,17 +32,17 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.1 }}
                 >
-                    <ChevronRight className="w-4 h-4 text-gray-400" />
+                    <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
 
                     {item.href ? (
                         <Link
                             href={item.href}
-                            className="text-gray-600 hover:text-[#4A6741] transition-colors duration-200 font-medium"
+                            className="text-gray-800 hover:text-[#4A6741] transition-colors duration-200 font-medium"
                         >
                             {item.label}
                         </Link>
                     ) : (
-                        <span className="text-gray-800 font-semibold">
+                        <span className="text-[#4A6741] font-bold">
                             {item.label}
                         </span>
                     )}

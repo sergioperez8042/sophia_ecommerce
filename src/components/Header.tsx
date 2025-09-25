@@ -19,11 +19,11 @@ export default function Header() {
             // Contador de wishlist
             const savedWishlist = localStorage.getItem('sophia_wishlist');
             const wishlistItems = savedWishlist ? JSON.parse(savedWishlist) : [];
-            
+
             // Si estamos en la página de wishlist, agregar los productos de ejemplo al contador
             const sampleProductsCount = 3; // Los 3 productos de ejemplo que siempre están
             const totalWishlistCount = wishlistItems.length + sampleProductsCount;
-            
+
             setWishlistCount(totalWishlistCount);
 
             // Contador de carrito
@@ -121,14 +121,12 @@ export default function Header() {
                                 >
                                     <Link
                                         href={item.href}
-                                        className={`font-medium transition-colors duration-200 relative group ${
-                                            isActive ? 'text-[#4A6741]' : 'text-gray-700 hover:text-[#4A6741]'
-                                        }`}
+                                        className={`font-medium transition-colors duration-200 relative group ${isActive ? 'text-[#4A6741]' : 'text-gray-700 hover:text-[#4A6741]'
+                                            }`}
                                     >
                                         {item.name}
-                                        <span className={`absolute inset-x-0 -bottom-1 h-0.5 bg-[#4A6741] transform transition-transform duration-200 ${
-                                            isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
-                                        }`}></span>
+                                        <span className={`absolute inset-x-0 -bottom-1 h-0.5 bg-[#4A6741] transform transition-transform duration-200 ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                                            }`}></span>
                                     </Link>
                                 </motion.div>
                             );
