@@ -8,8 +8,50 @@ import EmailInput from "@/components/ui/email-input";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 
 export default function Home() {
+  const [wishlist, setWishlist] = useState<string[]>([]);
+
+  // Load wishlist from localStorage
+  useEffect(() => {
+    const savedWishlist = localStorage.getItem('sophia_wishlist');
+    if (savedWishlist) {
+      setWishlist(JSON.parse(savedWishlist));
+    }
+  }, []);
+
+  // Toggle wishlist function
+  const toggleWishlist = (productId: string) => {
+    const newWishlist = wishlist.includes(productId) 
+      ? wishlist.filter(id => id !== productId)
+      : [...wishlist, productId];
+    
+    setWishlist(newWishlist);
+    localStorage.setItem('sophia_wishlist', JSON.stringify(newWishlist));
+    
+    // Dispatch custom event to update other components
+    window.dispatchEvent(new CustomEvent('wishlistChanged'));
+  };
+
+  // Add to cart function
+  const addToCart = (productId: string) => {
+    const savedCart = localStorage.getItem('sophia_cart');
+    const cart = savedCart ? JSON.parse(savedCart) : [];
+    
+    const existingItem = cart.find((item: any) => item.id === productId);
+    
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      cart.push({ id: productId, quantity: 1 });
+    }
+    
+    localStorage.setItem('sophia_cart', JSON.stringify(cart));
+    
+    // Dispatch custom event to update other components
+    window.dispatchEvent(new CustomEvent('cartChanged'));
+  };
   return (
     <main className="min-h-screen bg-white">
       {/* Hero Section */}
@@ -122,9 +164,11 @@ export default function Home() {
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Button variant="outline" size="lg" className="border-[#4A6741] text-[#4A6741] hover:bg-[#4A6741] hover:text-white px-8 py-3 text-lg">
-                    Nuestra historia
-                  </Button>
+                  <Link href="/about">
+                    <Button variant="outline" size="lg" className="border-[#4A6741] text-[#4A6741] hover:bg-[#4A6741] hover:text-white px-8 py-3 text-lg">
+                      Nuestra historia
+                    </Button>
+                  </Link>
                 </motion.div>
               </motion.div>
             </motion.div>
@@ -351,8 +395,31 @@ export default function Home() {
                         whileInView={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.4, delay: product.delay + 0.2 }}
                         viewport={{ once: true }}
+                        className="flex items-center justify-between mb-2"
                       >
-                        <Badge variant="secondary" className="mb-2">{product.badge}</Badge>
+                        <Badge 
+                          className="bg-[#4A6741] text-white hover:bg-[#3F5D4C] border-none font-medium"
+                        >
+                          {product.badge}
+                        </Badge>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            toggleWishlist(product.id);
+                          }}
+                          className="p-2 h-auto hover:bg-[#4A6741]/10"
+                        >
+                          <Heart 
+                            className={`w-5 h-5 transition-colors ${
+                              wishlist.includes(product.id) 
+                                ? 'fill-red-500 text-red-500' 
+                                : 'text-gray-400 hover:text-red-400'
+                            }`}
+                          />
+                        </Button>
                       </motion.div>
 
                       <motion.h3
@@ -376,7 +443,7 @@ export default function Home() {
                       </motion.p>
 
                       <motion.div
-                        className="flex items-center justify-between"
+                        className="flex items-center justify-between mb-4"
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.4, delay: product.delay + 0.5 }}
@@ -398,6 +465,24 @@ export default function Home() {
                           </motion.div>
                           <span className="text-sm text-gray-700">{product.rating}</span>
                         </div>
+                      </motion.div>
+
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, delay: product.delay + 0.6 }}
+                        viewport={{ once: true }}
+                      >
+                        <Button 
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            addToCart(product.id);
+                          }}
+                          className="w-full bg-[#4A6741] hover:bg-[#3F5D4C] text-white"
+                        >
+                          Agregar al Carrito
+                        </Button>
                       </motion.div>
                     </motion.div>
                   </Card>

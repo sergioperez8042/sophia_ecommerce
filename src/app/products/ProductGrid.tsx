@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,55 @@ interface ProductGridProps {
 }
 
 export default function ProductGrid({ products, isLoading, viewMode = "grid" }: ProductGridProps) {
+    const [wishlist, setWishlist] = useState<any[]>([]);
+
+    // Cargar wishlist al montar el componente
+    useEffect(() => {
+        const savedWishlist = localStorage.getItem('sophia_wishlist');
+        if (savedWishlist) {
+            setWishlist(JSON.parse(savedWishlist));
+        }
+
+        // Escuchar cambios en el wishlist
+        const handleWishlistChange = () => {
+            const savedWishlist = localStorage.getItem('sophia_wishlist');
+            if (savedWishlist) {
+                setWishlist(JSON.parse(savedWishlist));
+            } else {
+                setWishlist([]);
+            }
+        };
+
+        window.addEventListener('wishlistChanged', handleWishlistChange);
+        return () => window.removeEventListener('wishlistChanged', handleWishlistChange);
+    }, []);
+
+    const isInWishlist = (productId: number) => {
+        return wishlist.some(item => item.id === productId);
+    };
+
+    const toggleWishlist = (product: any, e: any) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const savedWishlist = localStorage.getItem('sophia_wishlist');
+        let currentWishlist = savedWishlist ? JSON.parse(savedWishlist) : [];
+
+        const existingIndex = currentWishlist.findIndex((item: any) => item.id === product.id);
+        
+        if (existingIndex >= 0) {
+            currentWishlist.splice(existingIndex, 1);
+        } else {
+            currentWishlist.push(product);
+        }
+
+        localStorage.setItem('sophia_wishlist', JSON.stringify(currentWishlist));
+        setWishlist(currentWishlist);
+        
+        // Disparar evento personalizado
+        window.dispatchEvent(new CustomEvent('wishlistChanged'));
+    };
+
     const addToCart = (product: any, e: any) => {
         e.preventDefault();
         e.stopPropagation();
@@ -30,10 +79,10 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
         }
 
         localStorage.setItem('sophia_cart', JSON.stringify(currentCart));
-        window.dispatchEvent(new Event('cartUpdate'));
-    };
-
-    if (isLoading) {
+        
+        // Disparar evento personalizado
+        window.dispatchEvent(new CustomEvent('cartChanged'));
+    };    if (isLoading) {
         return (
             <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'}`}>
                 {Array(8).fill(0).map((_, i) => (
@@ -116,28 +165,6 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                                         </Badge>
                                     )}
 
-                                    <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200">
-                                        <Button
-                                            size="icon"
-                                            variant="ghost"
-                                            className="bg-white/90 hover:bg-white transition-all duration-200"
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                            }}
-                                        >
-                                            <Heart className="w-4 h-4 text-gray-700" />
-                                        </Button>
-                                        <Button
-                                            size="icon"
-                                            variant="ghost"
-                                            className="bg-white/90 hover:bg-white transition-all duration-200"
-                                            onClick={(e) => addToCart(product, e)}
-                                        >
-                                            <ShoppingBag className="w-4 h-4 text-gray-700" />
-                                        </Button>
-                                    </div>
-
                                     {product.stock <= 5 && product.stock > 0 && (
                                         <Badge className="absolute bottom-4 left-4 bg-orange-500 text-white">
                                             ¡Últimas {product.stock} unidades!
@@ -185,14 +212,26 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                                             )}
                                         </div>
 
-                                        <Button
-                                            onClick={(e) => addToCart(product, e)}
-                                            className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white"
-                                            disabled={product.stock === 0}
-                                        >
-                                            <ShoppingBag className="w-4 h-4 mr-2" />
-                                            Añadir
-                                        </Button>
+                                        <div className="flex items-center gap-2">
+                                            <Button
+                                                size="icon"
+                                                className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white transition-all duration-200 border-0"
+                                                onClick={(e) => toggleWishlist(product, e)}
+                                            >
+                                                <Heart className={`w-4 h-4 ${
+                                                    isInWishlist(product.id) ? 'fill-white' : ''
+                                                }`} />
+                                            </Button>
+                                            
+                                            <Button
+                                                onClick={(e) => addToCart(product, e)}
+                                                className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white flex-1"
+                                                disabled={product.stock === 0}
+                                            >
+                                                <ShoppingBag className="w-4 h-4 mr-2" />
+                                                Añadir
+                                            </Button>
+                                        </div>
                                     </div>
                                 </CardContent>
                             </Card>
@@ -284,14 +323,26 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                                                 )}
                                             </div>
 
-                                            <Button
-                                                onClick={(e) => addToCart(product, e)}
-                                                className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white"
-                                                disabled={product.stock === 0}
-                                            >
-                                                <ShoppingBag className="w-4 h-4 mr-2" />
-                                                Añadir al carrito
-                                            </Button>
+                                            <div className="flex items-center gap-2">
+                                                <Button
+                                                    size="icon"
+                                                    className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white transition-all duration-200 border-0"
+                                                    onClick={(e) => toggleWishlist(product, e)}
+                                                >
+                                                    <Heart className={`w-4 h-4 ${
+                                                        isInWishlist(product.id) ? 'fill-white' : ''
+                                                    }`} />
+                                                </Button>
+
+                                                <Button
+                                                    onClick={(e) => addToCart(product, e)}
+                                                    className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white"
+                                                    disabled={product.stock === 0}
+                                                >
+                                                    <ShoppingBag className="w-4 h-4 mr-2" />
+                                                    Añadir al carrito
+                                                </Button>
+                                            </div>
                                         </div>
                                     </CardContent>
                                 </div>

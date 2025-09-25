@@ -36,13 +36,27 @@ export default function Header() {
             }
         };
 
+        // Escuchar el evento personalizado de cambios en wishlist
+        const handleWishlistChange = () => {
+            updateCounts();
+        };
+
+        // Escuchar el evento personalizado de cambios en carrito
+        const handleCartChange = () => {
+            updateCounts();
+        };
+
         window.addEventListener('storage', handleStorageChange);
+        window.addEventListener('wishlistChanged', handleWishlistChange);
+        window.addEventListener('cartChanged', handleCartChange);
 
         // También escuchar cambios internos (mismo tab)
         const interval = setInterval(updateCounts, 1000);
 
         return () => {
             window.removeEventListener('storage', handleStorageChange);
+            window.removeEventListener('wishlistChanged', handleWishlistChange);
+            window.removeEventListener('cartChanged', handleCartChange);
             clearInterval(interval);
         };
     }, []);
@@ -123,7 +137,7 @@ export default function Header() {
                                     <ShoppingBag className="w-5 h-5 text-gray-800 stroke-2" />
                                     {/* Badge de cantidad del carrito */}
                                     {cartCount > 0 && (
-                                        <motion.div 
+                                        <motion.div
                                             initial={{ scale: 0 }}
                                             animate={{ scale: 1 }}
                                             className="absolute -top-1 -right-1 bg-[#4A6741] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold"
@@ -144,7 +158,7 @@ export default function Header() {
                                     <Heart className="w-5 h-5 text-gray-800 stroke-2" />
                                     {/* Badge de cantidad de favoritos */}
                                     {wishlistCount > 0 && (
-                                        <motion.div 
+                                        <motion.div
                                             initial={{ scale: 0 }}
                                             animate={{ scale: 1 }}
                                             className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold"

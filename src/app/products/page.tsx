@@ -226,21 +226,27 @@ export default function ProductsPage() {
     const currentWishlist = savedWishlist ? JSON.parse(savedWishlist) : [];
 
     const isInWishlist = wishlistItems.includes(product.id);
-    
+
     if (isInWishlist) {
       // Remover de favoritos
       const updatedWishlist = currentWishlist.filter((item: any) => item.id !== product.id);
       const updatedWishlistIds = wishlistItems.filter(id => id !== product.id);
-      
+
       localStorage.setItem('sophia_wishlist', JSON.stringify(updatedWishlist));
       setWishlistItems(updatedWishlistIds);
+
+      // Disparar evento personalizado para notificar cambios
+      window.dispatchEvent(new CustomEvent('wishlistChanged'));
     } else {
       // Agregar a favoritos
       const updatedWishlist = [...currentWishlist, product];
       const updatedWishlistIds = [...wishlistItems, product.id];
-      
+
       localStorage.setItem('sophia_wishlist', JSON.stringify(updatedWishlist));
       setWishlistItems(updatedWishlistIds);
+
+      // Disparar evento personalizado para notificar cambios
+      window.dispatchEvent(new CustomEvent('wishlistChanged'));
     }
   };
   return (
@@ -248,7 +254,7 @@ export default function ProductsPage() {
       <div className="container mx-auto px-4 py-6">
         {/* Breadcrumb */}
         <div className="mb-6">
-          <Breadcrumb 
+          <Breadcrumb
             items={[
               { label: 'Productos' }
             ]}
@@ -289,11 +295,10 @@ export default function ProductsPage() {
                             setSelectedCategories([...selectedCategories, category.name]);
                           }
                         }}
-                        className={`w-full flex items-center justify-between text-left p-2 rounded-lg transition-colors hover:bg-[#4A6741]/10 ${
-                          selectedCategories.includes(category.name) 
-                            ? 'bg-[#4A6741]/10 text-[#4A6741] font-medium' 
-                            : 'text-gray-700 hover:text-[#4A6741]'
-                        }`}
+                        className={`w-full flex items-center justify-between text-left p-2 rounded-lg transition-colors hover:bg-[#4A6741]/10 ${selectedCategories.includes(category.name)
+                          ? 'bg-[#4A6741]/10 text-[#4A6741] font-medium'
+                          : 'text-gray-700 hover:text-[#4A6741]'
+                          }`}
                       >
                         <span className="text-sm flex-1">
                           {category.name}
@@ -318,11 +323,10 @@ export default function ProductsPage() {
                             setSelectedBrands([...selectedBrands, brand.name]);
                           }
                         }}
-                        className={`w-full flex items-center justify-between text-left p-2 rounded-lg transition-colors hover:bg-[#4A6741]/10 ${
-                          selectedBrands.includes(brand.name) 
-                            ? 'bg-[#4A6741]/10 text-[#4A6741] font-medium' 
-                            : 'text-gray-700 hover:text-[#4A6741]'
-                        }`}
+                        className={`w-full flex items-center justify-between text-left p-2 rounded-lg transition-colors hover:bg-[#4A6741]/10 ${selectedBrands.includes(brand.name)
+                          ? 'bg-[#4A6741]/10 text-[#4A6741] font-medium'
+                          : 'text-gray-700 hover:text-[#4A6741]'
+                          }`}
                       >
                         <span className="text-sm flex-1">
                           {brand.name}
@@ -347,11 +351,10 @@ export default function ProductsPage() {
                             setSelectedPriceRanges([...selectedPriceRanges, range.value]);
                           }
                         }}
-                        className={`w-full flex items-center justify-between text-left p-2 rounded-lg transition-colors hover:bg-[#4A6741]/10 ${
-                          selectedPriceRanges.includes(range.value) 
-                            ? 'bg-[#4A6741]/10 text-[#4A6741] font-medium' 
-                            : 'text-gray-700 hover:text-[#4A6741]'
-                        }`}
+                        className={`w-full flex items-center justify-between text-left p-2 rounded-lg transition-colors hover:bg-[#4A6741]/10 ${selectedPriceRanges.includes(range.value)
+                          ? 'bg-[#4A6741]/10 text-[#4A6741] font-medium'
+                          : 'text-gray-700 hover:text-[#4A6741]'
+                          }`}
                       >
                         <span className="text-sm flex-1">
                           {range.name}
@@ -367,11 +370,10 @@ export default function ProductsPage() {
                   <h3 className="font-semibold text-gray-900 mb-3">Disponibilidad</h3>
                   <button
                     onClick={() => setInStockOnly(!inStockOnly)}
-                    className={`w-full flex items-center text-left p-2 rounded-lg transition-colors hover:bg-[#4A6741]/10 ${
-                      inStockOnly 
-                        ? 'bg-[#4A6741]/10 text-[#4A6741] font-medium' 
-                        : 'text-gray-700 hover:text-[#4A6741]'
-                    }`}
+                    className={`w-full flex items-center text-left p-2 rounded-lg transition-colors hover:bg-[#4A6741]/10 ${inStockOnly
+                      ? 'bg-[#4A6741]/10 text-[#4A6741] font-medium'
+                      : 'text-gray-700 hover:text-[#4A6741]'
+                      }`}
                   >
                     <span className="text-sm">
                       Solo en stock
@@ -395,9 +397,9 @@ export default function ProductsPage() {
                     <span className="text-sm text-gray-600">
                       {filteredProducts.length} productos
                     </span>
-                    
-                    <Button 
-                      variant="outline" 
+
+                    <Button
+                      variant="outline"
                       size="sm"
                       onClick={() => setShowMobileFilters(true)}
                       className="lg:hidden border-[#4A6741] text-[#4A6741] hover:bg-[#4A6741] hover:text-white"
@@ -449,8 +451,8 @@ export default function ProductsPage() {
                     {selectedCategories.map(category => (
                       <Badge key={category} variant="secondary" className="bg-[#4A6741]/10 text-[#4A6741] flex items-center gap-1">
                         {category}
-                        <X 
-                          className="h-3 w-3 cursor-pointer hover:text-red-500" 
+                        <X
+                          className="h-3 w-3 cursor-pointer hover:text-red-500"
                           onClick={() => setSelectedCategories(prev => prev.filter(c => c !== category))}
                         />
                       </Badge>
@@ -458,8 +460,8 @@ export default function ProductsPage() {
                     {selectedBrands.map(brand => (
                       <Badge key={brand} variant="secondary" className="bg-[#4A6741]/10 text-[#4A6741] flex items-center gap-1">
                         {brand}
-                        <X 
-                          className="h-3 w-3 cursor-pointer hover:text-red-500" 
+                        <X
+                          className="h-3 w-3 cursor-pointer hover:text-red-500"
                           onClick={() => setSelectedBrands(prev => prev.filter(b => b !== brand))}
                         />
                       </Badge>
@@ -467,8 +469,8 @@ export default function ProductsPage() {
                     {selectedPriceRanges.map(range => (
                       <Badge key={range} variant="secondary" className="bg-[#4A6741]/10 text-[#4A6741] flex items-center gap-1">
                         {priceRanges.find(r => r.value === range)?.name}
-                        <X 
-                          className="h-3 w-3 cursor-pointer hover:text-red-500" 
+                        <X
+                          className="h-3 w-3 cursor-pointer hover:text-red-500"
                           onClick={() => setSelectedPriceRanges(prev => prev.filter(r => r !== range))}
                         />
                       </Badge>
@@ -476,8 +478,8 @@ export default function ProductsPage() {
                     {inStockOnly && (
                       <Badge variant="secondary" className="bg-[#4A6741]/10 text-[#4A6741] flex items-center gap-1">
                         En stock
-                        <X 
-                          className="h-3 w-3 cursor-pointer hover:text-red-500" 
+                        <X
+                          className="h-3 w-3 cursor-pointer hover:text-red-500"
                           onClick={() => setInStockOnly(false)}
                         />
                       </Badge>
@@ -488,7 +490,7 @@ export default function ProductsPage() {
             </Card>
 
             {/* Grid de productos */}
-            <motion.div 
+            <motion.div
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -513,7 +515,7 @@ export default function ProductsPage() {
                             className="object-cover transition-transform duration-300 group-hover:scale-105"
                           />
                         </Link>
-                        
+
                         <div className="absolute top-3 left-3 flex flex-col gap-1">
                           {product.isNew && (
                             <Badge variant="secondary" className="bg-emerald-600 text-white font-semibold shadow-md">
@@ -536,17 +538,15 @@ export default function ProductsPage() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className={`h-8 w-8 p-0 bg-white/90 hover:bg-white rounded-full shadow-md transition-colors ${
-                              wishlistItems.includes(product.id)
-                                ? 'text-red-500 hover:text-red-600'
-                                : 'text-gray-600 hover:text-red-500'
-                            }`}
+                            className={`h-8 w-8 p-0 bg-white/90 hover:bg-white rounded-full shadow-md transition-colors ${wishlistItems.includes(product.id)
+                              ? 'text-red-500 hover:text-red-600'
+                              : 'text-gray-600 hover:text-red-500'
+                              }`}
                             onClick={(e) => toggleWishlist(product, e)}
                           >
-                            <Heart 
-                              className={`h-4 w-4 ${
-                                wishlistItems.includes(product.id) ? 'fill-current' : ''
-                              }`} 
+                            <Heart
+                              className={`h-4 w-4 ${wishlistItems.includes(product.id) ? 'fill-current' : ''
+                                }`}
                             />
                           </Button>
                         </div>
@@ -556,13 +556,13 @@ export default function ProductsPage() {
                         <Badge variant="secondary" className="text-xs mb-2 bg-[#4A6741]/10 text-[#4A6741]">
                           {product.category}
                         </Badge>
-                        
+
                         <Link href={`/products/${product.id}`}>
                           <h3 className="text-lg font-bold text-[#4A6741] mb-2 hover:text-[#3F5D4C] transition-colors cursor-pointer line-clamp-2">
                             {product.name}
                           </h3>
                         </Link>
-                        
+
                         <p className="text-sm text-gray-600 mb-3 line-clamp-2">
                           {product.description}
                         </p>
@@ -571,11 +571,10 @@ export default function ProductsPage() {
                           {[...Array(5)].map((_, i) => (
                             <Star
                               key={i}
-                              className={`h-3 w-3 ${
-                                i < Math.floor(product.rating)
-                                  ? 'text-yellow-500 fill-yellow-400'
-                                  : 'text-gray-300 fill-gray-200'
-                              }`}
+                              className={`h-3 w-3 ${i < Math.floor(product.rating)
+                                ? 'text-yellow-500 fill-yellow-400'
+                                : 'text-gray-300 fill-gray-200'
+                                }`}
                             />
                           ))}
                           <span className="text-xs font-medium text-gray-700 ml-1">
@@ -592,7 +591,7 @@ export default function ProductsPage() {
                           </div>
                         </div>
 
-                        <Button 
+                        <Button
                           className="w-full bg-[#4A6741] hover:bg-[#3F5D4C] text-white font-semibold"
                           disabled={!product.inStock}
                           onClick={(e) => addToCart(product, e)}
@@ -620,7 +619,7 @@ export default function ProductsPage() {
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">No se encontraron productos</h3>
                   <p className="text-gray-600 mb-4">Intenta ajustar tus filtros para ver más resultados.</p>
-                  <Button 
+                  <Button
                     onClick={clearAllFilters}
                     className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white"
                   >

@@ -1,14 +1,19 @@
 "use client";
 
 import { useState, useEffect, use } from 'react';
-import { ArrowLeft, Star, Heart, ShoppingBag, Plus, Minus, Share2, Shield, Truck, RotateCcw, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, Heart, ShoppingBag, Plus, Minus, Share2, Shield, Truck, RotateCcw, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import Breadcrumb from "@/components/ui/breadcrumb";
+import dynamic from 'next/dynamic';
+
+// Importar Breadcrumb dinámicamente para evitar problemas de SSR
+const Breadcrumb = dynamic(() => import("@/components/ui/breadcrumb"), { 
+    ssr: false 
+});
 
 // Simulando datos del producto basándose en el ID
 const getProductById = (id: string) => {
@@ -279,18 +284,20 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
                                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                     <Button
-                                        variant="outline"
                                         size="lg"
                                         onClick={() => setIsWishlisted(!isWishlisted)}
-                                        className="h-12 w-12 p-0 border-2 border-[#4A6741] hover:bg-[#4A6741] hover:text-white group relative shadow-md"
+                                        className="h-12 w-12 p-0 bg-[#4A6741] hover:bg-[#3F5D4C] text-white group relative shadow-md flex items-center justify-center border-0"
                                         title="Añadir a favoritos"
                                     >
                                         <Heart
-                                            className={`h-5 w-5 stroke-2 transition-colors ${isWishlisted ? 'fill-current text-red-500 group-hover:text-red-400' : 'text-[#4A6741] group-hover:text-white'
-                                                }`}
+                                            className={`h-6 w-6 stroke-2 transition-colors ${
+                                                isWishlisted 
+                                                    ? 'fill-white text-white' 
+                                                    : 'text-white'
+                                            }`}
                                         />
                                         {/* Tooltip mejorado */}
-                                        <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-3 py-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap shadow-lg z-10">
+                                        <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-3 py-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap shadow-lg z-50 pointer-events-none">
                                             {isWishlisted ? 'Quitar de favoritos' : 'Añadir a favoritos'}
                                         </div>
                                     </Button>
@@ -298,14 +305,13 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
                                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                     <Button
-                                        variant="outline"
                                         size="lg"
-                                        className="h-12 w-12 p-0 border-2 border-[#4A6741] hover:bg-[#4A6741] hover:text-white group relative shadow-md text-[#4A6741]"
+                                        className="h-12 w-12 p-0 bg-[#4A6741] hover:bg-[#3F5D4C] text-white group relative shadow-md flex items-center justify-center border-0"
                                         title="Compartir producto"
                                     >
-                                        <Share2 className="h-5 w-5 stroke-2 transition-colors group-hover:text-white" />
+                                        <Share2 className="h-6 w-6 stroke-2 text-white" />
                                         {/* Tooltip mejorado */}
-                                        <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-3 py-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap shadow-lg z-10">
+                                        <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-3 py-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap shadow-lg z-50 pointer-events-none">
                                             Compartir producto
                                         </div>
                                     </Button>

@@ -18,7 +18,7 @@ export default function ContactPage() {
         subject: '',
         message: ''
     });
-    
+
     const heroInView = useInView(heroRef, { once: true, amount: 0.3 });
     const formInView = useInView(formRef, { once: true, amount: 0.2 });
 
@@ -48,8 +48,8 @@ export default function ContactPage() {
 
     const itemVariants = {
         hidden: { opacity: 0, y: 60 },
-        visible: { 
-            opacity: 1, 
+        visible: {
+            opacity: 1,
             y: 0,
             transition: { duration: 0.8 }
         }
@@ -58,12 +58,12 @@ export default function ContactPage() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50">
             {/* Hero Section */}
-            <motion.section 
+            <motion.section
                 ref={heroRef}
                 className="relative pt-24 pb-16 overflow-hidden"
             >
                 <div className="absolute inset-0 bg-gradient-to-br from-[#4A6741]/5 via-transparent to-[#4A6741]/10" />
-                
+
                 <motion.div
                     variants={containerVariants}
                     initial="hidden"
@@ -91,7 +91,7 @@ export default function ContactPage() {
                                     <span className="bg-gradient-to-r from-[#4A6741] to-[#6B8E5A] bg-clip-text text-transparent"> Ayudarte</span>
                                 </h1>
                                 <p className="text-xl text-gray-700 font-medium leading-relaxed">
-                                    ¿Tienes preguntas sobre nuestros productos? ¿Quieres conocer más sobre nuestra historia? 
+                                    ¿Tienes preguntas sobre nuestros productos? ¿Quieres conocer más sobre nuestra historia?
                                     Estamos aquí para escucharte y ayudarte en tu camino hacia la belleza natural.
                                 </p>
                             </div>
@@ -159,30 +159,30 @@ export default function ContactPage() {
                         {/* Decorative Elements */}
                         <motion.div variants={itemVariants} className="relative">
                             <motion.div
-                                animate={{ 
+                                animate={{
                                     rotate: [0, 360],
                                     scale: [1, 1.1, 1]
                                 }}
-                                transition={{ 
-                                    duration: 20, 
-                                    repeat: Infinity, 
-                                    ease: "linear" 
+                                transition={{
+                                    duration: 20,
+                                    repeat: Infinity,
+                                    ease: "linear"
                                 }}
                                 className="absolute top-10 right-10 w-20 h-20 bg-gradient-to-r from-[#4A6741]/20 to-[#6B8E5A]/20 rounded-full blur-xl"
                             />
                             <motion.div
-                                animate={{ 
+                                animate={{
                                     rotate: [360, 0],
                                     scale: [1, 1.2, 1]
                                 }}
-                                transition={{ 
-                                    duration: 15, 
-                                    repeat: Infinity, 
-                                    ease: "linear" 
+                                transition={{
+                                    duration: 15,
+                                    repeat: Infinity,
+                                    ease: "linear"
                                 }}
                                 className="absolute bottom-20 left-10 w-32 h-32 bg-gradient-to-l from-[#4A6741]/15 to-[#6B8E5A]/15 rounded-full blur-2xl"
                             />
-                            
+
                             <Card className="border-0 shadow-2xl bg-gradient-to-br from-white to-gray-50 p-8">
                                 <CardContent className="text-center space-y-6">
                                     <div className="flex justify-center space-x-4">
@@ -219,7 +219,7 @@ export default function ContactPage() {
             </motion.section>
 
             {/* Contact Form Section */}
-            <motion.section 
+            <motion.section
                 ref={formRef}
                 className="py-32 bg-gradient-to-r from-[#4A6741]/5 via-transparent to-[#4A6741]/5"
             >
@@ -238,7 +238,7 @@ export default function ContactPage() {
                         </p>
                     </motion.div>
 
-                    <motion.div 
+                    <motion.div
                         variants={itemVariants}
                         className="max-w-4xl mx-auto"
                     >
@@ -319,7 +319,7 @@ export default function ContactPage() {
                                         />
                                     </motion.div>
 
-                                    <motion.div 
+                                    <motion.div
                                         className="text-center pt-4"
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}

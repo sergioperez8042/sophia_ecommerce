@@ -15,16 +15,63 @@ export default function WishlistPage() {
 
     // Cargar favoritos del localStorage
     useEffect(() => {
-        const savedWishlist = localStorage.getItem('sophia_wishlist');
-        if (savedWishlist) {
-            setWishlistItems(JSON.parse(savedWishlist));
-        }
+        const loadWishlist = () => {
+            try {
+                const savedWishlist = localStorage.getItem('sophia_wishlist');
+                if (savedWishlist) {
+                    const parsedWishlist = JSON.parse(savedWishlist);
+                    setWishlistItems(parsedWishlist);
+                } else {
+                    setWishlistItems([]);
+                }
+            } catch (error) {
+                console.error('Error loading wishlist:', error);
+                setWishlistItems([]);
+            }
+        };
+
+        // Cargar inicialmente
+        loadWishlist();
+
+        // Escuchar el evento personalizado de cambios en wishlist
+        const handleWishlistChange = () => {
+            loadWishlist();
+        };
+
+        window.addEventListener('wishlistChanged', handleWishlistChange);
+
+        // Recargar cuando la página recupera el foco (navegación entre páginas)
+        const handleFocus = () => {
+            loadWishlist();
+        };
+
+        const handleVisibilityChange = () => {
+            if (!document.hidden) {
+                loadWishlist();
+            }
+        };
+
+        window.addEventListener('focus', handleFocus);
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        // Polling ligero como fallback
+        const interval = setInterval(loadWishlist, 3000);
+
+        return () => {
+            window.removeEventListener('wishlistChanged', handleWishlistChange);
+            window.removeEventListener('focus', handleFocus);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            clearInterval(interval);
+        };
     }, []);
 
     const removeFromWishlist = (id: string) => {
         const updatedWishlist = wishlistItems.filter(item => item.id !== id);
         setWishlistItems(updatedWishlist);
         localStorage.setItem('sophia_wishlist', JSON.stringify(updatedWishlist));
+        
+        // Disparar evento personalizado para notificar cambios
+        window.dispatchEvent(new CustomEvent('wishlistChanged'));
     };
 
     const containerVariants = {
@@ -125,7 +172,7 @@ export default function WishlistPage() {
                         >
                             {wishlistItems.map((product, index) => (
                                 <motion.div
-                                    key={product.id}
+                                    key={`wishlist-${product.id}-${index}`}
                                     variants={itemVariants}
                                     exit="exit"
                                     layout
@@ -151,8 +198,8 @@ export default function WishlistPage() {
                                             >
                                                 <Link href={`/products/${product.id}`}>
                                                     <Image
-                                                        src={product.image}
-                                                        alt={product.name}
+                                                        src={product.image_url || product.image || 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop'}
+                                                        alt={product.name || 'Producto'}
                                                         fill
                                                         className="object-cover transition-transform duration-300 group-hover:scale-105"
                                                     />
@@ -161,7 +208,7 @@ export default function WishlistPage() {
                                                 {/* Badge de categoría */}
                                                 <div className="absolute top-3 left-3">
                                                     <Badge variant="secondary" className="bg-[#4A6741]/90 text-white font-semibold">
-                                                        {product.category}
+                                                        {product.category || product.category_name || 'Producto'}
                                                     </Badge>
                                                 </div>
                                             </motion.div>
@@ -173,12 +220,12 @@ export default function WishlistPage() {
                                                         className="text-xl font-bold text-[#4A6741] mb-2 hover:text-[#3F5D4C] transition-colors cursor-pointer"
                                                         whileHover={{ scale: 1.02 }}
                                                     >
-                                                        {product.name}
+                                                        {product.name || 'Producto Sin Nombre'}
                                                     </motion.h3>
                                                 </Link>
 
                                                 <p className="text-gray-700 font-medium mb-4 line-clamp-2">
-                                                    {product.description}
+                                                    {product.description || 'Sin descripción disponible'}
                                                 </p>
 
                                                 {/* Rating */}
@@ -187,33 +234,33 @@ export default function WishlistPage() {
                                                         {[...Array(5)].map((_, i) => (
                                                             <Star
                                                                 key={i}
-                                                                className={`h-4 w-4 ${i < Math.floor(product.rating)
-                                                                        ? 'text-yellow-500 fill-yellow-400'
-                                                                        : 'text-gray-300 fill-gray-200'
+                                                                className={`h-4 w-4 ${i < Math.floor(product.rating || 0)
+                                                                    ? 'text-yellow-500 fill-yellow-400'
+                                                                    : 'text-gray-300 fill-gray-200'
                                                                     }`}
                                                             />
                                                         ))}
                                                     </div>
-                                                    <span className="text-sm font-bold text-gray-900">{product.rating}</span>
-                                                    <span className="text-sm text-gray-600 font-medium">({product.reviews} reseñas)</span>
+                                                    <span className="text-sm font-bold text-gray-900">{product.rating || 0}</span>
+                                                    <span className="text-sm text-gray-600 font-medium">({product.reviews || 0} reseñas)</span>
                                                 </div>
 
                                                 {/* Precio */}
                                                 <div className="flex items-center justify-between mb-4">
                                                     <div className="flex items-center gap-2">
-                                                        <span className="text-2xl font-bold text-[#4A6741]">${product.price}</span>
-                                                        {product.originalPrice > product.price && (
-                                                            <span className="text-lg text-gray-500 line-through">${product.originalPrice}</span>
+                                                        <span className="text-2xl font-bold text-[#4A6741]">€{(product.price || 0).toFixed(2)}</span>
+                                                        {(product.originalPrice || product.compare_price) && (product.originalPrice || product.compare_price) > product.price && (
+                                                            <span className="text-lg text-gray-500 line-through">€{((product.originalPrice || product.compare_price) || 0).toFixed(2)}</span>
                                                         )}
                                                     </div>
                                                     <Badge
                                                         variant="secondary"
-                                                        className={`${product.inStock
+                                                        className={`${(product.inStock !== false && (product.stock === undefined || product.stock > 0))
                                                             ? 'bg-green-100 text-green-800'
                                                             : 'bg-red-100 text-red-800'
                                                             } font-semibold`}
                                                     >
-                                                        {product.inStock ? 'En stock' : 'Agotado'}
+                                                        {(product.inStock !== false && (product.stock === undefined || product.stock > 0)) ? 'En stock' : 'Agotado'}
                                                     </Badge>
                                                 </div>
 
@@ -222,10 +269,10 @@ export default function WishlistPage() {
                                                     <Link href={`/products/${product.id}`} className="flex-1">
                                                         <Button
                                                             className="w-full bg-[#4A6741] hover:bg-[#3F5D4C] text-white font-bold shadow-md"
-                                                            disabled={!product.inStock}
+                                                            disabled={product.inStock === false || (product.stock !== undefined && product.stock <= 0)}
                                                         >
                                                             <ShoppingBag className="h-4 w-4 mr-2" />
-                                                            {product.inStock ? 'Ver Producto' : 'No Disponible'}
+                                                            {(product.inStock !== false && (product.stock === undefined || product.stock > 0)) ? 'Ver Producto' : 'No Disponible'}
                                                         </Button>
                                                     </Link>
 
