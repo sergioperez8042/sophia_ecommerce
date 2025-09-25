@@ -198,7 +198,7 @@ export default function ProductsPage() {
     e.stopPropagation();
 
     console.log('Adding to cart:', product);
-    
+
     setAddingToCart(product.id);
 
     try {
@@ -214,14 +214,14 @@ export default function ProductsPage() {
 
       localStorage.setItem('sophia_cart', JSON.stringify(currentCart));
       console.log('Cart updated:', currentCart);
-      
+
       window.dispatchEvent(new Event('cartUpdate'));
-      
+
       // Dar feedback visual por 1 segundo
       setTimeout(() => {
         setAddingToCart(null);
       }, 1000);
-      
+
     } catch (error) {
       console.error('Error adding to cart:', error);
       setAddingToCart(null);
@@ -235,15 +235,15 @@ export default function ProductsPage() {
       try {
         const wishlistProducts = JSON.parse(savedWishlist);
         // Filtrar solo objetos válidos con id
-        const validProducts = wishlistProducts.filter((item: any) => 
+        const validProducts = wishlistProducts.filter((item: any) =>
           item && typeof item === 'object' && item.id
         );
-        
+
         // Si había datos corruptos, limpiar el localStorage
         if (validProducts.length !== wishlistProducts.length) {
           localStorage.setItem('sophia_wishlist', JSON.stringify(validProducts));
         }
-        
+
         setWishlistItems(validProducts.map((item: any) => item.id));
         console.log('Loaded wishlist items:', validProducts.map((item: any) => item.id));
       } catch (error) {
@@ -262,9 +262,9 @@ export default function ProductsPage() {
 
     const savedWishlist = localStorage.getItem('sophia_wishlist');
     let currentWishlist = savedWishlist ? JSON.parse(savedWishlist) : [];
-    
+
     // Limpiar datos corruptos - solo mantener objetos válidos
-    currentWishlist = currentWishlist.filter((item: any) => 
+    currentWishlist = currentWishlist.filter((item: any) =>
       item && typeof item === 'object' && item.id
     );
 
@@ -592,7 +592,7 @@ export default function ProductsPage() {
                           <Badge variant="secondary" className="text-xs bg-[#4A6741]/10 text-[#4A6741]">
                             {product.category}
                           </Badge>
-                          
+
                           {/* Botón de favoritos al lado del badge */}
                           <button
                             onClick={(e) => {
@@ -604,8 +604,8 @@ export default function ProductsPage() {
                           >
                             <Heart
                               className={`h-5 w-5 transition-all duration-200 ${wishlistItems.includes(product.id)
-                                  ? 'text-red-500 fill-red-500'
-                                  : 'text-gray-400 hover:text-red-500 group-hover/heart:scale-110'
+                                ? 'text-red-500 fill-red-500'
+                                : 'text-gray-400 hover:text-red-500 group-hover/heart:scale-110'
                                 }`}
                             />
                           </button>
@@ -644,17 +644,16 @@ export default function ProductsPage() {
                         </div>
 
                         <Button
-                          className={`w-full font-semibold transition-all duration-200 ${
-                            addingToCart === product.id 
-                              ? 'bg-green-600 hover:bg-green-700' 
+                          className={`w-full font-semibold transition-all duration-200 ${addingToCart === product.id
+                              ? 'bg-green-600 hover:bg-green-700'
                               : 'bg-[#4A6741] hover:bg-[#3F5D4C]'
-                          } text-white`}
+                            } text-white`}
                           disabled={!product.inStock || addingToCart === product.id}
                           onClick={(e) => addToCart(product, e)}
                         >
                           <ShoppingBag className="h-4 w-4 mr-2" />
-                          {addingToCart === product.id 
-                            ? '¡Agregado!' 
+                          {addingToCart === product.id
+                            ? '¡Agregado!'
                             : (product.inStock ? 'Agregar al carrito' : 'No disponible')
                           }
                         </Button>

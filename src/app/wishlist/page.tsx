@@ -12,7 +12,7 @@ import Breadcrumb from "@/components/ui/breadcrumb";
 
 export default function WishlistPage() {
     const [wishlistItems, setWishlistItems] = useState<any[]>([]);
-    
+
     console.log('WishlistPage component rendered. Current wishlistItems:', wishlistItems);
 
     // Cargar favoritos del localStorage
@@ -22,7 +22,7 @@ export default function WishlistPage() {
                 console.log('Loading wishlist from localStorage...');
                 const savedWishlist = localStorage.getItem('sophia_wishlist');
                 console.log('Raw localStorage data:', savedWishlist);
-                
+
                 if (savedWishlist) {
                     const parsedWishlist = JSON.parse(savedWishlist);
                     console.log('Parsed wishlist:', parsedWishlist);
@@ -193,116 +193,116 @@ export default function WishlistPage() {
                                     >
                                         <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/95 backdrop-blur-sm">
                                             <CardContent className="p-0 relative">
-                                            {/* Botón eliminar */}
-                                            <motion.button
-                                                onClick={() => removeFromWishlist(product.id)}
-                                                className="absolute top-3 right-3 z-10 bg-white/90 hover:bg-white text-gray-600 hover:text-red-500 rounded-full p-2 shadow-md transition-all duration-200"
-                                                whileHover={{ scale: 1.1 }}
-                                                whileTap={{ scale: 0.9 }}
-                                            >
-                                                <X className="h-4 w-4" />
-                                            </motion.button>
+                                                {/* Botón eliminar */}
+                                                <motion.button
+                                                    onClick={() => removeFromWishlist(product.id)}
+                                                    className="absolute top-3 right-3 z-10 bg-white/90 hover:bg-white text-gray-600 hover:text-red-500 rounded-full p-2 shadow-md transition-all duration-200"
+                                                    whileHover={{ scale: 1.1 }}
+                                                    whileTap={{ scale: 0.9 }}
+                                                >
+                                                    <X className="h-4 w-4" />
+                                                </motion.button>
 
-                                            {/* Imagen del producto */}
-                                            <motion.div
-                                                className="relative aspect-square bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden"
-                                                whileHover={{ scale: 1.02 }}
-                                                transition={{ duration: 0.3 }}
-                                            >
-                                                <Link href={`/products/${product.id}`}>
-                                                    <Image
-                                                        src={product.image || product.image_url || '/product1.png'}
-                                                        alt={product.name || 'Producto'}
-                                                        fill
-                                                        className="object-cover transition-transform duration-300 group-hover:scale-105"
-                                                    />
-                                                </Link>
-
-                                                {/* Badge de categoría */}
-                                                <div className="absolute top-3 left-3">
-                                                    <Badge variant="secondary" className="bg-[#4A6741]/90 text-white font-semibold">
-                                                        {product.category || product.category_name || 'Producto'}
-                                                    </Badge>
-                                                </div>
-                                            </motion.div>
-
-                                            {/* Información del producto */}
-                                            <div className="p-6">
-                                                <Link href={`/products/${product.id}`}>
-                                                    <motion.h3
-                                                        className="text-xl font-bold text-[#4A6741] mb-2 hover:text-[#3F5D4C] transition-colors cursor-pointer"
-                                                        whileHover={{ scale: 1.02 }}
-                                                    >
-                                                        {product.name || 'Producto Sin Nombre'}
-                                                    </motion.h3>
-                                                </Link>
-
-                                                <p className="text-gray-700 font-medium mb-4 line-clamp-2">
-                                                    {product.description || 'Sin descripción disponible'}
-                                                </p>
-
-                                                {/* Rating */}
-                                                <div className="flex items-center gap-2 mb-4">
-                                                    <div className="flex items-center">
-                                                        {[...Array(5)].map((_, i) => (
-                                                            <Star
-                                                                key={i}
-                                                                className={`h-4 w-4 ${i < Math.floor(product.rating || 0)
-                                                                    ? 'text-yellow-500 fill-yellow-400'
-                                                                    : 'text-gray-300 fill-gray-200'
-                                                                    }`}
-                                                            />
-                                                        ))}
-                                                    </div>
-                                                    <span className="text-sm font-bold text-gray-900">{product.rating || 0}</span>
-                                                    <span className="text-sm text-gray-600 font-medium">({product.reviews || 0} reseñas)</span>
-                                                </div>
-
-                                                {/* Precio */}
-                                                <div className="flex items-center justify-between mb-4">
-                                                    <div className="flex items-center gap-2">
-                                                        <span className="text-2xl font-bold text-[#4A6741]">€{(product.price || 0).toFixed(2)}</span>
-                                                        {(product.originalPrice || product.compare_price) && (product.originalPrice || product.compare_price) > product.price && (
-                                                            <span className="text-lg text-gray-500 line-through">€{((product.originalPrice || product.compare_price) || 0).toFixed(2)}</span>
-                                                        )}
-                                                    </div>
-                                                    <Badge
-                                                        variant="secondary"
-                                                        className={`${(product.inStock !== false && (product.stock === undefined || product.stock > 0))
-                                                            ? 'bg-green-100 text-green-800'
-                                                            : 'bg-red-100 text-red-800'
-                                                            } font-semibold`}
-                                                    >
-                                                        {(product.inStock !== false && (product.stock === undefined || product.stock > 0)) ? 'En stock' : 'Agotado'}
-                                                    </Badge>
-                                                </div>
-
-                                                {/* Botones de acción */}
-                                                <div className="flex gap-2">
-                                                    <Link href={`/products/${product.id}`} className="flex-1">
-                                                        <Button
-                                                            className="w-full bg-[#4A6741] hover:bg-[#3F5D4C] text-white font-bold shadow-md"
-                                                            disabled={product.inStock === false || (product.stock !== undefined && product.stock <= 0)}
-                                                        >
-                                                            <ShoppingBag className="h-4 w-4 mr-2" />
-                                                            {(product.inStock !== false && (product.stock === undefined || product.stock > 0)) ? 'Ver Producto' : 'No Disponible'}
-                                                        </Button>
+                                                {/* Imagen del producto */}
+                                                <motion.div
+                                                    className="relative aspect-square bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden"
+                                                    whileHover={{ scale: 1.02 }}
+                                                    transition={{ duration: 0.3 }}
+                                                >
+                                                    <Link href={`/products/${product.id}`}>
+                                                        <Image
+                                                            src={product.image || product.image_url || '/product1.png'}
+                                                            alt={product.name || 'Producto'}
+                                                            fill
+                                                            className="object-cover transition-transform duration-300 group-hover:scale-105"
+                                                        />
                                                     </Link>
 
-                                                    <motion.button
-                                                        onClick={() => removeFromWishlist(product.id)}
-                                                        className="p-3 border-2 border-red-200 text-red-500 hover:bg-red-50 hover:border-red-300 rounded-md transition-colors"
-                                                        whileHover={{ scale: 1.05 }}
-                                                        whileTap={{ scale: 0.95 }}
-                                                        title="Quitar de favoritos"
-                                                    >
-                                                        <Heart className="h-4 w-4 fill-current" />
-                                                    </motion.button>
+                                                    {/* Badge de categoría */}
+                                                    <div className="absolute top-3 left-3">
+                                                        <Badge variant="secondary" className="bg-[#4A6741]/90 text-white font-semibold">
+                                                            {product.category || product.category_name || 'Producto'}
+                                                        </Badge>
+                                                    </div>
+                                                </motion.div>
+
+                                                {/* Información del producto */}
+                                                <div className="p-6">
+                                                    <Link href={`/products/${product.id}`}>
+                                                        <motion.h3
+                                                            className="text-xl font-bold text-[#4A6741] mb-2 hover:text-[#3F5D4C] transition-colors cursor-pointer"
+                                                            whileHover={{ scale: 1.02 }}
+                                                        >
+                                                            {product.name || 'Producto Sin Nombre'}
+                                                        </motion.h3>
+                                                    </Link>
+
+                                                    <p className="text-gray-700 font-medium mb-4 line-clamp-2">
+                                                        {product.description || 'Sin descripción disponible'}
+                                                    </p>
+
+                                                    {/* Rating */}
+                                                    <div className="flex items-center gap-2 mb-4">
+                                                        <div className="flex items-center">
+                                                            {[...Array(5)].map((_, i) => (
+                                                                <Star
+                                                                    key={i}
+                                                                    className={`h-4 w-4 ${i < Math.floor(product.rating || 0)
+                                                                        ? 'text-yellow-500 fill-yellow-400'
+                                                                        : 'text-gray-300 fill-gray-200'
+                                                                        }`}
+                                                                />
+                                                            ))}
+                                                        </div>
+                                                        <span className="text-sm font-bold text-gray-900">{product.rating || 0}</span>
+                                                        <span className="text-sm text-gray-600 font-medium">({product.reviews || 0} reseñas)</span>
+                                                    </div>
+
+                                                    {/* Precio */}
+                                                    <div className="flex items-center justify-between mb-4">
+                                                        <div className="flex items-center gap-2">
+                                                            <span className="text-2xl font-bold text-[#4A6741]">€{(product.price || 0).toFixed(2)}</span>
+                                                            {(product.originalPrice || product.compare_price) && (product.originalPrice || product.compare_price) > product.price && (
+                                                                <span className="text-lg text-gray-500 line-through">€{((product.originalPrice || product.compare_price) || 0).toFixed(2)}</span>
+                                                            )}
+                                                        </div>
+                                                        <Badge
+                                                            variant="secondary"
+                                                            className={`${(product.inStock !== false && (product.stock === undefined || product.stock > 0))
+                                                                ? 'bg-green-100 text-green-800'
+                                                                : 'bg-red-100 text-red-800'
+                                                                } font-semibold`}
+                                                        >
+                                                            {(product.inStock !== false && (product.stock === undefined || product.stock > 0)) ? 'En stock' : 'Agotado'}
+                                                        </Badge>
+                                                    </div>
+
+                                                    {/* Botones de acción */}
+                                                    <div className="flex gap-2">
+                                                        <Link href={`/products/${product.id}`} className="flex-1">
+                                                            <Button
+                                                                className="w-full bg-[#4A6741] hover:bg-[#3F5D4C] text-white font-bold shadow-md"
+                                                                disabled={product.inStock === false || (product.stock !== undefined && product.stock <= 0)}
+                                                            >
+                                                                <ShoppingBag className="h-4 w-4 mr-2" />
+                                                                {(product.inStock !== false && (product.stock === undefined || product.stock > 0)) ? 'Ver Producto' : 'No Disponible'}
+                                                            </Button>
+                                                        </Link>
+
+                                                        <motion.button
+                                                            onClick={() => removeFromWishlist(product.id)}
+                                                            className="p-3 border-2 border-red-200 text-red-500 hover:bg-red-50 hover:border-red-300 rounded-md transition-colors"
+                                                            whileHover={{ scale: 1.05 }}
+                                                            whileTap={{ scale: 0.95 }}
+                                                            title="Quitar de favoritos"
+                                                        >
+                                                            <Heart className="h-4 w-4 fill-current" />
+                                                        </motion.button>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
-                                </motion.div>
+                                            </CardContent>
+                                        </Card>
+                                    </motion.div>
                                 ))
                             )}
                         </motion.div>

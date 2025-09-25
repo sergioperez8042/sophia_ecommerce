@@ -47,18 +47,19 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
         e.stopPropagation();
 
         const savedWishlist = localStorage.getItem('sophia_wishlist');
-        let currentWishlist = savedWishlist ? JSON.parse(savedWishlist) : [];
+        const currentWishlist = savedWishlist ? JSON.parse(savedWishlist) : [];
 
         const existingIndex = currentWishlist.findIndex((item: any) => item.id === product.id);
+        let updatedWishlist;
 
         if (existingIndex >= 0) {
-            currentWishlist.splice(existingIndex, 1);
+            updatedWishlist = currentWishlist.filter((item: any) => item.id !== product.id);
         } else {
-            currentWishlist.push(product);
+            updatedWishlist = [...currentWishlist, product];
         }
 
-        localStorage.setItem('sophia_wishlist', JSON.stringify(currentWishlist));
-        setWishlist(currentWishlist);
+        localStorage.setItem('sophia_wishlist', JSON.stringify(updatedWishlist));
+        setWishlist(updatedWishlist);
 
         // Disparar evento personalizado
         window.dispatchEvent(new CustomEvent('wishlistChanged'));
