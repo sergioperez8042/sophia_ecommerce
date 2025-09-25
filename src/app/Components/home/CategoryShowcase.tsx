@@ -49,7 +49,7 @@ export default function CategoryShowcase({ categories, isLoading }: CategoryShow
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                         Explora por categorías
                     </h2>
-                    <p className="text-xl text-gray-600">
+                    <p className="text-xl text-gray-800">
                         Encuentra productos específicos para cada necesidad de tu piel
                     </p>
                 </motion.div>
@@ -78,10 +78,10 @@ export default function CategoryShowcase({ categories, isLoading }: CategoryShow
                                     </div>
 
                                     <CardContent className="p-6">
-                                        <h3 className="font-semibold text-lg text-gray-900 mb-2 group-hover:text-[#87A96B] transition-colors">
+                                        <h3 className="font-semibold text-lg text-gray-900 mb-2 group-hover:text-[#4A6741] transition-colors">
                                             {category.name}
                                         </h3>
-                                        <p className="text-gray-600 text-sm">
+                                        <p className="text-gray-700 text-sm">
                                             {category.description || 'Descubre nuestra selección de productos naturales'}
                                         </p>
                                     </CardContent>

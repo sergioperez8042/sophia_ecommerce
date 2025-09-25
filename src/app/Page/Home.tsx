@@ -42,7 +42,7 @@ export default function HomePage() {
     };
 
     return (
-        <div className="min-h-screen">
+        <main className="min-h-screen">
             {/* Hero Section */}
             <section className="hero-gradient py-16 md:py-24">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -53,7 +53,7 @@ export default function HomePage() {
                             transition={{ duration: 0.8 }}
                         >
                             <div className="flex items-center gap-2 mb-6">
-                                <Badge className="bg-[#87A96B]/10 text-[#87A96B] border-[#87A96B]/20">
+                                <Badge className="bg-[#4A6741]/10 text-[#4A6741] border-[#4A6741]/20">
                                     <Leaf className="w-3 h-3 mr-1" />
                                     100% Natural
                                 </Badge>
@@ -61,10 +61,10 @@ export default function HomePage() {
 
                             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 leading-tight mb-6">
                                 Belleza natural
-                                <span className="block text-[#87A96B]">para tu piel</span>
+                                <span className="block text-[#4A6741]">para tu piel</span>
                             </h1>
 
-                            <p className="text-xl text-gray-600 leading-relaxed mb-8 max-w-xl">
+                            <p className="text-xl text-gray-800 leading-relaxed mb-8 max-w-xl">
                                 Descubre nuestra colección de cosméticos artesanales,
                                 elaborados con ingredientes orgánicos seleccionados para
                                 nutrir y cuidar tu piel de forma natural.
@@ -72,13 +72,13 @@ export default function HomePage() {
 
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <Link href="/products">
-                                    <Button size="lg" className="bg-[#87A96B] hover:bg-[#6B8A78] text-white px-8 py-3 text-lg">
+                                    <Button size="lg" className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white px-8 py-3 text-lg">
                                         Explorar productos
                                         <ArrowRight className="w-5 h-5 ml-2" />
                                     </Button>
                                 </Link>
                                 <Link href="/about">
-                                    <Button variant="outline" size="lg" className="border-[#87A96B] text-[#87A96B] hover:bg-[#87A96B] hover:text-white px-8 py-3 text-lg">
+                                    <Button variant="outline" size="lg" className="border-[#4A6741] text-[#4A6741] hover:bg-[#4A6741] hover:text-white px-8 py-3 text-lg">
                                         Nuestra historia
                                     </Button>
                                 </Link>
@@ -104,7 +104,7 @@ export default function HomePage() {
 
                             {/* Floating elements */}
                             <div className="absolute -top-4 -right-4 w-20 h-20 rounded-full bg-[#87A96B]/20 blur-xl"></div>
-                            <div className="absolute -bottom-4 -left-4 w-32 h-32 rounded-full bg-[#D4AF37]/10 blur-2xl"></div>
+                            <div className="absolute -bottom-4 -left-4 w-32 h-32 rounded-full bg-[#B8941F]/10 blur-2xl"></div>
                         </motion.div>
                     </div>
                 </div>
@@ -120,7 +120,7 @@ export default function HomePage() {
             <CategoryShowcase categories={categories} isLoading={isLoading} />
 
             {/* Newsletter Section */}
-            <section className="py-16 bg-gradient-to-r from-[#87A96B] to-[#6B8A78]">
+            <section className="py-16 bg-gradient-to-r from-[#4A6741] to-[#3F5D4C]">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -132,7 +132,7 @@ export default function HomePage() {
                         <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
                             Suscríbete a nuestro newsletter
                         </h2>
-                        <p className="text-xl text-white/90 mb-8">
+                        <p className="text-xl text-white/95 mb-8">
                             Recibe consejos de belleza natural y ofertas exclusivas
                         </p>
 
@@ -140,15 +140,15 @@ export default function HomePage() {
                             <input
                                 type="email"
                                 placeholder="Tu email"
-                                className="flex-1 px-6 py-3 rounded-lg border-0 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-white/50"
+                                className="flex-1 px-6 py-3 rounded-lg border-0 text-gray-900 placeholder-gray-600 focus:ring-2 focus:ring-white/50"
                             />
-                            <Button className="bg-white text-[#87A96B] hover:bg-gray-100 px-8 py-3">
+                            <Button className="bg-white text-[#4A6741] hover:bg-gray-100 px-8 py-3 font-semibold">
                                 Suscribirme
                             </Button>
                         </div>
                     </motion.div>
                 </div>
             </section>
-        </div>
+        </main>
     );
 }

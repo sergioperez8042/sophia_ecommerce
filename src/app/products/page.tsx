@@ -134,7 +134,7 @@ const products = [
             >
                 {/* Animated background elements */}
                 <motion.div
-                    className="absolute top-10 left-20 w-24 h-24 rounded-full bg-[#87A96B]/10 blur-2xl"
+                    className="absolute top-10 left-20 w-24 h-24 rounded-full bg-[#4A6741]/10 blur-2xl"
                     animate={{
                         scale: [1, 1.3, 1],
                         opacity: [0.2, 0.5, 0.2],
@@ -175,7 +175,7 @@ const products = [
                             Nuestros Productos
                         </motion.h1>
                         <motion.p
-                            className="text-xl text-gray-600 max-w-3xl mx-auto"
+                            className="text-xl text-gray-800 max-w-3xl mx-auto"
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: 0.6 }}
@@ -208,7 +208,7 @@ const products = [
                                 placeholder="Buscar productos..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="pl-10 pr-4 py-2 w-full focus:ring-2 focus:ring-[#87A96B] transition-all duration-200"
+                                className="pl-10 pr-4 py-2 w-full focus:ring-2 focus:ring-[#4A6741] transition-all duration-200"
                             />
                         </motion.div>
 
@@ -222,7 +222,7 @@ const products = [
                             <motion.select
                                 value={selectedCategory}
                                 onChange={(e) => setSelectedCategory(e.target.value)}
-                                className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#87A96B] transition-all duration-200"
+                                className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4A6741] transition-all duration-200"
                                 whileHover={{ scale: 1.02 }}
                                 whileFocus={{ scale: 1.02 }}
                             >
@@ -235,7 +235,7 @@ const products = [
                             <motion.select
                                 value={sortBy}
                                 onChange={(e) => setSortBy(e.target.value)}
-                                className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#87A96B] transition-all duration-200"
+                                className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4A6741] transition-all duration-200"
                                 whileHover={{ scale: 1.02 }}
                                 whileFocus={{ scale: 1.02 }}
                             >
@@ -254,7 +254,7 @@ const products = [
                                         variant={viewMode === 'grid' ? 'default' : 'outline'}
                                         size="sm"
                                         onClick={() => setViewMode('grid')}
-                                        className={viewMode === 'grid' ? 'bg-[#87A96B] hover:bg-[#6B8A78]' : ''}
+                                        className={viewMode === 'grid' ? 'bg-[#4A6741] hover:bg-[#3F5D4C]' : ''}
                                     >
                                         <Grid className="w-4 h-4" />
                                     </Button>
@@ -267,7 +267,7 @@ const products = [
                                         variant={viewMode === 'list' ? 'default' : 'outline'}
                                         size="sm"
                                         onClick={() => setViewMode('list')}
-                                        className={viewMode === 'list' ? 'bg-[#87A96B] hover:bg-[#6B8A78]' : ''}
+                                        className={viewMode === 'list' ? 'bg-[#4A6741] hover:bg-[#3F5D4C]' : ''}
                                     >
                                         <List className="w-4 h-4" />
                                     </Button>
@@ -366,7 +366,7 @@ const products = [
                                                         transition={{ duration: 0.3, delay: index * 0.1 + 0.6 }}
                                                         className="absolute top-3 right-3"
                                                     >
-                                                        <Badge className="bg-[#87A96B] text-white">
+                                                        <Badge className="bg-[#4A6741] text-white">
                                                             Bestseller
                                                         </Badge>
                                                     </motion.div>
@@ -405,7 +405,7 @@ const products = [
                                                             whileHover={{ scale: 1, rotate: 0 }}
                                                             transition={{ duration: 0.3, delay: 0.1 }}
                                                         >
-                                                            <Button size="sm" className="bg-[#87A96B] hover:bg-[#6B8A78] text-white">
+                                                            <Button size="sm" className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white">
                                                                 <ShoppingBag className="w-4 h-4" />
                                                             </Button>
                                                         </motion.div>
@@ -435,7 +435,7 @@ const products = [
                                                 </motion.div>
 
                                                 <motion.h3
-                                                    className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-[#87A96B] transition-colors"
+                                                    className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-[#4A6741] transition-colors"
                                                     initial={{ opacity: 0, x: -20 }}
                                                     animate={{ opacity: 1, x: 0 }}
                                                     transition={{ duration: 0.4, delay: index * 0.1 + 0.8 }}
@@ -444,7 +444,7 @@ const products = [
                                                 </motion.h3>
 
                                                 <motion.p
-                                                    className="text-gray-600 text-sm mb-4 line-clamp-2"
+                                                    className="text-gray-700 text-sm mb-4 line-clamp-2"
                                                     initial={{ opacity: 0, x: -20 }}
                                                     animate={{ opacity: 1, x: 0 }}
                                                     transition={{ duration: 0.4, delay: index * 0.1 + 0.9 }}
@@ -460,7 +460,7 @@ const products = [
                                                 >
                                                     <div className="flex items-center gap-2">
                                                         <motion.span
-                                                            className="text-xl font-bold text-[#87A96B]"
+                                                            className="text-xl font-bold text-[#4A6741]"
                                                             whileHover={{ scale: 1.1 }}
                                                             transition={{ duration: 0.2 }}
                                                         >
@@ -468,7 +468,7 @@ const products = [
                                                         </motion.span>
                                                         {product.originalPrice && (
                                                             <motion.span
-                                                                className="text-sm text-gray-500 line-through"
+                                                                className="text-sm text-gray-600 line-through"
                                                                 initial={{ opacity: 0 }}
                                                                 animate={{ opacity: 1 }}
                                                                 transition={{ duration: 0.3, delay: index * 0.1 + 1.1 }}
@@ -485,7 +485,7 @@ const products = [
                                                         >
                                                             <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                                                         </motion.div>
-                                                        <span className="text-sm text-gray-600">
+                                                        <span className="text-sm text-gray-700">
                                                             {product.rating} ({product.reviews})
                                                         </span>
                                                     </div>
@@ -499,7 +499,7 @@ const products = [
                                                     whileTap={{ scale: 0.98 }}
                                                 >
                                                     <Button
-                                                        className="w-full bg-[#87A96B] hover:bg-[#6B8A78] text-white"
+                                                        className="w-full bg-[#4A6741] hover:bg-[#3F5D4C] text-white"
                                                         size="sm"
                                                     >
                                                         <motion.div
@@ -567,12 +567,12 @@ const products = [
                                                         <Badge className="bg-green-500 text-white text-xs">Nuevo</Badge>
                                                     )}
                                                     {product.isBestseller && (
-                                                        <Badge className="bg-[#87A96B] text-white text-xs">Bestseller</Badge>
+                                                        <Badge className="bg-[#4A6741] text-white text-xs">Bestseller</Badge>
                                                     )}
                                                 </motion.div>
 
                                                 <motion.h3
-                                                    className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-[#87A96B] transition-colors"
+                                                    className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-[#4A6741] transition-colors"
                                                     initial={{ opacity: 0, x: -20 }}
                                                     animate={{ opacity: 1, x: 0 }}
                                                     transition={{ duration: 0.4, delay: index * 0.1 + 0.4 }}
@@ -581,7 +581,7 @@ const products = [
                                                 </motion.h3>
 
                                                 <motion.p
-                                                    className="text-gray-600 mb-4 flex-1"
+                                                    className="text-gray-700 mb-4 flex-1"
                                                     initial={{ opacity: 0, x: -20 }}
                                                     animate={{ opacity: 1, x: 0 }}
                                                     transition={{ duration: 0.4, delay: index * 0.1 + 0.5 }}
@@ -598,13 +598,13 @@ const products = [
                                                     <div className="flex items-center gap-4">
                                                         <div className="flex items-center gap-2">
                                                             <motion.span
-                                                                className="text-2xl font-bold text-[#87A96B]"
+                                                                className="text-2xl font-bold text-[#4A6741]"
                                                                 whileHover={{ scale: 1.1 }}
                                                             >
                                                                 €{product.price}
                                                             </motion.span>
                                                             {product.originalPrice && (
-                                                                <span className="text-lg text-gray-500 line-through">
+                                                                <span className="text-lg text-gray-600 line-through">
                                                                     €{product.originalPrice}
                                                                 </span>
                                                             )}
@@ -612,7 +612,7 @@ const products = [
 
                                                         <div className="flex items-center gap-1">
                                                             <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                                                            <span className="text-sm text-gray-600">
+                                                            <span className="text-sm text-gray-700">
                                                                 {product.rating} ({product.reviews} reseñas)
                                                             </span>
                                                         </div>

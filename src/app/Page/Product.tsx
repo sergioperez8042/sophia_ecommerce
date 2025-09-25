@@ -94,7 +94,7 @@ export default function ProductsPage() {
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Nuestros Productos
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-800 max-w-3xl mx-auto">
             Descubre nuestra colección completa de cosméticos naturales,
             cada uno cuidadosamente formulado con ingredientes orgánicos de la más alta calidad.
           </p>
@@ -115,7 +115,7 @@ export default function ProductsPage() {
                 placeholder="Buscar productos..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-12 h-12 text-lg border-gray-200 focus:border-[#87A96B]"
+                className="pl-12 h-12 text-lg border-gray-200 focus:border-[#4A6741]"
               />
             </div>
 
@@ -153,7 +153,7 @@ export default function ProductsPage() {
                 variant={viewMode === "grid" ? "default" : "ghost"}
                 size="icon"
                 onClick={() => setViewMode("grid")}
-                className={viewMode === "grid" ? "bg-[#87A96B] text-white" : ""}
+                className={viewMode === "grid" ? "bg-[#4A6741] text-white" : ""}
               >
                 <Grid className="w-5 h-5" />
               </Button>
@@ -161,7 +161,7 @@ export default function ProductsPage() {
                 variant={viewMode === "list" ? "default" : "ghost"}
                 size="icon"
                 onClick={() => setViewMode("list")}
-                className={viewMode === "list" ? "bg-[#87A96B] text-white" : ""}
+                className={viewMode === "list" ? "bg-[#4A6741] text-white" : ""}
               >
                 <List className="w-5 h-5" />
               </Button>
@@ -170,7 +170,7 @@ export default function ProductsPage() {
 
           {/* Results count */}
           <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
-            <p className="text-gray-600">
+            <p className="text-gray-700">
               Mostrando {filteredProducts.length} de {products.length} productos
             </p>
             {(searchTerm || selectedCategory !== "all") && (

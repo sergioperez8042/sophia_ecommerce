@@ -77,7 +77,7 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
                     No se encontraron productos
                 </h3>
-                <p className="text-gray-600 mb-6">
+                <p className="text-gray-800 mb-6">
                     Intenta ajustar tus filtros o buscar con otros términos
                 </p>
                 <Button variant="outline" onClick={() => window.location.reload()}>
@@ -126,7 +126,7 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                                                 e.stopPropagation();
                                             }}
                                         >
-                                            <Heart className="w-4 h-4 text-gray-600" />
+                                            <Heart className="w-4 h-4 text-gray-700" />
                                         </Button>
                                         <Button
                                             size="icon"
@@ -134,7 +134,7 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                                             className="bg-white/90 hover:bg-white transition-all duration-200"
                                             onClick={(e) => addToCart(product, e)}
                                         >
-                                            <ShoppingBag className="w-4 h-4 text-gray-600" />
+                                            <ShoppingBag className="w-4 h-4 text-gray-700" />
                                         </Button>
                                     </div>
 
@@ -153,16 +153,16 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
 
                                 <CardContent className="p-6">
                                     <div className="mb-2">
-                                        <Badge variant="outline" className="text-[#87A96B] border-[#87A96B]/30 text-xs">
+                                        <Badge variant="outline" className="text-[#4A6741] border-[#4A6741]/30 text-xs">
                                             {product.category_name || 'Sin categoría'}
                                         </Badge>
                                     </div>
 
-                                    <h3 className="font-semibold text-lg text-gray-900 mb-2 group-hover:text-[#87A96B] transition-colors line-clamp-2">
+                                    <h3 className="font-semibold text-lg text-gray-900 mb-2 group-hover:text-[#4A6741] transition-colors line-clamp-2">
                                         {product.name}
                                     </h3>
 
-                                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                                    <p className="text-gray-700 text-sm mb-4 line-clamp-2">
                                         {product.description}
                                     </p>
 
@@ -170,7 +170,7 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                                         {[...Array(5)].map((_, i) => (
                                             <Star key={i} className="w-4 h-4 fill-[#D4AF37] text-[#D4AF37]" />
                                         ))}
-                                        <span className="text-sm text-gray-500 ml-1">(12)</span>
+                                        <span className="text-sm text-gray-700 ml-1">(12)</span>
                                     </div>
 
                                     <div className="flex items-center justify-between">
@@ -179,7 +179,7 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                                                 €{product.price.toFixed(2)}
                                             </span>
                                             {product.compare_price && product.compare_price > product.price && (
-                                                <span className="text-lg text-gray-500 line-through">
+                                                <span className="text-lg text-gray-600 line-through">
                                                     €{product.compare_price.toFixed(2)}
                                                 </span>
                                             )}
@@ -187,7 +187,7 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
 
                                         <Button
                                             onClick={(e) => addToCart(product, e)}
-                                            className="bg-[#87A96B] hover:bg-[#6B8A78] text-white"
+                                            className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white"
                                             disabled={product.stock === 0}
                                         >
                                             <ShoppingBag className="w-4 h-4 mr-2" />
@@ -237,16 +237,16 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                                     <CardContent className="p-6 flex-1 flex justify-between">
                                         <div className="flex-1">
                                             <div className="mb-2">
-                                                <Badge variant="outline" className="text-[#87A96B] border-[#87A96B]/30 text-xs">
+                                                <Badge variant="outline" className="text-[#4A6741] border-[#4A6741]/30 text-xs">
                                                     {product.category_name || 'Sin categoría'}
                                                 </Badge>
                                             </div>
 
-                                            <h3 className="font-semibold text-xl text-gray-900 mb-2 group-hover:text-[#87A96B] transition-colors">
+                                            <h3 className="font-semibold text-xl text-gray-900 mb-2 group-hover:text-[#4A6741] transition-colors">
                                                 {product.name}
                                             </h3>
 
-                                            <p className="text-gray-600 mb-4 line-clamp-2">
+                                            <p className="text-gray-700 mb-4 line-clamp-2">
                                                 {product.description}
                                             </p>
 
@@ -254,7 +254,7 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                                                 {[...Array(5)].map((_, i) => (
                                                     <Star key={i} className="w-4 h-4 fill-[#D4AF37] text-[#D4AF37]" />
                                                 ))}
-                                                <span className="text-sm text-gray-500 ml-1">(12 reseñas)</span>
+                                                <span className="text-sm text-gray-700 ml-1">(12 reseñas)</span>
                                             </div>
                                         </div>
 
@@ -265,7 +265,7 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                                                         €{product.price.toFixed(2)}
                                                     </span>
                                                     {product.compare_price && product.compare_price > product.price && (
-                                                        <span className="text-xl text-gray-500 line-through">
+                                                        <span className="text-xl text-gray-600 line-through">
                                                             €{product.compare_price.toFixed(2)}
                                                         </span>
                                                     )}
@@ -286,7 +286,7 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
 
                                             <Button
                                                 onClick={(e) => addToCart(product, e)}
-                                                className="bg-[#87A96B] hover:bg-[#6B8A78] text-white"
+                                                className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white"
                                                 disabled={product.stock === 0}
                                             >
                                                 <ShoppingBag className="w-4 h-4 mr-2" />

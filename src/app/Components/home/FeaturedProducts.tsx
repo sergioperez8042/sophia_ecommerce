@@ -67,7 +67,7 @@ export default function FeaturedProducts({ products, isLoading }: FeaturedProduc
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                         Productos destacados
                     </h2>
-                    <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                    <p className="text-xl text-gray-800 max-w-2xl mx-auto">
                         Descubre nuestra selección de productos más populares,
                         elaborados con los mejores ingredientes naturales
                     </p>
@@ -101,34 +101,34 @@ export default function FeaturedProducts({ products, isLoading }: FeaturedProduc
                                     <Button
                                         size="icon"
                                         variant="ghost"
-                                        className="absolute top-4 right-4 bg-white/80 hover:bg-white transition-all duration-200 opacity-0 group-hover:opacity-100"
+                                        className="absolute top-4 right-4 bg-white/90 hover:bg-white transition-all duration-200 opacity-0 group-hover:opacity-100"
                                     >
-                                        <Heart className="w-4 h-4 text-gray-600" />
+                                        <Heart className="w-4 h-4 text-gray-700" />
                                     </Button>
                                 </div>
 
                                 <CardContent className="p-6">
                                     <div className="mb-2">
-                                        <Badge variant="outline" className="text-[#87A96B] border-[#87A96B]/30 text-xs">
+                                        <Badge variant="outline" className="text-[#4A6741] border-[#4A6741]/30 text-xs">
                                             {product.category_name || 'Sin categoría'}
                                         </Badge>
                                     </div>
 
                                     <Link href={`/product?id=${product.id}`}>
-                                        <h3 className="font-semibold text-lg text-gray-900 mb-2 hover:text-[#87A96B] transition-colors">
+                                        <h3 className="font-semibold text-lg text-gray-900 mb-2 hover:text-[#4A6741] transition-colors">
                                             {product.name}
                                         </h3>
                                     </Link>
 
-                                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                                    <p className="text-gray-700 text-sm mb-4 line-clamp-2">
                                         {product.description}
                                     </p>
 
                                     <div className="flex items-center gap-1 mb-4">
                                         {[...Array(5)].map((_, i) => (
-                                            <Star key={i} className="w-4 h-4 fill-[#D4AF37] text-[#D4AF37]" />
+                                            <Star key={i} className="w-4 h-4 fill-[#B8941F] text-[#B8941F]" />
                                         ))}
-                                        <span className="text-sm text-gray-500 ml-1">(24)</span>
+                                        <span className="text-sm text-gray-600 ml-1">(24)</span>
                                     </div>
 
                                     <div className="flex items-center justify-between">
@@ -137,7 +137,7 @@ export default function FeaturedProducts({ products, isLoading }: FeaturedProduc
                                                 €{product.price.toFixed(2)}
                                             </span>
                                             {product.compare_price && product.compare_price > product.price && (
-                                                <span className="text-lg text-gray-500 line-through">
+                                                <span className="text-lg text-gray-600 line-through">
                                                     €{product.compare_price.toFixed(2)}
                                                 </span>
                                             )}
@@ -145,7 +145,7 @@ export default function FeaturedProducts({ products, isLoading }: FeaturedProduc
 
                                         <Button
                                             onClick={() => addToCart(product)}
-                                            className="bg-[#87A96B] hover:bg-[#6B8A78] text-white"
+                                            className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white"
                                         >
                                             <ShoppingBag className="w-4 h-4 mr-2" />
                                             Añadir
@@ -165,7 +165,7 @@ export default function FeaturedProducts({ products, isLoading }: FeaturedProduc
                     className="text-center mt-12"
                 >
                     <Link href="/products">
-                        <Button size="lg" variant="outline" className="border-[#87A96B] text-[#87A96B] hover:bg-[#87A96B] hover:text-white">
+                        <Button size="lg" variant="outline" className="border-[#4A6741] text-[#4A6741] hover:bg-[#4A6741] hover:text-white">
                             Ver todos los productos
                         </Button>
                     </Link>

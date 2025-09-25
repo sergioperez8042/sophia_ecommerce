@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white">
+    <main className="min-h-screen bg-white">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 nav-glass">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,7 +23,7 @@ export default function Home() {
               transition={{ duration: 0.6 }}
             >
               <motion.div
-                className="w-10 h-10 rounded-full bg-gradient-to-r from-[#87A96B] to-[#6B8A78] flex items-center justify-center shadow-lg"
+                className="w-10 h-10 rounded-full bg-gradient-to-r from-[#4A6741] to-[#3F5D4C] flex items-center justify-center shadow-lg"
                 whileHover={{ scale: 1.1, rotate: 360 }}
                 transition={{ duration: 0.3 }}
               >
@@ -33,7 +33,7 @@ export default function Home() {
                 <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
                   Sophia
                 </h1>
-                <p className="text-xs text-[#87A96B] font-medium -mt-1">
+                <p className="text-xs text-[#4A6741] font-medium -mt-1">
                   Cosmética Natural
                 </p>
               </div>
@@ -57,8 +57,8 @@ export default function Home() {
                   <Link
                     href={item.href}
                     className={`text-sm font-medium transition-colors ${item.active
-                      ? 'text-[#87A96B] border-b-2 border-[#87A96B] pb-1'
-                      : 'text-gray-600 hover:text-[#87A96B]'
+                      ? 'text-[#4A6741] border-b-2 border-[#4A6741] pb-1'
+                      : 'text-gray-700 hover:text-[#4A6741]'
                       }`}
                   >
                     <motion.span
@@ -85,7 +85,7 @@ export default function Home() {
                 whileTap={{ scale: 0.9 }}
               >
                 <Button variant="ghost" size="icon">
-                  <Heart className="w-5 h-5 text-gray-600" />
+                  <Heart className="w-5 h-5 text-gray-700" />
                 </Button>
               </motion.div>
             </motion.div>
@@ -97,7 +97,7 @@ export default function Home() {
       <section className="hero-gradient py-16 md:py-24 pt-24 relative overflow-hidden">
         {/* Animated background elements */}
         <motion.div
-          className="absolute top-20 left-10 w-32 h-32 rounded-full bg-[#87A96B]/10 blur-3xl"
+          className="absolute top-20 left-10 w-32 h-32 rounded-full bg-[#4A6741]/10 blur-3xl"
           animate={{
             scale: [1, 1.2, 1],
             opacity: [0.3, 0.6, 0.3],
@@ -137,7 +137,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                <Badge className="bg-[#87A96B]/10 text-[#87A96B] border-[#87A96B]/20">
+                <Badge className="bg-[#4A6741]/10 text-[#4A6741] border-[#4A6741]/20">
                   <motion.div
                     animate={{ rotate: [0, 360] }}
                     transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
@@ -156,7 +156,7 @@ export default function Home() {
               >
                 Belleza natural
                 <motion.span
-                  className="block text-[#87A96B]"
+                  className="block text-[#4A6741]"
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.6, delay: 0.8 }}
@@ -166,7 +166,7 @@ export default function Home() {
               </motion.h1>
 
               <motion.p
-                className="text-xl text-gray-600 leading-relaxed mb-8 max-w-xl"
+                className="text-xl text-gray-800 leading-relaxed mb-8 max-w-xl"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
@@ -187,7 +187,7 @@ export default function Home() {
                   whileTap={{ scale: 0.95 }}
                 >
                   <Link href="/products">
-                    <Button size="lg" className="bg-[#87A96B] hover:bg-[#6B8A78] text-white px-8 py-3 text-lg group">
+                    <Button size="lg" className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white px-8 py-3 text-lg group">
                       Explorar productos
                       <motion.div
                         className="ml-2"
@@ -203,7 +203,7 @@ export default function Home() {
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Button variant="outline" size="lg" className="border-[#87A96B] text-[#87A96B] hover:bg-[#87A96B] hover:text-white px-8 py-3 text-lg">
+                  <Button variant="outline" size="lg" className="border-[#4A6741] text-[#4A6741] hover:bg-[#4A6741] hover:text-white px-8 py-3 text-lg">
                     Nuestra historia
                   </Button>
                 </motion.div>
@@ -235,7 +235,7 @@ export default function Home() {
 
               {/* Floating elements with animations */}
               <motion.div
-                className="absolute -top-4 -right-4 w-20 h-20 rounded-full bg-[#87A96B]/20 blur-xl"
+                className="absolute -top-4 -right-4 w-20 h-20 rounded-full bg-[#4A6741]/20 blur-xl"
                 animate={{
                   y: [0, -10, 0],
                   scale: [1, 1.1, 1],
@@ -284,7 +284,7 @@ export default function Home() {
               ¿Por qué elegir Sophia?
             </motion.h2>
             <motion.p
-              className="text-xl text-gray-600 max-w-3xl mx-auto"
+              className="text-xl text-gray-800 max-w-3xl mx-auto"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
@@ -311,7 +311,7 @@ export default function Home() {
                 whileHover={{ y: -10 }}
               >
                 <motion.div
-                  className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-r from-[#87A96B] to-[#6B8A78] flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300"
+                  className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-r from-[#4A6741] to-[#3F5D4C] flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300"
                   whileHover={{
                     scale: 1.1,
                     rotate: [0, -10, 10, -10, 0],
@@ -334,13 +334,13 @@ export default function Home() {
                 </motion.div>
                 <motion.h3
                   className="text-xl font-semibold text-gray-900 mb-3"
-                  whileHover={{ color: "#87A96B" }}
+                  whileHover={{ color: "#4A6741" }}
                   transition={{ duration: 0.2 }}
                 >
                   {item.title}
                 </motion.h3>
                 <motion.p
-                  className="text-gray-600 leading-relaxed"
+                  className="text-gray-700 leading-relaxed"
                   initial={{ opacity: 0.7 }}
                   whileHover={{ opacity: 1 }}
                   transition={{ duration: 0.2 }}
@@ -373,7 +373,7 @@ export default function Home() {
               Productos Destacados
             </motion.h2>
             <motion.p
-              className="text-xl text-gray-600 max-w-3xl mx-auto"
+              className="text-xl text-gray-800 max-w-3xl mx-auto"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
@@ -446,7 +446,7 @@ export default function Home() {
                     </motion.h3>
 
                     <motion.p
-                      className="text-gray-600 mb-4"
+                      className="text-gray-700 mb-4"
                       initial={{ opacity: 0, x: -20 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.4, delay: product.delay + 0.4 }}
@@ -476,7 +476,7 @@ export default function Home() {
                         >
                           <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                         </motion.div>
-                        <span className="text-sm text-gray-600">{product.rating}</span>
+                        <span className="text-sm text-gray-700">{product.rating}</span>
                       </div>
                     </motion.div>
                   </motion.div>
@@ -583,6 +583,6 @@ export default function Home() {
           </motion.div>
         </div>
       </motion.section>
-    </div>
+    </main>
   );
 }

@@ -39,7 +39,7 @@ export default function ValueProposition() {
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                         ¿Por qué elegir Sophia?
                     </h2>
-                    <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                    <p className="text-xl text-gray-800 max-w-3xl mx-auto">
                         Nuestro compromiso con la belleza natural y sostenible nos hace únicos
                     </p>
                 </motion.div>
@@ -56,13 +56,13 @@ export default function ValueProposition() {
                                 transition={{ duration: 0.6, delay: index * 0.1 }}
                                 className="text-center group"
                             >
-                                <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-r from-[#87A96B] to-[#6B8A78] flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
+                                <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-r from-[#4A6741] to-[#3F5D4C] flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
                                     <Icon className="w-8 h-8 text-white" />
                                 </div>
                                 <h3 className="text-xl font-semibold text-gray-900 mb-3">
                                     {value.title}
                                 </h3>
-                                <p className="text-gray-600 leading-relaxed">
+                                <p className="text-gray-700 leading-relaxed">
                                     {value.description}
                                 </p>
                             </motion.div>
