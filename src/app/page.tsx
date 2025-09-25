@@ -567,12 +567,12 @@ export default function Home() {
                 <motion.input
                   type="email"
                   placeholder="Tu email"
-                  className="flex-1 px-4 py-3 rounded-lg border-0 focus:ring-2 focus:ring-white/50 outline-none"
+                  className="flex-1 px-4 py-3 rounded-lg border-2 border-white/30 bg-white text-gray-900 placeholder-gray-600 focus:ring-2 focus:ring-white focus:border-white outline-none transition-colors"
                   whileFocus={{ scale: 1.02 }}
                   transition={{ duration: 0.2 }}
                 />
                 <motion.button
-                  className="px-6 py-3 bg-white text-[#87A96B] font-semibold rounded-lg hover:bg-gray-100 transition-colors"
+                  className="px-6 py-3 bg-white text-[#4A6741] font-semibold rounded-lg hover:bg-gray-100 transition-colors"
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                 >

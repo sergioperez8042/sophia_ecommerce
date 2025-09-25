@@ -140,7 +140,7 @@ export default function HomePage() {
                             <input
                                 type="email"
                                 placeholder="Tu email"
-                                className="flex-1 px-6 py-3 rounded-lg border-0 text-gray-900 placeholder-gray-600 focus:ring-2 focus:ring-white/50"
+                                className="flex-1 px-6 py-3 rounded-lg border-2 border-white/30 bg-white text-gray-900 placeholder-gray-600 focus:ring-2 focus:ring-white focus:border-white transition-colors"
                             />
                             <Button className="bg-white text-[#4A6741] hover:bg-gray-100 px-8 py-3 font-semibold">
                                 Suscribirme
