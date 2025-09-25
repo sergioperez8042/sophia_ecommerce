@@ -1,28 +1,24 @@
 
 import React, { useState, useEffect, useCallback } from "react";
-import { Product, Category } from "@/entities/all";
+import { Product, Category, IProduct, ICategory } from "@/entities/all";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { Search, Filter, Grid, List, Star, Heart, ShoppingBag } from "lucide-react";
-import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { createPageUrl } from "@/lib/utils";
+import { Search, Grid, List } from "lucide-react";
+import { motion } from "framer-motion";
 
 import ProductGrid from "../products/ProductGrid";
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<IProduct[]>([]);
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("name");
   const [viewMode, setViewMode] = useState("grid");
-  const [showFilters, setShowFilters] = useState(false);
 
   const applyFilters = useCallback(() => {
     let filtered = [...products];
@@ -181,7 +177,7 @@ export default function ProductsPage() {
               <div className="flex gap-2">
                 {searchTerm && (
                   <Badge variant="secondary" className="flex items-center gap-1">
-                    Búsqueda: "{searchTerm}"
+                    Búsqueda: &quot;{searchTerm}&quot;
                     <button onClick={() => setSearchTerm("")} className="ml-1 hover:text-red-500">×</button>
                   </Badge>
                 )}

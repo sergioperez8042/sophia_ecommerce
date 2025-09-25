@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Product, Category } from "@/entities/all";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Leaf, Heart, Star, ArrowRight, Shield, Sparkles } from "lucide-react";
+import { Leaf, ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
+import Link from "next/link";
+import Image from "next/image";
 import ValueProposition from "../Components/home/ValueProposition";
 import FeaturedProducts from "../Components/home/FeaturedProducts";
 import CategoryShowcase from "../Components/home/CategoryShowcase";
-import { createPageUrl } from "@/lib/utils";
 
 
 export default function HomePage() {
@@ -23,13 +22,18 @@ export default function HomePage() {
 
     const loadData = async () => {
         try {
-            const [products, cats] = await Promise.all([
-                Product.filter({ featured: true, active: true }, '-created_date', 6),
-                Category.list('sort_order', 4)
+            const [allProducts, cats] = await Promise.all([
+                Product.filter({ featured: true, active: true }, '-created_date'),
+                Category.list('sort_order')
             ]);
 
+            // Tomar solo los primeros 6 productos
+            const products = allProducts.slice(0, 6);
+            // Tomar solo las primeras 4 categorías  
+            const categories = cats.slice(0, 4);
+
             setFeaturedProducts(products);
-            setCategories(cats);
+            setCategories(categories);
         } catch (error) {
             console.error('Error loading data:', error);
         } finally {
@@ -67,13 +71,13 @@ export default function HomePage() {
                             </p>
 
                             <div className="flex flex-col sm:flex-row gap-4">
-                                <Link to={createPageUrl("Products")}>
+                                <Link href="/products">
                                     <Button size="lg" className="bg-[#87A96B] hover:bg-[#6B8A78] text-white px-8 py-3 text-lg">
                                         Explorar productos
                                         <ArrowRight className="w-5 h-5 ml-2" />
                                     </Button>
                                 </Link>
-                                <Link to={createPageUrl("About")}>
+                                <Link href="/about">
                                     <Button variant="outline" size="lg" className="border-[#87A96B] text-[#87A96B] hover:bg-[#87A96B] hover:text-white px-8 py-3 text-lg">
                                         Nuestra historia
                                     </Button>
@@ -88,9 +92,11 @@ export default function HomePage() {
                             className="relative"
                         >
                             <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                                <img
+                                <Image
                                     src="https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=600&h=600&fit=crop"
                                     alt="Productos naturales Sophia"
+                                    width={600}
+                                    height={500}
                                     className="w-full h-[500px] object-cover"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>

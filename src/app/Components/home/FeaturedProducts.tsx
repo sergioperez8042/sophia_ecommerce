@@ -1,19 +1,24 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
+import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Star, Heart, ShoppingBag } from "lucide-react";
 import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
+import Image from "next/image";
 
-export default function FeaturedProducts({ products, isLoading }) {
-    const addToCart = (product) => {
+interface FeaturedProductsProps {
+  products: any[];
+  isLoading: boolean;
+}
+
+export default function FeaturedProducts({ products, isLoading }: FeaturedProductsProps) {
+    const addToCart = (product: any) => {
         const savedCart = localStorage.getItem('sophia_cart');
         const currentCart = savedCart ? JSON.parse(savedCart) : [];
 
-        const existingItem = currentCart.find(item => item.id === product.id);
+        const existingItem = currentCart.find((item: any) => item.id === product.id);
         if (existingItem) {
             existingItem.quantity += 1;
         } else {
@@ -79,9 +84,11 @@ export default function FeaturedProducts({ products, isLoading }) {
                         >
                             <Card className="product-card group hover:shadow-xl transition-all duration-300 overflow-hidden">
                                 <div className="relative overflow-hidden">
-                                    <img
+                                    <Image
                                         src={product.image_url || 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop'}
                                         alt={product.name}
+                                        width={400}
+                                        height={300}
                                         className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                                     />
 
@@ -107,7 +114,7 @@ export default function FeaturedProducts({ products, isLoading }) {
                                         </Badge>
                                     </div>
 
-                                    <Link to={createPageUrl(`Product?id=${product.id}`)}>
+                                    <Link href={`/product?id=${product.id}`}>
                                         <h3 className="font-semibold text-lg text-gray-900 mb-2 hover:text-[#87A96B] transition-colors">
                                             {product.name}
                                         </h3>
@@ -157,7 +164,7 @@ export default function FeaturedProducts({ products, isLoading }) {
                     transition={{ duration: 0.6, delay: 0.3 }}
                     className="text-center mt-12"
                 >
-                    <Link to={createPageUrl("Products")}>
+                    <Link href="/products">
                         <Button size="lg" variant="outline" className="border-[#87A96B] text-[#87A96B] hover:bg-[#87A96B] hover:text-white">
                             Ver todos los productos
                         </Button>

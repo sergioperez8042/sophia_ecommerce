@@ -1,22 +1,28 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
+import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Star, Heart, ShoppingBag, Leaf } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
+import Image from "next/image";
 
-export default function ProductGrid({ products, isLoading, viewMode = "grid" }) {
-    const addToCart = (product, e) => {
+interface ProductGridProps {
+  products: any[];
+  isLoading: boolean;
+  viewMode?: string;
+}
+
+export default function ProductGrid({ products, isLoading, viewMode = "grid" }: ProductGridProps) {
+    const addToCart = (product: any, e: any) => {
         e.preventDefault();
         e.stopPropagation();
 
         const savedCart = localStorage.getItem('sophia_cart');
         const currentCart = savedCart ? JSON.parse(savedCart) : [];
 
-        const existingItem = currentCart.find(item => item.id === product.id);
+        const existingItem = currentCart.find((item: any) => item.id === product.id);
         if (existingItem) {
             existingItem.quantity += 1;
         } else {
@@ -93,12 +99,14 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }) 
                         exit={{ opacity: 0, scale: 0.9 }}
                         transition={{ duration: 0.3, delay: index * 0.05 }}
                     >
-                        <Link to={createPageUrl(`Product?id=${product.id}`)}>
+                        <Link href={`/product?id=${product.id}`}>
                             <Card className="product-card group hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer">
                                 <div className="relative overflow-hidden">
-                                    <img
+                                    <Image
                                         src={product.image_url || 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop'}
                                         alt={product.name}
+                                        width={400}
+                                        height={300}
                                         className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                                     />
 
@@ -207,13 +215,15 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }) 
                         exit={{ opacity: 0, x: -20 }}
                         transition={{ duration: 0.3, delay: index * 0.05 }}
                     >
-                        <Link to={createPageUrl(`Product?id=${product.id}`)}>
+                        <Link href={`/product?id=${product.id}`}>
                             <Card className="product-card group hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer">
                                 <div className="flex">
                                     <div className="relative w-48 h-32 overflow-hidden">
-                                        <img
+                                        <Image
                                             src={product.image_url || 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop'}
                                             alt={product.name}
+                                            width={192}
+                                            height={128}
                                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                         />
 

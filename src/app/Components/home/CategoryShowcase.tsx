@@ -1,12 +1,17 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
+import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
+import Image from "next/image";
 
-export default function CategoryShowcase({ categories, isLoading }) {
+interface CategoryShowcaseProps {
+  categories: any[];
+  isLoading: boolean;
+}
+
+export default function CategoryShowcase({ categories, isLoading }: CategoryShowcaseProps) {
     if (isLoading) {
         return (
             <section className="py-16 bg-gradient-to-b from-[#F5F1E8] to-white">
@@ -58,12 +63,14 @@ export default function CategoryShowcase({ categories, isLoading }) {
                             viewport={{ once: true }}
                             transition={{ duration: 0.6, delay: index * 0.1 }}
                         >
-                            <Link to={createPageUrl(`Products?category=${category.slug}`)}>
+                            <Link href={`/products?category=${category.slug}`}>
                                 <Card className="product-card group hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
                                     <div className="relative overflow-hidden">
-                                        <img
+                                        <Image
                                             src={category.image_url || `https://images.unsplash.com/photo-157101961345${index + 4}-1cb2f99b2d8b?w=300&h=200&fit=crop`}
                                             alt={category.name}
+                                            width={300}
+                                            height={200}
                                             className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent group-hover:from-black/50 transition-all duration-300"></div>

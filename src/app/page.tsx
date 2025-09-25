@@ -52,7 +52,7 @@ export default function Home() {
                 { name: "Categorías", href: "#", active: false },
                 { name: "Nosotros", href: "#", active: false },
                 { name: "Contacto", href: "#", active: false }
-              ].map((item, index) => (
+              ].map((item) => (
                 <motion.div key={item.name}>
                   <Link
                     href={item.href}

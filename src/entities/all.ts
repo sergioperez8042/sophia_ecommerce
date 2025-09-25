@@ -2,7 +2,7 @@ import ProductsData from './Product.json';
 import CategoriesData from './Category.json';
 
 // Tipos TypeScript
-export interface Product {
+export interface IProduct {
   id: string;
   name: string;
   description: string;
@@ -18,7 +18,7 @@ export interface Product {
   featured: boolean;
 }
 
-export interface Category {
+export interface ICategory {
   id: string;
   name: string;
   description: string;
@@ -30,8 +30,8 @@ export interface Category {
 
 // Clases con métodos estáticos para simular una API
 export class Product {
-  static async list(orderBy?: string): Promise<Product[]> {
-    let products = [...ProductsData] as Product[];
+  static async list(orderBy?: string): Promise<IProduct[]> {
+    const products = [...ProductsData] as IProduct[];
     
     if (orderBy) {
       if (orderBy === 'name') {
@@ -44,29 +44,30 @@ export class Product {
     return products;
   }
 
-  static async filter(conditions: any, orderBy?: string): Promise<Product[]> {
-    let products = await this.list(orderBy);
+  static async filter(conditions: Record<string, unknown>, orderBy?: string): Promise<IProduct[]> {
+    const products = await this.list(orderBy);
+    let filteredProducts = [...products];
     
     if (conditions.active !== undefined) {
-      products = products.filter(p => p.active === conditions.active);
+      filteredProducts = filteredProducts.filter(p => p.active === conditions.active);
     }
     
     if (conditions.featured !== undefined) {
-      products = products.filter(p => p.featured === conditions.featured);
+      filteredProducts = filteredProducts.filter(p => p.featured === conditions.featured);
     }
     
-    return products;
+    return filteredProducts;
   }
 
-  static async findById(id: string): Promise<Product | null> {
+  static async findById(id: string): Promise<IProduct | null> {
     const products = await this.list();
     return products.find(p => p.id === id) || null;
   }
 }
 
 export class Category {
-  static async list(orderBy?: string): Promise<Category[]> {
-    let categories = [...CategoriesData] as Category[];
+  static async list(orderBy?: string): Promise<ICategory[]> {
+    const categories = [...CategoriesData] as ICategory[];
     
     if (orderBy === 'sort_order') {
       categories.sort((a, b) => a.sort_order - b.sort_order);
@@ -75,8 +76,11 @@ export class Category {
     return categories.filter(c => c.active);
   }
 
-  static async findById(id: string): Promise<Category | null> {
+  static async findById(id: string): Promise<ICategory | null> {
     const categories = await this.list();
     return categories.find(c => c.id === id) || null;
   }
 }
+
+// Exportar también los tipos para compatibilidad con código existente
+export type { IProduct as ProductType, ICategory as CategoryType };
