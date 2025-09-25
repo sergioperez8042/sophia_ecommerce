@@ -9,8 +9,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 
 interface FeaturedProductsProps {
-  products: any[];
-  isLoading: boolean;
+    products: any[];
+    isLoading: boolean;
 }
 
 export default function FeaturedProducts({ products, isLoading }: FeaturedProductsProps) {

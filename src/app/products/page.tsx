@@ -10,91 +10,91 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 
 const products = [
-  {
-    id: 1,
-    name: "Crema Hidratante Natural",
-    description: "Hidratación profunda con aloe vera y aceite de jojoba",
-    price: 25.99,
-    originalPrice: 32.99,
-    rating: 4.8,
-    reviews: 124,
-    image: "/product1.png",
-    category: "Cuidado Facial",
-    isNew: false,
-    isBestseller: true,
-    badges: ["Bestseller", "Natural"]
-  },
-  {
-    id: 2,
-    name: "Serum Vitamina C",
-    description: "Ilumina y protege tu piel con antioxidantes naturales",
-    price: 42.99,
-    originalPrice: null,
-    rating: 4.9,
-    reviews: 89,
-    image: "/product2.png",
-    category: "Cuidado Facial",
-    isNew: true,
-    isBestseller: false,
-    badges: ["Nuevo", "Vitaminas"]
-  },
-  {
-    id: 3,
-    name: "Jabón de Lavanda",
-    description: "Jabón artesanal con aceites esenciales de lavanda",
-    price: 12.99,
-    originalPrice: null,
-    rating: 4.7,
-    reviews: 203,
-    image: "/product3.png",
-    category: "Cuerpo",
-    isNew: false,
-    isBestseller: true,
-    badges: ["Artesanal", "Relajante"]
-  },
-  {
-    id: 4,
-    name: "Aceite Corporal Nutritivo",
-    description: "Mezcla de aceites naturales para nutrir la piel",
-    price: 35.99,
-    originalPrice: 44.99,
-    rating: 4.6,
-    reviews: 67,
-    image: "/product4.png",
-    category: "Cuerpo",
-    isNew: false,
-    isBestseller: false,
-    badges: ["Nutritivo", "Natural"]
-  },
-  {
-    id: 5,
-    name: "Mascarilla Purificante",
-    description: "Arcilla verde y té verde para purificar los poros",
-    price: 18.99,
-    originalPrice: null,
-    rating: 4.8,
-    reviews: 156,
-    image: "/product5.png",
-    category: "Cuidado Facial",
-    isNew: true,
-    isBestseller: false,
-    badges: ["Nuevo", "Purificante"]
-  },
-  {
-    id: 6,
-    name: "Bálsamo Labial Natural",
-    description: "Protección y nutrición para labios secos",
-    price: 8.99,
-    originalPrice: null,
-    rating: 4.9,
-    reviews: 284,
-    image: "/product1.png",
-    category: "Labios",
-    isNew: false,
-    isBestseller: true,
-    badges: ["Bestseller", "Protección"]
-  }
-];export default function ProductsPage() {
+    {
+        id: 1,
+        name: "Crema Hidratante Natural",
+        description: "Hidratación profunda con aloe vera y aceite de jojoba",
+        price: 25.99,
+        originalPrice: 32.99,
+        rating: 4.8,
+        reviews: 124,
+        image: "/product1.png",
+        category: "Cuidado Facial",
+        isNew: false,
+        isBestseller: true,
+        badges: ["Bestseller", "Natural"]
+    },
+    {
+        id: 2,
+        name: "Serum Vitamina C",
+        description: "Ilumina y protege tu piel con antioxidantes naturales",
+        price: 42.99,
+        originalPrice: null,
+        rating: 4.9,
+        reviews: 89,
+        image: "/product2.png",
+        category: "Cuidado Facial",
+        isNew: true,
+        isBestseller: false,
+        badges: ["Nuevo", "Vitaminas"]
+    },
+    {
+        id: 3,
+        name: "Jabón de Lavanda",
+        description: "Jabón artesanal con aceites esenciales de lavanda",
+        price: 12.99,
+        originalPrice: null,
+        rating: 4.7,
+        reviews: 203,
+        image: "/product3.png",
+        category: "Cuerpo",
+        isNew: false,
+        isBestseller: true,
+        badges: ["Artesanal", "Relajante"]
+    },
+    {
+        id: 4,
+        name: "Aceite Corporal Nutritivo",
+        description: "Mezcla de aceites naturales para nutrir la piel",
+        price: 35.99,
+        originalPrice: 44.99,
+        rating: 4.6,
+        reviews: 67,
+        image: "/product4.png",
+        category: "Cuerpo",
+        isNew: false,
+        isBestseller: false,
+        badges: ["Nutritivo", "Natural"]
+    },
+    {
+        id: 5,
+        name: "Mascarilla Purificante",
+        description: "Arcilla verde y té verde para purificar los poros",
+        price: 18.99,
+        originalPrice: null,
+        rating: 4.8,
+        reviews: 156,
+        image: "/product5.png",
+        category: "Cuidado Facial",
+        isNew: true,
+        isBestseller: false,
+        badges: ["Nuevo", "Purificante"]
+    },
+    {
+        id: 6,
+        name: "Bálsamo Labial Natural",
+        description: "Protección y nutrición para labios secos",
+        price: 8.99,
+        originalPrice: null,
+        rating: 4.9,
+        reviews: 284,
+        image: "/product1.png",
+        category: "Labios",
+        isNew: false,
+        isBestseller: true,
+        badges: ["Bestseller", "Protección"]
+    }
+]; export default function ProductsPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [sortBy, setSortBy] = useState('name');
@@ -288,8 +288,8 @@ const products = [
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
                         className={`grid gap-6 ${viewMode === 'grid'
-                                ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-                                : 'grid-cols-1 lg:grid-cols-2'
+                            ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+                            : 'grid-cols-1 lg:grid-cols-2'
                             }`}
                         layout
                     >

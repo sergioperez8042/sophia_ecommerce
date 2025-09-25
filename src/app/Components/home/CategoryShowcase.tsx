@@ -7,8 +7,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 
 interface CategoryShowcaseProps {
-  categories: any[];
-  isLoading: boolean;
+    categories: any[];
+    isLoading: boolean;
 }
 
 export default function CategoryShowcase({ categories, isLoading }: CategoryShowcaseProps) {

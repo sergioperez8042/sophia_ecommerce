@@ -9,9 +9,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 
 interface ProductGridProps {
-  products: any[];
-  isLoading: boolean;
-  viewMode?: string;
+    products: any[];
+    isLoading: boolean;
+    viewMode?: string;
 }
 
 export default function ProductGrid({ products, isLoading, viewMode = "grid" }: ProductGridProps) {

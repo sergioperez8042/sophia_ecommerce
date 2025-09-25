@@ -57,8 +57,8 @@ export default function Home() {
                   <Link
                     href={item.href}
                     className={`text-sm font-medium transition-colors ${item.active
-                        ? 'text-[#87A96B] border-b-2 border-[#87A96B] pb-1'
-                        : 'text-gray-600 hover:text-[#87A96B]'
+                      ? 'text-[#87A96B] border-b-2 border-[#87A96B] pb-1'
+                      : 'text-gray-600 hover:text-[#87A96B]'
                       }`}
                   >
                     <motion.span
