@@ -414,8 +414,8 @@ export default function Home() {
                         >
                           <Heart
                             className={`w-5 h-5 transition-colors ${wishlist.includes(product.id)
-                                ? 'fill-red-500 text-red-500'
-                                : 'text-gray-400 hover:text-red-400'
+                              ? 'fill-red-500 text-red-500'
+                              : 'text-gray-400 hover:text-red-400'
                               }`}
                           />
                         </Button>

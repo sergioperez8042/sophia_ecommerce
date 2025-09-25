@@ -73,7 +73,7 @@ export default function WishlistPage() {
                     const parsedWishlist = JSON.parse(savedWishlist);
                     console.log('Parsed wishlist:', parsedWishlist);
                     console.log('Parsed wishlist length:', parsedWishlist.length);
-                    
+
                     // Combinar productos de ejemplo con productos reales del localStorage
                     // Evitar duplicados basado en el ID
                     const combinedProducts = [...sampleProducts];
@@ -82,7 +82,7 @@ export default function WishlistPage() {
                             combinedProducts.push(product);
                         }
                     });
-                    
+
                     setWishlistItems(combinedProducts);
                 } else {
                     console.log('No wishlist data found in localStorage, showing sample products');
@@ -131,14 +131,14 @@ export default function WishlistPage() {
 
     const toggleWishlist = (product: any) => {
         const isCurrentlyInWishlist = wishlistItems.some(item => item.id === product.id);
-        
+
         if (isCurrentlyInWishlist) {
             // Quitar de favoritos
             const updatedWishlist = wishlistItems.filter(item => item.id !== product.id);
             setWishlistItems(updatedWishlist);
-            
+
             // Solo guardar en localStorage los productos que no son de ejemplo
-            const nonSampleProducts = updatedWishlist.filter(item => 
+            const nonSampleProducts = updatedWishlist.filter(item =>
                 !sampleProducts.find(sample => sample.id === item.id)
             );
             localStorage.setItem('sophia_wishlist', JSON.stringify(nonSampleProducts));
@@ -146,9 +146,9 @@ export default function WishlistPage() {
             // Agregar a favoritos
             const updatedWishlist = [...wishlistItems, product];
             setWishlistItems(updatedWishlist);
-            
+
             // Solo guardar en localStorage los productos que no son de ejemplo
-            const nonSampleProducts = updatedWishlist.filter(item => 
+            const nonSampleProducts = updatedWishlist.filter(item =>
                 !sampleProducts.find(sample => sample.id === item.id)
             );
             localStorage.setItem('sophia_wishlist', JSON.stringify(nonSampleProducts));
@@ -161,9 +161,9 @@ export default function WishlistPage() {
     const removeFromWishlist = (id: string) => {
         const updatedWishlist = wishlistItems.filter(item => item.id !== id);
         setWishlistItems(updatedWishlist);
-        
+
         // Solo guardar en localStorage los productos que no son de ejemplo
-        const nonSampleProducts = updatedWishlist.filter(item => 
+        const nonSampleProducts = updatedWishlist.filter(item =>
             !sampleProducts.find(sample => sample.id === item.id)
         );
         localStorage.setItem('sophia_wishlist', JSON.stringify(nonSampleProducts));
@@ -185,7 +185,7 @@ export default function WishlistPage() {
 
         localStorage.setItem('sophia_cart', JSON.stringify(currentCart));
         window.dispatchEvent(new Event('cartUpdate'));
-        
+
         // Mostrar feedback visual temporal
         console.log(`${product.name} agregado al carrito`);
     };
@@ -346,13 +346,13 @@ export default function WishlistPage() {
                                                                 {product.name || 'Producto Sin Nombre'}
                                                             </motion.h3>
                                                         </Link>
-                                                        
+
                                                         <motion.button
                                                             onClick={() => toggleWishlist(product)}
-                                                            className={`p-1 rounded transition-colors ${wishlistItems.some(item => item.id === product.id) 
-                                                                ? 'text-red-500 hover:bg-red-50' 
+                                                            className={`p-1 rounded transition-colors ${wishlistItems.some(item => item.id === product.id)
+                                                                ? 'text-red-500 hover:bg-red-50'
                                                                 : 'text-gray-400 hover:text-red-500 hover:bg-red-50'
-                                                            }`}
+                                                                }`}
                                                             whileHover={{ scale: 1.1 }}
                                                             whileTap={{ scale: 0.9 }}
                                                             title={wishlistItems.some(item => item.id === product.id) ? "Quitar de favoritos" : "Agregar a favoritos"}
@@ -411,7 +411,7 @@ export default function WishlistPage() {
                                                             <ShoppingBag className="h-4 w-4 mr-2" />
                                                             {(product.inStock !== false && (product.stock === undefined || product.stock > 0)) ? 'Agregar al Carrito' : 'No Disponible'}
                                                         </Button>
-                                                        
+
                                                         <div className="flex gap-2">
                                                             <Link href={`/products/${product.id}`} className="flex-1">
                                                                 <Button

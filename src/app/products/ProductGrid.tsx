@@ -192,10 +192,10 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                                         </h3>
                                         <button
                                             onClick={(e) => toggleWishlist(product, e)}
-                                            className={`p-1 rounded transition-colors ${isInWishlist(product.id) 
-                                                ? 'text-red-500' 
+                                            className={`p-1 rounded transition-colors ${isInWishlist(product.id)
+                                                ? 'text-red-500'
                                                 : 'text-gray-400 hover:text-red-500'
-                                            }`}
+                                                }`}
                                         >
                                             <Heart className={`w-5 h-5 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
                                         </button>
@@ -289,10 +289,10 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                                                 </h3>
                                                 <button
                                                     onClick={(e) => toggleWishlist(product, e)}
-                                                    className={`p-1 rounded transition-colors ${isInWishlist(product.id) 
-                                                        ? 'text-red-500' 
+                                                    className={`p-1 rounded transition-colors ${isInWishlist(product.id)
+                                                        ? 'text-red-500'
                                                         : 'text-gray-400 hover:text-red-500'
-                                                    }`}
+                                                        }`}
                                                 >
                                                     <Heart className={`w-5 h-5 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
                                                 </button>
