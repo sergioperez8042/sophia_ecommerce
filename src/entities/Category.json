@@ -1,0 +1,38 @@
+[
+  {
+    "id": "skincare",
+    "name": "Cuidado de la Piel",
+    "description": "Productos para el cuidado facial y corporal",
+    "image": "/images/categories/skincare.jpg",
+    "sort_order": 1,
+    "active": true,
+    "product_count": 15
+  },
+  {
+    "id": "makeup",
+    "name": "Maquillaje",
+    "description": "Productos de maquillaje natural y orgánico",
+    "image": "/images/categories/makeup.jpg",
+    "sort_order": 2,
+    "active": true,
+    "product_count": 12
+  },
+  {
+    "id": "haircare",
+    "name": "Cuidado Capilar",
+    "description": "Productos para el cuidado del cabello",
+    "image": "/images/categories/haircare.jpg",
+    "sort_order": 3,
+    "active": true,
+    "product_count": 8
+  },
+  {
+    "id": "bodycare",
+    "name": "Cuidado Corporal",
+    "description": "Productos para el cuidado del cuerpo",
+    "image": "/images/categories/bodycare.jpg",
+    "sort_order": 4,
+    "active": true,
+    "product_count": 10
+  }
+]
