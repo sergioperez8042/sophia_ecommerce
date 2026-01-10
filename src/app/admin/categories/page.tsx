@@ -34,6 +34,7 @@ const emptyCategory: Omit<ICategory, 'id'> = {
     image: '/images/categories/placeholder.jpg',
     active: true,
     sort_order: 0,
+    product_count: 0
 };
 
 export default function AdminCategoriesPage() {
@@ -95,6 +96,7 @@ export default function AdminCategoriesPage() {
             image: category.image || '/images/categories/placeholder.jpg',
             active: category.active,
             sort_order: category.sort_order || 0,
+            product_count: category.product_count || 0,
         });
         setViewMode('edit');
     };
