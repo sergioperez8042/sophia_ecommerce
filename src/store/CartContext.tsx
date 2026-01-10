@@ -1,6 +1,9 @@
 "use client";
 
-import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, ReactNode, useState } from 'react';
+import { useAuth } from './AuthContext';
+import { db } from '@/lib/firebase'; // Ensure this path is correct
+import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
 
 // Types
 export interface CartProduct {
@@ -56,7 +59,6 @@ function cartReducer(state: CartState, action: CartAction): CartState {
       return { ...state, items: action.payload, isLoaded: true };
 
     case 'ADD_ITEM': {
-      // Filter out any invalid items first
       const validItems = state.items.filter(item => item && item.product && item.product.id);
       const existingIndex = validItems.findIndex(
         item => item.product.id === action.payload.id
@@ -114,44 +116,116 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 // Provider
 export function CartProvider({ children }: { children: ReactNode }) {
+  const { user, isAuthenticated } = useAuth();
   const [state, dispatch] = useReducer(cartReducer, { items: [], isLoaded: false });
+  // Flag to track if we are syncing to avoid loops
+  const [isSyncing, setIsSyncing] = useState(false);
 
-  // Load cart from localStorage on mount
+  // Initial Load & Auth Sync
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        // Filter out invalid items
-        const validItems = Array.isArray(parsed)
-          ? parsed.filter((item: any) =>
-            item &&
-            item.product &&
-            typeof item.product === 'object' &&
-            item.product.id &&
-            typeof item.product.price === 'number' &&
-            typeof item.quantity === 'number'
-          )
-          : [];
-        dispatch({ type: 'LOAD_CART', payload: validItems });
+    let unsubscribe: () => void = () => { };
+
+    const syncCart = async () => {
+      // 1. If authenticated, listen to Firestore
+      if (isAuthenticated && user) {
+        const userCartRef = doc(db, 'users', user.id, 'cart', 'main'); // Using a subcollection or single doc strategy
+        // Simplified: Storing cart array in user document or a dedicated cart document
+        // Let's store it in a 'carts' collection keyed by userID for separation
+        // OR inside the user doc: users/{uid} field: cartItems
+
+        // Let's use users/{uid} -> field: cartItems for simplicity as per common pattern
+        // BUT 'users' collection is managed by UserService. 
+        // Let's use a separate logic to avoid conflicts if we can.
+        // Actually, updating a field in the user doc is fine. 
+
+        const userRef = doc(db, 'users', user.id);
+
+        unsubscribe = onSnapshot(userRef, (docSnap) => {
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            const remoteItems = data.cartItems as CartItem[] || [];
+
+            // We only update state if it differs significantly to avoid local jitter
+            // But for now, let's just trust remote as source of truth when logged in
+            if (!isSyncing) {
+              dispatch({ type: 'LOAD_CART', payload: remoteItems });
+            }
+          } else {
+            // User doc doesn't exist?
+          }
+        });
+
+        // MERGE LOGIC: If we have local items and just logged in
+        const localSaved = localStorage.getItem(STORAGE_KEY);
+        if (localSaved) {
+          const localItems = JSON.parse(localSaved) as CartItem[];
+          if (localItems.length > 0) {
+            // Read current remote to merge
+            const docSnap = await getDoc(userRef);
+            const remoteItems = docSnap.exists() ? (docSnap.data().cartItems as CartItem[] || []) : [];
+
+            // Simple merge: Local items override or add to remote
+            // Only if remote is empty? Or always?
+            // A better UX is: add local items to remote.
+
+            const mergedItems = [...remoteItems];
+            localItems.forEach(lItem => {
+              const existing = mergedItems.find(r => r.product.id === lItem.product.id);
+              if (existing) {
+                existing.quantity += lItem.quantity;
+              } else {
+                mergedItems.push(lItem);
+              }
+            });
+
+            // Save merged to firestore
+            await setDoc(userRef, { cartItems: mergedItems }, { merge: true });
+
+            // Clear local
+            localStorage.removeItem(STORAGE_KEY);
+          }
+        }
+
       } else {
-        dispatch({ type: 'LOAD_CART', payload: [] });
+        // 2. If guest, use localStorage
+        const saved = localStorage.getItem(STORAGE_KEY);
+        const items = saved ? JSON.parse(saved) : [];
+        dispatch({ type: 'LOAD_CART', payload: items });
       }
-    } catch (error) {
-      console.error('Error loading cart:', error);
-      // Clear corrupted data
-      localStorage.removeItem(STORAGE_KEY);
-      dispatch({ type: 'LOAD_CART', payload: [] });
-    }
-  }, []);
+    };
 
-  // Save cart to localStorage whenever it changes
+    syncCart();
+
+    return () => unsubscribe();
+  }, [isAuthenticated, user]);
+
+  // Save changes
   useEffect(() => {
-    if (state.isLoaded) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.items));
-      window.dispatchEvent(new Event('cartChanged'));
-    }
-  }, [state.items, state.isLoaded]);
+    if (!state.isLoaded) return;
+
+    const saveChanges = async () => {
+      setIsSyncing(true);
+      if (isAuthenticated && user) {
+        // Save to Firestore
+        try {
+          const userRef = doc(db, 'users', user.id);
+          await setDoc(userRef, { cartItems: state.items }, { merge: true });
+        } catch (err) {
+          console.error("Error saving cart to firestore", err);
+        }
+      } else {
+        // Save to LocalStorage
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state.items));
+        window.dispatchEvent(new Event('cartChanged'));
+      }
+      setTimeout(() => setIsSyncing(false), 500);
+    };
+
+    // Debounce or just save
+    const timeout = setTimeout(saveChanges, 500);
+    return () => clearTimeout(timeout);
+
+  }, [state.items, isAuthenticated, user, state.isLoaded]);
 
   // Actions
   const addItem = (product: CartProduct) => {
@@ -170,7 +244,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'CLEAR_CART' });
   };
 
-  // Computed values - filter out invalid items
+  // Computed values
   const validItems = state.items.filter(item => item && item.product && typeof item.product.price === 'number');
   const totalItems = validItems.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = validItems.reduce(

@@ -18,7 +18,8 @@ import {
   ChevronRight,
   BarChart3,
   Calendar,
-  Loader2
+  Loader2,
+  Database
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -261,50 +262,68 @@ export default function AdminPage() {
         </Card>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
           <Link href="/admin/products">
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow cursor-pointer h-full">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="p-3 bg-green-100 rounded-full">
                     <ShoppingBag className="w-6 h-6 text-green-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">Gestión de Productos</h3>
-                    <p className="text-sm text-gray-500">Crear, editar y eliminar productos</p>
+                    <h3 className="font-semibold text-gray-900">Productos</h3>
+                    <p className="text-sm text-gray-500">Gestionar catálogo</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
           </Link>
 
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+          <Link href="/admin/newsletter">
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow cursor-pointer h-full">
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-blue-100 rounded-full">
+                    <Mail className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Newsletter</h3>
+                    <p className="text-sm text-gray-500">Suscriptores y envíos</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow cursor-pointer h-full opacity-60">
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-blue-100 rounded-full">
-                  <BarChart3 className="w-6 h-6 text-blue-600" />
+                <div className="p-3 bg-amber-100 rounded-full">
+                  <BarChart3 className="w-6 h-6 text-amber-600" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900">Reportes</h3>
-                  <p className="text-sm text-gray-500">Ver estadísticas detalladas</p>
+                  <p className="text-sm text-gray-500">Próximamente</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-purple-100 rounded-full">
-                  <Calendar className="w-6 h-6 text-purple-600" />
+          <Link href="/admin/setup">
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow cursor-pointer h-full">
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-gray-100 rounded-full">
+                    <Database className="w-6 h-6 text-gray-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Datos de Prueba</h3>
+                    <p className="text-sm text-gray-500">Inicializar DB</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">Metas del Mes</h3>
-                  <p className="text-sm text-gray-500">Configurar objetivos</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
       </div>
     </div>

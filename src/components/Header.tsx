@@ -29,20 +29,16 @@ export default function Header() {
                     >
                         <Link href="/" className="flex items-center gap-3">
                             <motion.div
-                                className="w-10 h-10 rounded-full bg-gradient-to-r from-[#4A6741] to-[#3F5D4C] flex items-center justify-center shadow-lg"
-                                whileHover={{ scale: 1.1, rotate: 360 }}
+                                whileHover={{ scale: 1.05 }}
                                 transition={{ duration: 0.3 }}
+                                className="relative w-40 h-16"
                             >
-                                <Leaf className="w-5 h-5 text-white" />
+                                <img
+                                    src="/images/logo-sophia.jpg"
+                                    alt="Sophia - Cosmética Natural"
+                                    className="w-full h-full object-contain"
+                                />
                             </motion.div>
-                            <div>
-                                <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
-                                    Sophia
-                                </h1>
-                                <p className="text-xs text-[#4A6741] font-medium -mt-1">
-                                    Cosmética Natural
-                                </p>
-                            </div>
                         </Link>
                     </motion.div>
 

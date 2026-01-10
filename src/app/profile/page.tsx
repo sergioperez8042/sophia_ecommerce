@@ -103,8 +103,10 @@ export default function ProfilePage() {
 
   // Determinar el color del perfil según el rol
   const getProfileColors = () => {
-    if (isAdmin) return { gradient: 'from-purple-600 to-purple-800', accent: 'purple' };
+    // Admin ahora usa el color corporativo (verde) para consistencia
+    if (isAdmin) return { gradient: 'from-[#4A6741] to-[#2E4529]', accent: 'green' };
     if (isManager) return { gradient: 'from-amber-600 to-amber-800', accent: 'amber' };
+    // Cliente
     return { gradient: 'from-[#4A6741] to-[#3F5D4C]', accent: 'green' };
   };
 
@@ -116,32 +118,32 @@ export default function ProfilePage() {
       <div className="container mx-auto px-4 py-8">
         {/* Header del Perfil */}
         <div className="mb-8">
-          <div className={`bg-gradient-to-r ${colors.gradient} rounded-2xl p-8 text-white relative overflow-hidden`}>
+          <div className={`bg-gradient-to-r ${colors.gradient} rounded-2xl p-8 text-white relative overflow-hidden shadow-xl`}>
             {/* Decorative circles */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-xl" />
 
             <div className="flex flex-col md:flex-row items-center md:items-start gap-6 relative z-10">
               {/* Avatar */}
-              <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center text-4xl font-bold border-4 border-white/30">
+              <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center text-4xl font-bold border-4 border-white/30 shadow-lg">
                 {user.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
               </div>
 
               {/* Info Principal */}
               <div className="flex-1 text-center md:text-left">
-                <h1 className="text-3xl font-bold mb-2">{user.name}</h1>
+                <h1 className="text-3xl font-bold mb-2 text-white">{user.name}</h1>
                 <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 opacity-90">
-                  <Badge className="bg-white/20 text-white border-none">
+                  <Badge className="bg-white/20 text-white border-none backdrop-blur-sm">
                     {isAdmin ? 'Administrador' : isManager ? 'Gestor' : 'Cliente'}
                   </Badge>
                   {isManager && user.managerCode && (
-                    <span className="flex items-center gap-1 text-sm">
+                    <span className="flex items-center gap-1 text-sm text-white">
                       <Award className="w-4 h-4" />
                       {user.managerCode}
                     </span>
                   )}
                   {isManager && user.zone && (
-                    <span className="flex items-center gap-1 text-sm">
+                    <span className="flex items-center gap-1 text-sm text-white">
                       <MapPin className="w-4 h-4" />
                       {user.zone}
                     </span>
@@ -150,7 +152,7 @@ export default function ProfilePage() {
 
                 {/* Descuento de gestor */}
                 {isManagerPricing && (
-                  <div className="mt-4 inline-flex items-center gap-2 bg-white/20 rounded-lg px-4 py-2">
+                  <div className="mt-4 inline-flex items-center gap-2 bg-white/20 rounded-lg px-4 py-2 backdrop-blur-sm">
                     <Percent className="w-5 h-5" />
                     <span className="font-medium">30% de descuento en todos los productos</span>
                   </div>
@@ -159,8 +161,8 @@ export default function ProfilePage() {
 
               {/* Ranking para gestores */}
               {isManager && (
-                <div className="text-center bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-                  <Award className="w-8 h-8 mx-auto mb-2" />
+                <div className="text-center bg-white/10 rounded-xl p-4 backdrop-blur-sm border border-white/10">
+                  <Award className="w-8 h-8 mx-auto mb-2 text-amber-200" />
                   <p className="text-sm opacity-80">Ranking</p>
                   <p className="text-2xl font-bold">#{mockManagerStats.performance.rank}</p>
                   <p className="text-xs opacity-70">de {mockManagerStats.performance.totalManagers} gestores</p>
@@ -171,48 +173,56 @@ export default function ProfilePage() {
         </div>
 
         {/* Información de Contacto */}
-        <Card className="mb-8">
+        <Card className="mb-8 border-0 shadow-md">
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <User className="w-5 h-5" />
+            <CardTitle className="flex items-center gap-2 text-gray-900">
+              <User className="w-5 h-5 text-[#4A6741]" />
               Información de Contacto
             </CardTitle>
-            <Button variant="ghost" size="sm" className="text-gray-500">
+            <Button variant="ghost" size="sm" className="text-[#4A6741] hover:text-[#3F5D4C] hover:bg-green-50">
               <Edit className="w-4 h-4 mr-2" />
               Editar
             </Button>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
-                <Mail className="w-5 h-5 text-[#4A6741]" />
+              <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-100 hover:shadow-sm transition-shadow">
+                <div className="p-2 bg-white rounded-full text-[#4A6741] shadow-sm">
+                  <Mail className="w-5 h-5" />
+                </div>
                 <div>
-                  <p className="text-sm text-gray-500">Email</p>
-                  <p className="font-medium">{user.email}</p>
+                  <p className="text-sm text-gray-500 mb-1">Email</p>
+                  <p className="font-semibold text-gray-900">{user.email}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
-                <Phone className="w-5 h-5 text-[#4A6741]" />
+              <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-100 hover:shadow-sm transition-shadow">
+                <div className="p-2 bg-white rounded-full text-[#4A6741] shadow-sm">
+                  <Phone className="w-5 h-5" />
+                </div>
                 <div>
-                  <p className="text-sm text-gray-500">Teléfono</p>
-                  <p className="font-medium">{user.phone || 'No especificado'}</p>
+                  <p className="text-sm text-gray-500 mb-1">Teléfono</p>
+                  <p className="font-semibold text-gray-900">{user.phone || 'No especificado'}</p>
                 </div>
               </div>
               {isManager && (
-                <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
-                  <MapPin className="w-5 h-5 text-[#4A6741]" />
+                <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-100 hover:shadow-sm transition-shadow">
+                  <div className="p-2 bg-white rounded-full text-[#4A6741] shadow-sm">
+                    <MapPin className="w-5 h-5" />
+                  </div>
                   <div>
-                    <p className="text-sm text-gray-500">Zona</p>
-                    <p className="font-medium">{user.zone || 'No especificada'}</p>
+                    <p className="text-sm text-gray-500 mb-1">Zona</p>
+                    <p className="font-semibold text-gray-900">{user.zone || 'No especificada'}</p>
                   </div>
                 </div>
               )}
               {isClient && (
-                <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
-                  <MapPin className="w-5 h-5 text-[#4A6741]" />
+                <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-100 hover:shadow-sm transition-shadow">
+                  <div className="p-2 bg-white rounded-full text-[#4A6741] shadow-sm">
+                    <MapPin className="w-5 h-5" />
+                  </div>
                   <div>
-                    <p className="text-sm text-gray-500">Dirección</p>
-                    <p className="font-medium">{user.address || 'No especificada'}</p>
+                    <p className="text-sm text-gray-500 mb-1">Dirección</p>
+                    <p className="font-semibold text-gray-900">{user.address || 'No especificada'}</p>
                   </div>
                 </div>
               )}
@@ -515,12 +525,12 @@ export default function ProfilePage() {
 
         {/* Contenido para admin */}
         {isAdmin && (
-          <Card className="bg-gradient-to-r from-purple-600 to-purple-800 text-white">
+          <Card className="bg-gradient-to-r from-[#4A6741] to-[#3F5D4C] text-white">
             <CardContent className="pt-6 text-center">
               <h3 className="text-2xl font-bold mb-2">Panel de Administración</h3>
               <p className="opacity-90 mb-4">Gestiona tu equipo y visualiza las estadísticas de ventas</p>
               <Link href="/admin">
-                <Button className="bg-white text-purple-700 hover:bg-gray-100">
+                <Button className="bg-white text-[#4A6741] hover:bg-gray-100 font-bold">
                   Ir al Panel Admin
                 </Button>
               </Link>

@@ -1,43 +1,31 @@
 "use client";
 
-import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, ReactNode, useState } from 'react';
+import { useAuth } from './AuthContext';
+import { db } from '@/lib/firebase';
+import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
 
-// Types
-export interface WishlistProduct {
-  id: string;
-  name: string;
-  description?: string;
-  price: number;
-  originalPrice?: number;
-  rating?: number;
-  reviews?: number;
-  image: string;
-  category?: string;
-  brand?: string;
-  inStock?: boolean;
-  isNew?: boolean;
-  isBestseller?: boolean;
-}
+// Types - Reusing CartProduct since it's similar structure for display
+import { CartProduct } from './CartContext';
 
 interface WishlistState {
-  items: WishlistProduct[];
+  items: string[]; // Store only product IDs
   isLoaded: boolean;
 }
 
 type WishlistAction =
-  | { type: 'LOAD_WISHLIST'; payload: WishlistProduct[] }
-  | { type: 'ADD_ITEM'; payload: WishlistProduct }
+  | { type: 'LOAD_WISHLIST'; payload: string[] }
+  | { type: 'ADD_ITEM'; payload: string }
   | { type: 'REMOVE_ITEM'; payload: string }
-  | { type: 'TOGGLE_ITEM'; payload: WishlistProduct }
+  | { type: 'TOGGLE_ITEM'; payload: string }
   | { type: 'CLEAR_WISHLIST' };
 
 interface WishlistContextType {
-  items: WishlistProduct[];
+  items: string[]; // List of product IDs
   isLoaded: boolean;
-  addItem: (product: WishlistProduct) => void;
-  removeItem: (productId: string) => void;
-  toggleItem: (product: WishlistProduct) => void;
-  clearWishlist: () => void;
+  addToWishlist: (productId: string) => void;
+  removeFromWishlist: (productId: string) => void;
+  toggleItem: (productId: string) => void;
   isInWishlist: (productId: string) => boolean;
   totalItems: number;
 }
@@ -50,28 +38,23 @@ function wishlistReducer(state: WishlistState, action: WishlistAction): Wishlist
     case 'LOAD_WISHLIST':
       return { ...state, items: action.payload, isLoaded: true };
 
-    case 'ADD_ITEM': {
-      const exists = state.items.some(item => item.id === action.payload.id);
-      if (exists) return state;
+    case 'ADD_ITEM':
+      if (state.items.includes(action.payload)) return state;
       return { ...state, items: [...state.items, action.payload] };
-    }
 
     case 'REMOVE_ITEM':
       return {
         ...state,
-        items: state.items.filter(item => item.id !== action.payload),
+        items: state.items.filter(id => id !== action.payload),
       };
 
-    case 'TOGGLE_ITEM': {
-      const exists = state.items.some(item => item.id === action.payload.id);
-      if (exists) {
-        return {
-          ...state,
-          items: state.items.filter(item => item.id !== action.payload.id),
-        };
-      }
-      return { ...state, items: [...state.items, action.payload] };
-    }
+    case 'TOGGLE_ITEM':
+      return {
+        ...state,
+        items: state.items.includes(action.payload)
+          ? state.items.filter(id => id !== action.payload)
+          : [...state.items, action.payload],
+      };
 
     case 'CLEAR_WISHLIST':
       return { ...state, items: [] };
@@ -86,70 +69,109 @@ const WishlistContext = createContext<WishlistContextType | undefined>(undefined
 
 // Provider
 export function WishlistProvider({ children }: { children: ReactNode }) {
+  const { user, isAuthenticated } = useAuth();
   const [state, dispatch] = useReducer(wishlistReducer, { items: [], isLoaded: false });
+  const [isSyncing, setIsSyncing] = useState(false);
 
-  // Load wishlist from localStorage on mount
+  // Sync Logic
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        // Filter valid items
-        const validItems = parsed.filter(
-          (item: any) => item && typeof item === 'object' && item.id
-        );
-        dispatch({ type: 'LOAD_WISHLIST', payload: validItems });
+    let unsubscribe: () => void = () => { };
+
+    const syncWishlist = async () => {
+      if (isAuthenticated && user) {
+        // Authenticated: Sync with Firestore
+        const userRef = doc(db, 'users', user.id);
+
+        unsubscribe = onSnapshot(userRef, (docSnap) => {
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            const remoteItems = data.wishlist as string[] || [];
+            if (!isSyncing) {
+              dispatch({ type: 'LOAD_WISHLIST', payload: remoteItems });
+            }
+          }
+        });
+
+        // Merge local if exists
+        const localSaved = localStorage.getItem(STORAGE_KEY);
+        if (localSaved) {
+          const localItems = JSON.parse(localSaved) as string[];
+          if (localItems.length > 0) {
+            const docSnap = await getDoc(userRef);
+            const remoteItems = docSnap.exists() ? (docSnap.data().wishlist as string[] || []) : [];
+
+            // Merge unique
+            const merged = Array.from(new Set([...remoteItems, ...localItems]));
+
+            await setDoc(userRef, { wishlist: merged }, { merge: true });
+            localStorage.removeItem(STORAGE_KEY);
+          }
+        }
+
       } else {
-        dispatch({ type: 'LOAD_WISHLIST', payload: [] });
+        // Guest: LocalStorage
+        const saved = localStorage.getItem(STORAGE_KEY);
+        const items = saved ? JSON.parse(saved) : [];
+        dispatch({ type: 'LOAD_WISHLIST', payload: items });
       }
-    } catch (error) {
-      console.error('Error loading wishlist:', error);
-      dispatch({ type: 'LOAD_WISHLIST', payload: [] });
-    }
-  }, []);
+    };
 
-  // Save wishlist to localStorage whenever it changes
+    syncWishlist();
+    return () => unsubscribe();
+  }, [isAuthenticated, user]);
+
+  // Save changes
   useEffect(() => {
-    if (state.isLoaded) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.items));
-      window.dispatchEvent(new Event('wishlistChanged'));
-    }
-  }, [state.items, state.isLoaded]);
+    if (!state.isLoaded) return;
+
+    const saveChanges = async () => {
+      setIsSyncing(true);
+      if (isAuthenticated && user) {
+        try {
+          const userRef = doc(db, 'users', user.id);
+          await setDoc(userRef, { wishlist: state.items }, { merge: true });
+        } catch (err) {
+          console.error("Error saving wishlist", err);
+        }
+      } else {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state.items));
+        window.dispatchEvent(new Event('wishlistChanged'));
+      }
+      setTimeout(() => setIsSyncing(false), 500);
+    };
+
+    const timeout = setTimeout(saveChanges, 500);
+    return () => clearTimeout(timeout);
+
+  }, [state.items, isAuthenticated, user, state.isLoaded]);
 
   // Actions
-  const addItem = (product: WishlistProduct) => {
-    dispatch({ type: 'ADD_ITEM', payload: product });
+  const addToWishlist = (productId: string) => {
+    dispatch({ type: 'ADD_ITEM', payload: productId });
   };
 
-  const removeItem = (productId: string) => {
+  const removeFromWishlist = (productId: string) => {
     dispatch({ type: 'REMOVE_ITEM', payload: productId });
   };
 
-  const toggleItem = (product: WishlistProduct) => {
-    dispatch({ type: 'TOGGLE_ITEM', payload: product });
-  };
-
-  const clearWishlist = () => {
-    dispatch({ type: 'CLEAR_WISHLIST' });
+  const toggleItem = (productId: string) => {
+    dispatch({ type: 'TOGGLE_ITEM', payload: productId });
   };
 
   const isInWishlist = (productId: string) => {
-    return state.items.some((item: { id: string; }) => item.id === productId);
+    return state.items.includes(productId);
   };
-
-  const totalItems = state.items.length;
 
   return (
     <WishlistContext.Provider
       value={{
         items: state.items,
         isLoaded: state.isLoaded,
-        addItem,
-        removeItem,
+        addToWishlist,
+        removeFromWishlist,
         toggleItem,
-        clearWishlist,
         isInWishlist,
-        totalItems,
+        totalItems: state.items.length,
       }}
     >
       {children}
