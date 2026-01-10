@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --sage-green: #4A6741; /* Darker for better contrast */
+  --sage-green-light: #87A96B; /* Original color for backgrounds */
+  --warm-beige: #F5F1E8;
+  --cream-white: #FEFCF7;
+  --eucalyptus: #3F5D4C; /* Darker for better contrast */
+  --soft-gold: #B8941F; /* Darker for better contrast */
+  --text-muted: #4A4A4A; /* Better contrast than gray-600 */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+.hero-gradient {
+  background: linear-gradient(135deg, var(--cream-white) 0%, var(--warm-beige) 100%);
+}
+
+.product-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(74, 103, 65, 0.15);
+}
+
+.nav-glass {
+  background: rgba(254, 252, 247, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(74, 103, 65, 0.15);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Improved contrast utilities */
+.text-accessible {
+  color: var(--text-muted);
+}
+
+.text-brand-primary {
+  color: var(--sage-green);
+}
+
+.bg-brand-primary {
+  background-color: var(--sage-green);
+}
+
+.border-brand-primary {
+  border-color: var(--sage-green);
+}
+
+/* High contrast focus styles */
+.focus-accessible:focus {
+  outline: 2px solid var(--sage-green);
+  outline-offset: 2px;
+}
