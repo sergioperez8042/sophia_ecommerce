@@ -17,7 +17,6 @@ export { useManager, ManagerProvider, AVAILABLE_MANAGERS } from './ManagerContex
 export { useProducts, ProductProvider } from './ProductContext';
 export { useCategories, CategoryProvider } from './CategoryContext';
 export type { CartProduct, CartItem } from './CartContext';
-export type { WishlistProduct } from './WishlistContext';
 export type { User, UserRole, RegisterData } from './AuthContext';
 export type { Manager } from './ManagerContext';
 
