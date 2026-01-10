@@ -143,21 +143,7 @@ export default function ProductsPage() {
     e.preventDefault();
     e.stopPropagation();
 
-    toggleItem({
-      id: product.id,
-      name: product.name,
-      description: product.description,
-      price: product.price,
-      originalPrice: product.originalPrice,
-      rating: product.rating,
-      reviews: product.reviews,
-      image: product.image,
-      category: product.category,
-      brand: product.brand,
-      inStock: product.inStock,
-      isNew: product.isNew,
-      isBestseller: product.isBestseller,
-    });
+    toggleItem(product.id);
   };
 
   return (

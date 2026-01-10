@@ -100,19 +100,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     };
 
     const handleToggleWishlist = () => {
-        toggleItem({
-            id: product.id,
-            name: product.name,
-            description: product.description,
-            price: product.price,
-            originalPrice: product.originalPrice,
-            rating: product.rating,
-            reviews: product.reviews,
-            image: product.images[0],
-            category: product.category,
-            brand: product.brand,
-            inStock: product.inStock,
-        });
+        toggleItem(product.id);
     };
 
     // Funciones para el carousel
@@ -316,8 +304,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     <Button
                                         onClick={handleAddToCart}
                                         className={`w-full h-12 text-lg font-bold shadow-lg transition-all ${addedToCart
-                                                ? 'bg-green-600 hover:bg-green-700'
-                                                : 'bg-[#4A6741] hover:bg-[#3F5D4C]'
+                                            ? 'bg-green-600 hover:bg-green-700'
+                                            : 'bg-[#4A6741] hover:bg-[#3F5D4C]'
                                             } text-white`}
                                     >
                                         <ShoppingBag className="mr-2 h-6 w-6 stroke-2 fill-white/20" />
@@ -329,8 +317,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                         variant="outline"
                                         onClick={handleToggleWishlist}
                                         className={`h-12 w-12 p-0 border-2 ${isWishlisted
-                                                ? 'border-pink-500 bg-pink-50 text-pink-500'
-                                                : 'border-gray-300 hover:border-pink-500 hover:text-pink-500'
+                                            ? 'border-pink-500 bg-pink-50 text-pink-500'
+                                            : 'border-gray-300 hover:border-pink-500 hover:text-pink-500'
                                             }`}
                                     >
                                         <Heart className={`h-6 w-6 ${isWishlisted ? 'fill-current' : ''}`} />

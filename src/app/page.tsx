@@ -13,7 +13,8 @@ import EmailInput from "@/components/ui/email-input";
 
 export default function Home() {
   const { products, isLoading, getFeaturedProducts } = useProducts();
-  const [wishlist, setWishlist] = useState<string[]>([]);
+  const { toggleItem: toggleWishlist, isInWishlist } = useWishlist();
+  const { addItem: addToCartStore } = useCart();
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [newsletterMessage, setNewsletterMessage] = useState("");
@@ -21,44 +22,22 @@ export default function Home() {
   // Get featured products from context
   const featuredProducts = getFeaturedProducts().slice(0, 3);
 
-  // Load wishlist from localStorage
-  useEffect(() => {
-    const savedWishlist = localStorage.getItem('sophia_wishlist');
-    if (savedWishlist) {
-      setWishlist(JSON.parse(savedWishlist));
-    }
-  }, []);
-
-  // Toggle wishlist function
-  const toggleWishlist = (productId: string) => {
-    const newWishlist = wishlist.includes(productId)
-      ? wishlist.filter(id => id !== productId)
-      : [...wishlist, productId];
-
-    setWishlist(newWishlist);
-    localStorage.setItem('sophia_wishlist', JSON.stringify(newWishlist));
-
-    // Dispatch custom event to update other components
-    window.dispatchEvent(new CustomEvent('wishlistChanged'));
-  };
-
   // Add to cart function
-  const addToCart = (productId: string) => {
-    const savedCart = localStorage.getItem('sophia_cart');
-    const cart = savedCart ? JSON.parse(savedCart) : [];
+  const addToCart = (product: any, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-    const existingItem = cart.find((item: any) => item.id === productId);
-
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      cart.push({ id: productId, quantity: 1 });
-    }
-
-    localStorage.setItem('sophia_cart', JSON.stringify(cart));
-
-    // Dispatch custom event to update other components
-    window.dispatchEvent(new CustomEvent('cartChanged'));
+    addToCartStore({
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      originalPrice: product.price * 1.2, // Mock original price if needed or use actual
+      image: product.image,
+      category: product.category,
+      brand: product.brand,
+      inStock: product.active,
+    });
   };
   return (
     <main className="min-h-screen bg-white">
@@ -427,7 +406,7 @@ export default function Home() {
                             className="p-2 h-auto hover:bg-[#4A6741]/10"
                           >
                             <Heart
-                              className={`w-5 h-5 transition-colors ${wishlist.includes(product.id)
+                              className={`w-5 h-5 transition-colors ${isInWishlist(product.id)
                                 ? 'fill-red-500 text-red-500'
                                 : 'text-gray-500 hover:text-red-400'
                                 }`}
@@ -487,11 +466,7 @@ export default function Home() {
                           viewport={{ once: true }}
                         >
                           <Button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              addToCart(product.id);
-                            }}
+                            onClick={(e) => addToCart(product, e)}
                             className="w-full bg-[#4A6741] hover:bg-[#3F5D4C] text-white"
                           >
                             Agregar al Carrito

@@ -1,4 +1,4 @@
-"use client";
+update"use client";
 
 import { useEffect, useState } from 'react';
 import { useAuth, useCategories } from '@/store';
