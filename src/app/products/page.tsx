@@ -308,20 +308,21 @@ export default function ProductsPage() {
                       </SelectContent>
                     </Select>
 
-                    <div className="flex border border-gray-300 rounded-lg overflow-hidden">
+                    <div className="flex border border-gray-300 rounded-lg overflow-hidden h-10">
                       <Button
                         variant={viewMode === "grid" ? "default" : "ghost"}
-                        size="sm"
+                        size="icon"
                         onClick={() => setViewMode("grid")}
-                        className={`rounded-none ${viewMode === "grid" ? "bg-[#4A6741] text-white" : ""}`}
+                        className={`rounded-none h-full w-10 ${viewMode === "grid" ? "bg-[#4A6741] text-white hover:bg-[#3F5D4C]" : "hover:bg-gray-100"}`}
                       >
                         <Grid3X3 className="h-4 w-4" />
                       </Button>
+                      <div className="w-[1px] bg-gray-300 h-full"></div>
                       <Button
                         variant={viewMode === "list" ? "default" : "ghost"}
-                        size="sm"
+                        size="icon"
                         onClick={() => setViewMode("list")}
-                        className={`rounded-none ${viewMode === "list" ? "bg-[#4A6741] text-white" : ""}`}
+                        className={`rounded-none h-full w-10 ${viewMode === "list" ? "bg-[#4A6741] text-white hover:bg-[#3F5D4C]" : "hover:bg-gray-100"}`}
                       >
                         <List className="h-4 w-4" />
                       </Button>
@@ -413,7 +414,7 @@ export default function ProductsPage() {
 
                       <div className="p-4">
                         <div className="flex items-center justify-between mb-2">
-                          <Badge variant="secondary" className="text-xs bg-[#4A6741]/10 text-[#4A6741]">
+                          <Badge variant="secondary" className="text-xs px-2.5 py-0.5 font-medium bg-[#4A6741]/10 text-[#4A6741] hover:bg-[#4A6741]/20">
                             {product.category}
                           </Badge>
 
@@ -457,9 +458,9 @@ export default function ProductsPage() {
 
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center gap-2">
-                            <span className="text-xl font-bold text-[#4A6741]">€{product.price}</span>
+                            <span className="text-xl font-bold text-[#4A6741]">€{product.price.toFixed(2)}</span>
                             {product.originalPrice > product.price && (
-                              <span className="text-sm text-gray-500 line-through">€{product.originalPrice}</span>
+                              <span className="text-sm text-gray-500 line-through">€{product.originalPrice.toFixed(2)}</span>
                             )}
                           </div>
                         </div>
