@@ -80,7 +80,7 @@ const USERS_COLLECTION = 'users';
 // Generate manager code
 const generateManagerCode = async (): Promise<string> => {
   if (!db) return 'MGR-001';
-  
+
   const managersQuery = query(
     collection(db, USERS_COLLECTION),
     where('role', '==', 'manager')
