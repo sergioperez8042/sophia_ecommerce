@@ -108,7 +108,7 @@ export default function NewsletterAdminPage() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     <PageHeader
                         title="Newsletter"
-                        subtitle="Gestiona tus suscriptores y envía newsletters"
+                        description="Gestiona tus suscriptores y envía newsletters"
                     />
 
                     {/* Message */}
