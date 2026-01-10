@@ -8,7 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { useProducts } from "@/store";
+import { useProducts, useWishlist, useCart } from "@/store";
 import EmailInput from "@/components/ui/email-input";
 
 export default function Home() {
