@@ -147,8 +147,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (docSnap.exists()) {
         const data = docSnap.data();
         // Convert Firestore Timestamp to Date
-        const createdAt = data.createdAt instanceof Timestamp 
-          ? data.createdAt.toDate() 
+        const createdAt = data.createdAt instanceof Timestamp
+          ? data.createdAt.toDate()
           : data.createdAt;
         return { id: docSnap.id, ...data, createdAt } as User;
       }
@@ -195,10 +195,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const userProfile = await getUserProfile(userCredential.user.uid);
+      let userProfile = await getUserProfile(userCredential.user.uid);
 
+      // If user exists in Auth but not in Firestore, create the profile
       if (!userProfile) {
-        return { success: false, error: 'Perfil de usuario no encontrado' };
+        console.log('Creating missing Firestore profile for user:', userCredential.user.uid);
+        const newProfile: Omit<User, 'id'> = {
+          name: userCredential.user.displayName || email.split('@')[0],
+          email: userCredential.user.email || email,
+          role: 'client',
+          createdAt: new Date(),
+        };
+
+        await setDoc(doc(db, USERS_COLLECTION, userCredential.user.uid), newProfile);
+        userProfile = { id: userCredential.user.uid, ...newProfile };
+
+        dispatch({
+          type: 'SET_USER',
+          payload: { user: userProfile, firebaseUser: userCredential.user }
+        });
       }
 
       return { success: true };
