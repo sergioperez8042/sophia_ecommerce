@@ -1,10 +1,10 @@
 // Firebase configuration
 // Get these values from Firebase Console > Project Settings > Your apps > Web app
 
-import { initializeApp, getApps } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
-import { getStorage } from 'firebase/storage';
+import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
+import { getFirestore, Firestore } from 'firebase/firestore';
+import { getAuth, Auth } from 'firebase/auth';
+import { getStorage, FirebaseStorage } from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -15,12 +15,29 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase (avoid reinitializing in dev mode with HMR)
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+// Check if Firebase config is valid (has required values)
+const isFirebaseConfigValid = !!(
+  firebaseConfig.apiKey &&
+  firebaseConfig.apiKey !== 'undefined' &&
+  firebaseConfig.authDomain &&
+  firebaseConfig.projectId
+);
 
-// Initialize services
-export const db = getFirestore(app);
-export const auth = getAuth(app);
-export const storage = getStorage(app);
+// Only initialize Firebase if we have a valid config
+// This prevents build-time errors on Vercel when env vars are not set
+let app: FirebaseApp | null = null;
+let db: Firestore | null = null;
+let auth: Auth | null = null;
+let storage: FirebaseStorage | null = null;
 
+if (isFirebaseConfigValid) {
+  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+  db = getFirestore(app);
+  auth = getAuth(app);
+  storage = getStorage(app);
+}
+
+// Export with type assertions - consumers should check if these are null
+// when used in contexts where Firebase might not be initialized
+export { db, auth, storage };
 export default app;

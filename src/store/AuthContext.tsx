@@ -79,6 +79,8 @@ const USERS_COLLECTION = 'users';
 
 // Generate manager code
 const generateManagerCode = async (): Promise<string> => {
+  if (!db) return 'MGR-001';
+  
   const managersQuery = query(
     collection(db, USERS_COLLECTION),
     where('role', '==', 'manager')
@@ -140,6 +142,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Get user profile from Firestore
   const getUserProfile = useCallback(async (uid: string): Promise<User | null> => {
+    if (!db) return null;
+
     try {
       const docRef = doc(db, USERS_COLLECTION, uid);
       const docSnap = await getDoc(docRef);
@@ -161,6 +165,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Listen to Firebase Auth state changes
   useEffect(() => {
+    // Guard: If Firebase is not initialized, mark as loaded with no user
+    if (!auth) {
+      dispatch({ type: 'SET_LOADED' });
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         // User is signed in, get their profile from Firestore
@@ -193,6 +203,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Login
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+    if (!auth || !db) {
+      return { success: false, error: 'Firebase no está inicializado' };
+    }
+
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       let userProfile = await getUserProfile(userCredential.user.uid);
@@ -241,6 +255,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Validate email format
     if (!isValidEmail(userData.email)) {
       return { success: false, error: 'Formato de email inválido' };
+    }
+
+    if (!auth || !db) {
+      return { success: false, error: 'Firebase no está inicializado' };
     }
 
     try {
@@ -295,6 +313,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Logout
   const logout = async () => {
+    if (!auth) return;
+
     try {
       await signOut(auth);
       dispatch({ type: 'LOGOUT' });
@@ -305,7 +325,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Update user profile
   const updateUser = async (data: Partial<User>) => {
-    if (!state.user || !state.firebaseUser) return;
+    if (!state.user || !state.firebaseUser || !db) return;
 
     try {
       // Update Firestore
@@ -326,6 +346,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Get all managers
   const getManagers = async (): Promise<User[]> => {
+    if (!db) return [];
+
     try {
       const managersQuery = query(
         collection(db, USERS_COLLECTION),
