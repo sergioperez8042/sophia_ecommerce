@@ -352,9 +352,20 @@ export default function AdminProductsPage() {
                                                 >
                                                     <td className="p-4">
                                                         <div className="flex items-center gap-3">
-                                                            <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                                                                <ImageIcon className="w-6 h-6 text-gray-500" />
-                                                            </div>
+                                                            {product.image ? (
+                                                                <Image
+                                                                    src={product.image}
+                                                                    alt={product.name}
+                                                                    width={48}
+                                                                    height={48}
+                                                                    className="w-12 h-12 rounded-lg object-cover"
+                                                                    unoptimized
+                                                                />
+                                                            ) : (
+                                                                <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                                                                    <ImageIcon className="w-6 h-6 text-gray-500" />
+                                                                </div>
+                                                            )}
                                                             <div>
                                                                 <p className="font-medium text-gray-900">
                                                                     {product.name}
