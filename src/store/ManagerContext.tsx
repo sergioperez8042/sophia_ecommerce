@@ -88,7 +88,7 @@ export function ManagerProvider({ children }: { children: ReactNode }) {
 
   // Load managers from Firebase
   const loadManagersFromFirebase = useCallback(async () => {
-    if (!isFirebaseConfigured()) {
+    if (!isFirebaseConfigured() || !db) {
       console.warn('Firebase not configured. Cannot load managers.');
       return;
     }

@@ -3,6 +3,12 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { ICategory } from '@/entities/all';
 import { CategoryService } from '@/lib/firestore-services';
+import { db } from '@/lib/firebase';
+
+// Check if Firebase is ready (client-side and initialized)
+const isFirebaseReady = () => {
+    return typeof window !== 'undefined' && db !== null;
+};
 
 interface CategoryContextType {
     categories: ICategory[];
@@ -25,6 +31,12 @@ export function CategoryProvider({ children }: { children: ReactNode }) {
     const [error, setError] = useState<string | null>(null);
 
     const refreshCategories = useCallback(async () => {
+        // Guard: Don't attempt to fetch if Firebase isn't ready
+        if (!isFirebaseReady()) {
+            setIsLoading(false);
+            return;
+        }
+
         setIsLoading(true);
         setError(null);
         try {

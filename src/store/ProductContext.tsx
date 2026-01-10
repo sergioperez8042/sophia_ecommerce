@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useReducer, useEffect, ReactNode, useCallback } from 'react';
 import { IProduct } from '@/entities/all';
 import { ProductService } from '@/lib/firestore-services';
+import { db } from '@/lib/firebase';
 import ProductsData from '@/entities/Product.json';
 
 // Types
@@ -80,12 +81,9 @@ function productReducer(state: ProductState, action: ProductAction): ProductStat
 // Context
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
-// Check if Firebase is configured
-const isFirebaseConfigured = () => {
-    return !!(
-        process.env.NEXT_PUBLIC_FIREBASE_API_KEY &&
-        process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID
-    );
+// Check if Firebase is configured and available
+const isFirebaseReady = () => {
+    return typeof window !== 'undefined' && db !== null;
 };
 
 // Provider
@@ -97,7 +95,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
         dispatch({ type: 'SET_LOADING', payload: true });
 
         try {
-            if (isFirebaseConfigured()) {
+            if (isFirebaseReady()) {
                 // Load from Firestore
                 const products = await ProductService.getAll();
                 dispatch({ type: 'SET_PRODUCTS', payload: products });
@@ -126,7 +124,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
 
     // Seed products to Firestore
     const seedProducts = async () => {
-        if (!isFirebaseConfigured()) {
+        if (!isFirebaseReady()) {
             console.error('Firebase not configured');
             return;
         }
@@ -163,7 +161,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
     const addProduct = async (
         productData: Omit<IProduct, 'id' | 'created_date'>
     ): Promise<IProduct> => {
-        if (isFirebaseConfigured()) {
+        if (isFirebaseReady()) {
             const newProduct = await ProductService.create({
                 ...productData,
                 created_date: new Date().toISOString(),
@@ -201,7 +199,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
             id,
         };
 
-        if (isFirebaseConfigured()) {
+        if (isFirebaseReady()) {
             await ProductService.update(id, data);
         }
 
@@ -214,7 +212,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
         const exists = state.products.some((p) => p.id === id);
         if (!exists) return false;
 
-        if (isFirebaseConfigured()) {
+        if (isFirebaseReady()) {
             await ProductService.delete(id);
         }
 
@@ -229,7 +227,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
 
         const updatedProduct = { ...product, active: !product.active };
 
-        if (isFirebaseConfigured()) {
+        if (isFirebaseReady()) {
             await ProductService.update(id, { active: !product.active });
         }
 
@@ -244,7 +242,7 @@ export function ProductProvider({ children }: { children: ReactNode }) {
 
         const updatedProduct = { ...product, featured: !product.featured };
 
-        if (isFirebaseConfigured()) {
+        if (isFirebaseReady()) {
             await ProductService.update(id, { featured: !product.featured });
         }
 

@@ -25,6 +25,11 @@ const PRODUCTS_COLLECTION = 'products';
 const CATEGORIES_COLLECTION = 'categories';
 const USERS_COLLECTION = 'users';
 
+// Helper to check if Firebase is available (client-side only)
+const isFirebaseAvailable = (): boolean => {
+  return typeof window !== 'undefined' && db !== null;
+};
+
 // Helper to ensure Firebase is initialized
 const getDb = (): Firestore => {
   if (!db) {
