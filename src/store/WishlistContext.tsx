@@ -78,7 +78,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
     let unsubscribe: () => void = () => { };
 
     const syncWishlist = async () => {
-      if (isAuthenticated && user) {
+      if (isAuthenticated && user && db) {
         // Authenticated: Sync with Firestore
         const userRef = doc(db, 'users', user.id);
 
@@ -126,7 +126,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
 
     const saveChanges = async () => {
       setIsSyncing(true);
-      if (isAuthenticated && user) {
+      if (isAuthenticated && user && db) {
         try {
           const userRef = doc(db, 'users', user.id);
           await setDoc(userRef, { wishlist: state.items }, { merge: true });

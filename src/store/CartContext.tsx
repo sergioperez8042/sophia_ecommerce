@@ -126,8 +126,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     let unsubscribe: () => void = () => { };
 
     const syncCart = async () => {
-      // 1. If authenticated, listen to Firestore
-      if (isAuthenticated && user) {
+      // 1. If authenticated and Firebase is available, listen to Firestore
+      if (isAuthenticated && user && db) {
         const userCartRef = doc(db, 'users', user.id, 'cart', 'main'); // Using a subcollection or single doc strategy
         // Simplified: Storing cart array in user document or a dedicated cart document
         // Let's store it in a 'carts' collection keyed by userID for separation
@@ -205,7 +205,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     const saveChanges = async () => {
       setIsSyncing(true);
-      if (isAuthenticated && user) {
+      if (isAuthenticated && user && db) {
         // Save to Firestore
         try {
           const userRef = doc(db, 'users', user.id);
