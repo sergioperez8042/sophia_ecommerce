@@ -11,9 +11,6 @@ const isValidEnvVar = (value: string | undefined): value is string => {
   return !!(value && value !== 'undefined' && value !== '' && value.length > 10);
 };
 
-// Check if we're in a browser environment (client-side)
-const isBrowser = typeof window !== 'undefined';
-
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -24,21 +21,21 @@ const firebaseConfig = {
 };
 
 // Check if Firebase config is valid (has required values)
-// More strict validation to prevent build-time errors
 const isFirebaseConfigValid = 
   isValidEnvVar(firebaseConfig.apiKey) &&
   isValidEnvVar(firebaseConfig.authDomain) &&
   isValidEnvVar(firebaseConfig.projectId);
 
-// Only initialize Firebase if:
-// 1. We have a valid config
-// 2. We're in a browser environment (prevents SSG/SSR build errors)
+// Initialize Firebase variables
 let app: FirebaseApp | null = null;
 let db: Firestore | null = null;
 let auth: Auth | null = null;
 let storage: FirebaseStorage | null = null;
 
-if (isFirebaseConfigValid && isBrowser) {
+// Initialize Firebase if config is valid
+// This will work on both client (browser) and server (API routes)
+// It will fail during build if env vars are not set, but that's expected
+if (isFirebaseConfigValid) {
   try {
     app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
     db = getFirestore(app);
@@ -52,5 +49,5 @@ if (isFirebaseConfigValid && isBrowser) {
 
 // Export with type assertions - consumers should check if these are null
 // when used in contexts where Firebase might not be initialized
-export { db, auth, storage };
+export { db, auth, storage, isFirebaseConfigValid };
 export default app;

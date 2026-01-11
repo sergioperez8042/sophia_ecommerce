@@ -172,7 +172,7 @@ export default function CartPage() {
                                                     <Button
                                                         variant="ghost"
                                                         size="sm"
-                                                        className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600 text-gray-500"
+                                                        className="h-10 w-10 p-0 bg-red-50 hover:bg-red-100 text-red-500 hover:text-red-600 border border-red-200 hover:border-red-300 rounded-lg transition-all duration-200"
                                                         onClick={() => removeItem(item.product.id)}
                                                     >
                                                         <Trash2 className="h-5 w-5" />

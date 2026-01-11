@@ -1,35 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, readFile, mkdir } from 'fs/promises';
-import path from 'path';
-
-const DATA_DIR = path.join(process.cwd(), 'data');
-const SUBSCRIBERS_FILE = path.join(DATA_DIR, 'subscribers.json');
+import { collection, addDoc, query, where, getDocs, Timestamp } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 // Email validation regex
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
+const SUBSCRIBERS_COLLECTION = 'subscribers';
+
 interface Subscriber {
   email: string;
-  subscribedAt: string;
+  subscribedAt: Timestamp;
   source: 'newsletter' | 'checkout' | 'contact';
-}
-
-async function ensureDataDir() {
-  await mkdir(DATA_DIR, { recursive: true });
-}
-
-async function getSubscribers(): Promise<Subscriber[]> {
-  try {
-    const data = await readFile(SUBSCRIBERS_FILE, 'utf-8');
-    return JSON.parse(data);
-  } catch {
-    return [];
-  }
-}
-
-async function saveSubscribers(subscribers: Subscriber[]) {
-  await ensureDataDir();
-  await writeFile(SUBSCRIBERS_FILE, JSON.stringify(subscribers, null, 2));
+  active: boolean;
 }
 
 export async function POST(request: NextRequest) {
@@ -51,28 +33,38 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const subscribers = await getSubscribers();
-    
+    // Check if Firebase is available
+    if (!db) {
+      console.error('Firebase not initialized');
+      return NextResponse.json(
+        { error: 'Error de configuración del servidor' },
+        { status: 500 }
+      );
+    }
+
     // Check if already subscribed
-    const existing = subscribers.find(s => s.email.toLowerCase() === email.toLowerCase());
-    if (existing) {
+    const subscribersRef = collection(db, SUBSCRIBERS_COLLECTION);
+    const q = query(subscribersRef, where('email', '==', email.toLowerCase().trim()));
+    const existingDocs = await getDocs(q);
+
+    if (!existingDocs.empty) {
       return NextResponse.json(
         { message: 'Ya estás suscrito a nuestro boletín', alreadySubscribed: true },
         { status: 200 }
       );
     }
 
-    // Add new subscriber
+    // Add new subscriber to Firestore
     const newSubscriber: Subscriber = {
       email: email.toLowerCase().trim(),
-      subscribedAt: new Date().toISOString(),
+      subscribedAt: Timestamp.now(),
       source,
+      active: true,
     };
 
-    subscribers.push(newSubscriber);
-    await saveSubscribers(subscribers);
+    await addDoc(subscribersRef, newSubscriber);
 
-    // Send welcome email
+    // Send welcome email (optional - don't fail if email fails)
     try {
       const { sendWelcomeEmail } = await import('@/lib/resend');
       await sendWelcomeEmail({ to: email });
@@ -97,7 +89,23 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const subscribers = await getSubscribers();
+    if (!db) {
+      return NextResponse.json(
+        { error: 'Firebase not initialized' },
+        { status: 500 }
+      );
+    }
+
+    const subscribersRef = collection(db, SUBSCRIBERS_COLLECTION);
+    const q = query(subscribersRef, where('active', '==', true));
+    const snapshot = await getDocs(q);
+
+    const subscribers = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      subscribedAt: doc.data().subscribedAt?.toDate?.()?.toISOString() || null,
+    }));
+
     return NextResponse.json({
       total: subscribers.length,
       subscribers,
