@@ -582,7 +582,7 @@ export default function Home() {
                         await emailjs.send(
                           'service_4sxjhjo',
                           'template_3jwk9za',
-                          { user_email: newsletterEmail },
+                          { email: newsletterEmail },
                           'jaIFCXoPemamfWFiH'
                         );
                         setNewsletterStatus('success');
