@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useProducts, useWishlist, useCart } from "@/store";
 import EmailInput from "@/components/ui/email-input";
+import emailjs from '@emailjs/browser';
 
 export default function Home() {
   const { products, isLoading, getFeaturedProducts } = useProducts();
@@ -577,23 +578,20 @@ export default function Home() {
                       if (!newsletterEmail) return;
                       setNewsletterStatus('loading');
                       try {
-                        const res = await fetch('/api/subscribe', {
-                          method: 'POST',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ email: newsletterEmail }),
-                        });
-                        const data = await res.json();
-                        if (res.ok) {
-                          setNewsletterStatus('success');
-                          setNewsletterMessage(data.message);
-                          setNewsletterEmail('');
-                        } else {
-                          setNewsletterStatus('error');
-                          setNewsletterMessage(data.error);
-                        }
-                      } catch {
+                        // Send email using EmailJS
+                        await emailjs.send(
+                          'service_4sxjhjo',
+                          'template_3jwk9za',
+                          { user_email: newsletterEmail },
+                          'jaIFCXoPemamfWFiH'
+                        );
+                        setNewsletterStatus('success');
+                        setNewsletterMessage('¡Gracias por suscribirte! Revisa tu correo.');
+                        setNewsletterEmail('');
+                      } catch (error) {
+                        console.error('EmailJS error:', error);
                         setNewsletterStatus('error');
-                        setNewsletterMessage('Error al procesar la suscripción');
+                        setNewsletterMessage('Error al enviar. Intenta de nuevo.');
                       }
                     }}
                   >
