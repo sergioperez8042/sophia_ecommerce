@@ -19,6 +19,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { email, source = 'newsletter' } = body;
 
+    console.log('Subscribe request received:', { email, source });
+
     if (!email) {
       return NextResponse.json(
         { error: 'El email es requerido' },
@@ -35,23 +37,32 @@ export async function POST(request: NextRequest) {
 
     // Check if Firebase is available
     if (!db) {
-      console.error('Firebase not initialized');
+      console.error('Firebase not initialized - env vars missing?', {
+        hasApiKey: !!process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+        hasProjectId: !!process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+      });
       return NextResponse.json(
-        { error: 'Error de configuración del servidor' },
-        { status: 500 }
+        { error: 'Servicio temporalmente no disponible. Por favor intenta más tarde.' },
+        { status: 503 }
       );
     }
 
     // Check if already subscribed
     const subscribersRef = collection(db, SUBSCRIBERS_COLLECTION);
-    const q = query(subscribersRef, where('email', '==', email.toLowerCase().trim()));
-    const existingDocs = await getDocs(q);
+    
+    try {
+      const q = query(subscribersRef, where('email', '==', email.toLowerCase().trim()));
+      const existingDocs = await getDocs(q);
 
-    if (!existingDocs.empty) {
-      return NextResponse.json(
-        { message: 'Ya estás suscrito a nuestro boletín', alreadySubscribed: true },
-        { status: 200 }
-      );
+      if (!existingDocs.empty) {
+        return NextResponse.json(
+          { message: 'Ya estás suscrito a nuestro boletín', alreadySubscribed: true },
+          { status: 200 }
+        );
+      }
+    } catch (queryError) {
+      console.error('Error querying existing subscribers:', queryError);
+      // Continue anyway - we'll just add the subscriber
     }
 
     // Add new subscriber to Firestore
@@ -63,11 +74,13 @@ export async function POST(request: NextRequest) {
     };
 
     await addDoc(subscribersRef, newSubscriber);
+    console.log('Subscriber added successfully:', email);
 
     // Send welcome email (optional - don't fail if email fails)
     try {
       const { sendWelcomeEmail } = await import('@/lib/resend');
       await sendWelcomeEmail({ to: email });
+      console.log('Welcome email sent to:', email);
     } catch (emailError) {
       console.error('Error sending welcome email:', emailError);
       // Don't fail the subscription if email fails
@@ -81,7 +94,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error saving subscriber:', error);
     return NextResponse.json(
-      { error: 'Error al procesar la suscripción' },
+      { error: 'Error al procesar la suscripción. Por favor intenta de nuevo.' },
       { status: 500 }
     );
   }
