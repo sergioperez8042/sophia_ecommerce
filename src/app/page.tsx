@@ -581,7 +581,7 @@ export default function Home() {
                         // Send email using EmailJS
                         await emailjs.send(
                           'service_4sxjhjo',
-                          'template_3jwk9za',
+                          'template_psds5gq',
                           { email: newsletterEmail },
                           'jaIFCXoPemamfWFiH'
                         );
