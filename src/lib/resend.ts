@@ -1,7 +1,18 @@
 import { Resend } from 'resend';
 
-// Initialize Resend with API key
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy initialization - only create Resend instance when needed
+let resendInstance: Resend | null = null;
+
+function getResend(): Resend {
+  if (!resendInstance) {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      throw new Error('RESEND_API_KEY environment variable is not set');
+    }
+    resendInstance = new Resend(apiKey);
+  }
+  return resendInstance;
+}
 
 // Brand colors
 const BRAND_GREEN = '#4A6741';
@@ -144,6 +155,7 @@ function getWelcomeEmailHtml(subscriberName?: string): string {
  */
 export async function sendWelcomeEmail({ to, subscriberName }: SendWelcomeEmailParams) {
   try {
+    const resend = getResend();
     const { data, error } = await resend.emails.send({
       from: 'Sophia Natural <onboarding@resend.dev>',
       to: [to],
@@ -169,6 +181,7 @@ export async function sendWelcomeEmail({ to, subscriberName }: SendWelcomeEmailP
  */
 export async function sendNewsletter({ to, subject, content }: SendNewsletterParams) {
   try {
+    const resend = getResend();
     // Send in batches to avoid rate limits
     const batchSize = 50;
     const results = [];
