@@ -98,6 +98,12 @@ export async function POST(request: NextRequest) {
     const { email, source = 'newsletter' } = body;
 
     console.log('Request body:', { email, source });
+    console.log('ENV CHECK:', {
+      hasFirebaseApiKey: !!process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+      hasFirebaseProjectId: !!process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+      hasResendKey: !!process.env.RESEND_API_KEY,
+      dbAvailable: !!db,
+    });
 
     if (!email) {
       return NextResponse.json(
@@ -115,11 +121,16 @@ export async function POST(request: NextRequest) {
 
     // Check if Firebase is available
     if (!db) {
-      console.error('Firebase not initialized');
-      return NextResponse.json(
-        { error: 'Servicio temporalmente no disponible' },
-        { status: 503 }
-      );
+      // Firebase not available - just send email and return success
+      console.log('Firebase not available, sending email only');
+      const emailResult = await sendWelcomeEmail(email);
+      
+      return NextResponse.json({
+        success: true,
+        message: '¡Gracias por suscribirte! Pronto recibirás nuestras novedades.',
+        emailSent: emailResult.success,
+        note: 'Firebase not configured',
+      });
     }
 
     const subscribersRef = collection(db, SUBSCRIBERS_COLLECTION);
