@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { collection, addDoc, query, where, getDocs, Timestamp } from 'firebase/firestore';
+import { collection, addDoc, query, where, getDocs, Timestamp, QueryDocumentSnapshot, DocumentData } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { sendWelcomeEmail } from '@/lib/resend';
 
 // Email validation regex
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -78,7 +79,6 @@ export async function POST(request: NextRequest) {
 
     // Send welcome email (optional - don't fail if email fails)
     try {
-      const { sendWelcomeEmail } = await import('@/lib/resend');
       await sendWelcomeEmail({ to: email });
       console.log('Welcome email sent to:', email);
     } catch (emailError) {
@@ -113,11 +113,25 @@ export async function GET() {
     const q = query(subscribersRef, where('active', '==', true));
     const snapshot = await getDocs(q);
 
-    const subscribers = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-      subscribedAt: doc.data().subscribedAt?.toDate?.()?.toISOString() || null,
-    }));
+    interface SubscriberRecord {
+      id: string;
+      email?: string;
+      source?: string;
+      active?: boolean;
+      subscribedAt: string | null;
+    }
+
+    const subscribers: SubscriberRecord[] = snapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
+      const data = doc.data();
+      const subscribedAtField = data.subscribedAt as { toDate?: () => Date } | undefined;
+      return {
+        id: doc.id,
+        email: data.email as string | undefined,
+        source: data.source as string | undefined,
+        active: data.active as boolean | undefined,
+        subscribedAt: subscribedAtField?.toDate?.()?.toISOString() || null,
+      };
+    });
 
     return NextResponse.json({
       total: subscribers.length,

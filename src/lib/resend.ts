@@ -16,6 +16,7 @@ interface SendNewsletterParams {
   to: string[];
   subject: string;
   content: string;
+  previewText?: string;
 }
 
 // Welcome email HTML template
