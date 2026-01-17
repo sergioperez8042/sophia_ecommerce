@@ -12,7 +12,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  
+
   // Rutas que usan el layout limpio (solo catálogo, sin header)
   const isPublicCatalog = pathname === '/' || pathname?.startsWith('/catalogo');
 
