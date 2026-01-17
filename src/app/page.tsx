@@ -1,10 +1,14 @@
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
-import { Star, Search, Grid3X3, List, Sparkles, Leaf, Phone, Mail } from "lucide-react";
+import { Star, Search, Grid3X3, List, Sparkles, Leaf, Phone, Mail, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { motion, AnimatePresence } from 'framer-motion';
+
+// Número de WhatsApp para pedidos
+const WHATSAPP_NUMBER = "34642633982";
 
 interface Product {
     id: string;
@@ -33,7 +37,6 @@ export default function HomePage() {
     const [searchTerm, setSearchTerm] = useState("");
     const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-    // Cargar productos y categorías de Firebase
     useEffect(() => {
         const fetchData = async () => {
             if (!db) {
@@ -43,7 +46,6 @@ export default function HomePage() {
             }
 
             try {
-                // Cargar categorías
                 const categoriesSnapshot = await getDocs(collection(db, 'categories'));
                 const categoriesData = categoriesSnapshot.docs.map(doc => ({
                     id: doc.id,
@@ -51,7 +53,6 @@ export default function HomePage() {
                 })) as Category[];
                 setCategories(categoriesData);
 
-                // Cargar productos activos
                 const productsQuery = query(
                     collection(db, 'products'),
                     where('active', '==', true)
@@ -72,7 +73,6 @@ export default function HomePage() {
         fetchData();
     }, []);
 
-    // Filtrar productos
     const filteredProducts = useMemo(() => {
         let filtered = [...products];
 
@@ -98,65 +98,160 @@ export default function HomePage() {
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-[#FEFCF7]">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4A6741] mx-auto mb-4"></div>
-                    <p className="text-gray-600">Cargando catálogo...</p>
-                </div>
+                <motion.div
+                    className="text-center"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    <motion.div
+                        className="w-16 h-16 bg-gradient-to-br from-[#4A6741] to-[#3F5D4C] rounded-full flex items-center justify-center mx-auto mb-4"
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    >
+                        <Leaf className="w-8 h-8 text-white" />
+                    </motion.div>
+                    <motion.p
+                        className="text-gray-600"
+                        animate={{ opacity: [0.5, 1, 0.5] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                        Cargando catálogo...
+                    </motion.p>
+                </motion.div>
             </div>
         );
     }
 
     return (
         <div className="min-h-screen bg-[#FEFCF7]">
-            {/* Header del Catálogo */}
-            <header className="nav-glass sticky top-0 z-50">
+            {/* Floating WhatsApp Button */}
+            <motion.a
+                href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hola! Me gustaría hacer un pedido`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:shadow-xl"
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 1, type: "spring", stiffness: 200 }}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+            >
+                <MessageCircle className="w-6 h-6" />
+            </motion.a>
+
+            {/* Header */}
+            <motion.header
+                className="nav-glass sticky top-0 z-40"
+                initial={{ y: -100 }}
+                animate={{ y: 0 }}
+                transition={{ type: "spring", stiffness: 100 }}
+            >
                 <div className="max-w-7xl mx-auto px-4 py-4">
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-[#4A6741] to-[#3F5D4C] rounded-full flex items-center justify-center">
+                        <motion.div
+                            className="flex items-center gap-3"
+                            whileHover={{ scale: 1.02 }}
+                        >
+                            <motion.div
+                                className="w-10 h-10 bg-gradient-to-br from-[#4A6741] to-[#3F5D4C] rounded-full flex items-center justify-center"
+                                whileHover={{ rotate: 360 }}
+                                transition={{ duration: 0.5 }}
+                            >
                                 <Leaf className="w-5 h-5 text-white" />
-                            </div>
+                            </motion.div>
                             <div>
                                 <h1 className="text-xl font-semibold text-gray-900">Sophia</h1>
                                 <p className="text-xs text-[#4A6741]">Cosmética Natural</p>
                             </div>
-                        </div>
+                        </motion.div>
 
-                        {/* Contacto */}
                         <div className="hidden md:flex items-center gap-6 text-sm text-gray-600">
-                            <a href="tel:+34600000000" className="flex items-center gap-2 hover:text-[#4A6741] transition-colors">
+                            <motion.a
+                                href="tel:+34642633982"
+                                className="flex items-center gap-2 hover:text-[#4A6741] transition-colors"
+                                whileHover={{ scale: 1.05 }}
+                            >
                                 <Phone className="w-4 h-4" />
-                                <span>+34 600 000 000</span>
-                            </a>
-                            <a href="mailto:info@sophia.com" className="flex items-center gap-2 hover:text-[#4A6741] transition-colors">
+                                <span>+34 642 63 39 82</span>
+                            </motion.a>
+                            <motion.a
+                                href="mailto:info@sophia.com"
+                                className="flex items-center gap-2 hover:text-[#4A6741] transition-colors"
+                                whileHover={{ scale: 1.05 }}
+                            >
                                 <Mail className="w-4 h-4" />
                                 <span>info@sophia.com</span>
-                            </a>
+                            </motion.a>
                         </div>
                     </div>
                 </div>
-            </header>
+            </motion.header>
 
             {/* Hero Section */}
-            <section className="hero-gradient py-12 px-4">
-                <div className="max-w-7xl mx-auto text-center">
-                    <div className="inline-flex items-center gap-2 bg-[#4A6741]/10 backdrop-blur-sm px-4 py-2 rounded-full mb-4">
-                        <Sparkles className="w-4 h-4 text-[#4A6741]" />
-                        <span className="text-sm text-[#4A6741]">Cosmética Natural Artesanal</span>
-                    </div>
-                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <section className="hero-gradient py-16 px-4 relative overflow-hidden">
+                {/* Animated background elements */}
+                <motion.div
+                    className="absolute top-10 left-10 w-32 h-32 rounded-full bg-[#4A6741]/10 blur-3xl"
+                    animate={{
+                        scale: [1, 1.2, 1],
+                        opacity: [0.3, 0.6, 0.3],
+                    }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                />
+                <motion.div
+                    className="absolute bottom-10 right-10 w-48 h-48 rounded-full bg-[#D4AF37]/10 blur-3xl"
+                    animate={{
+                        scale: [1.2, 1, 1.2],
+                        opacity: [0.2, 0.5, 0.2],
+                    }}
+                    transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+                />
+
+                <div className="max-w-7xl mx-auto text-center relative z-10">
+                    <motion.div
+                        className="inline-flex items-center gap-2 bg-[#4A6741]/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                    >
+                        <motion.div
+                            animate={{ rotate: [0, 360] }}
+                            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                        >
+                            <Sparkles className="w-4 h-4 text-[#4A6741]" />
+                        </motion.div>
+                        <span className="text-sm text-[#4A6741] font-medium">Cosmética Natural Artesanal</span>
+                    </motion.div>
+
+                    <motion.h2
+                        className="text-4xl md:text-5xl font-bold text-gray-900 mb-4"
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3, duration: 0.6 }}
+                    >
                         Nuestro Catálogo
-                    </h2>
-                    <p className="text-gray-600 max-w-2xl mx-auto">
+                    </motion.h2>
+
+                    <motion.p
+                        className="text-gray-600 max-w-2xl mx-auto text-lg"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4 }}
+                    >
                         Descubre nuestra colección de productos naturales elaborados con ingredientes orgánicos de la más alta calidad.
-                    </p>
+                    </motion.p>
                 </div>
             </section>
 
             {/* Filtros y Búsqueda */}
-            <section className="max-w-7xl mx-auto px-4 py-6">
+            <motion.section
+                className="max-w-7xl mx-auto px-4 py-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+            >
                 <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-                    {/* Búsqueda */}
                     <div className="relative w-full md:w-96">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#4A6741]" />
                         <input
@@ -164,102 +259,131 @@ export default function HomePage() {
                             placeholder="Buscar productos..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#4A6741]/20 bg-white focus:outline-none focus:ring-2 focus:ring-[#4A6741]/50 text-gray-900"
+                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#4A6741]/20 bg-white focus:outline-none focus:ring-2 focus:ring-[#4A6741]/50 text-gray-900 transition-all"
                         />
                     </div>
 
-                    {/* Categorías */}
                     <div className="flex items-center gap-2 overflow-x-auto pb-2 w-full md:w-auto">
-                        <button
+                        <motion.button
                             onClick={() => setSelectedCategory("all")}
                             className={`px-4 py-2 rounded-full text-sm whitespace-nowrap transition-all ${selectedCategory === "all"
-                                ? "bg-[#4A6741] text-white"
+                                ? "bg-[#4A6741] text-white shadow-lg"
                                 : "bg-white text-gray-600 hover:bg-[#F5F1E8] border border-[#4A6741]/20"
                                 }`}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                         >
                             Todos ({products.length})
-                        </button>
+                        </motion.button>
                         {categories.map(cat => {
                             const count = products.filter(p => p.category_id === cat.id).length;
                             if (count === 0) return null;
                             return (
-                                <button
+                                <motion.button
                                     key={cat.id}
                                     onClick={() => setSelectedCategory(cat.id)}
                                     className={`px-4 py-2 rounded-full text-sm whitespace-nowrap transition-all ${selectedCategory === cat.id
-                                        ? "bg-[#4A6741] text-white"
+                                        ? "bg-[#4A6741] text-white shadow-lg"
                                         : "bg-white text-gray-600 hover:bg-[#F5F1E8] border border-[#4A6741]/20"
                                         }`}
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
                                 >
                                     {cat.name} ({count})
-                                </button>
+                                </motion.button>
                             );
                         })}
                     </div>
 
-                    {/* Vista */}
                     <div className="hidden md:flex items-center gap-2 bg-white rounded-lg p-1 border border-[#4A6741]/20">
-                        <button
+                        <motion.button
                             onClick={() => setViewMode("grid")}
-                            className={`p-2 rounded-md transition-colors ${viewMode === "grid" ? "bg-[#F5F1E8] text-[#4A6741]" : "text-gray-600"
-                                }`}
+                            className={`p-2 rounded-md transition-colors ${viewMode === "grid" ? "bg-[#F5F1E8] text-[#4A6741]" : "text-gray-600"}`}
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
                         >
                             <Grid3X3 className="w-5 h-5" />
-                        </button>
-                        <button
+                        </motion.button>
+                        <motion.button
                             onClick={() => setViewMode("list")}
-                            className={`p-2 rounded-md transition-colors ${viewMode === "list" ? "bg-[#F5F1E8] text-[#4A6741]" : "text-gray-600"
-                                }`}
+                            className={`p-2 rounded-md transition-colors ${viewMode === "list" ? "bg-[#F5F1E8] text-[#4A6741]" : "text-gray-600"}`}
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
                         >
                             <List className="w-5 h-5" />
-                        </button>
+                        </motion.button>
                     </div>
                 </div>
-            </section>
+            </motion.section>
 
             {/* Productos */}
             <section className="max-w-7xl mx-auto px-4 pb-12">
-                {filteredProducts.length === 0 ? (
-                    <div className="text-center py-16">
-                        <div className="w-16 h-16 bg-[#4A6741]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <Search className="w-8 h-8 text-[#4A6741]" />
-                        </div>
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron productos</h3>
-                        <p className="text-gray-600">Prueba con otros filtros o términos de búsqueda</p>
-                    </div>
-                ) : (
-                    <div className={
-                        viewMode === "grid"
-                            ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-                            : "flex flex-col gap-4"
-                    }>
-                        {filteredProducts.map((product) => (
-                            <ProductCard
-                                key={product.id}
-                                product={product}
-                                categoryName={getCategoryName(product.category_id)}
-                                viewMode={viewMode}
-                            />
-                        ))}
-                    </div>
-                )}
+                <AnimatePresence mode="wait">
+                    {filteredProducts.length === 0 ? (
+                        <motion.div
+                            className="text-center py-16"
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                        >
+                            <motion.div
+                                className="w-16 h-16 bg-[#4A6741]/10 rounded-full flex items-center justify-center mx-auto mb-4"
+                                animate={{ rotate: [0, 10, -10, 0] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                            >
+                                <Search className="w-8 h-8 text-[#4A6741]" />
+                            </motion.div>
+                            <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron productos</h3>
+                            <p className="text-gray-600">Prueba con otros filtros o términos de búsqueda</p>
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            className={
+                                viewMode === "grid"
+                                    ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                                    : "flex flex-col gap-4"
+                            }
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                        >
+                            {filteredProducts.map((product, index) => (
+                                <ProductCard
+                                    key={product.id}
+                                    product={product}
+                                    categoryName={getCategoryName(product.category_id)}
+                                    viewMode={viewMode}
+                                    index={index}
+                                />
+                            ))}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </section>
 
             {/* Footer */}
-            <footer className="bg-[#3F5D4C] text-white py-8 px-4">
+            <motion.footer
+                className="bg-[#3F5D4C] text-white py-8 px-4"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+            >
                 <div className="max-w-7xl mx-auto text-center">
-                    <div className="flex items-center justify-center gap-3 mb-4">
+                    <motion.div
+                        className="flex items-center justify-center gap-3 mb-4"
+                        whileHover={{ scale: 1.05 }}
+                    >
                         <div className="w-8 h-8 bg-gradient-to-br from-[#4A6741] to-[#3F5D4C] rounded-full flex items-center justify-center border border-white/20">
                             <Leaf className="w-4 h-4 text-white" />
                         </div>
                         <span className="text-lg font-semibold">Sophia Cosmética Natural</span>
-                    </div>
+                    </motion.div>
                     <p className="text-white/70 text-sm mb-4">
                         Productos artesanales con ingredientes 100% naturales
                     </p>
                     <div className="flex items-center justify-center gap-6 text-sm text-white/70">
-                        <a href="tel:+34600000000" className="hover:text-white transition-colors">
-                            +34 600 000 000
+                        <a href="tel:+34642633982" className="hover:text-white transition-colors">
+                            +34 642 63 39 82
                         </a>
                         <span>•</span>
                         <a href="mailto:info@sophia.com" className="hover:text-white transition-colors">
@@ -267,21 +391,25 @@ export default function HomePage() {
                         </a>
                     </div>
                 </div>
-            </footer>
+            </motion.footer>
         </div>
     );
 }
 
-// Componente de tarjeta de producto
+// Componente de tarjeta de producto con animaciones
 function ProductCard({
     product,
     categoryName,
-    viewMode
+    viewMode,
+    index
 }: {
     product: Product;
     categoryName: string;
     viewMode: "grid" | "list";
+    index: number;
 }) {
+    const [isHovered, setIsHovered] = useState(false);
+
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('es-ES', {
             style: 'currency',
@@ -289,21 +417,45 @@ function ProductCard({
         }).format(price);
     };
 
+    const handleWhatsAppOrder = () => {
+        const message = encodeURIComponent(
+            `Hola! Me interesa el producto:\n\n` +
+            `📦 *${product.name}*\n` +
+            `💰 Precio: ${formatPrice(product.price)}\n\n` +
+            `¿Podrían darme más información?`
+        );
+        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
+    };
+
     if (viewMode === "list") {
         return (
-            <div className="product-card rounded-2xl overflow-hidden shadow-sm flex">
-                <div className="relative w-40 h-40 flex-shrink-0">
+            <motion.div
+                className="product-card rounded-2xl overflow-hidden shadow-sm flex bg-white"
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.4 }}
+                whileHover={{ scale: 1.02, boxShadow: "0 10px 40px rgba(0,0,0,0.1)" }}
+                onHoverStart={() => setIsHovered(true)}
+                onHoverEnd={() => setIsHovered(false)}
+            >
+                <div className="relative w-40 h-40 flex-shrink-0 overflow-hidden">
                     <Image
-                        src={product.image || "/product1.png"}
+                        src={product.image || "/images/no-image.png"}
                         alt={product.name}
                         fill
-                        className="object-cover"
+                        className="object-cover transition-transform duration-500"
+                        style={{ transform: isHovered ? 'scale(1.1)' : 'scale(1)' }}
                     />
                     {product.featured && (
-                        <div className="absolute top-2 left-2 bg-[#D4AF37] text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                        <motion.div
+                            className="absolute top-2 left-2 bg-[#D4AF37] text-white text-xs px-2 py-1 rounded-full flex items-center gap-1"
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ delay: 0.3, type: "spring" }}
+                        >
                             <Star className="w-3 h-3 fill-current" />
                             Destacado
-                        </div>
+                        </motion.div>
                     )}
                 </div>
                 <div className="p-4 flex-1 flex flex-col justify-between">
@@ -314,41 +466,92 @@ function ProductCard({
                     </div>
                     <div className="flex items-center justify-between mt-3">
                         <span className="text-xl font-bold text-[#4A6741]">{formatPrice(product.price)}</span>
-                        {product.rating > 0 && (
-                            <div className="flex items-center gap-1 text-sm text-gray-600">
-                                <Star className="w-4 h-4 fill-[#D4AF37] text-[#D4AF37]" />
-                                <span>{product.rating.toFixed(1)}</span>
-                                <span className="text-xs">({product.reviews_count})</span>
-                            </div>
-                        )}
+                        <motion.button
+                            onClick={handleWhatsAppOrder}
+                            className="bg-[#25D366] text-white px-3 py-1.5 rounded-full text-sm flex items-center gap-1"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            <MessageCircle className="w-4 h-4" />
+                            Pedir
+                        </motion.button>
                     </div>
                 </div>
-            </div>
+            </motion.div>
         );
     }
 
     return (
-        <div className="product-card rounded-2xl overflow-hidden shadow-sm group hover:shadow-lg transition-shadow">
-            <div className="relative aspect-square">
+        <motion.div
+            className="product-card rounded-2xl overflow-hidden shadow-sm group bg-white"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1, duration: 0.4, type: "spring", stiffness: 100 }}
+            whileHover={{ y: -8, boxShadow: "0 20px 40px rgba(0,0,0,0.12)" }}
+            onHoverStart={() => setIsHovered(true)}
+            onHoverEnd={() => setIsHovered(false)}
+        >
+            <div className="relative aspect-square overflow-hidden">
                 <Image
-                    src={product.image || "/product1.png"}
+                    src={product.image || "/images/no-image.png"}
                     alt={product.name}
                     fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="object-cover transition-transform duration-500"
+                    style={{ transform: isHovered ? 'scale(1.1)' : 'scale(1)' }}
                 />
                 {product.featured && (
-                    <div className="absolute top-3 left-3 bg-[#D4AF37] text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                    <motion.div
+                        className="absolute top-3 left-3 bg-[#D4AF37] text-white text-xs px-2 py-1 rounded-full flex items-center gap-1"
+                        initial={{ scale: 0, rotate: -10 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ delay: 0.3, type: "spring" }}
+                    >
                         <Star className="w-3 h-3 fill-current" />
                         Destacado
-                    </div>
+                    </motion.div>
                 )}
+
+                {/* Overlay con botón de WhatsApp */}
+                <motion.div
+                    className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end justify-center pb-4"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: isHovered ? 1 : 0 }}
+                    transition={{ duration: 0.3 }}
+                >
+                    <motion.button
+                        onClick={handleWhatsAppOrder}
+                        className="bg-[#25D366] text-white px-4 py-2 rounded-full flex items-center gap-2 font-medium"
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: isHovered ? 0 : 20, opacity: isHovered ? 1 : 0 }}
+                        transition={{ duration: 0.3 }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                    >
+                        <MessageCircle className="w-4 h-4" />
+                        Hacer Pedido
+                    </motion.button>
+                </motion.div>
             </div>
             <div className="p-4">
-                <span className="text-xs text-[#4A6741] font-medium">{categoryName}</span>
+                <motion.span
+                    className="text-xs text-[#4A6741] font-medium"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                >
+                    {categoryName}
+                </motion.span>
                 <h3 className="font-semibold text-gray-900 mt-1 line-clamp-1">{product.name}</h3>
                 <p className="text-sm text-gray-600 mt-1 line-clamp-2">{product.description}</p>
                 <div className="flex items-center justify-between mt-3">
-                    <span className="text-xl font-bold text-[#4A6741]">{formatPrice(product.price)}</span>
+                    <motion.span
+                        className="text-xl font-bold text-[#4A6741]"
+                        initial={{ scale: 0.8 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.3, type: "spring" }}
+                    >
+                        {formatPrice(product.price)}
+                    </motion.span>
                     {product.rating > 0 && (
                         <div className="flex items-center gap-1 text-sm text-gray-600">
                             <Star className="w-4 h-4 fill-[#D4AF37] text-[#D4AF37]" />
@@ -357,6 +560,6 @@ function ProductCard({
                     )}
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 }

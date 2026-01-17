@@ -144,6 +144,13 @@ export default function AdminProductsPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Validar que haya imagen
+        if (!formData.image || formData.image === '/images/placeholder.jpg') {
+            setUploadError('La imagen del producto es requerida');
+            return;
+        }
+
         setIsSaving(true);
 
         try {
@@ -650,15 +657,20 @@ export default function AdminProductsPage() {
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-2">
                                         <ImageIcon className="w-5 h-5" />
-                                        Imagen
+                                        Imagen <span className="text-red-500">*</span>
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
+                                    {uploadError && (
+                                        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+                                            {uploadError}
+                                        </div>
+                                    )}
 
                                     {/* File Upload */}
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Subir imagen desde dispositivo
+                                            Subir imagen desde dispositivo <span className="text-red-500">*</span>
                                         </label>
                                         <div className="relative">
                                             <input
