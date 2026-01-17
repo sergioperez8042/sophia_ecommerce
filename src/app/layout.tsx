@@ -1,21 +1,40 @@
-import type { Metadata } from "next";
+"use client";
+
 import "./globals.css";
 import Header from "@/components/Header";
 import { StoreProvider } from "@/store";
 import { ToastProvider } from "@/components/ui/toast";
-
-export const metadata: Metadata = {
-  title: "Sophia - Cosmética Natural",
-  description: "Cosmética natural artesanal con ingredientes orgánicos de la más alta calidad",
-};
+import { usePathname } from "next/navigation";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
+  const isCatalogo = pathname?.startsWith('/catalogo');
+
+  // Si es la página de catálogo, renderizar sin header ni providers
+  if (isCatalogo) {
+    return (
+      <html lang="es" suppressHydrationWarning={true}>
+        <head>
+          <title>Catálogo - Sophia Cosmética Natural</title>
+          <meta name="description" content="Catálogo de productos de cosmética natural artesanal" />
+        </head>
+        <body className="antialiased" suppressHydrationWarning={true}>
+          {children}
+        </body>
+      </html>
+    );
+  }
+
   return (
     <html lang="es" suppressHydrationWarning={true}>
+      <head>
+        <title>Sophia - Cosmética Natural</title>
+        <meta name="description" content="Cosmética natural artesanal con ingredientes orgánicos de la más alta calidad" />
+      </head>
       <body className="antialiased" suppressHydrationWarning={true}>
         <StoreProvider>
           <ToastProvider>
