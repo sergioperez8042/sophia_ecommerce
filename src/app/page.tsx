@@ -105,7 +105,7 @@ export default function HomePage() {
                     transition={{ duration: 0.5 }}
                 >
                     <motion.div
-                        className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg overflow-hidden"
+                        className="w-24 h-24 rounded-full bg-gradient-to-br from-[#4A6741] to-[#3F5D4C] flex items-center justify-center mx-auto mb-4 shadow-lg"
                         animate={{ 
                             scale: [1, 1.15, 1, 1.1, 1],
                             boxShadow: [
@@ -125,7 +125,7 @@ export default function HomePage() {
                         <img 
                             src="/images/logo_hand2.png" 
                             alt="Sophia" 
-                            className="w-full h-full object-cover"
+                            className="w-16 h-16 object-contain"
                         />
                     </motion.div>
                     <motion.p
