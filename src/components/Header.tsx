@@ -31,7 +31,7 @@ export default function Header() {
                             <motion.div
                                 whileHover={{ scale: 1.05 }}
                                 transition={{ duration: 0.3 }}
-                                className="relative w-40 h-16"
+                                className="relative w-64 h-28"
                             >
                                 <img
                                     src="/images/logo-sophia.jpg"

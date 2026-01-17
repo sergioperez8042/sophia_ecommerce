@@ -105,11 +105,28 @@ export default function HomePage() {
                     transition={{ duration: 0.5 }}
                 >
                     <motion.div
-                        className="w-16 h-16 bg-gradient-to-br from-[#4A6741] to-[#3F5D4C] rounded-full flex items-center justify-center mx-auto mb-4"
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                        className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg overflow-hidden"
+                        animate={{ 
+                            scale: [1, 1.15, 1, 1.1, 1],
+                            boxShadow: [
+                                "0 4px 15px rgba(74, 103, 65, 0.3)",
+                                "0 4px 25px rgba(74, 103, 65, 0.5)",
+                                "0 4px 15px rgba(74, 103, 65, 0.3)",
+                                "0 4px 20px rgba(74, 103, 65, 0.4)",
+                                "0 4px 15px rgba(74, 103, 65, 0.3)"
+                            ]
+                        }}
+                        transition={{ 
+                            duration: 1.2,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                        }}
                     >
-                        <Leaf className="w-8 h-8 text-white" />
+                        <img 
+                            src="/images/logo_hand2.png" 
+                            alt="Sophia" 
+                            className="w-full h-full object-cover"
+                        />
                     </motion.div>
                     <motion.p
                         className="text-gray-600"
@@ -154,16 +171,16 @@ export default function HomePage() {
                             whileHover={{ scale: 1.02 }}
                         >
                             <motion.div
-                                className="w-10 h-10 bg-gradient-to-br from-[#4A6741] to-[#3F5D4C] rounded-full flex items-center justify-center"
-                                whileHover={{ rotate: 360 }}
-                                transition={{ duration: 0.5 }}
+                                whileHover={{ scale: 1.05 }}
+                                transition={{ duration: 0.3 }}
+                                className="relative w-48 h-20"
                             >
-                                <Leaf className="w-5 h-5 text-white" />
+                                <img
+                                    src="/images/logo-sophia.jpg"
+                                    alt="Sophia"
+                                    className="w-full h-full object-contain"
+                                />
                             </motion.div>
-                            <div>
-                                <h1 className="text-xl font-semibold text-gray-900">Sophia</h1>
-                                <p className="text-xs text-[#4A6741]">Cosmética Natural</p>
-                            </div>
                         </motion.div>
 
                         <div className="hidden md:flex items-center gap-6 text-sm text-gray-600">

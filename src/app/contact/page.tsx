@@ -112,7 +112,7 @@ export default function ContactPage() {
                                         <CardContent className="p-6">
                                             <Mail className="h-8 w-8 text-[#4A6741] mb-4" />
                                             <h3 className="text-lg font-bold text-gray-900 mb-2">Email</h3>
-                                            <p className="text-gray-700 font-medium">contacto@sophianatural.com</p>
+                                            <p className="text-gray-700 font-medium">chavesophia1994@gmail.com</p>
                                         </CardContent>
                                     </Card>
                                 </motion.div>
@@ -126,7 +126,7 @@ export default function ContactPage() {
                                         <CardContent className="p-6">
                                             <Phone className="h-8 w-8 text-[#4A6741] mb-4" />
                                             <h3 className="text-lg font-bold text-gray-900 mb-2">Teléfono</h3>
-                                            <p className="text-gray-700 font-medium">+34 900 123 456</p>
+                                            <p className="text-gray-700 font-medium">+34 642 63 39 82</p>
                                         </CardContent>
                                     </Card>
                                 </motion.div>

@@ -110,14 +110,72 @@ export default function AuthPage() {
       >
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-3">
-            <div className="w-14 h-14 rounded-full bg-gradient-to-r from-[#4A6741] to-[#3F5D4C] flex items-center justify-center shadow-lg">
-              <Leaf className="w-7 h-7 text-white" />
-            </div>
-            <div className="text-left">
-              <h1 className="text-3xl font-bold text-gray-900">Sophia</h1>
-              <p className="text-sm text-[#4A6741] font-medium">Cosmética Natural</p>
-            </div>
+          <Link href="/" className="inline-flex items-center gap-3 group">
+            <motion.div 
+              className="w-16 h-16 rounded-full bg-gradient-to-r from-[#4A6741] to-[#3F5D4C] flex items-center justify-center shadow-lg relative overflow-hidden"
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ 
+                type: "spring", 
+                stiffness: 200, 
+                damping: 15,
+                delay: 0.2 
+              }}
+              whileHover={{ 
+                scale: 1.1,
+                boxShadow: "0 0 25px rgba(74, 103, 65, 0.5)"
+              }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {/* Anillo giratorio */}
+              <motion.div
+                className="absolute inset-0 rounded-full border-2 border-white/30"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                style={{ borderStyle: "dashed" }}
+              />
+              {/* Brillo que pasa */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                animate={{ x: ["-100%", "100%"] }}
+                transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+              />
+              <motion.img
+                src="/images/logo_hand2.png"
+                alt="Sophia"
+                className="w-11 h-11 object-contain relative z-10"
+                animate={{ 
+                  y: [0, -2, 0],
+                }}
+                transition={{ 
+                  duration: 2, 
+                  repeat: Infinity, 
+                  ease: "easeInOut" 
+                }}
+              />
+            </motion.div>
+            <motion.div 
+              className="text-left"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              <motion.h1 
+                className="text-3xl font-bold text-gray-900"
+                style={{ fontFamily: 'Cinzel, serif' }}
+                whileHover={{ color: "#4A6741" }}
+              >
+                Sophia
+              </motion.h1>
+              <motion.p 
+                className="text-sm text-[#4A6741] font-medium"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+              >
+                Cosmética Natural
+              </motion.p>
+            </motion.div>
           </Link>
         </div>
 
