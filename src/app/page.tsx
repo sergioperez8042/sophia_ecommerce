@@ -389,32 +389,50 @@ export default function HomePage() {
 
             {/* Footer */}
             <motion.footer
-                className="bg-[#3F5D4C] text-white py-8 px-4"
+                className="bg-[#3F5D4C] text-white py-8 sm:py-10 px-4 pb-24 sm:pb-10"
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
             >
-                <div className="max-w-7xl mx-auto text-center">
+                <div className="max-w-7xl mx-auto">
+                    {/* Logo y nombre */}
                     <motion.div
                         className="flex items-center justify-center gap-3 mb-4"
                         whileHover={{ scale: 1.05 }}
                     >
-                        <div className="w-10 h-10 bg-gradient-to-br from-[#4A6741] to-[#3F5D4C] rounded-full flex items-center justify-center border border-white/20 overflow-hidden">
-                            <img src="/images/logo_hand2.png" alt="Sophia" className="w-8 h-8 object-contain" />
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#4A6741] to-[#3F5D4C] rounded-full flex items-center justify-center border border-white/20 overflow-hidden">
+                            <img src="/images/logo_hand2.png" alt="Sophia" className="w-8 h-8 sm:w-10 sm:h-10 object-contain" />
                         </div>
-                        <span className="text-lg font-semibold">Sophia Cosmética Natural</span>
+                        <span className="text-lg sm:text-xl font-semibold">Sophia Cosmética Natural</span>
                     </motion.div>
-                    <p className="text-white/70 text-sm mb-4">
+                    
+                    <p className="text-white/70 text-sm text-center mb-6">
                         Productos artesanales con ingredientes 100% naturales
                     </p>
-                    <div className="flex items-center justify-center gap-6 text-sm text-white/70">
-                        <a href="tel:+34642633982" className="hover:text-white transition-colors">
-                            +34 642 63 39 82
+                    
+                    {/* Contact info - stacked on mobile */}
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-sm">
+                        <a 
+                            href="tel:+34642633982" 
+                            className="flex items-center gap-2 text-white/80 hover:text-white transition-colors bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full"
+                        >
+                            <Phone className="w-4 h-4" />
+                            <span>+34 642 63 39 82</span>
                         </a>
-                        <span>•</span>
-                        <a href="mailto:chavesophia1994@gmail.com" className="hover:text-white transition-colors">
-                            chavesophia1994@gmail.com
+                        <a 
+                            href="mailto:chavesophia1994@gmail.com" 
+                            className="flex items-center gap-2 text-white/80 hover:text-white transition-colors bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full"
+                        >
+                            <Mail className="w-4 h-4" />
+                            <span className="truncate max-w-[200px] sm:max-w-none">chavesophia1994@gmail.com</span>
                         </a>
+                    </div>
+                    
+                    {/* Copyright */}
+                    <div className="mt-6 pt-4 border-t border-white/10 text-center">
+                        <p className="text-white/50 text-xs">
+                            © {new Date().getFullYear()} Sophia. Todos los derechos reservados.
+                        </p>
                     </div>
                 </div>
             </motion.footer>
