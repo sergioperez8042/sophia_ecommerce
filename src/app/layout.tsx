@@ -12,14 +12,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  const isCatalogo = pathname?.startsWith('/catalogo');
+  
+  // Rutas que usan el layout limpio (solo catálogo, sin header)
+  const isPublicCatalog = pathname === '/' || pathname?.startsWith('/catalogo');
 
-  // Si es la página de catálogo, renderizar sin header ni providers
-  if (isCatalogo) {
+  // Si es la página principal o catálogo, renderizar sin header (vista cliente)
+  if (isPublicCatalog) {
     return (
       <html lang="es" suppressHydrationWarning={true}>
         <head>
-          <title>Catálogo - Sophia Cosmética Natural</title>
+          <title>Sophia - Cosmética Natural</title>
           <meta name="description" content="Catálogo de productos de cosmética natural artesanal" />
         </head>
         <body className="antialiased" suppressHydrationWarning={true}>
