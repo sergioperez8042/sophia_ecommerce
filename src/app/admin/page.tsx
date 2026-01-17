@@ -19,7 +19,8 @@ import {
   BarChart3,
   Calendar,
   Loader2,
-  Database
+  Database,
+  Layers
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -262,7 +263,7 @@ export default function AdminPage() {
         </Card>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mt-8">
           <Link href="/admin/products">
             <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow cursor-pointer h-full">
               <CardContent className="pt-6">
@@ -273,6 +274,22 @@ export default function AdminPage() {
                   <div>
                     <h3 className="font-semibold text-gray-900">Productos</h3>
                     <p className="text-sm text-gray-500">Gestionar catálogo</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/admin/categories">
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow cursor-pointer h-full">
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-purple-100 rounded-full">
+                    <Layers className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Categorías</h3>
+                    <p className="text-sm text-gray-500">Organizar productos</p>
                   </div>
                 </div>
               </CardContent>
