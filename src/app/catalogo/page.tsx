@@ -173,8 +173,8 @@ export default function CatalogoPage() {
                         <button
                             onClick={() => setSelectedCategory("all")}
                             className={`px-4 py-2 rounded-full text-sm whitespace-nowrap transition-all ${selectedCategory === "all"
-                                    ? "bg-[#4A6741] text-white"
-                                    : "bg-white text-gray-600 hover:bg-[#F5F1E8] border border-[#4A6741]/20"
+                                ? "bg-[#4A6741] text-white"
+                                : "bg-white text-gray-600 hover:bg-[#F5F1E8] border border-[#4A6741]/20"
                                 }`}
                         >
                             Todos ({products.length})
@@ -187,8 +187,8 @@ export default function CatalogoPage() {
                                     key={cat.id}
                                     onClick={() => setSelectedCategory(cat.id)}
                                     className={`px-4 py-2 rounded-full text-sm whitespace-nowrap transition-all ${selectedCategory === cat.id
-                                            ? "bg-[#4A6741] text-white"
-                                            : "bg-white text-gray-600 hover:bg-[#F5F1E8] border border-[#4A6741]/20"
+                                        ? "bg-[#4A6741] text-white"
+                                        : "bg-white text-gray-600 hover:bg-[#F5F1E8] border border-[#4A6741]/20"
                                         }`}
                                 >
                                     {cat.name} ({count})
