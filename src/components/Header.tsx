@@ -34,7 +34,7 @@ export default function Header() {
                                 className="relative w-64 h-28"
                             >
                                 <img
-                                    src="/images/logo-sophia.jpg"
+                                    src="/images/logo-sophia.png"
                                     alt="Sophia - Cosmética Natural"
                                     className="w-full h-full object-contain"
                                 />

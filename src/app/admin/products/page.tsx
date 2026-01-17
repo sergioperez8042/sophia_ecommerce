@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { useAuth, useProducts } from '@/store';
+import { useAuth, useProducts, useCategories } from '@/store';
 import { IProduct, ICategory } from '@/entities/all';
-import CategoriesData from '@/entities/Category.json';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -36,8 +35,6 @@ import Image from 'next/image';
 
 type ViewMode = 'list' | 'create' | 'edit';
 
-const categories = CategoriesData as ICategory[];
-
 // Empty product template
 const emptyProduct: Omit<IProduct, 'id' | 'created_date'> = {
     name: '',
@@ -65,6 +62,7 @@ export default function AdminProductsPage() {
         toggleProductActive,
         toggleProductFeatured,
     } = useProducts();
+    const { categories, isLoading: categoriesLoading } = useCategories();
 
     const [viewMode, setViewMode] = useState<ViewMode>('list');
     const [searchQuery, setSearchQuery] = useState('');
@@ -86,7 +84,7 @@ export default function AdminProductsPage() {
         }
     }, [isLoaded, isAuthenticated, isAdmin, router]);
 
-    if (!isLoaded || isLoading) {
+    if (!isLoaded || isLoading || categoriesLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4A6741]" />
@@ -244,11 +242,11 @@ export default function AdminProductsPage() {
                                 <select
                                     value={categoryFilter}
                                     onChange={(e) => setCategoryFilter(e.target.value)}
-                                    className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6741]"
+                                    className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6741] text-gray-900 bg-white"
                                 >
-                                    <option value="all">Todas las categorías</option>
+                                    <option value="all" className="text-gray-900">Todas las categorías</option>
                                     {categories.map((cat) => (
-                                        <option key={cat.id} value={cat.id}>
+                                        <option key={cat.id} value={cat.id} className="text-gray-900">
                                             {cat.name}
                                         </option>
                                     ))}

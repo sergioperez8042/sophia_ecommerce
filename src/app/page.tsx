@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
-import { Star, Search, Grid3X3, List, Sparkles, Leaf, Phone, Mail, MessageCircle } from "lucide-react";
+import { Star, Search, Grid3X3, List, Sparkles, Leaf, Phone, Mail, MessageCircle, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
@@ -164,7 +164,7 @@ export default function HomePage() {
                 animate={{ y: 0 }}
                 transition={{ type: "spring", stiffness: 100 }}
             >
-                <div className="max-w-7xl mx-auto px-4 py-4">
+                <div className="max-w-7xl mx-auto px-4 py-2">
                     <div className="flex items-center justify-between">
                         <motion.div
                             className="flex items-center gap-3"
@@ -173,25 +173,34 @@ export default function HomePage() {
                             <motion.div
                                 whileHover={{ scale: 1.05 }}
                                 transition={{ duration: 0.3 }}
-                                className="relative w-48 h-20"
+                                className="relative h-20"
                             >
                                 <img
-                                    src="/images/logo-sophia.jpg"
+                                    src="/images/logo-sophia.png"
                                     alt="Sophia"
-                                    className="w-full h-full object-contain"
+                                    className="h-full w-auto object-contain"
                                 />
                             </motion.div>
                         </motion.div>
 
                         <div className="hidden md:flex items-center gap-6 text-sm text-gray-600">
-                            <motion.a
-                                href="tel:+34642633982"
-                                className="flex items-center gap-2 hover:text-[#4A6741] transition-colors"
-                                whileHover={{ scale: 1.05 }}
-                            >
-                                <Phone className="w-4 h-4" />
-                                <span>+34 642 63 39 82</span>
-                            </motion.a>
+                            <div className="flex items-center gap-2">
+                                <motion.div
+                                    animate={{ x: [0, 5, 0] }}
+                                    transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+                                    className="text-[#4A6741]"
+                                >
+                                    <ArrowRight className="w-5 h-5" />
+                                </motion.div>
+                                <motion.a
+                                    href="tel:+34642633982"
+                                    className="flex items-center gap-2 hover:text-[#4A6741] transition-colors font-medium"
+                                    whileHover={{ scale: 1.05 }}
+                                >
+                                    <Phone className="w-4 h-4" />
+                                    <span>+34 642 63 39 82</span>
+                                </motion.a>
+                            </div>
                             <motion.a
                                 href="mailto:chavesophia1994@gmail.com"
                                 className="flex items-center gap-2 hover:text-[#4A6741] transition-colors"
@@ -390,8 +399,8 @@ export default function HomePage() {
                         className="flex items-center justify-center gap-3 mb-4"
                         whileHover={{ scale: 1.05 }}
                     >
-                        <div className="w-8 h-8 bg-gradient-to-br from-[#4A6741] to-[#3F5D4C] rounded-full flex items-center justify-center border border-white/20">
-                            <Leaf className="w-4 h-4 text-white" />
+                        <div className="w-10 h-10 bg-gradient-to-br from-[#4A6741] to-[#3F5D4C] rounded-full flex items-center justify-center border border-white/20 overflow-hidden">
+                            <img src="/images/logo_hand2.png" alt="Sophia" className="w-8 h-8 object-contain" />
                         </div>
                         <span className="text-lg font-semibold">Sophia Cosmética Natural</span>
                     </motion.div>

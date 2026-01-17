@@ -199,35 +199,60 @@ export const CategoryService = {
   // Get all categories
   async getAll(orderByField?: string): Promise<ICategory[]> {
     const firestore = getDb();
-    const constraints: QueryConstraint[] = [];
     
-    if (orderByField) {
-      constraints.push(orderBy(orderByField));
-    }
+    try {
+      const constraints: QueryConstraint[] = [];
+      
+      if (orderByField) {
+        constraints.push(orderBy(orderByField));
+      }
 
-    const q = query(collection(firestore, CATEGORIES_COLLECTION), ...constraints);
-    const snapshot = await getDocs(q);
-    
-    return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as ICategory[];
+      const q = query(collection(firestore, CATEGORIES_COLLECTION), ...constraints);
+      const snapshot = await getDocs(q);
+      
+      return snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as ICategory[];
+    } catch (error) {
+      // If index error, try without ordering
+      console.warn('Fetching categories without ordering due to:', error);
+      const snapshot = await getDocs(collection(firestore, CATEGORIES_COLLECTION));
+      const categories = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as ICategory[];
+      // Sort manually
+      return categories.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+    }
   },
 
   // Get active categories
   async getActive(): Promise<ICategory[]> {
     const firestore = getDb();
-    const q = query(
-      collection(firestore, CATEGORIES_COLLECTION),
-      where('active', '==', true),
-      orderBy('sort_order')
-    );
-    const snapshot = await getDocs(q);
     
-    return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as ICategory[];
+    try {
+      const q = query(
+        collection(firestore, CATEGORIES_COLLECTION),
+        where('active', '==', true),
+        orderBy('sort_order')
+      );
+      const snapshot = await getDocs(q);
+      
+      return snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as ICategory[];
+    } catch (error) {
+      // If index error, fetch all and filter manually
+      console.warn('Fetching active categories without index:', error);
+      const snapshot = await getDocs(collection(firestore, CATEGORIES_COLLECTION));
+      const categories = snapshot.docs
+        .map((doc) => ({ id: doc.id, ...doc.data() })) as ICategory[];
+      return categories
+        .filter(c => c.active)
+        .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+    }
   },
 
   // Get category by ID

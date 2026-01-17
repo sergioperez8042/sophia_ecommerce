@@ -33,6 +33,7 @@ export function CategoryProvider({ children }: { children: ReactNode }) {
     const refreshCategories = useCallback(async () => {
         // Guard: Don't attempt to fetch if Firebase isn't ready
         if (!isFirebaseReady()) {
+            console.log('🔴 Firebase not ready');
             setIsLoading(false);
             return;
         }
@@ -40,15 +41,18 @@ export function CategoryProvider({ children }: { children: ReactNode }) {
         setIsLoading(true);
         setError(null);
         try {
+            console.log('🔵 Fetching categories...');
             // Get all categories ordered by sort_order
             const allData = await CategoryService.getAll('sort_order');
+            console.log('✅ Categories loaded:', allData);
             setCategories(allData);
 
             // Filter active ones
             const activeData = allData.filter(c => c.active);
+            console.log('✅ Active categories:', activeData);
             setActiveCategories(activeData);
         } catch (err) {
-            console.error('Error fetching categories:', err);
+            console.error('❌ Error fetching categories:', err);
             setError('Error al cargar las categorías');
             // Fallback to empty if error, don't break app
             setCategories([]);
@@ -65,11 +69,13 @@ export function CategoryProvider({ children }: { children: ReactNode }) {
 
     const createCategory = async (category: Omit<ICategory, 'id'>) => {
         try {
+            console.log('🔵 Creating category:', category);
             const newCategory = await CategoryService.create(category);
+            console.log('✅ Category created:', newCategory);
             await refreshCategories(); // Reload to ensure sync
             return newCategory;
         } catch (err) {
-            console.error('Error creating category:', err);
+            console.error('❌ Error creating category:', err);
             throw err;
         }
     };
