@@ -124,6 +124,9 @@ export default function CategoriesPage() {
                                 // Calculate product count for this category
                                 const productCount = products.filter(p => p.category_id === category.id && p.active).length;
 
+                                // No mostrar categorías sin productos
+                                if (productCount === 0) return null;
+
                                 return (
                                     <motion.div
                                         key={category.id}
