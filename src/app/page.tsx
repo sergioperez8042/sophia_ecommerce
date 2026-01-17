@@ -176,12 +176,12 @@ export default function HomePage() {
                                 <span>+34 642 63 39 82</span>
                             </motion.a>
                             <motion.a
-                                href="mailto:info@sophia.com"
+                                href="mailto:chavesophia1994@gmail.com"
                                 className="flex items-center gap-2 hover:text-[#4A6741] transition-colors"
                                 whileHover={{ scale: 1.05 }}
                             >
                                 <Mail className="w-4 h-4" />
-                                <span>info@sophia.com</span>
+                                <span>chavesophia1994@gmail.com</span>
                             </motion.a>
                         </div>
                     </div>
@@ -386,8 +386,8 @@ export default function HomePage() {
                             +34 642 63 39 82
                         </a>
                         <span>•</span>
-                        <a href="mailto:info@sophia.com" className="hover:text-white transition-colors">
-                            info@sophia.com
+                        <a href="mailto:chavesophia1994@gmail.com" className="hover:text-white transition-colors">
+                            chavesophia1994@gmail.com
                         </a>
                     </div>
                 </div>
