@@ -104,13 +104,12 @@ export default function AboutPage() {
                                         Descubre Nuestros Productos
                                     </Button>
                                 </Link>
-                                <Button
-                                    variant="outline"
-                                    className="w-full sm:w-auto border-[#4A6741] text-[#4A6741] hover:bg-[#4A6741] hover:text-white font-bold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg"
+                                <button
+                                    className="w-full sm:w-auto border-2 border-[#4A6741] bg-transparent text-[#4A6741] hover:bg-[#4A6741] hover:text-white font-bold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg transition-colors rounded-md"
                                     onClick={() => storyRef.current?.scrollIntoView({ behavior: 'smooth' })}
                                 >
                                     Conoce la Historia
-                                </Button>
+                                </button>
                             </motion.div>
                         </motion.div>
 
@@ -366,13 +365,11 @@ export default function AboutPage() {
                             </Button>
                         </Link>
                         <Link href="/contact">
-                            <Button
-                                size="lg"
-                                variant="outline"
-                                className="border-white !text-white hover:bg-white hover:!text-[#4A6741] font-bold px-12 py-4 text-xl"
+                            <button
+                                className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-[#4A6741] font-bold px-12 py-4 text-xl rounded-md transition-colors"
                             >
                                 Contáctanos
-                            </Button>
+                            </button>
                         </Link>
                     </div>
                 </motion.div>
