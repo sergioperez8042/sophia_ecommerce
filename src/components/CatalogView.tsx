@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef, useCallback } from 'react';
 import { Star, Search, Grid3X3, List, Leaf, Phone, Mail, MessageCircle, Rabbit, Droplets, ShieldCheck, Hand, Sun, Moon } from "lucide-react";
 import Image from "next/image";
 import { motion, AnimatePresence } from 'framer-motion';
@@ -349,6 +349,8 @@ export default function CatalogView({ initialProducts, initialCategories }: Cata
 }
 
 // Product Card component
+const PLACEHOLDER_IMAGE = "/images/no-image.svg";
+
 function ProductCard({
     product,
     categoryName,
@@ -361,7 +363,11 @@ function ProductCard({
     index: number;
 }) {
     const [isHovered, setIsHovered] = useState(false);
+    const [imgError, setImgError] = useState(false);
     const { isDark } = useTheme();
+
+    const productImage = imgError || !product.image ? PLACEHOLDER_IMAGE : product.image;
+    const handleImgError = useCallback(() => setImgError(true), []);
 
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('es-ES', {
@@ -391,13 +397,15 @@ function ProductCard({
                 onHoverStart={() => setIsHovered(true)}
                 onHoverEnd={() => setIsHovered(false)}
             >
-                <div className="relative w-40 h-40 flex-shrink-0 overflow-hidden">
+                <div className="relative w-32 sm:w-40 h-32 sm:h-40 flex-shrink-0 overflow-hidden">
                     <Image
-                        src={product.image || "/images/no-image.png"}
+                        src={productImage}
                         alt={product.name}
                         fill
                         className="object-cover transition-transform duration-500"
                         style={{ transform: isHovered ? 'scale(1.1)' : 'scale(1)' }}
+                        onError={handleImgError}
+                        unoptimized={productImage === PLACEHOLDER_IMAGE}
                     />
                     {product.featured && (
                         <div className="absolute top-2 left-2 bg-[#C4B590] text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
@@ -439,11 +447,13 @@ function ProductCard({
         >
             <div className="relative aspect-square overflow-hidden">
                 <Image
-                    src={product.image || "/images/no-image.png"}
+                    src={productImage}
                     alt={product.name}
                     fill
                     className="object-cover transition-transform duration-500"
                     style={{ transform: isHovered ? 'scale(1.1)' : 'scale(1)' }}
+                    onError={handleImgError}
+                    unoptimized={productImage === PLACEHOLDER_IMAGE}
                 />
                 {product.featured && (
                     <div className="absolute top-3 left-3 bg-[#C4B590] text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
@@ -452,8 +462,9 @@ function ProductCard({
                     </div>
                 )}
 
+                {/* Hover overlay - desktop only */}
                 <motion.div
-                    className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end justify-center pb-4"
+                    className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent hidden sm:flex items-end justify-center pb-4"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: isHovered ? 1 : 0 }}
                     transition={{ duration: 0.3 }}
@@ -479,16 +490,24 @@ function ProductCard({
                 <h3 className={`font-semibold mt-1 line-clamp-1 ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>{product.name}</h3>
                 <p className={`text-sm mt-1 line-clamp-2 ${isDark ? 'text-[#8a8278]' : 'text-gray-600'}`}>{product.description}</p>
                 <div className="flex items-center justify-between mt-3">
-                    <span className={`text-xl font-bold ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>
+                    <span className={`text-lg font-bold ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>
                         {formatPrice(product.price)}
                     </span>
                     {product.rating > 0 && (
-                        <div className={`flex items-center gap-1 text-sm ${isDark ? 'text-[#8a8278]' : 'text-gray-600'}`}>
+                        <div className={`hidden sm:flex items-center gap-1 text-sm ${isDark ? 'text-[#8a8278]' : 'text-gray-600'}`}>
                             <Star className="w-4 h-4 fill-[#C4B590] text-[#C4B590]" />
                             <span>{product.rating.toFixed(1)}</span>
                         </div>
                     )}
                 </div>
+                {/* Mobile CTA button - always visible */}
+                <button
+                    onClick={handleWhatsAppOrder}
+                    className="sm:hidden w-full mt-3 bg-[#505A4A] text-white py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 active:bg-[#414A3C] transition-colors"
+                >
+                    <MessageCircle className="w-4 h-4" />
+                    Hacer Pedido
+                </button>
             </div>
         </motion.div>
     );
