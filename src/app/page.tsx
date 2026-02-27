@@ -492,7 +492,7 @@ export default function HomePage() {
                     href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hola! Me gustaría hacer un pedido`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 bg-[#25D366] text-white px-4 py-3 rounded-full shadow-lg shadow-[#25D366]/30"
+                    className="flex items-center gap-2 bg-[#505A4A] text-white px-4 py-3 rounded-full shadow-lg shadow-[#505A4A]/30"
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
