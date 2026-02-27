@@ -194,7 +194,7 @@ export default function HomePage() {
                                     priority
                                 />
                             </div>
-                            <span className={`hidden sm:block text-lg font-semibold tracking-tight leading-tight ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>Sophia</span>
+                            <span className={`text-base sm:text-lg font-semibold tracking-tight leading-tight ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>Sophia</span>
                         </motion.div>
 
                         <div className="flex items-center gap-2">
@@ -219,18 +219,17 @@ export default function HomePage() {
                             </AnimatePresence>
                         </motion.button>
 
-                        {/* CTA */}
+                        {/* CTA - hidden on mobile, shown in header on desktop */}
                         <motion.a
                             href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hola! Me gustaría hacer un pedido`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 bg-[#505A4A] text-white px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium hover:bg-[#414A3C] transition-colors shadow-sm"
+                            className="hidden sm:flex items-center gap-2 bg-[#505A4A] text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-[#414A3C] transition-colors shadow-sm"
                             whileHover={{ scale: 1.03 }}
                             whileTap={{ scale: 0.97 }}
                         >
                             <MessageCircle className="w-4 h-4" />
-                            <span className="hidden sm:inline">Pedir por WhatsApp</span>
-                            <span className="sm:hidden">Pedir</span>
+                            Pedir por WhatsApp
                         </motion.a>
                         </div>
                     </div>
@@ -486,6 +485,23 @@ export default function HomePage() {
                     </div>
                 </div>
             </motion.footer>
+
+            {/* Floating WhatsApp button - mobile only */}
+            <div className="sm:hidden fixed bottom-6 right-4 z-50">
+                <motion.a
+                    href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hola! Me gustaría hacer un pedido`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 bg-[#25D366] text-white px-4 py-3 rounded-full shadow-lg shadow-[#25D366]/30"
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
+                    whileTap={{ scale: 0.9 }}
+                >
+                    <MessageCircle className="w-5 h-5" />
+                    <span className="text-sm font-semibold">Pedir</span>
+                </motion.a>
+            </div>
         </div>
     );
 }
