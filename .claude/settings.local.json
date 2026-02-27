@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx next build)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(xargs sed -i '' 's/#4A6741/#505A4A/g; s/#3F5D4C/#414A3C/g; s/#2D4A3E/#363E31/g; s/#D4AF37/#C4B590/g')",
+      "WebFetch(domain:mixkit.co)",
+      "WebFetch(domain:www.pexels.com)",
+      "WebFetch(domain:pixabay.com)"
+    ]
+  }
+}

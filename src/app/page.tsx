@@ -269,7 +269,7 @@ export default function HomePage() {
             </motion.header>
 
             {/* Hero Section - Video Carousel */}
-            <section className="relative h-56 sm:h-64 md:h-80 overflow-hidden" style={{ clipPath: 'ellipse(75% 100% at 50% 0%)' }}>
+            <section className="relative h-64 sm:h-72 md:h-80 overflow-hidden">
                 {/* Video carousel */}
                 {HERO_VIDEOS.map((src, i) => (
                     <video
@@ -289,7 +289,7 @@ export default function HomePage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#414A3C]/70 via-[#505A4A]/30 to-[#505A4A]/20" />
 
                 {/* Carousel indicators */}
-                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10">
                     {HERO_VIDEOS.map((_, i) => (
                         <button
                             key={i}
@@ -300,7 +300,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Content overlay */}
-                <div className="absolute inset-0 flex items-end justify-center pb-6 sm:pb-8 px-4">
+                <div className="absolute inset-0 flex items-center justify-center px-4">
                     <motion.div
                         className="text-center"
                         initial={{ opacity: 0, y: 20 }}
