@@ -132,32 +132,30 @@ export default function HomePage() {
                     transition={{ duration: 0.5 }}
                 >
                     <motion.div
-                        className="w-24 h-24 rounded-full bg-gradient-to-br from-[#505A4A] to-[#414A3C] flex items-center justify-center mx-auto mb-4 shadow-lg"
-                        animate={{ 
-                            scale: [1, 1.15, 1, 1.1, 1],
+                        className="w-28 h-28 rounded-2xl bg-[#505A4A] flex items-center justify-center mx-auto mb-4 shadow-lg overflow-hidden"
+                        animate={{
+                            scale: [1, 1.08, 1],
                             boxShadow: [
-                                "0 4px 15px rgba(74, 103, 65, 0.3)",
-                                "0 4px 25px rgba(74, 103, 65, 0.5)",
-                                "0 4px 15px rgba(74, 103, 65, 0.3)",
-                                "0 4px 20px rgba(74, 103, 65, 0.4)",
-                                "0 4px 15px rgba(74, 103, 65, 0.3)"
+                                "0 4px 15px rgba(80, 90, 74, 0.3)",
+                                "0 8px 30px rgba(80, 90, 74, 0.5)",
+                                "0 4px 15px rgba(80, 90, 74, 0.3)"
                             ]
                         }}
-                        transition={{ 
-                            duration: 1.2,
+                        transition={{
+                            duration: 1.5,
                             repeat: Infinity,
                             ease: "easeInOut"
                         }}
                     >
-                        <img 
-                            src="/images/logo_hand2.png" 
-                            alt="Sophia" 
-                            className="w-16 h-16 object-contain"
+                        <img
+                            src="/images/sophia_logo_nuevo.jpeg"
+                            alt="Sophia"
+                            className="w-full h-full object-cover"
                         />
                     </motion.div>
                     <motion.p
-                        className="text-gray-600"
-                        animate={{ opacity: [0.5, 1, 0.5] }}
+                        className="text-[#505A4A] font-medium"
+                        animate={{ opacity: [0.4, 1, 0.4] }}
                         transition={{ duration: 1.5, repeat: Infinity }}
                     >
                         Cargando catálogo...
@@ -217,16 +215,6 @@ export default function HomePage() {
                             </div>
                             <span className={`hidden sm:block text-lg font-semibold tracking-tight leading-tight ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>Sophia</span>
                         </motion.div>
-
-                        {/* Title */}
-                        <motion.h1
-                            className={`text-sm sm:text-base md:text-lg font-semibold tracking-tight ${isDark ? 'text-[#e8e4dc]' : 'text-[#505A4A]'}`}
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3, duration: 0.4 }}
-                        >
-                            Explora nuestra colección
-                        </motion.h1>
 
                         <div className="flex items-center gap-2">
                         {/* Dark mode toggle */}
