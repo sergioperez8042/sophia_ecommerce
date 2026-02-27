@@ -1,72 +1,16 @@
 "use client";
 
 import { useState, use } from 'react';
-import { Star, Heart, ShoppingBag, Plus, Minus, Share2, Shield, Truck, RotateCcw, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
+import { Star, Heart, ShoppingBag, Plus, Minus, Truck, Shield, RotateCcw, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import ProductImage from "@/components/ui/product-image";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import dynamic from 'next/dynamic';
-import { useCart, useWishlist } from "@/store";
+import { useCart, useWishlist, useProducts, useCategories } from "@/store";
 
-// Importar Breadcrumb dinámicamente para evitar problemas de SSR
 const Breadcrumb = dynamic(() => import("@/components/ui/breadcrumb"), {
     ssr: false
 });
-
-// Simulando datos del producto basándose en el ID
-const getProductById = (id: string) => {
-    const products = [
-        {
-            id: "1",
-            name: "Crema Hidratante Natural",
-            description: "Hidratación profunda con aloe vera y aceite de jojoba para una piel suave y radiante",
-            longDescription: "Nuestra crema hidratante natural combina los beneficios del aloe vera orgánico con aceite de jojoba premium para proporcionar una hidratación profunda y duradera. Formulada sin parabenos ni químicos agresivos, es perfecta para todo tipo de piel, especialmente la piel sensible.",
-            price: 25.99,
-            originalPrice: 32.99,
-            rating: 4.8,
-            reviews: 124,
-            images: ["/product1.png", "/product2.png", "/product3.png"],
-            category: "Cuidado Facial",
-            brand: "Sophia Natural",
-            inStock: true,
-            features: [
-                "100% ingredientes naturales",
-                "Sin parabenos ni sulfatos",
-                "Certificado orgánico",
-                "Cruelty-free",
-                "Apto para piel sensible"
-            ],
-            ingredients: "Aloe Barbadensis Leaf Juice, Simmondsia Chinensis (Jojoba) Seed Oil, Butyrospermum Parkii (Shea) Butter, Glycerin, Cetyl Alcohol, Stearyl Alcohol, Tocopheryl Acetate (Vitamin E)"
-        },
-        {
-            id: "2",
-            name: "Serum Vitamina C",
-            description: "Serum antioxidante para iluminar y rejuvenecer tu piel",
-            longDescription: "Este potente serum de vitamina C está formulado con ácido L-ascórbico estabilizado para máxima eficacia. Ayuda a reducir manchas oscuras, unifica el tono de la piel y proporciona protección antioxidante contra los radicales libres.",
-            price: 35.99,
-            originalPrice: 45.99,
-            rating: 4.9,
-            reviews: 89,
-            images: ["/product2.png", "/product1.png", "/product3.png"],
-            category: "Tratamiento",
-            brand: "Sophia Natural",
-            inStock: true,
-            features: [
-                "20% Vitamina C estabilizada",
-                "Reduce manchas oscuras",
-                "Antioxidante potente",
-                "Absorción rápida",
-                "Resultados visibles en 4 semanas"
-            ],
-            ingredients: "Ascorbic Acid, Hyaluronic Acid, Vitamin E, Ferulic Acid, Water, Glycerin, Propylene Glycol"
-        }
-    ];
-
-    return products.find(p => p.id === id) || products[0];
-};
 
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const resolvedParams = use(params);
@@ -77,22 +21,33 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
     const { addItem: addToCartStore } = useCart();
     const { toggleItem, isInWishlist } = useWishlist();
+    const { products, isLoading } = useProducts();
+    const { categories } = useCategories();
 
-    const product = getProductById(resolvedParams.id);
-    const isWishlisted = isInWishlist(product.id);
+    const product = products.find(p => p.id === resolvedParams.id);
+    const category = product ? categories.find(c => c.id === product.category_id) : null;
+
+    const isWishlisted = product ? isInWishlist(product.id) : false;
+
+    const productImages = product?.image ? [product.image] : [];
+    const currentImage = productImages[selectedImage] || null;
+
+    const discount = product?.price
+        ? Math.round(((product.price * 1.2 - product.price) / (product.price * 1.2)) * 100)
+        : 0;
 
     const handleAddToCart = () => {
+        if (!product) return;
         for (let i = 0; i < quantity; i++) {
             addToCartStore({
                 id: product.id,
                 name: product.name,
                 description: product.description,
                 price: product.price,
-                originalPrice: product.originalPrice,
-                image: product.images[0],
-                category: product.category,
-                brand: product.brand,
-                inStock: product.inStock,
+                originalPrice: product.price * 1.2,
+                image: product.image || '',
+                category: category?.name,
+                inStock: product.active,
             });
         }
         setAddedToCart(true);
@@ -100,345 +55,300 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     };
 
     const handleToggleWishlist = () => {
-        toggleItem(product.id);
+        if (product) toggleItem(product.id);
     };
 
-    // Funciones para el carousel
-    const nextImage = () => {
-        setSelectedImage((prev) => (prev + 1) % product.images.length);
-    };
+    if (isLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-[#FEFCF7]">
+                <Loader2 className="h-8 w-8 animate-spin text-[#505A4A]/40" />
+            </div>
+        );
+    }
 
-    const prevImage = () => {
-        setSelectedImage((prev) => (prev - 1 + product.images.length) % product.images.length);
-    };
-
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.1,
-                delayChildren: 0.2
-            }
-        }
-    };
-
-    const itemVariants = {
-        hidden: { opacity: 0, y: 20 },
-        visible: {
-            opacity: 1,
-            y: 0
-        }
-    };
+    if (!product) {
+        return (
+            <div className="min-h-screen bg-[#FEFCF7]">
+                <div className="max-w-xl mx-auto px-6 py-16 text-center pt-32">
+                    <h1 className="text-2xl font-light text-[#333] mb-3">Producto no encontrado</h1>
+                    <p className="text-[#999] mb-8">El producto que buscas no existe o fue eliminado.</p>
+                    <Link
+                        href="/products"
+                        className="inline-block border border-[#505A4A] text-[#505A4A] px-8 py-3 text-[13px] font-medium tracking-[0.08em] uppercase hover:bg-[#505A4A] hover:text-white transition-all duration-300"
+                    >
+                        Ver Productos
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100">
-            <div className="container mx-auto px-4 py-8">
-                {/* Breadcrumb */}
-                <div className="mb-6">
-                    <Breadcrumb
-                        items={[
-                            { label: 'Productos', href: '/products' },
-                            { label: product.category, href: `/products?category=${product.category.toLowerCase()}` },
-                            { label: product.name }
-                        ]}
-                    />
-                </div>
+        <div className="min-h-screen bg-[#FEFCF7]">
+            <div className="max-w-[1200px] mx-auto px-6 lg:px-10 py-8 sm:py-12">
+                <Breadcrumb
+                    items={[
+                        { label: 'Productos', href: '/products' },
+                        { label: product.name }
+                    ]}
+                />
 
                 <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                    className="grid grid-cols-1 lg:grid-cols-2 gap-12"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="mt-8 sm:mt-12"
                 >
-                    {/* Galería de imágenes con carousel */}
-                    <motion.div variants={itemVariants} className="space-y-4">
-                        <div className="relative aspect-square rounded-2xl overflow-hidden bg-white shadow-lg group">
-                            <AnimatePresence mode="wait">
-                                <motion.div
-                                    key={selectedImage}
-                                    initial={{ opacity: 0, x: 300 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: -300 }}
-                                    transition={{ duration: 0.3 }}
-                                    className="absolute inset-0"
-                                >
-                                    <Image
-                                        src={product.images[selectedImage]}
-                                        alt={product.name}
-                                        fill
-                                        className="object-cover"
-                                        priority
-                                    />
-                                </motion.div>
-                            </AnimatePresence>
-
-                            {/* Botones de navegación del carousel */}
-                            <button
-                                onClick={prevImage}
-                                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
-                            >
-                                <ChevronLeft className="h-5 w-5" />
-                            </button>
-                            <button
-                                onClick={nextImage}
-                                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
-                            >
-                                <ChevronRight className="h-5 w-5" />
-                            </button>
-
-                            {/* Indicadores de carousel */}
-                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
-                                {product.images.map((_, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() => setSelectedImage(index)}
-                                        className={`w-2 h-2 rounded-full transition-all duration-300 ${selectedImage === index
-                                            ? 'bg-white w-6'
-                                            : 'bg-white/50 hover:bg-white/75'
-                                            }`}
-                                    />
-                                ))}
-                            </div>
-
-                            {/* Badge de descuento */}
-                            {product.originalPrice > product.price && (
-                                <Badge className="absolute top-4 left-4 bg-red-500 hover:bg-red-600 z-10">
-                                    -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
-                                </Badge>
-                            )}
-                        </div>
-
-                        {/* Thumbnails */}
-                        <div className="grid grid-cols-3 gap-2">
-                            {product.images.map((image, index) => (
-                                <motion.button
-                                    key={index}
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    onClick={() => setSelectedImage(index)}
-                                    className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all duration-300 ${selectedImage === index
-                                        ? 'border-[#505A4A] shadow-md'
-                                        : 'border-gray-200 hover:border-[#505A4A]/50'
-                                        }`}
-                                >
-                                    <Image
-                                        src={image}
-                                        alt={`${product.name} ${index + 1}`}
-                                        fill
-                                        className="object-cover"
-                                    />
-                                </motion.button>
-                            ))}
-                        </div>
-                    </motion.div>
-
-                    {/* Información del producto */}
-                    <motion.div variants={itemVariants} className="space-y-6">
-                        {/* Header del producto */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20">
+                        {/* Galería */}
                         <div>
-                            <Badge variant="secondary" className="mb-2 bg-[#505A4A]/10 text-[#505A4A] hover:bg-[#505A4A]/20 font-semibold">
-                                {product.category}
-                            </Badge>
-                            <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
-                            <p className="text-lg text-gray-800 font-medium leading-relaxed">{product.description}</p>
-                        </div>
-
-                        {/* Rating y reviews */}
-                        <div className="flex items-center gap-4">
-                            <div className="flex items-center">
-                                {[...Array(5)].map((_, i) => (
-                                    <Star
-                                        key={i}
-                                        className={`h-5 w-5 stroke-1 ${i < Math.floor(product.rating)
-                                            ? 'text-yellow-500 fill-yellow-400'
-                                            : 'text-gray-300 fill-gray-200'
-                                            }`}
-                                    />
-                                ))}
-                                <span className="ml-2 text-sm font-bold text-gray-900">{product.rating}</span>
-                            </div>
-                            <span className="text-sm text-gray-700 font-medium">({product.reviews} reseñas)</span>
-                        </div>
-
-                        {/* Precio */}
-                        <div className="flex items-center gap-3">
-                            <span className="text-3xl font-bold text-[#505A4A]">${product.price}</span>
-                            {product.originalPrice > product.price && (
-                                <span className="text-xl text-gray-500 line-through">${product.originalPrice}</span>
-                            )}
-                            <Badge variant="secondary" className="bg-green-100 text-green-800">
-                                En stock
-                            </Badge>
-                        </div>
-
-                        {/* Cantidad y acciones */}
-                        <div className="space-y-4">
-                            <div className="flex items-center gap-4">
-                                <span className="font-bold text-gray-900">Cantidad:</span>
-                                <div className="flex items-center bg-white border-2 border-[#505A4A]/40 rounded-lg shadow-md hover:border-[#505A4A]/60 transition-all duration-200">
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                        className="h-10 w-10 p-0 hover:bg-[#505A4A] hover:text-white border-r-2 border-[#505A4A]/40 rounded-r-none text-[#505A4A] font-bold transition-all"
+                            <div className="relative aspect-square overflow-hidden bg-[#F0EDE6] group">
+                                <AnimatePresence mode="wait">
+                                    <motion.div
+                                        key={selectedImage}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        transition={{ duration: 0.3 }}
+                                        className="absolute inset-0"
                                     >
-                                        <Minus className="h-5 w-5 stroke-[3]" />
-                                    </Button>
-                                    <span className="px-4 py-2 font-bold text-gray-900 min-w-[3rem] text-center bg-gray-50 text-lg">
+                                        <ProductImage
+                                            src={currentImage}
+                                            alt={product.name}
+                                            className="object-cover"
+                                        />
+                                    </motion.div>
+                                </AnimatePresence>
+
+                                {productImages.length > 1 && (
+                                    <>
+                                        <button
+                                            onClick={() => setSelectedImage((prev) => (prev - 1 + productImages.length) % productImages.length)}
+                                            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-white/80 hover:bg-white text-[#333] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
+                                        >
+                                            <ChevronLeft className="h-5 w-5" strokeWidth={1.5} />
+                                        </button>
+                                        <button
+                                            onClick={() => setSelectedImage((prev) => (prev + 1) % productImages.length)}
+                                            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-white/80 hover:bg-white text-[#333] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
+                                        >
+                                            <ChevronRight className="h-5 w-5" strokeWidth={1.5} />
+                                        </button>
+                                    </>
+                                )}
+                            </div>
+
+                            {productImages.length > 1 && (
+                                <div className="grid grid-cols-4 gap-2 mt-3">
+                                    {productImages.map((image, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() => setSelectedImage(index)}
+                                            className={`relative aspect-square overflow-hidden bg-[#F0EDE6] transition-all duration-200 ${
+                                                selectedImage === index
+                                                    ? 'ring-2 ring-[#505A4A]'
+                                                    : 'opacity-60 hover:opacity-100'
+                                            }`}
+                                        >
+                                            <ProductImage
+                                                src={image}
+                                                alt={`${product.name} ${index + 1}`}
+                                                className="object-cover"
+                                            />
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Info del producto */}
+                        <div className="lg:py-4">
+                            {category && (
+                                <span className="text-[11px] uppercase tracking-[0.15em] text-[#999] block mb-3">
+                                    {category.name}
+                                </span>
+                            )}
+
+                            <h1 className="text-[28px] sm:text-[34px] font-light text-[#333] tracking-[-0.02em] leading-tight mb-4">
+                                {product.name}
+                            </h1>
+
+                            <p className="text-[15px] text-[#777] font-light leading-relaxed mb-6">
+                                {product.description}
+                            </p>
+
+                            {/* Rating */}
+                            {product.rating > 0 && (
+                                <div className="flex items-center gap-3 mb-6">
+                                    <div className="flex items-center gap-0.5">
+                                        {[...Array(5)].map((_, i) => (
+                                            <Star
+                                                key={i}
+                                                className={`h-4 w-4 ${
+                                                    i < Math.floor(product.rating)
+                                                        ? 'text-[#C9A96E] fill-[#C9A96E]'
+                                                        : 'text-gray-200 fill-gray-200'
+                                                }`}
+                                            />
+                                        ))}
+                                    </div>
+                                    <span className="text-[13px] text-[#999]">
+                                        {product.rating} · {product.reviews_count} reseñas
+                                    </span>
+                                </div>
+                            )}
+
+                            {/* Precio */}
+                            <div className="flex items-baseline gap-3 mb-8 pb-8 border-b border-[#E8E4DD]">
+                                <span className="text-[28px] font-light text-[#333] tracking-tight">
+                                    ${product.price.toFixed(2)}
+                                </span>
+                                <span className="text-[16px] text-[#BBB] line-through">
+                                    ${(product.price * 1.2).toFixed(2)}
+                                </span>
+                                <span className="text-[12px] text-[#505A4A] font-medium tracking-wide uppercase">
+                                    -{discount}%
+                                </span>
+                            </div>
+
+                            {/* Cantidad */}
+                            <div className="mb-6">
+                                <span className="text-[12px] uppercase tracking-[0.12em] text-[#999] block mb-3">
+                                    Cantidad
+                                </span>
+                                <div className="inline-flex items-center border border-[#D5D0C8] h-[44px]">
+                                    <button
+                                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                                        className="w-[44px] h-full flex items-center justify-center text-[#999] hover:text-[#333] transition-colors"
+                                    >
+                                        <Minus className="h-3.5 w-3.5" strokeWidth={1.5} />
+                                    </button>
+                                    <span className="w-[50px] text-center text-[14px] text-[#333] tabular-nums select-none border-x border-[#D5D0C8]">
                                         {quantity}
                                     </span>
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
+                                    <button
                                         onClick={() => setQuantity(quantity + 1)}
-                                        className="h-10 w-10 p-0 hover:bg-[#505A4A] hover:text-white border-l-2 border-[#505A4A]/40 rounded-l-none text-[#505A4A] font-bold transition-all"
+                                        className="w-[44px] h-full flex items-center justify-center text-[#999] hover:text-[#333] transition-colors"
                                     >
-                                        <Plus className="h-5 w-5 stroke-[3]" />
-                                    </Button>
+                                        <Plus className="h-3.5 w-3.5" strokeWidth={1.5} />
+                                    </button>
                                 </div>
                             </div>
 
-                            <div className="flex gap-3">
-                                <motion.div className="flex-1" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                                    <Button
-                                        onClick={handleAddToCart}
-                                        className={`w-full h-12 text-lg font-bold shadow-lg transition-all ${addedToCart
-                                            ? 'bg-[#414A3C] hover:bg-[#414A3C]'
-                                            : 'bg-[#505A4A] hover:bg-[#414A3C]'
-                                            } text-white`}
-                                    >
-                                        <ShoppingBag className="mr-2 h-6 w-6 stroke-2 fill-white/20" />
-                                        {addedToCart ? '¡Agregado!' : 'Agregar al carrito'}
-                                    </Button>
-                                </motion.div>
-                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                    <Button
-                                        variant="outline"
-                                        onClick={handleToggleWishlist}
-                                        className={`h-12 w-12 p-0 border-2 ${isWishlisted
-                                            ? 'border-pink-500 bg-pink-50 text-pink-500'
-                                            : 'border-gray-300 hover:border-pink-500 hover:text-pink-500'
-                                            }`}
-                                    >
-                                        <Heart className={`h-6 w-6 ${isWishlisted ? 'fill-current' : ''}`} />
-                                    </Button>
-                                </motion.div>
+                            {/* Botones */}
+                            <div className="flex gap-3 mb-8">
+                                <button
+                                    onClick={handleAddToCart}
+                                    disabled={!product.active}
+                                    className={`flex-1 h-[52px] flex items-center justify-center gap-2 text-[13px] font-medium tracking-[0.1em] uppercase transition-all duration-300 ${
+                                        addedToCart
+                                            ? 'bg-[#414A3C] text-white'
+                                            : product.active
+                                                ? 'bg-[#505A4A] text-white hover:bg-[#414A3C]'
+                                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                    }`}
+                                >
+                                    <ShoppingBag className="h-4 w-4" strokeWidth={1.5} />
+                                    {addedToCart ? 'Agregado' : (product.active ? 'Agregar al carrito' : 'No disponible')}
+                                </button>
+                                <button
+                                    onClick={handleToggleWishlist}
+                                    className={`w-[52px] h-[52px] flex items-center justify-center border transition-all duration-300 ${
+                                        isWishlisted
+                                            ? 'border-[#505A4A] bg-[#505A4A]/5 text-[#505A4A]'
+                                            : 'border-[#D5D0C8] text-[#999] hover:text-[#505A4A] hover:border-[#505A4A]'
+                                    }`}
+                                >
+                                    <Heart className={`h-5 w-5 ${isWishlisted ? 'fill-current' : ''}`} strokeWidth={1.5} />
+                                </button>
+                            </div>
+
+                            {/* Trust */}
+                            <div className="grid grid-cols-3 gap-4 py-6 border-t border-[#E8E4DD]">
+                                <div className="flex flex-col items-center text-center">
+                                    <Truck className="h-5 w-5 text-[#505A4A]/50 mb-2" strokeWidth={1.5} />
+                                    <span className="text-[11px] text-[#999] tracking-[0.03em]">Envío Express</span>
+                                </div>
+                                <div className="flex flex-col items-center text-center">
+                                    <Shield className="h-5 w-5 text-[#505A4A]/50 mb-2" strokeWidth={1.5} />
+                                    <span className="text-[11px] text-[#999] tracking-[0.03em]">Garantía 30 días</span>
+                                </div>
+                                <div className="flex flex-col items-center text-center">
+                                    <RotateCcw className="h-5 w-5 text-[#505A4A]/50 mb-2" strokeWidth={1.5} />
+                                    <span className="text-[11px] text-[#999] tracking-[0.03em]">Devolución gratis</span>
+                                </div>
                             </div>
                         </div>
+                    </div>
 
-                        {/* Beneficios */}
-                        <motion.div
-                            variants={itemVariants}
-                            className="grid grid-cols-3 gap-4 py-6 border-t border-b border-gray-200"
-                        >
-                            <div className="flex flex-col items-center text-center">
-                                <Truck className="h-8 w-8 text-[#505A4A] mb-2 stroke-2" />
-                                <span className="text-sm font-semibold text-gray-900">Envío gratis</span>
-                                <span className="text-xs text-gray-600">Pedidos +$50</span>
-                            </div>
-                            <div className="flex flex-col items-center text-center">
-                                <Shield className="h-8 w-8 text-[#505A4A] mb-2 stroke-2" />
-                                <span className="text-sm font-semibold text-gray-900">Garantía</span>
-                                <span className="text-xs text-gray-600">30 días</span>
-                            </div>
-                            <div className="flex flex-col items-center text-center">
-                                <RotateCcw className="h-8 w-8 text-[#505A4A] mb-2 stroke-2" />
-                                <span className="text-sm font-semibold text-gray-900">Devoluciones</span>
-                                <span className="text-xs text-gray-600">Sin costo</span>
-                            </div>
-                        </motion.div>
-                    </motion.div>
-                </motion.div>
+                    {/* Tabs de información */}
+                    <div className="mt-20 border-t border-[#E8E4DD]">
+                        <div className="flex">
+                            {[
+                                { id: 'description', label: 'Descripción' },
+                                { id: 'details', label: 'Detalles' },
+                            ].map((tab) => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className={`py-5 px-6 text-[13px] tracking-[0.08em] uppercase transition-all duration-200 relative ${
+                                        activeTab === tab.id
+                                            ? 'text-[#333] font-medium'
+                                            : 'text-[#AAA] hover:text-[#666]'
+                                    }`}
+                                >
+                                    {tab.label}
+                                    {activeTab === tab.id && (
+                                        <motion.div
+                                            className="absolute top-0 left-0 right-0 h-[2px] bg-[#505A4A]"
+                                            layoutId="activeProductTab"
+                                        />
+                                    )}
+                                </button>
+                            ))}
+                        </div>
 
-                {/* Tabs de información adicional */}
-                <motion.div
-                    initial={{ opacity: 0, y: 40 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
-                    className="mt-24"
-                >
-                    <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm overflow-hidden">
-                        <CardContent className="p-0">
-                            {/* Tab headers */}
-                            <div className="flex space-x-0 border-b border-gray-200 bg-gray-50/50">
-                                {[
-                                    { id: 'description', label: 'Descripción' },
-                                    { id: 'features', label: 'Características' },
-                                    { id: 'ingredients', label: 'Ingredientes' }
-                                ].map((tab) => (
-                                    <button
-                                        key={tab.id}
-                                        onClick={() => setActiveTab(tab.id)}
-                                        className={`flex-1 py-6 px-6 font-semibold text-lg transition-all duration-300 relative ${activeTab === tab.id
-                                            ? 'text-[#505A4A] bg-white'
-                                            : 'text-gray-600 hover:text-[#505A4A] hover:bg-white/50'
-                                            }`}
-                                    >
-                                        {tab.label}
-                                        {activeTab === tab.id && (
-                                            <motion.div
-                                                className="absolute bottom-0 left-0 right-0 h-1 bg-[#505A4A]"
-                                                layoutId="activeTab"
-                                                initial={false}
-                                                transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                                            />
-                                        )}
-                                    </button>
-                                ))}
-                            </div>
-
-                            {/* Tab content */}
-                            <div className="p-8">
+                        <div className="py-10 max-w-2xl">
+                            <AnimatePresence mode="wait">
                                 <motion.div
                                     key={activeTab}
-                                    initial={{ opacity: 0, x: 20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ duration: 0.3 }}
-                                    className="min-h-[200px]"
+                                    initial={{ opacity: 0, y: 8 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.2 }}
                                 >
                                     {activeTab === 'description' && (
-                                        <div className="prose prose-gray max-w-none">
-                                            <p className="text-gray-800 leading-relaxed text-lg font-light tracking-wide m-0">
-                                                {product.longDescription}
-                                            </p>
-                                        </div>
+                                        <p className="text-[15px] text-[#666] font-light leading-[1.8]">
+                                            {product.description}
+                                        </p>
                                     )}
 
-                                    {activeTab === 'features' && (
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            {product.features.map((feature, index) => (
-                                                <motion.div
-                                                    key={index}
-                                                    initial={{ opacity: 0, y: 10 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                                                    className="flex items-start space-x-4 p-4 bg-green-50/50 rounded-lg border border-green-100 hover:shadow-sm transition-shadow duration-200"
-                                                >
-                                                    <div className="h-3 w-3 bg-[#505A4A] rounded-full flex-shrink-0 mt-1.5" />
-                                                    <span className="text-gray-800 font-medium text-base">{feature}</span>
-                                                </motion.div>
-                                            ))}
-                                        </div>
-                                    )}
-
-                                    {activeTab === 'ingredients' && (
-                                        <div className="prose prose-gray max-w-none">
-                                            <div className="bg-amber-50/80 border border-amber-200 rounded-xl p-6">
-                                                <h4 className="text-lg font-semibold text-[#505A4A] mb-4 flex items-center">
-                                                    <Sparkles className="w-5 h-5 mr-2 stroke-2 text-amber-600" />
-                                                    Ingredientes principales:
-                                                </h4>
-                                                <p className="text-gray-800 leading-relaxed text-base font-light m-0">
-                                                    {product.ingredients}
-                                                </p>
+                                    {activeTab === 'details' && (
+                                        <div className="space-y-4">
+                                            <div className="flex border-b border-[#E8E4DD] pb-4">
+                                                <span className="text-[13px] text-[#999] w-36 uppercase tracking-[0.05em]">Categoría</span>
+                                                <span className="text-[14px] text-[#555]">{category?.name || 'Sin categoría'}</span>
                                             </div>
+                                            <div className="flex border-b border-[#E8E4DD] pb-4">
+                                                <span className="text-[13px] text-[#999] w-36 uppercase tracking-[0.05em]">Estado</span>
+                                                <span className="text-[14px] text-[#555]">{product.active ? 'Disponible' : 'No disponible'}</span>
+                                            </div>
+                                            <div className="flex border-b border-[#E8E4DD] pb-4">
+                                                <span className="text-[13px] text-[#999] w-36 uppercase tracking-[0.05em]">Valoración</span>
+                                                <span className="text-[14px] text-[#555]">{product.rating} / 5 ({product.reviews_count} reseñas)</span>
+                                            </div>
+                                            {product.featured && (
+                                                <div className="flex border-b border-[#E8E4DD] pb-4">
+                                                    <span className="text-[13px] text-[#999] w-36 uppercase tracking-[0.05em]">Destacado</span>
+                                                    <span className="text-[14px] text-[#505A4A]">Producto destacado</span>
+                                                </div>
+                                            )}
                                         </div>
                                     )}
                                 </motion.div>
-                            </div>
-                        </CardContent>
-                    </Card>
+                            </AnimatePresence>
+                        </div>
+                    </div>
                 </motion.div>
             </div>
         </div>

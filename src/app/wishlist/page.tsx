@@ -5,7 +5,7 @@ import { Heart, Star, ShoppingBag, ArrowLeft, X, Eye, Loader2 } from "lucide-rea
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
+import ProductImage from "@/components/ui/product-image";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Breadcrumb from "@/components/ui/breadcrumb";
@@ -132,12 +132,10 @@ export default function WishlistPage() {
 
                                             {/* Imagen del producto */}
                                             <Link href={`/products/${product.id}`} className="relative aspect-square bg-gray-100 overflow-hidden block">
-                                                <Image
-                                                    src={product.image || '/images/placeholder.jpg'}
+                                                <ProductImage
+                                                    src={product.image}
                                                     alt={product.name}
-                                                    fill
                                                     className="object-cover transition-transform duration-300 group-hover:scale-105"
-                                                    unoptimized
                                                 />
                                             </Link>
 

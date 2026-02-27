@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import Image from "next/image";
+import ProductImage from "@/components/ui/product-image";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Breadcrumb from "@/components/ui/breadcrumb";
@@ -366,31 +366,31 @@ export default function ProductsPage() {
                 >
                   <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white group">
                     <CardContent className="p-0 relative">
-                      <div className="relative aspect-square bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
+                      <div className="relative aspect-square bg-[#F5F1E8]/40 overflow-hidden">
                         <Link href={`/products/${product.id}`} prefetch={false}>
-                          <Image
+                          <ProductImage
                             src={product.image}
                             alt={product.name}
-                            fill
                             className="object-cover transition-transform duration-300 group-hover:scale-105"
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                           />
                         </Link>
 
-                        <div className="absolute top-3 left-3 flex flex-col gap-1">
+                        <div className="absolute top-3 left-3 flex flex-col gap-1.5">
                           {product.isNew && (
-                            <Badge variant="secondary" className="bg-emerald-600 text-white font-semibold shadow-md">
+                            <span className="inline-block bg-[#505A4A] text-white text-[10px] font-medium tracking-[0.06em] uppercase px-3 py-1.5 rounded-full">
                               Nuevo
-                            </Badge>
+                            </span>
                           )}
                           {product.isBestseller && (
-                            <Badge variant="secondary" className="bg-amber-600 text-white font-semibold shadow-md">
+                            <span className="inline-block bg-[#333] text-white text-[10px] font-medium tracking-[0.06em] uppercase px-3 py-1.5 rounded-full">
                               Más vendido
-                            </Badge>
+                            </span>
                           )}
                           {!product.inStock && (
-                            <Badge variant="secondary" className="bg-red-600 text-white font-semibold shadow-md">
+                            <span className="inline-block bg-red-900/80 text-white text-[10px] font-medium tracking-[0.06em] uppercase px-3 py-1.5 rounded-full">
                               Agotado
-                            </Badge>
+                            </span>
                           )}
                         </div>
                       </div>
