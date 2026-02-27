@@ -7,6 +7,7 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   updateProfile,
+  sendPasswordResetEmail,
   User as FirebaseUser
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
@@ -61,6 +62,7 @@ interface AuthContextType {
   isClient: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   register: (userData: RegisterData) => Promise<{ success: boolean; error?: string }>;
+  resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   updateUser: (data: Partial<User>) => Promise<void>;
   getManagers: () => Promise<User[]>;
@@ -250,6 +252,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  // Reset Password
+  const resetPassword = async (email: string): Promise<{ success: boolean; error?: string }> => {
+    if (!auth) {
+      return { success: false, error: 'Firebase no está inicializado' };
+    }
+
+    if (!isValidEmail(email)) {
+      return { success: false, error: 'Formato de email inválido' };
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+      return { success: true };
+    } catch (error: unknown) {
+      const firebaseError = error as { code?: string };
+      const errorMessages: Record<string, string> = {
+        'auth/user-not-found': 'No existe una cuenta con ese email',
+        'auth/invalid-email': 'Email inválido',
+        'auth/too-many-requests': 'Demasiados intentos. Intenta más tarde',
+      };
+      const errorMessage = errorMessages[firebaseError.code || ''] || 'Error al enviar el email';
+      return { success: false, error: errorMessage };
+    }
+  };
+
   // Register
   const register = async (userData: RegisterData): Promise<{ success: boolean; error?: string }> => {
     // Validate email format
@@ -374,6 +401,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isClient: state.user?.role === 'client',
     login,
     register,
+    resetPassword,
     logout,
     updateUser,
     getManagers,

@@ -10,18 +10,19 @@ import { useAuth, RegisterData } from '@/store';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-type AuthMode = 'login' | 'register';
+type AuthMode = 'login' | 'register' | 'reset';
 type UserType = 'client' | 'manager';
 
 export default function AuthPage() {
   const router = useRouter();
-  const { login, register, isAuthenticated } = useAuth();
+  const { login, register, resetPassword, isAuthenticated } = useAuth();
 
   const [mode, setMode] = useState<AuthMode>('login');
   const [userType, setUserType] = useState<UserType | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [resetSuccess, setResetSuccess] = useState(false);
 
   // Form fields
   const [formData, setFormData] = useState({
@@ -95,10 +96,28 @@ export default function AuthPage() {
     setIsLoading(false);
   };
 
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+    setResetSuccess(false);
+
+    const result = await resetPassword(formData.email);
+
+    if (result.success) {
+      setResetSuccess(true);
+    } else {
+      setError(result.error || 'Error al enviar el email');
+    }
+
+    setIsLoading(false);
+  };
+
   const resetForm = () => {
     setFormData({ name: '', email: '', password: '', phone: '', zone: '' });
     setUserType(null);
     setError(null);
+    setResetSuccess(false);
   };
 
   return (
@@ -185,7 +204,7 @@ export default function AuthPage() {
             <div className="flex mb-8 bg-gray-100 rounded-lg p-1">
               <button
                 onClick={() => { setMode('login'); resetForm(); }}
-                className={`flex-1 py-2.5 rounded-md font-medium transition-all ${mode === 'login'
+                className={`flex-1 py-2.5 rounded-md font-medium transition-all ${mode === 'login' || mode === 'reset'
                   ? 'bg-white text-[#505A4A] shadow-sm'
                   : 'text-gray-600 hover:text-gray-900'
                   }`}
@@ -274,6 +293,86 @@ export default function AuthPage() {
                   >
                     {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
                   </Button>
+
+                  <button
+                    type="button"
+                    onClick={() => { setMode('reset'); setError(null); setResetSuccess(false); }}
+                    className="w-full text-sm text-[#505A4A] hover:underline mt-2"
+                  >
+                    ¿Olvidaste tu contraseña?
+                  </button>
+                </motion.form>
+              )}
+
+              {/* RESET PASSWORD */}
+              {mode === 'reset' && (
+                <motion.form
+                  key="reset"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  onSubmit={handleResetPassword}
+                  className="space-y-4"
+                >
+                  <button
+                    type="button"
+                    onClick={() => { setMode('login'); resetForm(); }}
+                    className="text-sm text-gray-500 hover:text-[#505A4A] mb-2"
+                  >
+                    ← Volver al inicio de sesión
+                  </button>
+
+                  <p className="text-sm text-gray-600">
+                    Introduce tu email y te enviaremos un enlace para restablecer tu contraseña.
+                  </p>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Email
+                    </label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                      <Input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        placeholder="tu@email.com"
+                        className="pl-10"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {error && (
+                    <motion.p
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="text-red-500 text-sm text-center bg-red-50 p-2 rounded"
+                    >
+                      {error}
+                    </motion.p>
+                  )}
+
+                  {resetSuccess && (
+                    <motion.p
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="text-green-700 text-sm text-center bg-green-50 p-3 rounded"
+                    >
+                      ✓ Email enviado. Revisa tu bandeja de entrada para restablecer tu contraseña.
+                    </motion.p>
+                  )}
+
+                  {!resetSuccess && (
+                    <Button
+                      type="submit"
+                      disabled={isLoading}
+                      className="w-full bg-[#505A4A] hover:bg-[#414A3C] text-white py-6"
+                    >
+                      {isLoading ? 'Enviando...' : 'Enviar enlace de restablecimiento'}
+                    </Button>
+                  )}
                 </motion.form>
               )}
 
