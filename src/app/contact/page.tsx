@@ -339,14 +339,13 @@ export default function ContactPage() {
                                             rel="noopener noreferrer"
                                             className="flex-1 sm:flex-none"
                                         >
-                                            <Button
+                                            <button
                                                 type="button"
-                                                variant="outline"
-                                                className="w-full border-2 border-[#505A4A] text-[#505A4A] hover:bg-[#505A4A] hover:text-white font-bold px-10 sm:px-12 py-4 text-lg"
+                                                className="w-full inline-flex items-center justify-center border-2 border-[#505A4A] bg-transparent text-[#505A4A] hover:bg-[#505A4A] hover:text-white font-bold px-10 sm:px-12 py-4 text-lg rounded-md transition-colors"
                                             >
                                                 <MessageCircle className="h-5 w-5 mr-3" />
                                                 WhatsApp
-                                            </Button>
+                                            </button>
                                         </a>
                                     </motion.div>
                                 </form>
