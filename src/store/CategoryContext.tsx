@@ -1,11 +1,10 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo } from 'react';
 import { ICategory } from '@/entities/all';
 import { CategoryService } from '@/lib/firestore-services';
 import { db } from '@/lib/firebase';
 
-// Check if Firebase is ready (client-side and initialized)
 const isFirebaseReady = () => {
     return typeof window !== 'undefined' && db !== null;
 };
@@ -13,6 +12,8 @@ const isFirebaseReady = () => {
 interface CategoryContextType {
     categories: ICategory[];
     activeCategories: ICategory[];
+    rootCategories: ICategory[];
+    activeRootCategories: ICategory[];
     isLoading: boolean;
     error: string | null;
     refreshCategories: () => Promise<void>;
@@ -20,20 +21,20 @@ interface CategoryContextType {
     updateCategory: (id: string, data: Partial<ICategory>) => Promise<void>;
     deleteCategory: (id: string) => Promise<void>;
     getCategory: (id: string) => ICategory | undefined;
+    getChildren: (parentId: string) => ICategory[];
+    getActiveChildren: (parentId: string) => ICategory[];
+    getCategoryPath: (id: string) => ICategory[];
 }
 
 const CategoryContext = createContext<CategoryContextType | undefined>(undefined);
 
 export function CategoryProvider({ children }: { children: ReactNode }) {
     const [categories, setCategories] = useState<ICategory[]>([]);
-    const [activeCategories, setActiveCategories] = useState<ICategory[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     const refreshCategories = useCallback(async () => {
-        // Guard: Don't attempt to fetch if Firebase isn't ready
         if (!isFirebaseReady()) {
-            console.log('🔴 Firebase not ready');
             setIsLoading(false);
             return;
         }
@@ -41,74 +42,88 @@ export function CategoryProvider({ children }: { children: ReactNode }) {
         setIsLoading(true);
         setError(null);
         try {
-            console.log('🔵 Fetching categories...');
-            // Get all categories ordered by sort_order
             const allData = await CategoryService.getAll('sort_order');
-            console.log('✅ Categories loaded:', allData);
             setCategories(allData);
-
-            // Filter active ones
-            const activeData = allData.filter(c => c.active);
-            console.log('✅ Active categories:', activeData);
-            setActiveCategories(activeData);
-        } catch (err) {
-            console.error('❌ Error fetching categories:', err);
+        } catch {
             setError('Error al cargar las categorías');
-            // Fallback to empty if error, don't break app
             setCategories([]);
-            setActiveCategories([]);
         } finally {
             setIsLoading(false);
         }
     }, []);
 
-    // Initial load
     useEffect(() => {
         refreshCategories();
     }, [refreshCategories]);
 
-    const createCategory = async (category: Omit<ICategory, 'id'>) => {
-        try {
-            console.log('🔵 Creating category:', category);
-            const newCategory = await CategoryService.create(category);
-            console.log('✅ Category created:', newCategory);
-            await refreshCategories(); // Reload to ensure sync
-            return newCategory;
-        } catch (err) {
-            console.error('❌ Error creating category:', err);
-            throw err;
-        }
-    };
+    const activeCategories = useMemo(() => {
+        return categories.filter(c => c.active);
+    }, [categories]);
 
-    const updateCategory = async (id: string, data: Partial<ICategory>) => {
-        try {
-            await CategoryService.update(id, data);
-            await refreshCategories();
-        } catch (err) {
-            console.error('Error updating category:', err);
-            throw err;
-        }
-    };
+    const rootCategories = useMemo(() => {
+        return categories.filter(c => !c.parent_id);
+    }, [categories]);
 
-    const deleteCategory = async (id: string) => {
-        try {
-            await CategoryService.delete(id);
-            await refreshCategories();
-        } catch (err) {
-            console.error('Error deleting category:', err);
-            throw err;
-        }
-    };
+    const activeRootCategories = useMemo(() => {
+        return categories.filter(c => c.active && !c.parent_id);
+    }, [categories]);
 
-    const getCategory = (id: string) => {
+    const getChildren = useCallback((parentId: string): ICategory[] => {
+        return categories
+            .filter(c => c.parent_id === parentId)
+            .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+    }, [categories]);
+
+    const getActiveChildren = useCallback((parentId: string): ICategory[] => {
+        return categories
+            .filter(c => c.parent_id === parentId && c.active)
+            .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+    }, [categories]);
+
+    const getCategory = useCallback((id: string) => {
         return categories.find(c => c.id === id);
-    };
+    }, [categories]);
+
+    const getCategoryPath = useCallback((id: string): ICategory[] => {
+        const path: ICategory[] = [];
+        let current = categories.find(c => c.id === id);
+        while (current) {
+            path.unshift(current);
+            current = current.parent_id
+                ? categories.find(c => c.id === current!.parent_id)
+                : undefined;
+        }
+        return path;
+    }, [categories]);
+
+    const createCategory = useCallback(async (category: Omit<ICategory, 'id'>) => {
+        const newCategory = await CategoryService.create(category);
+        await refreshCategories();
+        return newCategory;
+    }, [refreshCategories]);
+
+    const updateCategory = useCallback(async (id: string, data: Partial<ICategory>) => {
+        await CategoryService.update(id, data);
+        await refreshCategories();
+    }, [refreshCategories]);
+
+    const deleteCategory = useCallback(async (id: string) => {
+        // Also delete all children recursively
+        const childrenToDelete = categories.filter(c => c.parent_id === id);
+        for (const child of childrenToDelete) {
+            await deleteCategory(child.id);
+        }
+        await CategoryService.delete(id);
+        await refreshCategories();
+    }, [categories, refreshCategories]);
 
     return (
         <CategoryContext.Provider
             value={{
                 categories,
                 activeCategories,
+                rootCategories,
+                activeRootCategories,
                 isLoading,
                 error,
                 refreshCategories,
@@ -116,6 +131,9 @@ export function CategoryProvider({ children }: { children: ReactNode }) {
                 updateCategory,
                 deleteCategory,
                 getCategory,
+                getChildren,
+                getActiveChildren,
+                getCategoryPath,
             }}
         >
             {children}

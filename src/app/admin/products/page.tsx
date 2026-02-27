@@ -2,11 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useAuth, useProducts, useCategories } from '@/store';
-import { IProduct, ICategory } from '@/entities/all';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
+import { IProduct } from '@/entities/all';
 import {
     Plus,
     Pencil,
@@ -21,27 +17,24 @@ import {
     Save,
     ImageIcon,
     Tag,
-    DollarSign,
     FileText,
-    Layers,
+    Check,
+    AlertTriangle,
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-// Firebase Storage - comentado para uso futuro
-// import { storage } from '@/lib/firebase';
-// import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import Image from 'next/image';
 
 type ViewMode = 'list' | 'create' | 'edit';
 
-// Empty product template
+const PLACEHOLDER_IMAGE = "/images/no-image.svg";
+
 const emptyProduct: Omit<IProduct, 'id' | 'created_date'> = {
     name: '',
     description: '',
     price: 0,
     category_id: '',
-    image: '/images/placeholder.jpg',
+    image: '',
     rating: 0,
     reviews_count: 0,
     tags: [],
@@ -49,6 +42,141 @@ const emptyProduct: Omit<IProduct, 'id' | 'created_date'> = {
     active: true,
     featured: false,
 };
+
+function ProductListItem({
+    product,
+    categoryName,
+    onEdit,
+    onDelete,
+    onToggleActive,
+    onToggleFeatured,
+    deleteConfirm,
+    setDeleteConfirm,
+}: {
+    product: IProduct;
+    categoryName: string;
+    onEdit: () => void;
+    onDelete: () => void;
+    onToggleActive: () => void;
+    onToggleFeatured: () => void;
+    deleteConfirm: boolean;
+    setDeleteConfirm: (id: string | null) => void;
+}) {
+    const [imgError, setImgError] = useState(false);
+    const productImage = imgError || !product.image ? PLACEHOLDER_IMAGE : product.image;
+
+    return (
+        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+            <div className="flex gap-3 p-3 sm:p-4">
+                {/* Image */}
+                <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
+                    <Image
+                        src={productImage}
+                        alt={product.name}
+                        fill
+                        className="object-cover"
+                        onError={() => setImgError(true)}
+                        unoptimized={productImage === PLACEHOLDER_IMAGE}
+                    />
+                    {product.featured && (
+                        <div className="absolute top-1 left-1 bg-[#C4B590] rounded-full p-1">
+                            <Star className="w-2.5 h-2.5 text-white fill-current" />
+                        </div>
+                    )}
+                </div>
+
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                            <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
+                                {product.name}
+                            </h3>
+                            <p className="text-xs text-gray-500 mt-0.5">{categoryName}</p>
+                        </div>
+                        <span className={`text-[10px] sm:text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0 ${
+                            product.active
+                                ? 'bg-emerald-50 text-emerald-700'
+                                : 'bg-gray-100 text-gray-500'
+                        }`}>
+                            {product.active ? 'Activo' : 'Oculto'}
+                        </span>
+                    </div>
+
+                    <p className="text-xs sm:text-sm text-gray-500 mt-1 line-clamp-1">
+                        {product.description}
+                    </p>
+
+                    {/* Price + Actions */}
+                    <div className="flex items-center justify-between mt-2 sm:mt-3">
+                        <span className="text-base sm:text-lg font-bold text-gray-900">
+                            €{product.price.toFixed(2)}
+                        </span>
+
+                        <div className="flex items-center gap-1">
+                            {deleteConfirm ? (
+                                <div className="flex items-center gap-1 bg-red-50 rounded-lg px-2 py-1">
+                                    <span className="text-xs text-red-600 mr-1">¿Eliminar?</span>
+                                    <button
+                                        onClick={onDelete}
+                                        className="text-red-600 hover:bg-red-100 rounded p-1 transition-colors"
+                                    >
+                                        <Check className="w-4 h-4" />
+                                    </button>
+                                    <button
+                                        onClick={() => setDeleteConfirm(null)}
+                                        className="text-gray-500 hover:bg-gray-100 rounded p-1 transition-colors"
+                                    >
+                                        <X className="w-4 h-4" />
+                                    </button>
+                                </div>
+                            ) : (
+                                <>
+                                    <button
+                                        onClick={onToggleFeatured}
+                                        className={`p-1.5 rounded-lg transition-colors ${
+                                            product.featured
+                                                ? 'text-[#C4B590] bg-[#C4B590]/10'
+                                                : 'text-gray-400 hover:text-[#C4B590] hover:bg-gray-100'
+                                        }`}
+                                        title={product.featured ? 'Quitar destacado' : 'Destacar'}
+                                    >
+                                        <Star className={`w-4 h-4 ${product.featured ? 'fill-current' : ''}`} />
+                                    </button>
+                                    <button
+                                        onClick={onToggleActive}
+                                        className={`p-1.5 rounded-lg transition-colors ${
+                                            product.active
+                                                ? 'text-emerald-600 hover:bg-emerald-50'
+                                                : 'text-gray-400 hover:bg-gray-100'
+                                        }`}
+                                        title={product.active ? 'Ocultar' : 'Activar'}
+                                    >
+                                        {product.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                                    </button>
+                                    <button
+                                        onClick={onEdit}
+                                        className="p-1.5 rounded-lg text-[#505A4A] hover:bg-[#505A4A]/10 transition-colors"
+                                        title="Editar"
+                                    >
+                                        <Pencil className="w-4 h-4" />
+                                    </button>
+                                    <button
+                                        onClick={() => setDeleteConfirm(product.id)}
+                                        className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                                        title="Eliminar"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
 
 export default function AdminProductsPage() {
     const router = useRouter();
@@ -62,7 +190,7 @@ export default function AdminProductsPage() {
         toggleProductActive,
         toggleProductFeatured,
     } = useProducts();
-    const { categories, isLoading: categoriesLoading } = useCategories();
+    const { categories, isLoading: categoriesLoading, getCategoryPath } = useCategories();
 
     const [viewMode, setViewMode] = useState<ViewMode>('list');
     const [searchQuery, setSearchQuery] = useState('');
@@ -76,8 +204,8 @@ export default function AdminProductsPage() {
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadError, setUploadError] = useState<string | null>(null);
+    const [formImgError, setFormImgError] = useState(false);
 
-    // Redirect if not admin
     useEffect(() => {
         if (isLoaded && (!isAuthenticated || !isAdmin)) {
             router.push('/auth');
@@ -86,17 +214,14 @@ export default function AdminProductsPage() {
 
     if (!isLoaded || isLoading || categoriesLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#505A4A]" />
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#505A4A] border-t-transparent" />
             </div>
         );
     }
 
-    if (!isAdmin) {
-        return null;
-    }
+    if (!isAdmin) return null;
 
-    // Filter products
     const filteredProducts = products.filter((p) => {
         const matchesSearch =
             p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -106,12 +231,20 @@ export default function AdminProductsPage() {
         return matchesSearch && matchesCategory;
     });
 
-    // Handlers
+    const stats = {
+        total: products.length,
+        active: products.filter((p) => p.active).length,
+        featured: products.filter((p) => p.featured).length,
+        inactive: products.filter((p) => !p.active).length,
+    };
+
     const handleCreateNew = () => {
         setFormData(emptyProduct);
         setTagsInput('');
         setIngredientsInput('');
         setEditingProduct(null);
+        setUploadError(null);
+        setFormImgError(false);
         setViewMode('create');
     };
 
@@ -132,6 +265,8 @@ export default function AdminProductsPage() {
         });
         setTagsInput(product.tags.join(', '));
         setIngredientsInput(product.ingredients.join(', '));
+        setUploadError(null);
+        setFormImgError(false);
         setViewMode('edit');
     };
 
@@ -143,25 +278,17 @@ export default function AdminProductsPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Validar que haya imagen
         if (!formData.image || formData.image === '/images/placeholder.jpg') {
             setUploadError('La imagen del producto es requerida');
             return;
         }
 
         setIsSaving(true);
-
         try {
             const productData = {
                 ...formData,
-                tags: tagsInput
-                    .split(',')
-                    .map((t) => t.trim())
-                    .filter((t) => t),
-                ingredients: ingredientsInput
-                    .split(',')
-                    .map((i) => i.trim())
-                    .filter((i) => i),
+                tags: tagsInput.split(',').map((t) => t.trim()).filter((t) => t),
+                ingredients: ingredientsInput.split(',').map((i) => i.trim()).filter((i) => i),
             };
 
             if (viewMode === 'create') {
@@ -173,8 +300,8 @@ export default function AdminProductsPage() {
             setViewMode('list');
             setFormData(emptyProduct);
             setEditingProduct(null);
-        } catch (error) {
-            console.error('Error saving product:', error);
+        } catch {
+            // Error handled by context
         } finally {
             setIsSaving(false);
         }
@@ -186,692 +313,416 @@ export default function AdminProductsPage() {
         setEditingProduct(null);
         setTagsInput('');
         setIngredientsInput('');
+        setUploadError(null);
+    };
+
+    const handleFileUpload = async (file: File) => {
+        const localPreviewUrl = URL.createObjectURL(file);
+        setFormData(prev => ({ ...prev, image: localPreviewUrl }));
+        setFormImgError(false);
+        setIsUploading(true);
+        setUploadProgress(10);
+        setUploadError(null);
+
+        try {
+            const uploadFormData = new FormData();
+            uploadFormData.append('file', file);
+            uploadFormData.append('folder', 'products');
+            setUploadProgress(30);
+
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: uploadFormData,
+            });
+
+            setUploadProgress(80);
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || 'Error al subir la imagen');
+            }
+
+            URL.revokeObjectURL(localPreviewUrl);
+            setFormData(prev => ({ ...prev, image: result.url }));
+            setUploadProgress(100);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : 'No se pudo subir la imagen';
+            setUploadError(msg);
+        } finally {
+            setIsUploading(false);
+        }
     };
 
     const getCategoryName = (categoryId: string) => {
-        const category = categories.find((c) => c.id === categoryId);
-        return category?.name || categoryId;
+        const path = getCategoryPath(categoryId);
+        if (path.length === 0) return 'Sin categoría';
+        return path.map(c => c.name).join(' › ');
     };
 
-    // Render list view
+    // Build hierarchical category options for selectors
+    const buildCategoryOptions = () => {
+        const options: { id: string; label: string; depth: number }[] = [];
+        const addCategory = (cat: { id: string; name: string; parent_id?: string }, depth: number) => {
+            const prefix = depth > 0 ? '  '.repeat(depth) + '↳ ' : '';
+            options.push({ id: cat.id, label: `${prefix}${cat.name}`, depth });
+            const children = categories
+                .filter(c => c.parent_id === cat.id)
+                .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+            children.forEach(child => addCategory(child, depth + 1));
+        };
+        categories
+            .filter(c => !c.parent_id)
+            .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
+            .forEach(cat => addCategory(cat, 0));
+        return options;
+    };
+
+    const categoryOptions = buildCategoryOptions();
+
+    // ─── LIST VIEW ───────────────────────────────────────────────
     if (viewMode === 'list') {
         return (
             <div className="min-h-screen bg-gray-50 pt-20">
-                <div className="container mx-auto px-4 py-8">
+                <div className="max-w-4xl mx-auto px-4 py-6 sm:py-8">
                     {/* Header */}
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
+                    <div className="flex items-center justify-between mb-6">
                         <div>
-                            <div className="flex items-center gap-2 mb-2">
-                                <Link
-                                    href="/admin"
-                                    className="text-gray-500 hover:text-[#505A4A] transition-colors"
-                                >
+                            <div className="flex items-center gap-2 mb-1">
+                                <Link href="/admin" className="text-gray-400 hover:text-gray-600 transition-colors">
                                     <ArrowLeft className="w-5 h-5" />
                                 </Link>
-                                <h1 className="text-3xl font-bold text-gray-900">
-                                    Gestión de Productos
-                                </h1>
+                                <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Productos</h1>
                             </div>
-                            <p className="text-gray-600">
-                                Administra el catálogo de productos de la tienda
-                            </p>
+                            <p className="text-sm text-gray-500 ml-7">{stats.total} productos en catálogo</p>
                         </div>
-                        <Button
+                        <button
                             onClick={handleCreateNew}
-                            className="bg-[#505A4A] hover:bg-[#3d5636] text-white"
+                            className="flex items-center gap-2 bg-[#505A4A] text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-sm font-medium hover:bg-[#414A3C] transition-colors shadow-sm"
                         >
-                            <Plus className="w-4 h-4 mr-2" />
-                            Nuevo Producto
-                        </Button>
+                            <Plus className="w-4 h-4" />
+                            <span className="hidden sm:inline">Nuevo Producto</span>
+                            <span className="sm:hidden">Nuevo</span>
+                        </button>
                     </div>
 
-                    {/* Filters */}
-                    <Card className="mb-6 shadow-sm border border-gray-200">
-                        <CardContent className="pt-6">
-                            <div className="flex flex-col md:flex-row gap-4">
-                                <div className="flex-1 relative">
-                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                                    <Input
-                                        type="text"
-                                        placeholder="Buscar productos..."
-                                        value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="pl-10"
-                                    />
-                                </div>
-                                <select
-                                    value={categoryFilter}
-                                    onChange={(e) => setCategoryFilter(e.target.value)}
-                                    className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#505A4A] text-gray-900 bg-white"
-                                >
-                                    <option value="all" className="text-gray-900">Todas las categorías</option>
-                                    {categories.map((cat) => (
-                                        <option key={cat.id} value={cat.id} className="text-gray-900">
-                                            {cat.name}
-                                        </option>
-                                    ))}
-                                </select>
+                    {/* Quick Stats */}
+                    <div className="grid grid-cols-4 gap-2 sm:gap-3 mb-5">
+                        {[
+                            { label: 'Total', value: stats.total, icon: Package },
+                            { label: 'Activos', value: stats.active, icon: Eye },
+                            { label: 'Destacados', value: stats.featured, icon: Star },
+                            { label: 'Ocultos', value: stats.inactive, icon: EyeOff },
+                        ].map((stat) => (
+                            <div key={stat.label} className="bg-white rounded-xl border border-gray-200 p-3 text-center">
+                                <stat.icon className="w-4 h-4 text-gray-400 mx-auto mb-1" />
+                                <p className="text-lg sm:text-xl font-bold text-gray-900">{stat.value}</p>
+                                <p className="text-[10px] sm:text-xs text-gray-500">{stat.label}</p>
                             </div>
-                        </CardContent>
-                    </Card>
-
-                    {/* Stats */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                        <Card className="border-0 shadow-md">
-                            <CardContent className="pt-4">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm text-gray-500">Total</p>
-                                        <p className="text-2xl font-bold text-gray-900">
-                                            {products.length}
-                                        </p>
-                                    </div>
-                                    <Package className="w-8 h-8 text-gray-400" />
-                                </div>
-                            </CardContent>
-                        </Card>
-                        <Card className="border-0 shadow-md">
-                            <CardContent className="pt-4">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm text-gray-500">Activos</p>
-                                        <p className="text-2xl font-bold text-gray-900">
-                                            {products.filter((p) => p.active).length}
-                                        </p>
-                                    </div>
-                                    <Eye className="w-8 h-8 text-gray-300" />
-                                </div>
-                            </CardContent>
-                        </Card>
-                        <Card className="border-0 shadow-md">
-                            <CardContent className="pt-4">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm text-gray-500">Destacados</p>
-                                        <p className="text-2xl font-bold text-gray-900">
-                                            {products.filter((p) => p.featured).length}
-                                        </p>
-                                    </div>
-                                    <Star className="w-8 h-8 text-gray-300" />
-                                </div>
-                            </CardContent>
-                        </Card>
-                        <Card className="border-0 shadow-md">
-                            <CardContent className="pt-4">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm text-gray-500">Inactivos</p>
-                                        <p className="text-2xl font-bold text-gray-600">
-                                            {products.filter((p) => !p.active).length}
-                                        </p>
-                                    </div>
-                                    <EyeOff className="w-8 h-8 text-gray-400" />
-                                </div>
-                            </CardContent>
-                        </Card>
+                        ))}
                     </div>
 
-                    {/* Products Table */}
-                    <Card className="shadow-sm border border-gray-200 overflow-hidden">
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <Package className="w-5 h-5" />
-                                Productos ({filteredProducts.length})
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="overflow-x-auto">
-                                <table className="w-full">
-                                    <thead>
-                                        <tr className="border-b bg-gray-50">
-                                            <th className="text-left p-4 font-medium text-gray-600">
-                                                Producto
-                                            </th>
-                                            <th className="text-left p-4 font-medium text-gray-600">
-                                                Categoría
-                                            </th>
-                                            <th className="text-left p-4 font-medium text-gray-600">
-                                                Precio
-                                            </th>
-                                            <th className="text-center p-4 font-medium text-gray-600">
-                                                Estado
-                                            </th>
-                                            <th className="text-center p-4 font-medium text-gray-600">
-                                                Destacado
-                                            </th>
-                                            <th className="text-right p-4 font-medium text-gray-600">
-                                                Acciones
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <AnimatePresence>
-                                            {filteredProducts.map((product, index) => (
-                                                <motion.tr
-                                                    key={product.id}
-                                                    initial={{ opacity: 0, y: 10 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    exit={{ opacity: 0, y: -10 }}
-                                                    transition={{ delay: index * 0.03 }}
-                                                    className="border-b hover:bg-gray-50 transition-colors"
-                                                >
-                                                    <td className="p-4">
-                                                        <div className="flex items-center gap-3">
-                                                            {product.image ? (
-                                                                <Image
-                                                                    src={product.image}
-                                                                    alt={product.name}
-                                                                    width={48}
-                                                                    height={48}
-                                                                    className="w-12 h-12 rounded-lg object-cover"
-                                                                    unoptimized
-                                                                />
-                                                            ) : (
-                                                                <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                                                                    <ImageIcon className="w-6 h-6 text-gray-500" />
-                                                                </div>
-                                                            )}
-                                                            <div>
-                                                                <p className="font-medium text-gray-900">
-                                                                    {product.name}
-                                                                </p>
-                                                                <p className="text-sm text-gray-500 truncate max-w-[200px]">
-                                                                    {product.description}
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td className="p-4">
-                                                        <Badge variant="secondary">
-                                                            {getCategoryName(product.category_id)}
-                                                        </Badge>
-                                                    </td>
-                                                    <td className="p-4">
-                                                        <span className="font-semibold text-gray-900 font-medium">
-                                                            €{product.price.toFixed(2)}
-                                                        </span>
-                                                    </td>
-                                                    <td className="p-4 text-center">
-                                                        <button
-                                                            onClick={() => toggleProductActive(product.id)}
-                                                            className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium transition-colors ${product.active
-                                                                ? 'bg-[#505A4A]/10 text-[#505A4A] hover:bg-[#505A4A]/15'
-                                                                : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
-                                                                }`}
-                                                        >
-                                                            {product.active ? (
-                                                                <>
-                                                                    <Eye className="w-3 h-3" />
-                                                                    Activo
-                                                                </>
-                                                            ) : (
-                                                                <>
-                                                                    <EyeOff className="w-3 h-3" />
-                                                                    Inactivo
-                                                                </>
-                                                            )}
-                                                        </button>
-                                                    </td>
-                                                    <td className="p-4 text-center">
-                                                        <button
-                                                            onClick={() => toggleProductFeatured(product.id)}
-                                                            className={`inline-flex items-center justify-center w-8 h-8 rounded-full transition-colors ${product.featured
-                                                                ? 'bg-[#505A4A]/10 text-[#505A4A]'
-                                                                : 'bg-gray-100 text-gray-500 hover:bg-[#505A4A]/5 hover:text-[#505A4A]'
-                                                                }`}
-                                                        >
-                                                            <Star
-                                                                className={`w-4 h-4 ${product.featured ? 'fill-current' : ''
-                                                                    }`}
-                                                            />
-                                                        </button>
-                                                    </td>
-                                                    <td className="p-4">
-                                                        <div className="flex items-center justify-end gap-2">
-                                                            <Button
-                                                                variant="ghost"
-                                                                size="sm"
-                                                                onClick={() => handleEdit(product)}
-                                                                className="text-gray-600 hover:text-gray-800 hover:bg-gray-100"
-                                                            >
-                                                                <Pencil className="w-4 h-4" />
-                                                            </Button>
-                                                            {deleteConfirm === product.id ? (
-                                                                <div className="flex items-center gap-1">
-                                                                    <Button
-                                                                        variant="ghost"
-                                                                        size="sm"
-                                                                        onClick={() => handleDelete(product.id)}
-                                                                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                                                                    >
-                                                                        Sí
-                                                                    </Button>
-                                                                    <Button
-                                                                        variant="ghost"
-                                                                        size="sm"
-                                                                        onClick={() => setDeleteConfirm(null)}
-                                                                        className="text-gray-600 hover:text-gray-700"
-                                                                    >
-                                                                        No
-                                                                    </Button>
-                                                                </div>
-                                                            ) : (
-                                                                <Button
-                                                                    variant="ghost"
-                                                                    size="sm"
-                                                                    onClick={() => setDeleteConfirm(product.id)}
-                                                                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                                                                >
-                                                                    <Trash2 className="w-4 h-4" />
-                                                                </Button>
-                                                            )}
-                                                        </div>
-                                                    </td>
-                                                </motion.tr>
-                                            ))}
-                                        </AnimatePresence>
-                                    </tbody>
-                                </table>
+                    {/* Search + Filter */}
+                    <div className="flex gap-2 mb-4">
+                        <div className="flex-1 relative">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                            <input
+                                type="text"
+                                placeholder="Buscar productos..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full pl-9 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] transition-all"
+                            />
+                        </div>
+                        <select
+                            value={categoryFilter}
+                            onChange={(e) => setCategoryFilter(e.target.value)}
+                            className="px-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] min-w-[120px] sm:min-w-[160px]"
+                        >
+                            <option value="all">Todas</option>
+                            {categoryOptions.map((opt) => (
+                                <option key={opt.id} value={opt.id}>{opt.label}</option>
+                            ))}
+                        </select>
+                    </div>
 
-                                {filteredProducts.length === 0 && (
-                                    <div className="text-center py-12 text-gray-500">
-                                        <Package className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                                        <p>No se encontraron productos</p>
-                                    </div>
-                                )}
+                    {/* Products List */}
+                    <div className="space-y-2 sm:space-y-3">
+                        {filteredProducts.length === 0 ? (
+                            <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
+                                <Package className="w-10 h-10 text-gray-300 mx-auto mb-3" />
+                                <p className="text-gray-500 font-medium">No se encontraron productos</p>
+                                <p className="text-sm text-gray-400 mt-1">Prueba con otros filtros</p>
                             </div>
-                        </CardContent>
-                    </Card>
+                        ) : (
+                            filteredProducts.map((product) => (
+                                <ProductListItem
+                                    key={product.id}
+                                    product={product}
+                                    categoryName={getCategoryName(product.category_id)}
+                                    onEdit={() => handleEdit(product)}
+                                    onDelete={() => handleDelete(product.id)}
+                                    onToggleActive={() => toggleProductActive(product.id)}
+                                    onToggleFeatured={() => toggleProductFeatured(product.id)}
+                                    deleteConfirm={deleteConfirm === product.id}
+                                    setDeleteConfirm={setDeleteConfirm}
+                                />
+                            ))
+                        )}
+                    </div>
                 </div>
             </div>
         );
     }
 
-    // Render create/edit form
+    // ─── CREATE / EDIT FORM ──────────────────────────────────────
     return (
         <div className="min-h-screen bg-gray-50 pt-20">
-            <div className="container mx-auto px-4 py-8">
+            <div className="max-w-3xl mx-auto px-4 py-6 sm:py-8">
                 {/* Header */}
-                <div className="mb-8">
+                <div className="mb-6">
                     <button
                         onClick={handleCancel}
-                        className="flex items-center gap-2 text-gray-600 hover:text-[#505A4A] transition-colors mb-4"
+                        className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors mb-3"
                     >
-                        <ArrowLeft className="w-5 h-5" />
-                        Volver a la lista
+                        <ArrowLeft className="w-4 h-4" />
+                        Volver
                     </button>
-                    <h1 className="text-3xl font-bold text-gray-900">
+                    <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
                         {viewMode === 'create' ? 'Nuevo Producto' : 'Editar Producto'}
                     </h1>
-                    <p className="text-gray-600 mt-1">
-                        {viewMode === 'create'
-                            ? 'Completa la información para crear un nuevo producto'
-                            : `Editando: ${editingProduct?.name}`}
-                    </p>
+                    {viewMode === 'edit' && editingProduct && (
+                        <p className="text-sm text-gray-500 mt-1">Editando: {editingProduct.name}</p>
+                    )}
                 </div>
 
-                {/* Form */}
-                <form onSubmit={handleSubmit}>
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        {/* Main Info */}
-                        <div className="lg:col-span-2 space-y-6">
-                            <Card className="shadow-sm border border-gray-200">
-                                <CardHeader>
-                                    <CardTitle className="flex items-center gap-2">
-                                        <FileText className="w-5 h-5" />
-                                        Información Básica
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent className="space-y-4">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Nombre del Producto *
-                                        </label>
-                                        <Input
-                                            type="text"
-                                            value={formData.name}
-                                            onChange={(e) =>
-                                                setFormData({ ...formData, name: e.target.value })
-                                            }
-                                            placeholder="Ej: Crema Hidratante Natural"
-                                            required
-                                        />
-                                    </div>
+                <form onSubmit={handleSubmit} className="space-y-5">
+                    {/* Image Upload */}
+                    <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
+                        <label className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-3">
+                            <ImageIcon className="w-4 h-4 text-gray-500" />
+                            Imagen del producto <span className="text-red-500">*</span>
+                        </label>
 
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Descripción *
-                                        </label>
-                                        <textarea
-                                            value={formData.description}
-                                            onChange={(e) =>
-                                                setFormData({ ...formData, description: e.target.value })
-                                            }
-                                            placeholder="Describe el producto..."
-                                            rows={4}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#505A4A] text-gray-900 placeholder:text-gray-500"
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                <DollarSign className="w-4 h-4 inline mr-1" />
-                                                Precio (€) *
-                                            </label>
-                                            <Input
-                                                type="text"
-                                                inputMode="decimal"
-                                                value={formData.price === 0 ? '' : formData.price.toString()}
-                                                onChange={(e) => {
-                                                    const value = e.target.value;
-                                                    if (value === '' || /^\d*\.?\d*$/.test(value)) {
-                                                        setFormData({
-                                                            ...formData,
-                                                            price: value === '' ? 0 : parseFloat(value) || 0,
-                                                        });
-                                                    }
-                                                }}
-                                                placeholder="0.00"
-                                                required
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                <Layers className="w-4 h-4 inline mr-1" />
-                                                Categoría *
-                                            </label>
-                                            <select
-                                                value={formData.category_id}
-                                                onChange={(e) =>
-                                                    setFormData({ ...formData, category_id: e.target.value })
-                                                }
-                                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#505A4A] text-gray-900 bg-white"
-                                                required
-                                            >
-                                                <option value="" className="text-gray-500">Seleccionar categoría</option>
-                                                {categories.map((cat) => (
-                                                    <option key={cat.id} value={cat.id} className="text-gray-900">
-                                                        {cat.name}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-
-                            <Card className="shadow-sm border border-gray-200">
-                                <CardHeader>
-                                    <CardTitle className="flex items-center gap-2">
-                                        <Tag className="w-5 h-5" />
-                                        Etiquetas e Ingredientes
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent className="space-y-4">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Etiquetas (separadas por coma)
-                                        </label>
-                                        <Input
-                                            type="text"
-                                            value={tagsInput}
-                                            onChange={(e) => setTagsInput(e.target.value)}
-                                            placeholder="Ej: natural, hidratante, orgánico"
-                                        />
-                                        {tagsInput && (
-                                            <div className="flex flex-wrap gap-2 mt-2">
-                                                {tagsInput
-                                                    .split(',')
-                                                    .map((t) => t.trim())
-                                                    .filter((t) => t)
-                                                    .map((tag, i) => (
-                                                        <Badge key={i} variant="secondary">
-                                                            {tag}
-                                                        </Badge>
-                                                    ))}
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Ingredientes (separados por coma)
-                                        </label>
-                                        <textarea
-                                            value={ingredientsInput}
-                                            onChange={(e) => setIngredientsInput(e.target.value)}
-                                            placeholder="Ej: aloe vera, aceite de jojoba, manteca de karité"
-                                            rows={2}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#505A4A] text-gray-900 placeholder:text-gray-500"
-                                        />
-                                    </div>
-                                </CardContent>
-                            </Card>
-
-                            <Card className="shadow-sm border border-gray-200">
-                                <CardHeader>
-                                    <CardTitle className="flex items-center gap-2">
-                                        <ImageIcon className="w-5 h-5" />
-                                        Imagen <span className="text-red-500">*</span>
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent className="space-y-4">
-                                    {uploadError && (
-                                        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
-                                            {uploadError}
-                                        </div>
+                        <div className="relative w-full h-48 sm:h-56 bg-gray-100 rounded-xl overflow-hidden mb-3">
+                            {formData.image && formData.image !== '/images/placeholder.jpg' && formData.image !== '' && !formImgError ? (
+                                <Image
+                                    src={formData.image}
+                                    alt="Vista previa"
+                                    fill
+                                    className="object-cover"
+                                    onError={() => setFormImgError(true)}
+                                    unoptimized
+                                />
+                            ) : (
+                                <div className="flex flex-col items-center justify-center h-full text-gray-400">
+                                    <ImageIcon className="w-10 h-10 mb-2" />
+                                    <span className="text-sm">{formImgError ? 'Imagen no disponible' : 'Sin imagen'}</span>
+                                    {formImgError && formData.image && (
+                                        <span className="text-xs text-gray-400 mt-1 px-4 text-center truncate max-w-full">
+                                            {formData.image}
+                                        </span>
                                     )}
-
-                                    {/* File Upload */}
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Subir imagen desde dispositivo <span className="text-red-500">*</span>
-                                        </label>
-                                        <div className="relative">
-                                            <input
-                                                type="file"
-                                                accept="image/*"
-                                                onChange={async (e) => {
-                                                    const file = e.target.files?.[0];
-                                                    if (!file) return;
-
-                                                    // Show immediate local preview
-                                                    const localPreviewUrl = URL.createObjectURL(file);
-                                                    setFormData({ ...formData, image: localPreviewUrl });
-
-                                                    setIsUploading(true);
-                                                    setUploadProgress(10);
-                                                    setUploadError(null);
-
-                                                    try {
-                                                        // Upload to local API
-                                                        const uploadFormData = new FormData();
-                                                        uploadFormData.append('file', file);
-
-                                                        setUploadProgress(30);
-
-                                                        const response = await fetch('/api/upload', {
-                                                            method: 'POST',
-                                                            body: uploadFormData,
-                                                        });
-
-                                                        setUploadProgress(80);
-
-                                                        const result = await response.json();
-
-                                                        if (!response.ok) {
-                                                            throw new Error(result.error || 'Error al subir la imagen');
-                                                        }
-
-                                                        // Update with server URL
-                                                        URL.revokeObjectURL(localPreviewUrl);
-                                                        setFormData({ ...formData, image: result.url });
-                                                        setUploadProgress(100);
-                                                        setIsUploading(false);
-
-
-                                                        // Firebase Storage code removed - see commented imports at top of file for future use
-
-                                                    } catch (error: any) {
-                                                        console.error('Error uploading:', error);
-                                                        setUploadError(error.message || 'No se pudo subir la imagen');
-                                                        setIsUploading(false);
-                                                    }
-                                                }}
-                                                className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#505A4A] file:text-white hover:file:bg-[#3d5636] cursor-pointer"
-                                                disabled={isUploading}
-                                            />
-                                        </div>
-
-                                        {/* Upload Progress */}
-                                        {isUploading && (
-                                            <div className="mt-2">
-                                                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                                                    <div
-                                                        className="h-full bg-[#505A4A] transition-all duration-300"
-                                                        style={{ width: `${uploadProgress}%` }}
-                                                    />
-                                                </div>
-                                                <p className="text-xs text-gray-600 mt-1">Subiendo... {Math.round(uploadProgress)}%</p>
-                                            </div>
-                                        )}
-
-                                        {/* Upload Error */}
-                                        {uploadError && (
-                                            <div className="mt-2 p-3 bg-red-50 border border-red-200 rounded-md">
-                                                <p className="text-sm text-red-700">{uploadError}</p>
-                                            </div>
-                                        )}
-                                    </div>
-                                </CardContent>
-                            </Card>
+                                </div>
+                            )}
                         </div>
 
-                        {/* Sidebar */}
-                        <div className="space-y-6">
-                            <Card className="shadow-sm border border-gray-200">
-                                <CardHeader>
-                                    <CardTitle>Estado</CardTitle>
-                                </CardHeader>
-                                <CardContent className="space-y-4">
-                                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                        <div className="flex items-center gap-2">
-                                            {formData.active ? (
-                                                <Eye className="w-4 h-4 text-gray-900 font-medium" />
-                                            ) : (
-                                                <EyeOff className="w-4 h-4 text-gray-500" />
-                                            )}
-                                            <span className="text-sm font-medium text-gray-900">
-                                                {formData.active ? 'Producto visible' : 'Producto oculto'}
-                                            </span>
-                                        </div>
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                setFormData({ ...formData, active: !formData.active })
-                                            }
-                                            className={`w-12 h-6 rounded-full transition-colors ${formData.active ? 'bg-[#505A4A]' : 'bg-gray-300'
-                                                }`}
-                                        >
-                                            <div
-                                                className={`w-5 h-5 bg-white rounded-full shadow transition-transform ${formData.active ? 'translate-x-6' : 'translate-x-0.5'
-                                                    }`}
-                                            />
-                                        </button>
-                                    </div>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) handleFileUpload(file);
+                            }}
+                            className="w-full text-sm text-gray-700 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-[#505A4A] file:text-white hover:file:bg-[#414A3C] file:cursor-pointer cursor-pointer"
+                            disabled={isUploading}
+                        />
 
-                                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                        <div className="flex items-center gap-2">
-                                            <Star
-                                                className={`w-4 h-4 ${formData.featured
-                                                    ? 'text-[#505A4A] fill-current'
-                                                    : 'text-gray-500'
-                                                    }`}
-                                            />
-                                            <span className="text-sm font-medium text-gray-900">
-                                                {formData.featured ? 'Destacado' : 'No destacado'}
-                                            </span>
-                                        </div>
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                setFormData({ ...formData, featured: !formData.featured })
-                                            }
-                                            className={`w-12 h-6 rounded-full transition-colors ${formData.featured ? 'bg-[#505A4A]' : 'bg-gray-300'
-                                                }`}
-                                        >
-                                            <div
-                                                className={`w-5 h-5 bg-white rounded-full shadow transition-transform ${formData.featured ? 'translate-x-6' : 'translate-x-0.5'
-                                                    }`}
-                                            />
-                                        </button>
-                                    </div>
-                                </CardContent>
-                            </Card>
+                        {isUploading && (
+                            <div className="mt-3">
+                                <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                                    <div className="h-full bg-[#505A4A] transition-all duration-300 rounded-full" style={{ width: `${uploadProgress}%` }} />
+                                </div>
+                                <p className="text-xs text-gray-500 mt-1">Subiendo... {Math.round(uploadProgress)}%</p>
+                            </div>
+                        )}
 
-                            {/* Preview */}
-                            <Card className="shadow-sm border border-gray-200">
-                                <CardHeader>
-                                    <CardTitle>Vista Previa</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="bg-gray-100 rounded-lg p-4">
-                                        <div className="w-full h-32 bg-gray-200 rounded-lg flex items-center justify-center mb-3 overflow-hidden relative">
-                                            {formData.image && formData.image !== '/images/placeholder.jpg' ? (
-                                                <Image
-                                                    src={formData.image}
-                                                    alt="Vista previa"
-                                                    fill
-                                                    className="object-cover"
-                                                    unoptimized={formData.image.startsWith('blob:')}
-                                                />
-                                            ) : (
-                                                <ImageIcon className="w-8 h-8 text-gray-500" />
-                                            )}
-                                        </div>
-                                        <h3 className="font-semibold text-gray-900 truncate">
-                                            {formData.name || 'Nombre del producto'}
-                                        </h3>
-                                        <p className="text-sm text-gray-500 line-clamp-2 mt-1">
-                                            {formData.description || 'Descripción del producto'}
-                                        </p>
-                                        <p className="text-lg font-bold text-gray-900 font-medium mt-2">
-                                            €{formData.price.toFixed(2)}
-                                        </p>
-                                    </div>
-                                </CardContent>
-                            </Card>
+                        {uploadError && (
+                            <div className="mt-3 flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+                                <AlertTriangle className="w-4 h-4 text-red-500 flex-shrink-0" />
+                                <p className="text-sm text-red-700">{uploadError}</p>
+                            </div>
+                        )}
+                    </div>
 
-                            {/* Actions */}
-                            <div className="flex flex-col gap-3">
-                                <Button
-                                    type="submit"
-                                    disabled={isSaving}
-                                    className="w-full bg-[#505A4A] hover:bg-[#3d5636] text-white"
+                    {/* Basic Info */}
+                    <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5 space-y-4">
+                        <h2 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+                            <FileText className="w-4 h-4 text-gray-500" />
+                            Información Básica
+                        </h2>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1.5">Nombre *</label>
+                            <input
+                                type="text"
+                                value={formData.name}
+                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                placeholder="Ej: Crema Hidratante Natural"
+                                className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all"
+                                required
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1.5">Descripción *</label>
+                            <textarea
+                                value={formData.description}
+                                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                placeholder="Describe el producto..."
+                                rows={3}
+                                className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all resize-none"
+                                required
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1.5">Precio (€) *</label>
+                                <input
+                                    type="text"
+                                    inputMode="decimal"
+                                    value={formData.price === 0 ? '' : formData.price.toString()}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                                            setFormData({ ...formData, price: value === '' ? 0 : parseFloat(value) || 0 });
+                                        }
+                                    }}
+                                    placeholder="0.00"
+                                    className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1.5">Categoría *</label>
+                                <select
+                                    value={formData.category_id}
+                                    onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
+                                    className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all"
+                                    required
                                 >
-                                    {isSaving ? (
-                                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
-                                    ) : (
-                                        <>
-                                            <Save className="w-4 h-4 mr-2" />
-                                            {viewMode === 'create' ? 'Crear Producto' : 'Guardar Cambios'}
-                                        </>
-                                    )}
-                                </Button>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    onClick={handleCancel}
-                                    className="w-full"
-                                >
-                                    <X className="w-4 h-4 mr-2" />
-                                    Cancelar
-                                </Button>
+                                    <option value="">Seleccionar</option>
+                                    {categoryOptions.map((opt) => (
+                                        <option key={opt.id} value={opt.id}>{opt.label}</option>
+                                    ))}
+                                </select>
                             </div>
                         </div>
+                    </div>
+
+                    {/* Tags & Ingredients */}
+                    <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5 space-y-4">
+                        <h2 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+                            <Tag className="w-4 h-4 text-gray-500" />
+                            Etiquetas e Ingredientes
+                        </h2>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1.5">Etiquetas (separadas por coma)</label>
+                            <input
+                                type="text"
+                                value={tagsInput}
+                                onChange={(e) => setTagsInput(e.target.value)}
+                                placeholder="natural, hidratante, orgánico"
+                                className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all"
+                            />
+                            {tagsInput && (
+                                <div className="flex flex-wrap gap-1.5 mt-2">
+                                    {tagsInput.split(',').map((t) => t.trim()).filter((t) => t).map((tag, i) => (
+                                        <span key={i} className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-lg">{tag}</span>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1.5">Ingredientes (separados por coma)</label>
+                            <textarea
+                                value={ingredientsInput}
+                                onChange={(e) => setIngredientsInput(e.target.value)}
+                                placeholder="aloe vera, aceite de jojoba, manteca de karité"
+                                rows={2}
+                                className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all resize-none"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Status toggles */}
+                    <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5 space-y-3">
+                        <h2 className="text-sm font-semibold text-gray-900 mb-1">Estado</h2>
+
+                        <div className="flex items-center justify-between py-2">
+                            <div className="flex items-center gap-2.5">
+                                {formData.active ? (
+                                    <Eye className="w-4 h-4 text-emerald-600" />
+                                ) : (
+                                    <EyeOff className="w-4 h-4 text-gray-400" />
+                                )}
+                                <p className="text-sm font-medium text-gray-900">
+                                    {formData.active ? 'Visible en catálogo' : 'Oculto del catálogo'}
+                                </p>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setFormData({ ...formData, active: !formData.active })}
+                                className={`relative w-11 h-6 rounded-full transition-colors ${formData.active ? 'bg-[#505A4A]' : 'bg-gray-300'}`}
+                            >
+                                <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${formData.active ? 'left-[22px]' : 'left-0.5'}`} />
+                            </button>
+                        </div>
+
+                        <div className="border-t border-gray-100" />
+
+                        <div className="flex items-center justify-between py-2">
+                            <div className="flex items-center gap-2.5">
+                                <Star className={`w-4 h-4 ${formData.featured ? 'text-[#C4B590] fill-current' : 'text-gray-400'}`} />
+                                <p className="text-sm font-medium text-gray-900">
+                                    {formData.featured ? 'Producto destacado' : 'No destacado'}
+                                </p>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setFormData({ ...formData, featured: !formData.featured })}
+                                className={`relative w-11 h-6 rounded-full transition-colors ${formData.featured ? 'bg-[#505A4A]' : 'bg-gray-300'}`}
+                            >
+                                <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${formData.featured ? 'left-[22px]' : 'left-0.5'}`} />
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex gap-3 pt-2 pb-8">
+                        <button
+                            type="submit"
+                            disabled={isSaving}
+                            className="flex-1 flex items-center justify-center gap-2 bg-[#505A4A] text-white py-3 rounded-xl text-sm font-semibold hover:bg-[#414A3C] disabled:opacity-50 transition-colors shadow-sm"
+                        >
+                            {isSaving ? (
+                                <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+                            ) : (
+                                <>
+                                    <Save className="w-4 h-4" />
+                                    {viewMode === 'create' ? 'Crear Producto' : 'Guardar Cambios'}
+                                </>
+                            )}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleCancel}
+                            className="px-6 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors"
+                        >
+                            Cancelar
+                        </button>
                     </div>
                 </form>
             </div>

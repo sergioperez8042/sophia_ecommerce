@@ -184,7 +184,6 @@ export async function POST(request: NextRequest) {
         });
 
     } catch (error) {
-        console.error('Error enviando email:', error);
         return NextResponse.json(
             { 
                 success: false, 

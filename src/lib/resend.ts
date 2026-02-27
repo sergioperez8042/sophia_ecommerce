@@ -164,14 +164,11 @@ export async function sendWelcomeEmail({ to, subscriberName }: SendWelcomeEmailP
     });
 
     if (error) {
-      console.error('Error sending welcome email:', error);
       return { success: false, error };
     }
 
-    console.log('Welcome email sent successfully:', data);
     return { success: true, data };
   } catch (error) {
-    console.error('Error sending welcome email:', error);
     return { success: false, error };
   }
 }
@@ -197,7 +194,6 @@ export async function sendNewsletter({ to, subject, content }: SendNewsletterPar
       });
 
       if (error) {
-        console.error('Error sending newsletter batch:', error);
         results.push({ success: false, error, batch });
       } else {
         results.push({ success: true, data, batch });
@@ -206,7 +202,6 @@ export async function sendNewsletter({ to, subject, content }: SendNewsletterPar
 
     return { success: true, results };
   } catch (error) {
-    console.error('Error sending newsletter:', error);
     return { success: false, error };
   }
 }

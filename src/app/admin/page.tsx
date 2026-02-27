@@ -38,8 +38,8 @@ export default function AdminPage() {
       setIsLoadingManagers(true);
       const managersData = await UserService.getManagers();
       setManagers(managersData);
-    } catch (error) {
-      console.error('Error loading managers:', error);
+    } catch {
+      // Failed to load managers
     } finally {
       setIsLoadingManagers(false);
     }

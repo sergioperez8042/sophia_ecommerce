@@ -210,8 +210,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         try {
           const userRef = doc(db, 'users', user.id);
           await setDoc(userRef, { cartItems: state.items }, { merge: true });
-        } catch (err) {
-          console.error("Error saving cart to firestore", err);
+        } catch {
+          // Save failed silently
         }
       } else {
         // Save to LocalStorage

@@ -41,8 +41,7 @@ if (isFirebaseConfigValid) {
     db = getFirestore(app);
     auth = getAuth(app);
     storage = getStorage(app);
-  } catch (error) {
-    console.warn('Firebase initialization failed:', error);
+  } catch {
     // Keep all values as null - app will work in degraded mode
   }
 }

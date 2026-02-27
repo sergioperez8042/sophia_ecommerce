@@ -214,15 +214,12 @@ export const CategoryService = {
         id: doc.id,
         ...doc.data(),
       })) as ICategory[];
-    } catch (error) {
-      // If index error, try without ordering
-      console.warn('Fetching categories without ordering due to:', error);
+    } catch {
       const snapshot = await getDocs(collection(firestore, CATEGORIES_COLLECTION));
       const categories = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       })) as ICategory[];
-      // Sort manually
       return categories.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
     }
   },
@@ -243,9 +240,7 @@ export const CategoryService = {
         id: doc.id,
         ...doc.data(),
       })) as ICategory[];
-    } catch (error) {
-      // If index error, fetch all and filter manually
-      console.warn('Fetching active categories without index:', error);
+    } catch {
       const snapshot = await getDocs(collection(firestore, CATEGORIES_COLLECTION));
       const categories = snapshot.docs
         .map((doc) => ({ id: doc.id, ...doc.data() })) as ICategory[];
@@ -288,6 +283,30 @@ export const CategoryService = {
     await deleteDoc(docRef);
   },
 
+  // Get children of a category
+  async getChildren(parentId: string): Promise<ICategory[]> {
+    const firestore = getDb();
+    try {
+      const q = query(
+        collection(firestore, CATEGORIES_COLLECTION),
+        where('parent_id', '==', parentId),
+        orderBy('sort_order')
+      );
+      const snapshot = await getDocs(q);
+      return snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as ICategory[];
+    } catch {
+      const snapshot = await getDocs(collection(firestore, CATEGORIES_COLLECTION));
+      const allCats = snapshot.docs
+        .map((doc) => ({ id: doc.id, ...doc.data() })) as ICategory[];
+      return allCats
+        .filter((c) => c.parent_id === parentId)
+        .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+    }
+  },
+
   // Seed categories from JSON (for initial setup)
   async seedFromJSON(categories: ICategory[]): Promise<void> {
     const firestore = getDb();
@@ -300,6 +319,7 @@ export const CategoryService = {
         sort_order: category.sort_order,
         active: category.active,
         product_count: category.product_count,
+        parent_id: category.parent_id || '',
       });
     }
   },

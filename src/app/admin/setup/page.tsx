@@ -118,8 +118,7 @@ export default function AdminSetupPage() {
         categories: 'success',
         message: `${CategoriesData.length} categorías creadas correctamente`
       }));
-    } catch (error) {
-      console.error('Error seeding categories:', error);
+    } catch {
       setSeedStatus(prev => ({
         ...prev,
         categories: 'error',
@@ -138,8 +137,7 @@ export default function AdminSetupPage() {
         products: 'success',
         message: `${ProductsData.length} productos creados correctamente`
       }));
-    } catch (error) {
-      console.error('Error seeding products:', error);
+    } catch {
       setSeedStatus(prev => ({
         ...prev,
         products: 'error',
@@ -167,8 +165,7 @@ export default function AdminSetupPage() {
           userErrors: [],
         }));
       }
-    } catch (error) {
-      console.error('Error seeding users:', error);
+    } catch {
       setSeedStatus(prev => ({
         ...prev,
         users: 'error',

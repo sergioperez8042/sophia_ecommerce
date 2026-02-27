@@ -388,12 +388,9 @@ export default function CheckoutPage() {
                 }),
             });
 
-            const result = await response.json();
-            if (!result.success) {
-                console.error('Error enviando email:', result.error);
-            }
-        } catch (error) {
-            console.error('Error enviando email:', error);
+            await response.json();
+        } catch {
+            // Email sending failed silently
         }
     };
 

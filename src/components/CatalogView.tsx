@@ -120,20 +120,20 @@ export default function CatalogView({ initialProducts, initialCategories }: Cata
             </motion.header>
 
             {/* Hero Section */}
-            <section className="relative h-64 sm:h-80 md:h-[28rem] overflow-hidden mt-2 sm:mt-0 rounded-b-2xl sm:rounded-none">
+            <section className="relative h-[55vh] sm:h-[50vh] md:h-[60vh] lg:h-[65vh] max-h-[550px] md:max-h-[600px] min-h-[280px] overflow-hidden mt-3 sm:mt-4 mx-3 sm:mx-4 md:mx-6 rounded-2xl">
                 <video
                     ref={videoRef}
                     autoPlay
                     muted
                     loop
                     playsInline
-                    className="absolute inset-0 w-full h-full object-cover"
+                    className="absolute inset-0 w-full h-full object-cover object-[center_25%]"
                 >
                     <source src={HERO_VIDEO} type="video/mp4" />
                 </video>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/30" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
 
-                <div className="absolute inset-0 flex items-center justify-center px-4">
+                <div className="absolute inset-0 flex items-end justify-center px-4 pb-10 sm:pb-14 md:pb-16">
                     <motion.div
                         className="text-center"
                         initial={{ opacity: 0, y: 20 }}

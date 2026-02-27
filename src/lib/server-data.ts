@@ -33,8 +33,7 @@ export async function getActiveProducts(): Promise<Product[]> {
       id: doc.id,
       ...doc.data()
     })) as Product[];
-  } catch (error) {
-    console.error('Error fetching products:', error);
+  } catch {
     return [];
   }
 }
@@ -48,8 +47,7 @@ export async function getCategories(): Promise<Category[]> {
       id: doc.id,
       ...doc.data()
     })) as Category[];
-  } catch (error) {
-    console.error('Error fetching categories:', error);
+  } catch {
     return [];
   }
 }

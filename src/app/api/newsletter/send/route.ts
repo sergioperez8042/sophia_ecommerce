@@ -98,8 +98,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-  } catch (error) {
-    console.error('Error sending newsletter:', error);
+  } catch {
     return NextResponse.json(
       { error: 'Error al enviar la newsletter' },
       { status: 500 }
@@ -150,8 +149,7 @@ export async function GET(request: NextRequest) {
       total: newsletters.length,
       newsletters,
     });
-  } catch (error) {
-    console.error('Error getting newsletters:', error);
+  } catch {
     return NextResponse.json(
       { error: 'Error al obtener newsletters' },
       { status: 500 }

@@ -130,8 +130,8 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
         try {
           const userRef = doc(db, 'users', user.id);
           await setDoc(userRef, { wishlist: state.items }, { merge: true });
-        } catch (err) {
-          console.error("Error saving wishlist", err);
+        } catch {
+          // Save failed silently
         }
       } else {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state.items));

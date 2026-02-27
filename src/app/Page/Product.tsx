@@ -74,8 +74,8 @@ export default function ProductsPage() {
 
       setProducts(productsData);
       setCategories(categoriesData);
-    } catch (error) {
-      console.error('Error loading products:', error);
+    } catch {
+      // Failed to load products
     } finally {
       setIsLoading(false);
     }

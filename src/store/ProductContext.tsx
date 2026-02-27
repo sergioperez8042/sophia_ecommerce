@@ -101,12 +101,10 @@ export function ProductProvider({ children }: { children: ReactNode }) {
                 dispatch({ type: 'SET_PRODUCTS', payload: products });
             } else {
                 // Fallback to local JSON
-                console.warn('Firebase not configured. Using local JSON data.');
                 dispatch({ type: 'SET_PRODUCTS', payload: ProductsData as IProduct[] });
             }
             dispatch({ type: 'SET_INITIALIZED' });
-        } catch (error) {
-            console.error('Error loading products:', error);
+        } catch {
             dispatch({ type: 'SET_ERROR', payload: 'Error al cargar productos' });
             // Fallback to local data on error
             dispatch({ type: 'SET_PRODUCTS', payload: ProductsData as IProduct[] });
@@ -124,16 +122,13 @@ export function ProductProvider({ children }: { children: ReactNode }) {
 
     // Seed products to Firestore
     const seedProducts = async () => {
-        if (!isFirebaseReady()) {
-            console.error('Firebase not configured');
-            return;
-        }
+        if (!isFirebaseReady()) return;
 
         try {
             await ProductService.seedFromJSON(ProductsData as IProduct[]);
             await loadProducts();
-        } catch (error) {
-            console.error('Error seeding products:', error);
+        } catch {
+            // Seeding failed silently
         }
     };
 

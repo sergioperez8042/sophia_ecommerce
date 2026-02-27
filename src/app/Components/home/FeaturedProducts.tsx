@@ -152,7 +152,6 @@ export default function FeaturedProducts({ products, isLoading }: FeaturedProduc
                                         {/* Botón de favoritos al lado del badge */}
                                         <button
                                             onClick={(e) => {
-                                                console.log('Heart button clicked in FeaturedProducts!', product.name);
                                                 toggleWishlist(product, e);
                                             }}
                                             className="p-2 rounded-full hover:bg-gray-100 transition-all duration-200 group/heart border border-gray-200"

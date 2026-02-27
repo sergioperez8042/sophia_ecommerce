@@ -29,8 +29,7 @@ export default function ContactPage() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Aquí manejarías el envío del formulario
-        console.log('Formulario enviado:', formData);
+        // TODO: Handle form submission
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

@@ -35,8 +35,8 @@ export default function HomePage() {
 
             setFeaturedProducts(products);
             setCategories(categories);
-        } catch (error) {
-            console.error('Error loading data:', error);
+        } catch {
+            // Failed to load data
         } finally {
             setIsLoading(false);
         }

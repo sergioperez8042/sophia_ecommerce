@@ -159,8 +159,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { id: docSnap.id, ...data, createdAt } as User;
       }
       return null;
-    } catch (error) {
-      console.error('Error getting user profile:', error);
+    } catch {
       return null;
     }
   }, []);
@@ -184,8 +183,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             payload: { user: userProfile, firebaseUser }
           });
         } else {
-          // User exists in Auth but not in Firestore (shouldn't happen normally)
-          console.warn('User exists in Auth but not in Firestore');
+          // User exists in Auth but not in Firestore
           dispatch({
             type: 'SET_USER',
             payload: { user: null, firebaseUser: null }
@@ -215,7 +213,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       // If user exists in Auth but not in Firestore, create the profile
       if (!userProfile) {
-        console.log('Creating missing Firestore profile for user:', userCredential.user.uid);
         const newProfile: Omit<User, 'id'> = {
           name: userCredential.user.displayName || email.split('@')[0],
           email: userCredential.user.email || email,
@@ -235,7 +232,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { success: true };
     } catch (error: unknown) {
       const firebaseError = error as { code?: string; message?: string };
-      console.error('Login error:', firebaseError);
 
       // Map Firebase error codes to Spanish messages
       const errorMessages: Record<string, string> = {
@@ -330,7 +326,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { success: true };
     } catch (error: unknown) {
       const firebaseError = error as { code?: string; message?: string };
-      console.error('Register error:', firebaseError);
 
       const errorMessages: Record<string, string> = {
         'auth/email-already-in-use': 'Este email ya está registrado',
@@ -351,8 +346,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       await signOut(auth);
       dispatch({ type: 'LOGOUT' });
-    } catch (error) {
-      console.error('Logout error:', error);
+    } catch {
+      // Logout failed silently
     }
   };
 
@@ -372,8 +367,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (data.name) {
         await updateProfile(state.firebaseUser, { displayName: data.name });
       }
-    } catch (error) {
-      console.error('Error updating user:', error);
+    } catch {
+      // Update failed silently
     }
   };
 
@@ -392,8 +387,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         id: doc.id,
         ...doc.data(),
       })) as User[];
-    } catch (error) {
-      console.error('Error getting managers:', error);
+    } catch {
       return [];
     }
   };

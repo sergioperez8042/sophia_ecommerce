@@ -55,8 +55,7 @@ export async function DELETE(request: NextRequest) {
       message: 'Suscriptor eliminado',
     });
 
-  } catch (error) {
-    console.error('Error deleting subscriber:', error);
+  } catch {
     return NextResponse.json(
       { error: 'Error al eliminar suscriptor' },
       { status: 500 }
@@ -101,8 +100,7 @@ export async function POST(request: NextRequest) {
       recipients: recipients.length,
     });
 
-  } catch (error) {
-    console.error('Error sending newsletter:', error);
+  } catch {
     return NextResponse.json(
       { error: 'Error al enviar newsletter' },
       { status: 500 }

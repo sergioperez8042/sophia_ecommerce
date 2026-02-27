@@ -26,6 +26,7 @@ export interface ICategory {
   sort_order: number;
   active: boolean;
   product_count: number;
+  parent_id?: string;
 }
 
 // Clases con métodos estáticos para simular una API

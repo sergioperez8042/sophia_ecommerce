@@ -32,8 +32,7 @@ export async function POST(request: NextRequest) {
       message: 'Gracias por suscribirte!',
     });
 
-  } catch (error) {
-    console.error('Subscribe error:', error);
+  } catch {
     return NextResponse.json({ error: 'Error al procesar' }, { status: 500 });
   }
 }

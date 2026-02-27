@@ -89,7 +89,6 @@ export function ManagerProvider({ children }: { children: ReactNode }) {
   // Load managers from Firebase
   const loadManagersFromFirebase = useCallback(async () => {
     if (!isFirebaseConfigured() || !db) {
-      console.warn('Firebase not configured. Cannot load managers.');
       return;
     }
 
@@ -116,8 +115,7 @@ export function ManagerProvider({ children }: { children: ReactNode }) {
       });
 
       dispatch({ type: 'SET_AVAILABLE_MANAGERS', payload: managers });
-    } catch (error) {
-      console.error('Error loading managers from Firebase:', error);
+    } catch {
       dispatch({ type: 'SET_LOADING_MANAGERS', payload: false });
     }
   }, []);
@@ -141,8 +139,7 @@ export function ManagerProvider({ children }: { children: ReactNode }) {
       } else {
         dispatch({ type: 'LOAD_MANAGER', payload: null });
       }
-    } catch (error) {
-      console.error('Error loading manager:', error);
+    } catch {
       localStorage.removeItem(STORAGE_KEY);
       dispatch({ type: 'LOAD_MANAGER', payload: null });
     }
