@@ -131,38 +131,34 @@ export default function ContactPage() {
 
                             {/* Contact Info Cards */}
                             <div className="grid sm:grid-cols-2 gap-4 sm:gap-5">
-                                {contactInfo.map((info, index) => (
-                                    <motion.div
-                                        key={info.title}
-                                        variants={itemVariants}
-                                        whileHover={{ y: -4, scale: 1.02 }}
-                                        transition={{ duration: 0.3 }}
-                                    >
-                                        {info.href ? (
-                                            <a href={info.href} className="block">
-                                                <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm hover:shadow-xl transition-shadow h-full">
-                                                    <CardContent className="p-5 sm:p-6">
-                                                        <div className="w-10 h-10 bg-[#505A4A]/10 rounded-xl flex items-center justify-center mb-3">
-                                                            <info.icon className="h-5 w-5 text-[#505A4A]" />
-                                                        </div>
-                                                        <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-1">{info.title}</h3>
-                                                        <p className="text-gray-700 font-medium text-sm sm:text-base">{info.value}</p>
-                                                    </CardContent>
-                                                </Card>
-                                            </a>
-                                        ) : (
-                                            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm h-full">
-                                                <CardContent className="p-5 sm:p-6">
-                                                    <div className="w-10 h-10 bg-[#505A4A]/10 rounded-xl flex items-center justify-center mb-3">
-                                                        <info.icon className="h-5 w-5 text-[#505A4A]" />
-                                                    </div>
-                                                    <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-1">{info.title}</h3>
-                                                    <p className="text-gray-700 font-medium text-sm sm:text-base">{info.value}</p>
-                                                </CardContent>
-                                            </Card>
-                                        )}
-                                    </motion.div>
-                                ))}
+                                {contactInfo.map((info) => {
+                                    const cardContent = (
+                                        <Card className="border border-[#E8E2D5] shadow-md bg-white hover:shadow-xl hover:border-[#C4B590] transition-all duration-300 h-full group/card">
+                                            <CardContent className="p-6 sm:p-7 flex items-start gap-4">
+                                                <div className="w-12 h-12 bg-[#505A4A] rounded-xl flex items-center justify-center flex-shrink-0 group-hover/card:bg-[#414A3C] transition-colors">
+                                                    <info.icon className="h-5 w-5 text-white" />
+                                                </div>
+                                                <div>
+                                                    <h3 className="text-lg font-bold text-gray-900 mb-1">{info.title}</h3>
+                                                    <p className="text-gray-600 font-medium text-sm sm:text-base">{info.value}</p>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    );
+
+                                    return (
+                                        <motion.div
+                                            key={info.title}
+                                            variants={itemVariants}
+                                            whileHover={{ y: -4 }}
+                                            transition={{ duration: 0.3 }}
+                                        >
+                                            {info.href ? (
+                                                <a href={info.href} className="block">{cardContent}</a>
+                                            ) : cardContent}
+                                        </motion.div>
+                                    );
+                                })}
                             </div>
                         </motion.div>
 

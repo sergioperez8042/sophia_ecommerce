@@ -104,12 +104,12 @@ export default function AboutPage() {
                                         Descubre Nuestros Productos
                                     </Button>
                                 </Link>
-                                <button
-                                    className="w-full sm:w-auto border-2 border-[#505A4A] bg-transparent text-[#505A4A] hover:bg-[#505A4A] hover:text-white font-bold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg transition-colors rounded-md"
+                                <Button
+                                    className="w-full sm:w-auto bg-[#505A4A] hover:bg-[#414A3C] text-white font-bold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg shadow-lg"
                                     onClick={() => storyRef.current?.scrollIntoView({ behavior: 'smooth' })}
                                 >
                                     Conoce la Historia
-                                </button>
+                                </Button>
                             </motion.div>
                         </motion.div>
 
