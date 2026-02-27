@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
+import { storage } from '@/lib/firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File;
-    
+
     if (!file) {
       return NextResponse.json(
         { error: 'No se proporcionó ningún archivo' },
@@ -32,35 +32,41 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (!storage) {
+      return NextResponse.json(
+        { error: 'Firebase Storage no está configurado' },
+        { status: 500 }
+      );
+    }
+
     // Create unique filename
     const timestamp = Date.now();
-    const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-    const fileName = `${timestamp}_${originalName}`;
-    
-    // Ensure uploads directory exists
-    const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
-    await mkdir(uploadsDir, { recursive: true });
-    
-    // Write file to disk
+    const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+    const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_').replace(/\.[^.]+$/, '');
+    const fileName = `${timestamp}_${safeName}.${ext}`;
+
+    // Upload to Firebase Storage
+    const storageRef = ref(storage, `products/${fileName}`);
     const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const filePath = path.join(uploadsDir, fileName);
-    
-    await writeFile(filePath, buffer);
-    
-    // Return the public URL
-    const publicUrl = `/uploads/${fileName}`;
-    
-    return NextResponse.json({ 
-      success: true, 
-      url: publicUrl,
+    const buffer = new Uint8Array(bytes);
+
+    await uploadBytes(storageRef, buffer, {
+      contentType: file.type,
+    });
+
+    // Get the download URL
+    const downloadURL = await getDownloadURL(storageRef);
+
+    return NextResponse.json({
+      success: true,
+      url: downloadURL,
       fileName: fileName
     });
-    
+
   } catch (error) {
     console.error('Error uploading file:', error);
     return NextResponse.json(
-      { error: 'Error al subir el archivo' },
+      { error: 'Error al subir el archivo. Verifica la configuración de Firebase Storage.' },
       { status: 500 }
     );
   }

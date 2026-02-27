@@ -82,7 +82,7 @@ export default function Header() {
                                 <img
                                     src="/images/sophia_logo_nuevo.jpeg"
                                     alt="Sophia - Cosmética Botánica"
-                                    className="w-full h-full object-contain rounded-full"
+                                    className="w-full h-full object-contain rounded-2xl"
                                 />
                             </motion.div>
                             {/* Mobile tagline - visible only on small screens */}

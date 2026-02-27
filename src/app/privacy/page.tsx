@@ -1,19 +1,13 @@
-"use client";
-
-import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import BackButton from '@/components/BackButton';
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-[#FEFCF7] py-12 px-4">
+    <div className="min-h-screen bg-[#FEFCF7] pt-24 pb-12 px-4">
       <div className="max-w-2xl mx-auto">
-        <Link href="/auth" className="inline-flex items-center gap-1.5 text-sm text-[#505A4A] hover:underline mb-8">
-          <ArrowLeft className="w-4 h-4" />
-          Volver
-        </Link>
+        <BackButton />
 
         <div className="flex items-center gap-3 mb-8">
-          <img src="/images/sophia_logo_nuevo.jpeg" alt="Sophia" className="w-10 h-10 rounded-full" />
+          <img src="/images/sophia_logo_nuevo.jpeg" alt="Sophia" className="w-10 h-10 rounded-2xl" />
           <h1 className="text-2xl font-semibold text-gray-900" style={{ fontFamily: 'Cinzel, serif' }}>
             Política de Privacidad
           </h1>

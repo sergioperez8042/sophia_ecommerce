@@ -19,6 +19,7 @@ export default function RootLayout({
   // Rutas que usan el layout limpio (sin header)
   const isPublicCatalog = pathname === '/' || pathname?.startsWith('/catalogo');
   const isAuthPage = pathname === '/auth';
+  const isLegalPage = pathname === '/terms' || pathname === '/privacy';
 
   // Si es la página principal o catálogo, renderizar sin header (vista cliente)
   if (isPublicCatalog) {
@@ -107,8 +108,8 @@ export default function RootLayout({
       <body className="antialiased" style={{ fontFamily: 'Poppins, sans-serif' }} suppressHydrationWarning={true}>
         <StoreProvider>
           <ToastProvider>
-            {!isAuthPage && <Header />}
-            <div className={`min-h-screen ${isAuthPage ? '' : 'bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8]'}`}>
+            {!isAuthPage && !isLegalPage && <Header />}
+            <div className={`min-h-screen ${isAuthPage || isLegalPage ? '' : 'bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8]'}`}>
               {children}
             </div>
           </ToastProvider>
