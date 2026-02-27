@@ -263,7 +263,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      await sendPasswordResetEmail(auth, email);
+      const actionCodeSettings = {
+        url: typeof window !== 'undefined'
+          ? `${window.location.origin}/auth`
+          : 'https://sophia-ecommerce-i8ot.vercel.app/auth',
+        handleCodeInApp: false,
+      };
+      await sendPasswordResetEmail(auth, email, actionCodeSettings);
       return { success: true };
     } catch (error: unknown) {
       const firebaseError = error as { code?: string };

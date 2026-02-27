@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { Star, Search, Grid3X3, List, Leaf, Phone, Mail, MessageCircle, Rabbit, Droplets, ShieldCheck, Hand, Sun, Moon } from "lucide-react";
 import Image from "next/image";
 import { collection, getDocs, query, where } from 'firebase/firestore';
@@ -10,7 +10,7 @@ import { useTheme } from '@/store/ThemeContext';
 
 // Número de WhatsApp para pedidos
 const WHATSAPP_NUMBER = "34642633982";
-const HERO_VIDEOS = ["/videos/sophia_video.mp4", "/videos/sophia_video2.mp4"];
+const HERO_VIDEO = "/videos/sophia_video.mp4";
 
 interface Product {
     id: string;
@@ -38,29 +38,7 @@ export default function HomePage() {
     const [selectedCategory, setSelectedCategory] = useState<string>("all");
     const [searchTerm, setSearchTerm] = useState("");
     const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-    const [activeVideo, setActiveVideo] = useState(0);
-    const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
-
-    const nextVideo = useCallback(() => {
-        setActiveVideo(prev => (prev + 1) % HERO_VIDEOS.length);
-    }, []);
-
-    useEffect(() => {
-        videoRefs.current.forEach((video, i) => {
-            if (!video) return;
-            if (i === activeVideo) {
-                video.currentTime = 0;
-                const tryPlay = () => video.play().catch(() => {});
-                if (video.readyState >= 3) {
-                    tryPlay();
-                } else {
-                    video.addEventListener('canplay', tryPlay, { once: true });
-                }
-            } else {
-                video.pause();
-            }
-        });
-    }, [activeVideo]);
+    const videoRef = useRef<HTMLVideoElement | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -257,34 +235,19 @@ export default function HomePage() {
 
             {/* Hero Section - Video Carousel */}
             <section className="relative h-64 sm:h-72 md:h-80 overflow-hidden">
-                {/* Video carousel */}
-                {HERO_VIDEOS.map((src, i) => (
-                    <video
-                        key={src}
-                        ref={el => { videoRefs.current[i] = el; }}
-                        autoPlay={i === 0}
-                        muted
-                        playsInline
-                        className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
-                        style={{ opacity: activeVideo === i ? 1 : 0 }}
-                        onEnded={nextVideo}
-                    >
-                        <source src={src} type="video/mp4" />
-                    </video>
-                ))}
+                {/* Hero video */}
+                <video
+                    ref={videoRef}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover"
+                >
+                    <source src={HERO_VIDEO} type="video/mp4" />
+                </video>
                 {/* Gradient overlay for text readability */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#414A3C]/70 via-[#505A4A]/30 to-[#505A4A]/20" />
-
-                {/* Carousel indicators */}
-                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-                    {HERO_VIDEOS.map((_, i) => (
-                        <button
-                            key={i}
-                            onClick={() => setActiveVideo(i)}
-                            className={`h-1.5 rounded-full transition-all duration-500 ${activeVideo === i ? 'w-6 bg-white' : 'w-1.5 bg-white/50'}`}
-                        />
-                    ))}
-                </div>
 
                 {/* Content overlay */}
                 <div className="absolute inset-0 flex items-center justify-center px-4">
