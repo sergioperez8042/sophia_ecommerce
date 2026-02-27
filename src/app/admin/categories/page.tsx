@@ -23,11 +23,9 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import ProductImage from '@/components/ui/product-image';
 
 type ViewMode = 'list' | 'create' | 'edit';
-
-const PLACEHOLDER_IMAGE = "/images/no-image.svg";
 
 const emptyCategory: Omit<ICategory, 'id'> = {
     name: '',
@@ -66,12 +64,8 @@ function CategoryTreeItem({
     toggleExpand: (id: string) => void;
     allCategories: ICategory[];
 }) {
-    const [imgError, setImgError] = useState(false);
     const hasChildren = childCategories.length > 0;
     const isExpanded = expandedIds.has(category.id);
-    const categoryImage = imgError || !category.image || category.image.includes('placeholder')
-        ? PLACEHOLDER_IMAGE
-        : category.image;
 
     const getChildrenOf = (parentId: string) =>
         allCategories
@@ -104,13 +98,10 @@ function CategoryTreeItem({
                         )}
 
                         <div className="relative w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
-                            <Image
-                                src={categoryImage}
+                            <ProductImage
+                                src={category.image}
                                 alt={category.name}
-                                fill
                                 className="object-cover"
-                                onError={() => setImgError(true)}
-                                unoptimized={categoryImage === PLACEHOLDER_IMAGE}
                             />
                         </div>
                     </div>
@@ -579,14 +570,11 @@ export default function AdminCategoriesPage() {
                         </label>
 
                         <div className="relative w-full h-40 sm:h-48 bg-gray-100 rounded-xl overflow-hidden mb-3">
-                            {formData.image && !formData.image.includes('placeholder') && formData.image !== '' && !formImgError ? (
-                                <Image
+                            {formData.image && formData.image !== '' && !formImgError ? (
+                                <ProductImage
                                     src={formData.image}
                                     alt="Vista previa"
-                                    fill
                                     className="object-cover"
-                                    onError={() => setFormImgError(true)}
-                                    unoptimized
                                 />
                             ) : (
                                 <div className="flex flex-col items-center justify-center h-full text-gray-400">

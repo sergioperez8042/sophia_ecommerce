@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
 
     if (!cloudName || !apiKey || !apiSecret) {
       return NextResponse.json(
-        { error: `Cloudinary no está configurado. Variables: cloud_name=${cloudName ? 'OK' : 'FALTA'}, api_key=${apiKey ? 'OK' : 'FALTA'}, api_secret=${apiSecret ? 'OK' : 'FALTA'}` },
+        { error: 'Cloudinary no está configurado correctamente. Contacta al administrador.' },
         { status: 503 }
       );
     }

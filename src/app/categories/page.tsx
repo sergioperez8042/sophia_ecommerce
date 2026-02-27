@@ -5,7 +5,7 @@ import { Heart, Star, ShoppingBag, Grid3X3, List, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
+import ProductImage from "@/components/ui/product-image";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Breadcrumb from "@/components/ui/breadcrumb";
@@ -139,12 +139,10 @@ export default function CategoriesPage() {
                                             <CardContent className="p-0 flex-1 flex flex-col">
                                                 {/* Imagen de la categoría */}
                                                 <div className="relative aspect-square bg-gray-100 overflow-hidden">
-                                                    <Image
-                                                        src={category.image || '/images/placeholder.jpg'}
+                                                    <ProductImage
+                                                        src={category.image}
                                                         alt={category.name}
-                                                        fill
                                                         className="object-cover transition-transform duration-300 group-hover:scale-110"
-                                                        unoptimized
                                                     />
                                                     {/* Overlay con contador */}
                                                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors">
@@ -233,12 +231,10 @@ export default function CategoriesPage() {
                                                         <div className={`relative bg-gray-100 overflow-hidden ${viewMode === 'list' ? 'w-48 aspect-square' : 'aspect-square'
                                                             }`}>
                                                             <Link href={`/products/${product.id}`} prefetch={false}>
-                                                                <Image
-                                                                    src={product.image || '/images/placeholder.jpg'}
+                                                                <ProductImage
+                                                                    src={product.image}
                                                                     alt={product.name}
-                                                                    fill
                                                                     className="object-cover transition-transform duration-300 group-hover:scale-105"
-                                                                    unoptimized
                                                                 />
                                                             </Link>
 
@@ -298,7 +294,7 @@ export default function CategoriesPage() {
                                                                             €{product.price.toFixed(2)}
                                                                         </span>
                                                                     </div>
-                                                                    <Badge variant="secondary" className="bg-green-100 text-green-800">
+                                                                    <Badge variant="secondary" className="bg-[#505A4A]/10 text-[#505A4A]">
                                                                         En stock
                                                                     </Badge>
                                                                 </div>

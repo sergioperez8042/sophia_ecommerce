@@ -269,7 +269,7 @@ export default function AdminProductsPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!formData.image || formData.image === '/images/placeholder.jpg') {
+        if (!formData.image || formData.image === '/images/no-image.svg') {
             setUploadError('La imagen del producto es requerida');
             return;
         }

@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
-import Image from "next/image";
+import ProductImage from "@/components/ui/product-image";
 
 interface CategoryShowcaseProps {
     categories: any[];
@@ -66,13 +66,13 @@ export default function CategoryShowcase({ categories, isLoading }: CategoryShow
                             <Link href={`/products?category=${category.slug}`}>
                                 <Card className="product-card group hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
                                     <div className="relative overflow-hidden">
-                                        <Image
-                                            src={category.image_url || `https://images.unsplash.com/photo-157101961345${index + 4}-1cb2f99b2d8b?w=300&h=200&fit=crop`}
-                                            alt={category.name}
-                                            width={300}
-                                            height={200}
-                                            className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
-                                        />
+                                        <div className="relative w-full h-48">
+                                            <ProductImage
+                                                src={category.image_url || category.image}
+                                                alt={category.name}
+                                                className="object-cover group-hover:scale-110 transition-transform duration-300"
+                                            />
+                                        </div>
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent group-hover:from-black/50 transition-all duration-300"></div>
                                         <ArrowRight className="absolute top-4 right-4 w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0" />
                                     </div>

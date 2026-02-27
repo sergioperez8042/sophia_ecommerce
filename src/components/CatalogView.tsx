@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useMemo, useRef, useCallback } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { Star, Search, Grid3X3, List, Leaf, Phone, Mail, MessageCircle, Rabbit, Droplets, ShieldCheck, Hand, Sun, Moon } from "lucide-react";
 import Image from "next/image";
+import ProductImage from "@/components/ui/product-image";
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/store/ThemeContext';
 import BrandLogo from '@/components/BrandLogo';
@@ -322,7 +323,7 @@ export default function CatalogView({ initialProducts, initialCategories }: Cata
                     </div>
                     <div className="mt-6 pt-4 border-t border-white/10 text-center">
                         <p className="text-white/50 text-xs">
-                            © 2022 Sophia. Todos los derechos reservados.
+                            © {new Date().getFullYear()} Sophia. Todos los derechos reservados.
                         </p>
                     </div>
                 </div>
@@ -349,8 +350,6 @@ export default function CatalogView({ initialProducts, initialCategories }: Cata
 }
 
 // Product Card component
-const PLACEHOLDER_IMAGE = "/images/no-image.svg";
-
 function ProductCard({
     product,
     categoryName,
@@ -363,11 +362,7 @@ function ProductCard({
     index: number;
 }) {
     const [isHovered, setIsHovered] = useState(false);
-    const [imgError, setImgError] = useState(false);
     const { isDark } = useTheme();
-
-    const productImage = imgError || !product.image ? PLACEHOLDER_IMAGE : product.image;
-    const handleImgError = useCallback(() => setImgError(true), []);
 
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('es-ES', {
@@ -398,14 +393,10 @@ function ProductCard({
                 onHoverEnd={() => setIsHovered(false)}
             >
                 <div className="relative w-32 sm:w-40 h-32 sm:h-40 flex-shrink-0 overflow-hidden">
-                    <Image
-                        src={productImage}
+                    <ProductImage
+                        src={product.image}
                         alt={product.name}
-                        fill
-                        className="object-cover transition-transform duration-500"
-                        style={{ transform: isHovered ? 'scale(1.1)' : 'scale(1)' }}
-                        onError={handleImgError}
-                        unoptimized={productImage === PLACEHOLDER_IMAGE}
+                        className={`object-cover transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
                     />
                     {product.featured && (
                         <div className="absolute top-2 left-2 bg-[#C4B590] text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
@@ -446,14 +437,10 @@ function ProductCard({
             onHoverEnd={() => setIsHovered(false)}
         >
             <div className="relative aspect-square overflow-hidden">
-                <Image
-                    src={productImage}
+                <ProductImage
+                    src={product.image}
                     alt={product.name}
-                    fill
-                    className="object-cover transition-transform duration-500"
-                    style={{ transform: isHovered ? 'scale(1.1)' : 'scale(1)' }}
-                    onError={handleImgError}
-                    unoptimized={productImage === PLACEHOLDER_IMAGE}
+                    className={`object-cover transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
                 />
                 {product.featured && (
                     <div className="absolute top-3 left-3 bg-[#C4B590] text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">

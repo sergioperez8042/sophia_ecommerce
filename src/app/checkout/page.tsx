@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Truck, CheckCircle, ArrowLeft, MapPin, Download, User, Percent } from "lucide-react";
+import { Truck, CheckCircle, ArrowLeft, MapPin, Download, Percent } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,7 +10,7 @@ import ProductImage from "@/components/ui/product-image";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Breadcrumb from "@/components/ui/breadcrumb";
-import { useCart, useAuth, usePricing } from "@/store";
+import { useCart, useAuth } from "@/store";
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -34,7 +34,6 @@ export default function CheckoutPage() {
     const router = useRouter();
     const { items, subtotal, shipping, total, clearCart } = useCart();
     const { user, isAuthenticated, isManager, isLoaded } = useAuth();
-    const { getPrice, getPriceInfo } = usePricing();
 
     // Proteger ruta - redirigir si no está autenticado
     useEffect(() => {
@@ -108,9 +107,9 @@ export default function CheckoutPage() {
     // Generar PDF profesional
     const generateOrderPDF = (orderNum: string, cartItems: typeof items, cartSubtotal: number, cartShipping: number, cartTotal: number) => {
         const doc = new jsPDF();
-        const primaryColor: [number, number, number] = [74, 103, 65]; // #505A4A
-        const secondaryColor: [number, number, number] = [63, 93, 76]; // #414A3C
-        const lightGreen: [number, number, number] = [240, 253, 244]; // green-50
+        const primaryColor: [number, number, number] = [80, 90, 74]; // #505A4A
+        const secondaryColor: [number, number, number] = [65, 74, 60]; // #414A3C
+        const lightBg: [number, number, number] = [254, 252, 247]; // #FEFCF7
 
         // Header con fondo verde
         doc.setFillColor(...primaryColor);
@@ -150,7 +149,7 @@ export default function CheckoutPage() {
 
         // Sección: Datos del Cliente
         let yPos = 80;
-        doc.setFillColor(...lightGreen);
+        doc.setFillColor(...lightBg);
         doc.roundedRect(15, yPos - 5, 85, 45, 3, 3, 'F');
 
         doc.setTextColor(...primaryColor);
@@ -166,7 +165,7 @@ export default function CheckoutPage() {
         doc.text(shippingInfo.phone, 20, yPos + 29);
 
         // Sección: Dirección de Envío
-        doc.setFillColor(...lightGreen);
+        doc.setFillColor(...lightBg);
         doc.roundedRect(110, yPos - 5, 85, 45, 3, 3, 'F');
 
         doc.setTextColor(...primaryColor);
@@ -273,7 +272,7 @@ export default function CheckoutPage() {
 
         // Método de pago
         yPos = yPos + 50;
-        doc.setFillColor(...lightGreen);
+        doc.setFillColor(...lightBg);
         doc.roundedRect(15, yPos - 5, 180, 20, 3, 3, 'F');
         doc.setTextColor(...primaryColor);
         doc.setFontSize(10);
@@ -299,7 +298,7 @@ export default function CheckoutPage() {
         doc.circle(30, pageHeight - 12, 8, 'S');
         doc.setFontSize(6);
         doc.text('SOPHIA', 30, pageHeight - 11, { align: 'center' });
-        doc.text('2025', 30, pageHeight - 8, { align: 'center' });
+        doc.text(new Date().getFullYear().toString(), 30, pageHeight - 8, { align: 'center' });
 
         return doc;
     };
