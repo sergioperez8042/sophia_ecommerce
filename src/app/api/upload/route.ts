@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cloudinary } from '@/lib/cloudinary';
+import { v2 as cloudinary } from 'cloudinary';
 
 export async function POST(request: NextRequest) {
   try {
@@ -30,12 +30,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+    const apiKey = process.env.CLOUDINARY_API_KEY;
+    const apiSecret = process.env.CLOUDINARY_API_SECRET;
+
+    if (!cloudName || !apiKey || !apiSecret) {
       return NextResponse.json(
-        { error: 'Cloudinary no está configurado. Agrega CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY y CLOUDINARY_API_SECRET en las variables de entorno.' },
+        { error: `Cloudinary no está configurado. Variables: cloud_name=${cloudName ? 'OK' : 'FALTA'}, api_key=${apiKey ? 'OK' : 'FALTA'}, api_secret=${apiSecret ? 'OK' : 'FALTA'}` },
         { status: 503 }
       );
     }
+
+    cloudinary.config({
+      cloud_name: cloudName,
+      api_key: apiKey,
+      api_secret: apiSecret,
+    });
 
     const arrayBuffer = await file.arrayBuffer();
     const base64 = Buffer.from(arrayBuffer).toString('base64');
