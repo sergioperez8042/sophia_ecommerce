@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Product, Category } from "@/entities/all";
+import React from "react";
+import { IProduct, ICategory } from "@/entities/all";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import EmailInput from "@/components/ui/email-input";
@@ -10,37 +10,15 @@ import Image from "next/image";
 import ValueProposition from "../Components/home/ValueProposition";
 import FeaturedProducts from "../Components/home/FeaturedProducts";
 import CategoryShowcase from "../Components/home/CategoryShowcase";
-
+import { useProducts, useCategories } from "@/store";
 
 export default function HomePage() {
-    const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const { products, isLoading: productsLoading } = useProducts();
+    const { activeCategories, isLoading: categoriesLoading } = useCategories();
 
-    useEffect(() => {
-        loadData();
-    }, []);
-
-    const loadData = async () => {
-        try {
-            const [allProducts, cats] = await Promise.all([
-                Product.filter({ featured: true, active: true }, '-created_date'),
-                Category.list('sort_order')
-            ]);
-
-            // Tomar solo los primeros 6 productos
-            const products = allProducts.slice(0, 6);
-            // Tomar solo las primeras 4 categorías  
-            const categories = cats.slice(0, 4);
-
-            setFeaturedProducts(products);
-            setCategories(categories);
-        } catch {
-            // Failed to load data
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    const isLoading = productsLoading || categoriesLoading;
+    const featuredProducts = products.filter(p => p.featured && p.active).slice(0, 6);
+    const displayCategories = activeCategories.slice(0, 4);
 
     return (
         <main className="min-h-screen">
@@ -103,7 +81,6 @@ export default function HomePage() {
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                             </div>
 
-                            {/* Floating elements */}
                             <div className="absolute -top-4 -right-4 w-20 h-20 rounded-full bg-[#87A96B]/20 blur-xl"></div>
                             <div className="absolute -bottom-4 -left-4 w-32 h-32 rounded-full bg-[#B8941F]/10 blur-2xl"></div>
                         </motion.div>
@@ -111,14 +88,11 @@ export default function HomePage() {
                 </div>
             </section>
 
-            {/* Value Proposition */}
             <ValueProposition />
 
-            {/* Featured Products */}
             <FeaturedProducts products={featuredProducts} isLoading={isLoading} />
 
-            {/* Category Showcase */}
-            <CategoryShowcase categories={categories} isLoading={isLoading} />
+            <CategoryShowcase categories={displayCategories} isLoading={isLoading} />
 
             {/* Newsletter Section */}
             <section className="py-16 bg-gradient-to-r from-[#505A4A] to-[#414A3C]">

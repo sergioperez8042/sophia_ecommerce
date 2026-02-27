@@ -10,11 +10,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Breadcrumb from "@/components/ui/breadcrumb";
-import { useCart, useWishlist, useProducts } from "@/store";
-import CategoriesData from '@/entities/Category.json';
-import { ICategory } from '@/entities/all';
-
-const categoriesData = CategoriesData as ICategory[];
+import { useCart, useWishlist, useProducts, useCategories } from "@/store";
 
 export default function ProductsPage() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -28,6 +24,7 @@ export default function ProductsPage() {
   const { addItem: addToCartStore } = useCart();
   const { toggleItem, isInWishlist } = useWishlist();
   const { products: allProducts, isLoading } = useProducts();
+  const { categories: categoriesData } = useCategories();
 
   // Map products to display format
   const displayProducts = useMemo(() => {

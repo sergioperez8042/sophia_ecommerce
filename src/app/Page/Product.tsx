@@ -1,29 +1,32 @@
 
-import React, { useState, useEffect, useCallback } from "react";
-import { Product, Category, IProduct, ICategory } from "@/entities/all";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { IProduct, ICategory } from "@/entities/all";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Search, Grid, List } from "lucide-react";
 import { motion } from "framer-motion";
+import { useProducts, useCategories } from "@/store";
 
 import ProductGrid from "../products/ProductGrid";
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState<IProduct[]>([]);
-  const [categories, setCategories] = useState<ICategory[]>([]);
+  const { products: allProducts, isLoading: productsLoading } = useProducts();
+  const { categories, isLoading: categoriesLoading } = useCategories();
+
   const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("name");
   const [viewMode, setViewMode] = useState("grid");
 
-  const applyFilters = useCallback(() => {
-    let filtered = [...products];
+  const isLoading = productsLoading || categoriesLoading;
+  const activeProducts = useMemo(() => allProducts.filter(p => p.active), [allProducts]);
 
-    // Filtrar por búsqueda
+  const applyFilters = useCallback(() => {
+    let filtered = [...activeProducts];
+
     if (searchTerm) {
       filtered = filtered.filter(product =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -32,12 +35,10 @@ export default function ProductsPage() {
       );
     }
 
-    // Filtrar por categoría
     if (selectedCategory !== "all") {
       filtered = filtered.filter(product => product.category_id === selectedCategory);
     }
 
-    // Ordenar
     filtered.sort((a, b) => {
       switch (sortBy) {
         case "price_asc":
@@ -54,32 +55,11 @@ export default function ProductsPage() {
     });
 
     setFilteredProducts(filtered);
-  }, [products, searchTerm, selectedCategory, sortBy]);
+  }, [activeProducts, searchTerm, selectedCategory, sortBy]);
 
   useEffect(() => {
-    loadData();
-  }, []);
-
-  useEffect(() => {
-    // Aplicar filtros cuando cambien los parámetros
     applyFilters();
   }, [applyFilters]);
-
-  const loadData = async () => {
-    try {
-      const [productsData, categoriesData] = await Promise.all([
-        Product.filter({ active: true }, '-created_date'),
-        Category.list('sort_order')
-      ]);
-
-      setProducts(productsData);
-      setCategories(categoriesData);
-    } catch {
-      // Failed to load products
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8] py-8">
@@ -171,7 +151,7 @@ export default function ProductsPage() {
           {/* Results count */}
           <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
             <p className="text-gray-700">
-              Mostrando {filteredProducts.length} de {products.length} productos
+              Mostrando {filteredProducts.length} de {activeProducts.length} productos
             </p>
             {(searchTerm || selectedCategory !== "all") && (
               <div className="flex gap-2">
