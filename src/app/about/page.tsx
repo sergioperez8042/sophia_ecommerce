@@ -3,7 +3,7 @@
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { useRef } from "react";
 import Image from "next/image";
-import { Star, Heart, Globe, Award, Users, TrendingUp } from "lucide-react";
+import { Leaf, Heart, Globe, Award, Users, TrendingUp, Sparkles, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -58,7 +58,7 @@ export default function AboutPage() {
     };
 
     return (
-        <div ref={containerRef} className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50">
+        <div ref={containerRef} className="min-h-screen bg-gradient-to-br from-[#FEFCF7] via-white to-[#F5F1E8]">
             {/* Hero Section */}
             <motion.section
                 ref={heroRef}
@@ -66,7 +66,7 @@ export default function AboutPage() {
                 className="relative min-h-screen flex items-center justify-center overflow-hidden"
             >
                 {/* Background Pattern */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#505A4A]/5 via-transparent to-[#505A4A]/10" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#505A4A]/5 via-transparent to-[#C4B590]/10" />
 
                 <motion.div
                     variants={containerVariants}
@@ -87,7 +87,7 @@ export default function AboutPage() {
                                 </Badge>
                                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-gray-900 leading-tight">
                                     De Cuba a
-                                    <span className="bg-gradient-to-r from-[#505A4A] to-[#6B8E5A] bg-clip-text text-transparent"> Europa</span>
+                                    <span className="text-[#505A4A]"> Europa</span>
                                 </h1>
                             </motion.div>
 
@@ -135,7 +135,7 @@ export default function AboutPage() {
                                         repeat: Infinity,
                                         ease: "linear"
                                     }}
-                                    className="absolute -top-4 -left-4 w-24 h-24 bg-gradient-to-r from-[#505A4A]/20 to-[#6B8E5A]/20 rounded-full blur-xl"
+                                    className="absolute -top-4 -left-4 w-24 h-24 bg-gradient-to-r from-[#505A4A]/20 to-[#C4B590]/20 rounded-full blur-xl"
                                 />
                                 <motion.div
                                     animate={{
@@ -147,10 +147,10 @@ export default function AboutPage() {
                                         repeat: Infinity,
                                         ease: "linear"
                                     }}
-                                    className="absolute -bottom-8 -right-8 w-32 h-32 bg-gradient-to-l from-[#505A4A]/15 to-[#6B8E5A]/15 rounded-full blur-2xl"
+                                    className="absolute -bottom-8 -right-8 w-32 h-32 bg-gradient-to-l from-[#505A4A]/15 to-[#C4B590]/15 rounded-full blur-2xl"
                                 />
 
-                                <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br from-white to-gray-50 p-4">
+                                <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br from-[#FEFCF7] to-[#F5F1E8] p-4">
                                     <Image
                                         src="/sophia-founder.jpg"
                                         alt="Sophia, fundadora de Sophia Natural"
@@ -198,7 +198,7 @@ export default function AboutPage() {
                                     transition={{ duration: 0.6, delay: 0.2 }}
                                 >
                                     <h3 className="text-2xl font-bold text-[#505A4A] flex items-center gap-3">
-                                        <Heart className="h-6 w-6 text-red-500" />
+                                        <Heart className="h-6 w-6 text-[#C4B590]" />
                                         Los Inicios en Cuba
                                     </h3>
                                     <p className="text-gray-700 text-lg leading-relaxed font-medium">
@@ -212,7 +212,7 @@ export default function AboutPage() {
                                     transition={{ duration: 0.6, delay: 0.4 }}
                                 >
                                     <h3 className="text-2xl font-bold text-[#505A4A] flex items-center gap-3">
-                                        <TrendingUp className="h-6 w-6 text-green-500" />
+                                        <TrendingUp className="h-6 w-6 text-[#505A4A]" />
                                         El Crecimiento
                                     </h3>
                                     <p className="text-gray-700 text-lg leading-relaxed font-medium">
@@ -226,7 +226,7 @@ export default function AboutPage() {
                                     transition={{ duration: 0.6, delay: 0.6 }}
                                 >
                                     <h3 className="text-2xl font-bold text-[#505A4A] flex items-center gap-3">
-                                        <Globe className="h-6 w-6 text-blue-500" />
+                                        <Globe className="h-6 w-6 text-[#414A3C]" />
                                         La Conquista Europea
                                     </h3>
                                     <p className="text-gray-700 text-lg leading-relaxed font-medium">
@@ -249,9 +249,9 @@ export default function AboutPage() {
                             </motion.div>
 
                             <motion.div variants={cardVariants}>
-                                <Card className="border-0 shadow-xl bg-gradient-to-r from-green-500/5 to-green-500/10 backdrop-blur-sm">
+                                <Card className="border-0 shadow-xl bg-gradient-to-r from-[#C4B590]/10 to-[#C4B590]/20 backdrop-blur-sm">
                                     <CardContent className="p-8 text-center">
-                                        <Users className="h-12 w-12 text-green-600 mx-auto mb-4" />
+                                        <Users className="h-12 w-12 text-[#505A4A] mx-auto mb-4" />
                                         <h4 className="text-3xl font-bold text-gray-900 mb-2">50,000+</h4>
                                         <p className="text-gray-700 font-semibold">Mujeres Satisfechas</p>
                                     </CardContent>
@@ -259,9 +259,9 @@ export default function AboutPage() {
                             </motion.div>
 
                             <motion.div variants={cardVariants}>
-                                <Card className="border-0 shadow-xl bg-gradient-to-r from-blue-500/5 to-blue-500/10 backdrop-blur-sm">
+                                <Card className="border-0 shadow-xl bg-gradient-to-r from-[#F5F1E8] to-[#E8E2D5] backdrop-blur-sm">
                                     <CardContent className="p-8 text-center">
-                                        <Globe className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                                        <Globe className="h-12 w-12 text-[#414A3C] mx-auto mb-4" />
                                         <h4 className="text-3xl font-bold text-gray-900 mb-2">15</h4>
                                         <p className="text-gray-700 font-semibold">Países en Europa</p>
                                     </CardContent>
@@ -275,7 +275,7 @@ export default function AboutPage() {
             {/* Values Section */}
             <motion.section
                 ref={valuesRef}
-                className="py-32 bg-gradient-to-r from-[#505A4A]/5 via-transparent to-[#505A4A]/5"
+                className="py-24 sm:py-32 bg-gradient-to-r from-[#F5F1E8]/50 via-transparent to-[#F5F1E8]/50"
             >
                 <motion.div
                     variants={containerVariants}
@@ -283,40 +283,40 @@ export default function AboutPage() {
                     animate={valuesInView ? "visible" : "hidden"}
                     className="container mx-auto px-4"
                 >
-                    <motion.div variants={itemVariants} className="text-center mb-20">
-                        <h2 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
+                    <motion.div variants={itemVariants} className="text-center mb-16 sm:mb-20">
+                        <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
                             Nuestros <span className="text-[#505A4A]">Valores</span>
                         </h2>
-                        <p className="text-xl text-gray-700 max-w-3xl mx-auto font-medium">
+                        <p className="text-lg sm:text-xl text-gray-700 max-w-3xl mx-auto font-medium">
                             Los principios que nos guían en cada paso de nuestro viaje hacia la belleza natural y el empoderamiento femenino.
                         </p>
                     </motion.div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
                         {[
                             {
                                 icon: Heart,
                                 title: "Pasión",
                                 description: "Cada producto está hecho con amor y dedicación, siguiendo recetas tradicionales cubanas.",
-                                color: "text-red-500"
+                                accent: "bg-[#505A4A]/10"
                             },
                             {
-                                icon: Star,
+                                icon: Sparkles,
                                 title: "Calidad",
                                 description: "Solo utilizamos ingredientes naturales de la más alta calidad, sin químicos dañinos.",
-                                color: "text-yellow-500"
+                                accent: "bg-[#C4B590]/15"
                             },
                             {
                                 icon: Users,
                                 title: "Empoderamiento",
                                 description: "Creamos oportunidades para mujeres emprendedoras en Cuba y Europa.",
-                                color: "text-purple-500"
+                                accent: "bg-[#505A4A]/10"
                             },
                             {
-                                icon: Globe,
-                                title: "Innovación",
-                                description: "Combinamos tradición cubana con tecnología europea para crear productos únicos.",
-                                color: "text-blue-500"
+                                icon: ShieldCheck,
+                                title: "Compromiso",
+                                description: "Combinamos tradición cubana con estándares europeos para crear productos únicos.",
+                                accent: "bg-[#C4B590]/15"
                             }
                         ].map((value, index) => (
                             <motion.div
@@ -327,7 +327,9 @@ export default function AboutPage() {
                             >
                                 <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm h-full hover:shadow-2xl transition-all duration-300">
                                     <CardContent className="p-8 text-center h-full flex flex-col">
-                                        <value.icon className={`h-16 w-16 ${value.color} mx-auto mb-6`} />
+                                        <div className={`w-16 h-16 ${value.accent} rounded-2xl flex items-center justify-center mx-auto mb-6`}>
+                                            <value.icon className="h-8 w-8 text-[#505A4A]" />
+                                        </div>
                                         <h3 className="text-2xl font-bold text-gray-900 mb-4">{value.title}</h3>
                                         <p className="text-gray-700 font-medium leading-relaxed flex-grow">
                                             {value.description}
@@ -341,7 +343,7 @@ export default function AboutPage() {
             </motion.section>
 
             {/* CTA Section */}
-            <motion.section className="py-32 bg-gradient-to-r from-[#505A4A] to-[#6B8E5A] text-white">
+            <motion.section className="py-24 sm:py-32 bg-[#505A4A] text-white">
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -349,24 +351,25 @@ export default function AboutPage() {
                     viewport={{ once: true }}
                     className="container mx-auto px-4 text-center"
                 >
-                    <h2 className="text-4xl lg:text-6xl font-bold mb-6">
+                    <Leaf className="h-12 w-12 text-[#C4B590] mx-auto mb-8" />
+                    <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-6">
                         Únete a Nuestra Historia
                     </h2>
-                    <p className="text-xl mb-12 max-w-3xl mx-auto font-medium opacity-90">
+                    <p className="text-lg sm:text-xl mb-12 max-w-3xl mx-auto font-medium opacity-90">
                         Sé parte de la revolución de la belleza natural. Descubre productos que no solo cuidan tu piel, sino que también apoyan el sueño de una mujer emprendedora.
                     </p>
-                    <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                    <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
                         <Link href="/products">
                             <Button
                                 size="lg"
-                                className="bg-white text-[#505A4A] hover:bg-gray-100 font-bold px-12 py-4 text-xl shadow-xl"
+                                className="w-full sm:w-auto bg-white text-[#505A4A] hover:bg-[#F5F1E8] font-bold px-10 sm:px-12 py-4 text-lg sm:text-xl shadow-xl"
                             >
                                 Comprar Ahora
                             </Button>
                         </Link>
                         <Link href="/contact">
                             <button
-                                className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-[#505A4A] font-bold px-12 py-4 text-xl rounded-md transition-colors"
+                                className="w-full sm:w-auto border-2 border-white bg-transparent text-white hover:bg-white hover:text-[#505A4A] font-bold px-10 sm:px-12 py-4 text-lg sm:text-xl rounded-md transition-colors"
                             >
                                 Contáctanos
                             </button>
