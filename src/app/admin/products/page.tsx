@@ -23,11 +23,9 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import ProductImage from '@/components/ui/product-image';
 
 type ViewMode = 'list' | 'create' | 'edit';
-
-const PLACEHOLDER_IMAGE = "/images/no-image.svg";
 
 const emptyProduct: Omit<IProduct, 'id' | 'created_date'> = {
     name: '',
@@ -62,21 +60,15 @@ function ProductListItem({
     deleteConfirm: boolean;
     setDeleteConfirm: (id: string | null) => void;
 }) {
-    const [imgError, setImgError] = useState(false);
-    const productImage = imgError || !product.image ? PLACEHOLDER_IMAGE : product.image;
-
     return (
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
             <div className="flex gap-3 p-3 sm:p-4">
                 {/* Image */}
                 <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
-                    <Image
-                        src={productImage}
+                    <ProductImage
+                        src={product.image}
                         alt={product.name}
-                        fill
                         className="object-cover"
-                        onError={() => setImgError(true)}
-                        unoptimized={productImage === PLACEHOLDER_IMAGE}
                     />
                     {product.featured && (
                         <div className="absolute top-1 left-1 bg-[#C4B590] rounded-full p-1">
@@ -204,7 +196,6 @@ export default function AdminProductsPage() {
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadError, setUploadError] = useState<string | null>(null);
-    const [formImgError, setFormImgError] = useState(false);
 
     useEffect(() => {
         if (isLoaded && (!isAuthenticated || !isAdmin)) {
@@ -244,7 +235,7 @@ export default function AdminProductsPage() {
         setIngredientsInput('');
         setEditingProduct(null);
         setUploadError(null);
-        setFormImgError(false);
+
         setViewMode('create');
     };
 
@@ -266,7 +257,7 @@ export default function AdminProductsPage() {
         setTagsInput(product.tags.join(', '));
         setIngredientsInput(product.ingredients.join(', '));
         setUploadError(null);
-        setFormImgError(false);
+
         setViewMode('edit');
     };
 
@@ -319,7 +310,7 @@ export default function AdminProductsPage() {
     const handleFileUpload = async (file: File) => {
         const localPreviewUrl = URL.createObjectURL(file);
         setFormData(prev => ({ ...prev, image: localPreviewUrl }));
-        setFormImgError(false);
+
         setIsUploading(true);
         setUploadProgress(10);
         setUploadError(null);
@@ -504,24 +495,16 @@ export default function AdminProductsPage() {
                         </label>
 
                         <div className="relative w-full h-48 sm:h-56 bg-gray-100 rounded-xl overflow-hidden mb-3">
-                            {formData.image && formData.image !== '/images/placeholder.jpg' && formData.image !== '' && !formImgError ? (
-                                <Image
+                            {formData.image && formData.image !== '/images/placeholder.jpg' && formData.image !== '' ? (
+                                <ProductImage
                                     src={formData.image}
                                     alt="Vista previa"
-                                    fill
                                     className="object-cover"
-                                    onError={() => setFormImgError(true)}
-                                    unoptimized
                                 />
                             ) : (
                                 <div className="flex flex-col items-center justify-center h-full text-gray-400">
                                     <ImageIcon className="w-10 h-10 mb-2" />
-                                    <span className="text-sm">{formImgError ? 'Imagen no disponible' : 'Sin imagen'}</span>
-                                    {formImgError && formData.image && (
-                                        <span className="text-xs text-gray-400 mt-1 px-4 text-center truncate max-w-full">
-                                            {formData.image}
-                                        </span>
-                                    )}
+                                    <span className="text-sm">Sin imagen</span>
                                 </div>
                             )}
                         </div>

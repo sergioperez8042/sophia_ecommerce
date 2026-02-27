@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Star, Heart, ShoppingBag, Leaf } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
-import Image from "next/image";
+import ProductImage from "@/components/ui/product-image";
 
 interface ProductGridProps {
     products: any[];
@@ -152,13 +152,13 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                         <Link href={`/product?id=${product.id}`} prefetch={false}>
                             <Card className="product-card group hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer">
                                 <div className="relative overflow-hidden">
-                                    <Image
-                                        src={product.image_url || 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop'}
-                                        alt={product.name}
-                                        width={400}
-                                        height={300}
-                                        className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                                    />
+                                    <div className="relative w-full h-64">
+                                        <ProductImage
+                                            src={product.image_url || product.image}
+                                            alt={product.name}
+                                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                        />
+                                    </div>
 
                                     {product.compare_price && product.compare_price > product.price && (
                                         <Badge className="absolute top-4 left-4 bg-red-500 text-white">
@@ -260,12 +260,10 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                             <Card className="product-card group hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer">
                                 <div className="flex">
                                     <div className="relative w-48 h-32 overflow-hidden">
-                                        <Image
-                                            src={product.image_url || 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop'}
+                                        <ProductImage
+                                            src={product.image_url || product.image}
                                             alt={product.name}
-                                            width={192}
-                                            height={128}
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                            className="object-cover group-hover:scale-105 transition-transform duration-300"
                                         />
 
                                         {product.compare_price && product.compare_price > product.price && (

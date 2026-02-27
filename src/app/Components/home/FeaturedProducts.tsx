@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Star, Heart, ShoppingBag } from "lucide-react";
 import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
-import Image from "next/image";
+import ProductImage from "@/components/ui/product-image";
 
 interface FeaturedProductsProps {
     products: any[];
@@ -127,13 +127,13 @@ export default function FeaturedProducts({ products, isLoading }: FeaturedProduc
                         >
                             <Card className="product-card group hover:shadow-xl transition-all duration-300 overflow-hidden">
                                 <div className="relative overflow-hidden">
-                                    <Image
-                                        src={product.image_url || 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop'}
-                                        alt={product.name}
-                                        width={400}
-                                        height={300}
-                                        className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                                    />
+                                    <div className="relative w-full h-64">
+                                        <ProductImage
+                                            src={product.image_url || product.image}
+                                            alt={product.name}
+                                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                        />
+                                    </div>
 
                                     {product.compare_price && product.compare_price > product.price && (
                                         <Badge className="absolute top-4 left-4 bg-red-500 text-white">

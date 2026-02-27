@@ -6,7 +6,7 @@ import { Truck, CheckCircle, ArrowLeft, MapPin, Download, User, Percent } from "
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import Image from "next/image";
+import ProductImage from "@/components/ui/product-image";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Breadcrumb from "@/components/ui/breadcrumb";
@@ -726,10 +726,9 @@ export default function CheckoutPage() {
                                         {items.map((item) => (
                                             <div key={item.product.id} className="flex items-center gap-3">
                                                 <div className="relative w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
-                                                    <Image
+                                                    <ProductImage
                                                         src={item.product.image}
                                                         alt={item.product.name}
-                                                        fill
                                                         className="object-cover"
                                                     />
                                                     <span className="absolute -top-1 -right-1 bg-[#505A4A] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
