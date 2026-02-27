@@ -158,8 +158,8 @@ export default function FeaturedProducts({ products, isLoading }: FeaturedProduc
                                             title={wishlistItems.includes(product.id) ? 'Remover de favoritos' : 'Agregar a favoritos'}
                                         >
                                             <Heart className={`w-4 h-4 transition-colors duration-200 ${wishlistItems.includes(product.id)
-                                                ? 'text-red-500 fill-red-500'
-                                                : 'text-gray-500 hover:text-red-500 group-hover/heart:scale-110'
+                                                ? 'text-[#505A4A] fill-[#505A4A]'
+                                                : 'text-gray-500 hover:text-[#505A4A] group-hover/heart:scale-110'
                                                 }`} />
                                         </button>
                                     </div>                                    <Link href={`/product?id=${product.id}`}>

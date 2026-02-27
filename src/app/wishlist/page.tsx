@@ -87,7 +87,7 @@ export default function WishlistPage() {
                             <CardContent className="p-6">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-4">
-                                        <Heart className="h-8 w-8 text-red-500 fill-red-500" />
+                                        <Heart className="h-8 w-8 text-[#505A4A] fill-[#505A4A]" />
                                         <div>
                                             <h1 className="text-3xl font-bold text-gray-900">Mis Favoritos</h1>
                                             <p className="text-gray-700 font-medium">
@@ -122,7 +122,7 @@ export default function WishlistPage() {
                                             {/* Botón eliminar */}
                                             <motion.button
                                                 onClick={() => removeFromWishlist(product.id)}
-                                                className="absolute top-3 right-3 z-10 bg-white/90 hover:bg-white text-gray-600 hover:text-red-500 rounded-full p-2 shadow-md transition-all duration-200"
+                                                className="absolute top-3 right-3 z-10 bg-white/90 hover:bg-white text-gray-600 hover:text-[#505A4A] rounded-full p-2 shadow-md transition-all duration-200"
                                                 whileHover={{ scale: 1.1 }}
                                                 whileTap={{ scale: 0.9 }}
                                                 title="Eliminar producto"

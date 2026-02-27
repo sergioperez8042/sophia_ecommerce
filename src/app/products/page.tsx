@@ -409,8 +409,8 @@ export default function ProductsPage() {
                           >
                             <Heart
                               className={`h-5 w-5 transition-all duration-200 ${isInWishlist(product.id)
-                                ? 'text-red-500 fill-red-500'
-                                : 'text-gray-400 hover:text-red-500 group-hover/heart:scale-110'
+                                ? 'text-[#505A4A] fill-[#505A4A]'
+                                : 'text-gray-400 hover:text-[#505A4A] group-hover/heart:scale-110'
                                 }`}
                             />
                           </button>
