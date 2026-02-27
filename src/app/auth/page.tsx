@@ -160,9 +160,9 @@ export default function AuthPage() {
                 transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
               />
               <motion.img
-                src="/images/logo_hand2.png"
+                src="/images/sophia_logo_nuevo.jpeg"
                 alt="Sophia"
-                className="w-11 h-11 object-contain relative z-10"
+                className="w-11 h-11 object-contain rounded-full relative z-10"
                 animate={{ 
                   y: [0, -2, 0],
                 }}

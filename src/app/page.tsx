@@ -126,40 +126,59 @@ export default function HomePage() {
         return (
             <div className="min-h-screen flex items-center justify-center bg-[var(--cream-white)]">
                 <motion.div
-                    className="text-center"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
+                    className="flex items-center gap-3"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
                     <motion.div
-                        className="w-28 h-28 rounded-2xl bg-[#505A4A] flex items-center justify-center mx-auto mb-4 shadow-lg overflow-hidden"
-                        animate={{
-                            scale: [1, 1.08, 1],
-                            boxShadow: [
-                                "0 4px 15px rgba(80, 90, 74, 0.3)",
-                                "0 8px 30px rgba(80, 90, 74, 0.5)",
-                                "0 4px 15px rgba(80, 90, 74, 0.3)"
-                            ]
-                        }}
-                        transition={{
-                            duration: 1.5,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                        }}
+                        className="w-16 h-16 rounded-full bg-gradient-to-r from-[#505A4A] to-[#414A3C] flex items-center justify-center shadow-lg relative overflow-hidden"
+                        initial={{ scale: 0, rotate: -180 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
                     >
-                        <img
+                        {/* Anillo giratorio */}
+                        <motion.div
+                            className="absolute inset-0 rounded-full border-2 border-white/30"
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                            style={{ borderStyle: "dashed" }}
+                        />
+                        {/* Brillo que pasa */}
+                        <motion.div
+                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                            animate={{ x: ["-100%", "100%"] }}
+                            transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                        />
+                        <motion.img
                             src="/images/sophia_logo_nuevo.jpeg"
                             alt="Sophia"
-                            className="w-full h-full object-cover"
+                            className="w-11 h-11 object-contain rounded-full relative z-10"
+                            animate={{ y: [0, -2, 0] }}
+                            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                         />
                     </motion.div>
-                    <motion.p
-                        className="text-[#505A4A] font-medium"
-                        animate={{ opacity: [0.4, 1, 0.4] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
+                    <motion.div
+                        className="text-left"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.4 }}
                     >
-                        Cargando catálogo...
-                    </motion.p>
+                        <motion.h1
+                            className="text-3xl font-bold text-[#505A4A]"
+                            style={{ fontFamily: 'Cinzel, serif' }}
+                        >
+                            Sophia
+                        </motion.h1>
+                        <motion.p
+                            className="text-sm text-[#505A4A] font-medium"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.6 }}
+                        >
+                            Cosmética Botánica
+                        </motion.p>
+                    </motion.div>
                 </motion.div>
             </div>
         );
