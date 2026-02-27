@@ -120,7 +120,7 @@ export default function CatalogView({ initialProducts, initialCategories }: Cata
             </motion.header>
 
             {/* Hero Section */}
-            <section className="relative h-72 sm:h-80 md:h-96 overflow-hidden">
+            <section className="relative h-64 sm:h-80 md:h-[28rem] overflow-hidden mt-2 sm:mt-0 rounded-b-2xl sm:rounded-none">
                 <video
                     ref={videoRef}
                     autoPlay
