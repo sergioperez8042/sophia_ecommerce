@@ -3,26 +3,21 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useAuth, User } from '@/store';
 import { UserService } from '@/lib/firestore-services';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import {
   Users,
-  TrendingUp,
-  DollarSign,
   ShoppingBag,
-  Award,
-  Eye,
+  Layers,
+  Mail,
   MapPin,
   Phone,
-  Mail,
   ChevronRight,
-  BarChart3,
   Calendar,
   Loader2,
   Database,
-  Layers
+  Settings,
+  BarChart3,
+  ArrowRight,
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -59,7 +54,7 @@ export default function AdminPage() {
   if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#505A4A]" />
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#505A4A] border-t-transparent" />
       </div>
     );
   }
@@ -68,279 +63,167 @@ export default function AdminPage() {
     return null;
   }
 
+  const quickActions = [
+    { label: 'Productos', desc: 'Gestionar catálogo', href: '/admin/products', icon: ShoppingBag },
+    { label: 'Categorías', desc: 'Organizar productos', href: '/admin/categories', icon: Layers },
+    { label: 'Newsletter', desc: 'Suscriptores y envíos', href: '/admin/newsletter', icon: Mail },
+    { label: 'Configuración', desc: 'Inicializar datos', href: '/admin/setup', icon: Database },
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gray-50/50 pt-20">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Panel de Administración</h1>
-          <p className="text-gray-600 mt-1">Gestiona tu equipo de ventas y visualiza estadísticas</p>
+          <h1 className="text-2xl font-semibold text-gray-900">Panel de Administración</h1>
+          <p className="text-sm text-gray-500 mt-1">Gestiona tu equipo y catálogo de productos</p>
         </div>
 
-        {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            <Card className="border-0 shadow-lg">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-500">Gestores Activos</p>
-                    <p className="text-2xl font-bold text-green-600">
-                      {isLoadingManagers ? '...' : managers.length}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1">En el equipo</p>
-                  </div>
-                  <div className="p-3 bg-green-100 rounded-full">
-                    <Users className="w-6 h-6 text-green-600" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+        {/* Quick Stats */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div className="bg-white rounded-xl border border-gray-200 p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Gestores</p>
+                <p className="text-2xl font-semibold text-gray-900 mt-1">
+                  {isLoadingManagers ? '—' : managers.length}
+                </p>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                <Users className="w-5 h-5 text-gray-600" />
+              </div>
+            </div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <Card className="border-0 shadow-lg">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-500">Productos</p>
-                    <p className="text-2xl font-bold text-blue-600">
-                      <Link href="/admin/products" className="hover:underline">
-                        Ver todos →
-                      </Link>
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1">Gestionar catálogo</p>
-                  </div>
-                  <div className="p-3 bg-blue-100 rounded-full">
-                    <ShoppingBag className="w-6 h-6 text-blue-600" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+          <Link href="/admin/products" className="bg-white rounded-xl border border-gray-200 p-5 hover:border-[#505A4A]/30 transition-colors group">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Productos</p>
+                <p className="text-sm font-medium text-[#505A4A] mt-2 flex items-center gap-1 group-hover:gap-2 transition-all">
+                  Ver todos <ArrowRight className="w-3.5 h-3.5" />
+                </p>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                <ShoppingBag className="w-5 h-5 text-gray-600" />
+              </div>
+            </div>
+          </Link>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <Card className="border-0 shadow-lg">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-500">Configuración</p>
-                    <p className="text-2xl font-bold text-purple-600">
-                      <Link href="/admin/setup" className="hover:underline">
-                        Setup →
-                      </Link>
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1">Base de datos</p>
-                  </div>
-                  <div className="p-3 bg-purple-100 rounded-full">
-                    <BarChart3 className="w-6 h-6 text-purple-600" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+          <Link href="/admin/setup" className="bg-white rounded-xl border border-gray-200 p-5 hover:border-[#505A4A]/30 transition-colors group">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Config</p>
+                <p className="text-sm font-medium text-[#505A4A] mt-2 flex items-center gap-1 group-hover:gap-2 transition-all">
+                  Setup <ArrowRight className="w-3.5 h-3.5" />
+                </p>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                <Settings className="w-5 h-5 text-gray-600" />
+              </div>
+            </div>
+          </Link>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <Card className="border-0 shadow-lg">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-500">Estadísticas</p>
-                    <p className="text-2xl font-bold text-amber-600">Próximamente</p>
-                    <p className="text-xs text-gray-500 mt-1">Ventas y métricas</p>
-                  </div>
-                  <div className="p-3 bg-amber-100 rounded-full">
-                    <TrendingUp className="w-6 h-6 text-amber-600" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+          <div className="bg-white rounded-xl border border-gray-200 p-5 opacity-50">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Estadísticas</p>
+                <p className="text-sm text-gray-400 mt-2">Próximamente</p>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                <BarChart3 className="w-5 h-5 text-gray-400" />
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Managers List */}
-        <Card className="border-0 shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Users className="w-5 h-5" />
-                Equipo de Gestores
-              </div>
-              <Badge variant="secondary">{managers.length} gestores</Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+        <div className="bg-white rounded-xl border border-gray-200">
+          <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Users className="w-4 h-4 text-gray-500" />
+              <h2 className="text-sm font-semibold text-gray-900">Equipo de Gestores</h2>
+            </div>
+            <span className="text-xs text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full">
+              {managers.length} gestores
+            </span>
+          </div>
+
+          <div className="p-6">
             {isLoadingManagers ? (
               <div className="flex items-center justify-center py-8">
-                <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
-                <span className="ml-2 text-gray-500">Cargando gestores...</span>
+                <Loader2 className="w-5 h-5 animate-spin text-gray-400" />
+                <span className="ml-2 text-sm text-gray-500">Cargando...</span>
               </div>
             ) : managers.length === 0 ? (
-              <div className="text-center py-8">
-                <Users className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-500">No hay gestores registrados</p>
-                <p className="text-sm text-gray-400 mt-1">
-                  Ve a <Link href="/admin/setup" className="text-[#505A4A] hover:underline">Setup</Link> para crear usuarios iniciales
-                </p>
+              <div className="text-center py-10">
+                <Users className="w-10 h-10 text-gray-300 mx-auto mb-3" />
+                <p className="text-sm text-gray-500">No hay gestores registrados</p>
+                <Link
+                  href="/admin/setup"
+                  className="text-sm text-[#505A4A] hover:underline mt-1 inline-block"
+                >
+                  Ir a Setup para crear usuarios →
+                </Link>
               </div>
             ) : (
-              <div className="space-y-4">
-                {managers.map((manager, index) => {
-                  return (
-                    <motion.div
-                      key={manager.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.1 * index }}
-                    >
-                      <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                        {/* Avatar */}
-                        <div className="w-14 h-14 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 flex items-center justify-center text-white font-bold text-lg">
-                          {manager.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
-                        </div>
-
-                        {/* Info */}
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <h3 className="font-semibold text-gray-900">{manager.name}</h3>
-                            {manager.managerCode && (
-                              <Badge className="bg-amber-100 text-amber-800 border-none">
-                                {manager.managerCode}
-                              </Badge>
-                            )}
-                          </div>
-                          <div className="flex items-center gap-4 text-sm text-gray-500 mt-1">
-                            {manager.zone && (
-                              <span className="flex items-center gap-1">
-                                <MapPin className="w-3 h-3" />
-                                {manager.zone}
-                              </span>
-                            )}
-                            <span className="flex items-center gap-1">
-                              <Mail className="w-3 h-3" />
-                              {manager.email}
-                            </span>
-                            {manager.phone && (
-                              <span className="flex items-center gap-1">
-                                <Phone className="w-3 h-3" />
-                                {manager.phone}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Created date */}
-                        <div className="hidden md:flex items-center gap-2 text-sm text-gray-500">
-                          <Calendar className="w-4 h-4" />
-                          {manager.createdAt
-                            ? new Date(manager.createdAt).toLocaleDateString('es-ES')
-                            : 'N/A'
-                          }
-                        </div>
+              <div className="divide-y divide-gray-100">
+                {managers.map((manager) => (
+                  <div key={manager.id} className="flex items-center gap-4 py-4 first:pt-0 last:pb-0">
+                    <div className="w-10 h-10 rounded-full bg-[#505A4A] flex items-center justify-center text-white text-sm font-medium flex-shrink-0">
+                      {manager.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-sm font-medium text-gray-900 truncate">{manager.name}</h3>
+                        {manager.managerCode && (
+                          <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
+                            {manager.managerCode}
+                          </span>
+                        )}
                       </div>
-                    </motion.div>
-                  );
-                })}
+                      <div className="flex items-center gap-3 text-xs text-gray-500 mt-0.5">
+                        {manager.zone && (
+                          <span className="flex items-center gap-1">
+                            <MapPin className="w-3 h-3" /> {manager.zone}
+                          </span>
+                        )}
+                        <span className="flex items-center gap-1">
+                          <Mail className="w-3 h-3" /> {manager.email}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="hidden md:block text-xs text-gray-400">
+                      {manager.createdAt
+                        ? new Date(manager.createdAt).toLocaleDateString('es-ES')
+                        : '—'
+                      }
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mt-8">
-          <Link href="/admin/products">
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow cursor-pointer h-full">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-green-100 rounded-full">
-                    <ShoppingBag className="w-6 h-6 text-green-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Productos</h3>
-                    <p className="text-sm text-gray-500">Gestionar catálogo</p>
-                  </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+          {quickActions.map((action) => (
+            <Link
+              key={action.href}
+              href={action.href}
+              className="bg-white rounded-xl border border-gray-200 p-4 hover:border-[#505A4A]/30 hover:shadow-sm transition-all group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-lg bg-gray-50 flex items-center justify-center group-hover:bg-[#505A4A]/5 transition-colors">
+                  <action.icon className="w-4 h-4 text-gray-600" />
                 </div>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link href="/admin/categories">
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow cursor-pointer h-full">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-purple-100 rounded-full">
-                    <Layers className="w-6 h-6 text-purple-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Categorías</h3>
-                    <p className="text-sm text-gray-500">Organizar productos</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link href="/admin/newsletter">
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow cursor-pointer h-full">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-blue-100 rounded-full">
-                    <Mail className="w-6 h-6 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Newsletter</h3>
-                    <p className="text-sm text-gray-500">Suscriptores y envíos</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow cursor-pointer h-full opacity-60">
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-amber-100 rounded-full">
-                  <BarChart3 className="w-6 h-6 text-amber-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">Reportes</h3>
-                  <p className="text-sm text-gray-500">Próximamente</p>
+                <div className="min-w-0">
+                  <h3 className="text-sm font-medium text-gray-900">{action.label}</h3>
+                  <p className="text-xs text-gray-500 truncate">{action.desc}</p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-
-          <Link href="/admin/setup">
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow cursor-pointer h-full">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-gray-100 rounded-full">
-                    <Database className="w-6 h-6 text-gray-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Datos de Prueba</h3>
-                    <p className="text-sm text-gray-500">Inicializar DB</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
+            </Link>
+          ))}
         </div>
       </div>
     </div>

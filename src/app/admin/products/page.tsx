@@ -226,7 +226,7 @@ export default function AdminProductsPage() {
                     </div>
 
                     {/* Filters */}
-                    <Card className="mb-6 border-0 shadow-lg">
+                    <Card className="mb-6 shadow-sm border border-gray-200">
                         <CardContent className="pt-6">
                             <div className="flex flex-col md:flex-row gap-4">
                                 <div className="flex-1 relative">
@@ -275,11 +275,11 @@ export default function AdminProductsPage() {
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <p className="text-sm text-gray-500">Activos</p>
-                                        <p className="text-2xl font-bold text-green-600">
+                                        <p className="text-2xl font-bold text-gray-900">
                                             {products.filter((p) => p.active).length}
                                         </p>
                                     </div>
-                                    <Eye className="w-8 h-8 text-green-200" />
+                                    <Eye className="w-8 h-8 text-gray-300" />
                                 </div>
                             </CardContent>
                         </Card>
@@ -288,11 +288,11 @@ export default function AdminProductsPage() {
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <p className="text-sm text-gray-500">Destacados</p>
-                                        <p className="text-2xl font-bold text-amber-600">
+                                        <p className="text-2xl font-bold text-gray-900">
                                             {products.filter((p) => p.featured).length}
                                         </p>
                                     </div>
-                                    <Star className="w-8 h-8 text-amber-200" />
+                                    <Star className="w-8 h-8 text-gray-300" />
                                 </div>
                             </CardContent>
                         </Card>
@@ -312,7 +312,7 @@ export default function AdminProductsPage() {
                     </div>
 
                     {/* Products Table */}
-                    <Card className="border-0 shadow-lg overflow-hidden">
+                    <Card className="shadow-sm border border-gray-200 overflow-hidden">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Package className="w-5 h-5" />
@@ -387,7 +387,7 @@ export default function AdminProductsPage() {
                                                         </Badge>
                                                     </td>
                                                     <td className="p-4">
-                                                        <span className="font-semibold text-green-600">
+                                                        <span className="font-semibold text-gray-900 font-medium">
                                                             €{product.price.toFixed(2)}
                                                         </span>
                                                     </td>
@@ -395,7 +395,7 @@ export default function AdminProductsPage() {
                                                         <button
                                                             onClick={() => toggleProductActive(product.id)}
                                                             className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium transition-colors ${product.active
-                                                                ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                                                                ? 'bg-[#505A4A]/10 text-[#505A4A] hover:bg-[#505A4A]/15'
                                                                 : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                                                                 }`}
                                                         >
@@ -416,8 +416,8 @@ export default function AdminProductsPage() {
                                                         <button
                                                             onClick={() => toggleProductFeatured(product.id)}
                                                             className={`inline-flex items-center justify-center w-8 h-8 rounded-full transition-colors ${product.featured
-                                                                ? 'bg-amber-100 text-amber-600'
-                                                                : 'bg-gray-100 text-gray-500 hover:bg-amber-50 hover:text-amber-500'
+                                                                ? 'bg-[#505A4A]/10 text-[#505A4A]'
+                                                                : 'bg-gray-100 text-gray-500 hover:bg-[#505A4A]/5 hover:text-[#505A4A]'
                                                                 }`}
                                                         >
                                                             <Star
@@ -432,7 +432,7 @@ export default function AdminProductsPage() {
                                                                 variant="ghost"
                                                                 size="sm"
                                                                 onClick={() => handleEdit(product)}
-                                                                className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                                                                className="text-gray-600 hover:text-gray-800 hover:bg-gray-100"
                                                             >
                                                                 <Pencil className="w-4 h-4" />
                                                             </Button>
@@ -515,7 +515,7 @@ export default function AdminProductsPage() {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* Main Info */}
                         <div className="lg:col-span-2 space-y-6">
-                            <Card className="border-0 shadow-lg">
+                            <Card className="shadow-sm border border-gray-200">
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-2">
                                         <FileText className="w-5 h-5" />
@@ -603,7 +603,7 @@ export default function AdminProductsPage() {
                                 </CardContent>
                             </Card>
 
-                            <Card className="border-0 shadow-lg">
+                            <Card className="shadow-sm border border-gray-200">
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-2">
                                         <Tag className="w-5 h-5" />
@@ -651,7 +651,7 @@ export default function AdminProductsPage() {
                                 </CardContent>
                             </Card>
 
-                            <Card className="border-0 shadow-lg">
+                            <Card className="shadow-sm border border-gray-200">
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-2">
                                         <ImageIcon className="w-5 h-5" />
@@ -752,7 +752,7 @@ export default function AdminProductsPage() {
 
                         {/* Sidebar */}
                         <div className="space-y-6">
-                            <Card className="border-0 shadow-lg">
+                            <Card className="shadow-sm border border-gray-200">
                                 <CardHeader>
                                     <CardTitle>Estado</CardTitle>
                                 </CardHeader>
@@ -760,7 +760,7 @@ export default function AdminProductsPage() {
                                     <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                                         <div className="flex items-center gap-2">
                                             {formData.active ? (
-                                                <Eye className="w-4 h-4 text-green-600" />
+                                                <Eye className="w-4 h-4 text-gray-900 font-medium" />
                                             ) : (
                                                 <EyeOff className="w-4 h-4 text-gray-500" />
                                             )}
@@ -773,7 +773,7 @@ export default function AdminProductsPage() {
                                             onClick={() =>
                                                 setFormData({ ...formData, active: !formData.active })
                                             }
-                                            className={`w-12 h-6 rounded-full transition-colors ${formData.active ? 'bg-green-500' : 'bg-gray-300'
+                                            className={`w-12 h-6 rounded-full transition-colors ${formData.active ? 'bg-[#505A4A]' : 'bg-gray-300'
                                                 }`}
                                         >
                                             <div
@@ -787,7 +787,7 @@ export default function AdminProductsPage() {
                                         <div className="flex items-center gap-2">
                                             <Star
                                                 className={`w-4 h-4 ${formData.featured
-                                                    ? 'text-amber-500 fill-current'
+                                                    ? 'text-[#505A4A] fill-current'
                                                     : 'text-gray-500'
                                                     }`}
                                             />
@@ -800,7 +800,7 @@ export default function AdminProductsPage() {
                                             onClick={() =>
                                                 setFormData({ ...formData, featured: !formData.featured })
                                             }
-                                            className={`w-12 h-6 rounded-full transition-colors ${formData.featured ? 'bg-amber-500' : 'bg-gray-300'
+                                            className={`w-12 h-6 rounded-full transition-colors ${formData.featured ? 'bg-[#505A4A]' : 'bg-gray-300'
                                                 }`}
                                         >
                                             <div
@@ -813,7 +813,7 @@ export default function AdminProductsPage() {
                             </Card>
 
                             {/* Preview */}
-                            <Card className="border-0 shadow-lg">
+                            <Card className="shadow-sm border border-gray-200">
                                 <CardHeader>
                                     <CardTitle>Vista Previa</CardTitle>
                                 </CardHeader>
@@ -838,7 +838,7 @@ export default function AdminProductsPage() {
                                         <p className="text-sm text-gray-500 line-clamp-2 mt-1">
                                             {formData.description || 'Descripción del producto'}
                                         </p>
-                                        <p className="text-lg font-bold text-green-600 mt-2">
+                                        <p className="text-lg font-bold text-gray-900 font-medium mt-2">
                                             €{formData.price.toFixed(2)}
                                         </p>
                                     </div>

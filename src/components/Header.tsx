@@ -1,13 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Image from "next/image";
 import { Leaf, Heart, ShoppingBag, Menu, X, Home, Package, Grid3X3, Users, Phone } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
 import { useCart, useWishlist } from "@/store";
 import UserMenu from "@/components/UserMenu";
+
+const navItems = [
+    { name: "Inicio", href: "/", icon: Home },
+    { name: "Productos", href: "/products", icon: Package },
+    { name: "Categorías", href: "/categories", icon: Grid3X3 },
+    { name: "Nosotros", href: "/about", icon: Users },
+    { name: "Contacto", href: "/contact", icon: Phone }
+];
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,241 +23,167 @@ export default function Header() {
     const { totalItems: cartCount } = useCart();
     const { totalItems: wishlistCount } = useWishlist();
 
-    const navItems = [
-        { name: "Inicio", href: "/", icon: Home },
-        { name: "Productos", href: "/products", icon: Package },
-        { name: "Categorías", href: "/categories", icon: Grid3X3 },
-        { name: "Nosotros", href: "/about", icon: Users },
-        { name: "Contacto", href: "/contact", icon: Phone }
-    ];
+    // Close menu on route change
+    useEffect(() => {
+        setIsMenuOpen(false);
+    }, [pathname]);
+
+    // Prevent body scroll when menu is open
+    useEffect(() => {
+        if (isMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => { document.body.style.overflow = ''; };
+    }, [isMenuOpen]);
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
-            <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center h-14 sm:h-16">
-                    {/* Mobile menu button - Moved to left on mobile */}
-                    <motion.div 
-                        className="md:hidden flex items-center"
-                        whileTap={{ scale: 0.95 }}
-                    >
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className="hover:bg-[#505A4A]/10 h-9 w-9"
-                        >
-                            <AnimatePresence mode="wait">
-                                {isMenuOpen ? (
-                                    <motion.div
-                                        key="close"
-                                        initial={{ rotate: -90, opacity: 0 }}
-                                        animate={{ rotate: 0, opacity: 1 }}
-                                        exit={{ rotate: 90, opacity: 0 }}
-                                        transition={{ duration: 0.2 }}
-                                    >
-                                        <X className="w-5 h-5 text-[#505A4A]" />
-                                    </motion.div>
-                                ) : (
-                                    <motion.div
-                                        key="menu"
-                                        initial={{ rotate: 90, opacity: 0 }}
-                                        animate={{ rotate: 0, opacity: 1 }}
-                                        exit={{ rotate: -90, opacity: 0 }}
-                                        transition={{ duration: 0.2 }}
-                                    >
-                                        <Menu className="w-5 h-5 text-gray-700" />
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </Button>
-                    </motion.div>
-
-                    {/* Logo + Tagline on mobile */}
-                    <motion.div
-                        className="flex items-center justify-center md:justify-start flex-1 md:flex-none"
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4 }}
-                    >
-                        <Link href="/" className="flex items-center gap-2">
-                            <motion.div
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                transition={{ duration: 0.2 }}
-                                className="relative w-20 h-8 sm:w-28 sm:h-12 md:w-44 md:h-16 lg:w-52 lg:h-20"
+        <>
+            {/* Top Bar */}
+            <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+                <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+                    <div className="flex items-center justify-between h-14 sm:h-16">
+                        {/* Left: Hamburger + Logo */}
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                                className="md:hidden flex items-center justify-center h-9 w-9 rounded-lg hover:bg-gray-100 active:bg-gray-200 transition-colors"
+                                aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
+                                aria-expanded={isMenuOpen}
                             >
-                                <img
-                                    src="/images/sophia_logo_nuevo.jpeg"
-                                    alt="Sophia - Cosmética Botánica"
-                                    className="w-full h-full object-contain rounded-2xl"
-                                />
-                            </motion.div>
-                            {/* Mobile tagline - visible only on small screens */}
-                            <div className="flex sm:hidden flex-col border-l border-[#505A4A]/30 pl-2">
-                                <span className="text-[11px] text-[#505A4A] font-semibold leading-tight tracking-tight">Cosmética</span>
-                                <span className="text-[10px] text-[#505A4A]/70 leading-tight">Natural Artesanal</span>
-                            </div>
-                        </Link>
-                    </motion.div>
+                                {isMenuOpen ? (
+                                    <X className="w-5 h-5 text-gray-700" />
+                                ) : (
+                                    <Menu className="w-5 h-5 text-gray-700" />
+                                )}
+                            </button>
 
-                    {/* Desktop Navigation */}
-                    <motion.nav
-                        className="hidden md:flex items-center gap-6 lg:gap-8"
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.2 }}
-                    >
-                        {navItems.map((item) => {
-                            const isActive = pathname === item.href;
-                            return (
-                                <motion.div
-                                    key={item.name}
-                                    whileHover={{ scale: 1.05 }}
-                                    transition={{ duration: 0.2 }}
-                                >
-                                    <Link
-                                        href={item.href}
-                                        className={`font-medium transition-colors duration-200 relative group ${isActive ? 'text-[#505A4A]' : 'text-gray-700 hover:text-[#505A4A]'
-                                            }`}
-                                    >
-                                        {item.name}
-                                        <span className={`absolute inset-x-0 -bottom-1 h-0.5 bg-[#505A4A] transform transition-transform duration-200 ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
-                                            }`}></span>
-                                    </Link>
-                                </motion.div>
-                            );
-                        })}
-                    </motion.nav>
-
-                    {/* Actions */}
-                    <motion.div
-                        className="flex items-center gap-1 sm:gap-2"
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.6, delay: 0.4 }}
-                    >
-                        {/* User Menu - Hidden on mobile, visible on larger screens */}
-                        <div className="hidden sm:block">
-                            <UserMenu />
+                            <Link href="/" className="flex items-center gap-2">
+                                <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#505A4A]/15 flex-shrink-0">
+                                    <Image
+                                        src="/images/sophia_logo_nuevo.jpeg"
+                                        alt="Sophia"
+                                        fill
+                                        sizes="40px"
+                                        priority
+                                        className="object-cover"
+                                    />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-sm sm:text-base font-semibold text-[#505A4A] leading-tight">Sophia</span>
+                                    <span className="text-[10px] sm:text-xs text-[#505A4A]/60 leading-tight">Cosmética Botánica</span>
+                                </div>
+                            </Link>
                         </div>
 
-                        <motion.div
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                        >
-                            <Link href="/cart">
-                                <Button variant="ghost" size="icon" className="hover:bg-[#505A4A]/10 hover:text-[#505A4A] transition-colors relative h-9 w-9 sm:h-10 sm:w-10">
-                                    <ShoppingBag className="w-5 h-5 text-gray-700" />
-                                    {cartCount > 0 && (
-                                        <motion.div
-                                            initial={{ scale: 0 }}
-                                            animate={{ scale: 1 }}
-                                            className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 bg-[#505A4A] text-white text-[10px] sm:text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center font-bold shadow-sm"
-                                        >
-                                            {cartCount > 9 ? '9+' : cartCount}
-                                        </motion.div>
-                                    )}
-                                </Button>
-                            </Link>
-                        </motion.div>
+                        {/* Center: Desktop Navigation */}
+                        <nav className="hidden md:flex items-center gap-6 lg:gap-8">
+                            {navItems.map((item) => {
+                                const isActive = pathname === item.href;
+                                return (
+                                    <Link
+                                        key={item.name}
+                                        href={item.href}
+                                        className={`text-sm font-medium transition-colors relative group ${
+                                            isActive ? 'text-[#505A4A]' : 'text-gray-600 hover:text-[#505A4A]'
+                                        }`}
+                                    >
+                                        {item.name}
+                                        <span className={`absolute inset-x-0 -bottom-1 h-0.5 bg-[#505A4A] transition-transform duration-200 ${
+                                            isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                                        }`} />
+                                    </Link>
+                                );
+                            })}
+                        </nav>
 
-                        <motion.div
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                        >
-                            <Link href="/wishlist">
-                                <Button variant="ghost" size="icon" className="hover:bg-red-50 hover:text-red-500 transition-colors relative h-9 w-9 sm:h-10 sm:w-10">
-                                    <Heart className="w-5 h-5 text-gray-700" />
-                                    {wishlistCount > 0 && (
-                                        <motion.div
-                                            initial={{ scale: 0 }}
-                                            animate={{ scale: 1 }}
-                                            className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 bg-red-500 text-white text-[10px] sm:text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center font-bold shadow-sm"
-                                        >
-                                            {wishlistCount > 9 ? '9+' : wishlistCount}
-                                        </motion.div>
-                                    )}
-                                </Button>
-                            </Link>
-                        </motion.div>
-                    </motion.div>
-                </div>
-            </div>
-
-            {/* Mobile Navigation - Full screen overlay */}
-            <AnimatePresence>
-                {isMenuOpen && (
-                    <>
-                        {/* Backdrop */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                            className="fixed inset-0 bg-black/20 backdrop-blur-sm md:hidden z-40"
-                            onClick={() => setIsMenuOpen(false)}
-                            style={{ top: '56px' }}
-                        />
-                        
-                        {/* Menu Panel */}
-                        <motion.div
-                            initial={{ opacity: 0, x: -280 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -280 }}
-                            transition={{ duration: 0.3, ease: "easeOut" }}
-                            className="fixed left-0 top-14 bottom-0 w-72 bg-white shadow-xl md:hidden z-50 overflow-y-auto"
-                        >
-                            {/* User section at top of mobile menu */}
-                            <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-[#505A4A]/5 to-transparent">
+                        {/* Right: Actions */}
+                        <div className="flex items-center gap-1 sm:gap-1.5">
+                            <div className="hidden sm:block">
                                 <UserMenu />
                             </div>
 
-                            {/* Navigation Links */}
-                            <nav className="py-4">
-                                {navItems.map((item, index) => {
-                                    const isActive = pathname === item.href;
-                                    const Icon = item.icon;
-                                    return (
-                                        <motion.div
-                                            key={item.name}
-                                            initial={{ opacity: 0, x: -20 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            transition={{ duration: 0.3, delay: index * 0.05 }}
-                                        >
-                                            <Link
-                                                href={item.href}
-                                                className={`flex items-center gap-4 px-6 py-4 transition-all duration-200 ${
-                                                    isActive 
-                                                        ? 'bg-[#505A4A]/10 text-[#505A4A] border-l-4 border-[#505A4A]' 
-                                                        : 'text-gray-700 hover:bg-gray-50 hover:text-[#505A4A] border-l-4 border-transparent'
-                                                }`}
-                                                onClick={() => setIsMenuOpen(false)}
-                                            >
-                                                <Icon className={`w-5 h-5 ${isActive ? 'text-[#505A4A]' : 'text-gray-500'}`} />
-                                                <span className="font-medium text-base">{item.name}</span>
-                                                {isActive && (
-                                                    <motion.div
-                                                        layoutId="activeIndicator"
-                                                        className="ml-auto w-2 h-2 rounded-full bg-[#505A4A]"
-                                                    />
-                                                )}
-                                            </Link>
-                                        </motion.div>
-                                    );
-                                })}
-                            </nav>
+                            <Link
+                                href="/cart"
+                                className="relative flex items-center justify-center h-9 w-9 rounded-lg hover:bg-gray-100 transition-colors"
+                            >
+                                <ShoppingBag className="w-5 h-5 text-gray-600" />
+                                {cartCount > 0 && (
+                                    <span className="absolute -top-0.5 -right-0.5 bg-[#505A4A] text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center font-bold">
+                                        {cartCount > 9 ? '9+' : cartCount}
+                                    </span>
+                                )}
+                            </Link>
 
-                            {/* Bottom decoration */}
-                            <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-100 bg-gradient-to-t from-[#505A4A]/5 to-transparent">
-                                <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-                                    <Leaf className="w-4 h-4 text-[#505A4A]" />
-                                    <span>Cosmética Botánica Artesanal</span>
-                                </div>
+                            <Link
+                                href="/wishlist"
+                                className="relative flex items-center justify-center h-9 w-9 rounded-lg hover:bg-gray-100 transition-colors"
+                            >
+                                <Heart className="w-5 h-5 text-gray-600" />
+                                {wishlistCount > 0 && (
+                                    <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center font-bold">
+                                        {wishlistCount > 9 ? '9+' : wishlistCount}
+                                    </span>
+                                )}
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            {/* Mobile Navigation Overlay - OUTSIDE header to avoid backdrop-blur stacking context */}
+            {isMenuOpen && (
+                <div className="fixed inset-0 z-[60] md:hidden" style={{ top: '56px' }}>
+                    {/* Backdrop */}
+                    <div
+                        className="absolute inset-0 bg-black/30"
+                        onClick={() => setIsMenuOpen(false)}
+                        aria-hidden="true"
+                    />
+
+                    {/* Sidebar Panel */}
+                    <nav
+                        className="absolute left-0 top-0 bottom-0 w-72 bg-white shadow-2xl overflow-y-auto animate-slide-in-left"
+                    >
+                        {/* User section */}
+                        <div className="p-4 border-b border-gray-100">
+                            <UserMenu />
+                        </div>
+
+                        {/* Navigation Links */}
+                        <div className="py-2">
+                            {navItems.map((item) => {
+                                const isActive = pathname === item.href;
+                                const Icon = item.icon;
+                                return (
+                                    <Link
+                                        key={item.name}
+                                        href={item.href}
+                                        className={`flex items-center gap-3 px-5 py-3.5 text-sm font-medium transition-colors ${
+                                            isActive
+                                                ? 'bg-[#505A4A]/8 text-[#505A4A] border-l-3 border-[#505A4A]'
+                                                : 'text-gray-700 hover:bg-gray-50 border-l-3 border-transparent'
+                                        }`}
+                                        onClick={() => setIsMenuOpen(false)}
+                                    >
+                                        <Icon className={`w-5 h-5 ${isActive ? 'text-[#505A4A]' : 'text-gray-400'}`} />
+                                        {item.name}
+                                    </Link>
+                                );
+                            })}
+                        </div>
+
+                        {/* Footer */}
+                        <div className="absolute bottom-0 left-0 right-0 p-5 border-t border-gray-100">
+                            <div className="flex items-center justify-center gap-2 text-xs text-gray-400">
+                                <Leaf className="w-3.5 h-3.5 text-[#505A4A]/50" />
+                                <span>Cosmética Botánica Artesanal</span>
                             </div>
-                        </motion.div>
-                    </>
-                )}
-            </AnimatePresence>
-        </header>
+                        </div>
+                    </nav>
+                </div>
+            )}
+        </>
     );
 }

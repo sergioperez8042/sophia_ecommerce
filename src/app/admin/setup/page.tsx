@@ -1,13 +1,11 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth, useProducts } from '@/store';
 import { ProductService, CategoryService, UserService } from '@/lib/firestore-services';
 import ProductsData from '@/entities/Product.json';
 import CategoriesData from '@/entities/Category.json';
 import { IProduct, ICategory } from '@/entities/all';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import {
   Database,
   Upload,
@@ -24,7 +22,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { AdminGuard, PageHeader } from '@/components/ui/admin-components';
 
 // Initial users data for seeding
 const INITIAL_USERS = [
@@ -93,7 +91,6 @@ export default function AdminSetupPage() {
     userErrors: [],
   });
 
-  // Redirect if not admin
   useEffect(() => {
     if (isLoaded && (!isAuthenticated || !isAdmin)) {
       router.push('/auth');
@@ -103,7 +100,7 @@ export default function AdminSetupPage() {
   if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#505A4A]" />
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#505A4A] border-t-transparent" />
       </div>
     );
   }
@@ -114,63 +111,59 @@ export default function AdminSetupPage() {
 
   const handleSeedCategories = async () => {
     setSeedStatus(prev => ({ ...prev, categories: 'loading', message: 'Subiendo categorías...' }));
-
     try {
       await CategoryService.seedFromJSON(CategoriesData as ICategory[]);
       setSeedStatus(prev => ({
         ...prev,
         categories: 'success',
-        message: `✅ ${CategoriesData.length} categorías creadas correctamente`
+        message: `${CategoriesData.length} categorías creadas correctamente`
       }));
     } catch (error) {
       console.error('Error seeding categories:', error);
       setSeedStatus(prev => ({
         ...prev,
         categories: 'error',
-        message: '❌ Error al crear categorías'
+        message: 'Error al crear categorías'
       }));
     }
   };
 
   const handleSeedProducts = async () => {
     setSeedStatus(prev => ({ ...prev, products: 'loading', message: 'Subiendo productos...' }));
-
     try {
       await ProductService.seedFromJSON(ProductsData as IProduct[]);
       await refreshProducts();
       setSeedStatus(prev => ({
         ...prev,
         products: 'success',
-        message: `✅ ${ProductsData.length} productos creados correctamente`
+        message: `${ProductsData.length} productos creados correctamente`
       }));
     } catch (error) {
       console.error('Error seeding products:', error);
       setSeedStatus(prev => ({
         ...prev,
         products: 'error',
-        message: '❌ Error al crear productos'
+        message: 'Error al crear productos'
       }));
     }
   };
 
   const handleSeedUsers = async () => {
     setSeedStatus(prev => ({ ...prev, users: 'loading', message: 'Creando usuarios...', userErrors: [] }));
-
     try {
       const result = await UserService.seedUsers(INITIAL_USERS);
-
       if (result.errors.length > 0) {
         setSeedStatus(prev => ({
           ...prev,
           users: result.success > 0 ? 'success' : 'error',
-          message: `✅ ${result.success} usuarios creados (${result.errors.length} errores)`,
+          message: `${result.success} usuarios creados (${result.errors.length} errores)`,
           userErrors: result.errors,
         }));
       } else {
         setSeedStatus(prev => ({
           ...prev,
           users: 'success',
-          message: `✅ ${result.success} usuarios creados correctamente`,
+          message: `${result.success} usuarios creados correctamente`,
           userErrors: [],
         }));
       }
@@ -179,7 +172,7 @@ export default function AdminSetupPage() {
       setSeedStatus(prev => ({
         ...prev,
         users: 'error',
-        message: '❌ Error al crear usuarios'
+        message: 'Error al crear usuarios'
       }));
     }
   };
@@ -195,64 +188,76 @@ export default function AdminSetupPage() {
   const getStatusIcon = (status: 'idle' | 'loading' | 'success' | 'error') => {
     switch (status) {
       case 'loading':
-        return <Loader2 className="w-5 h-5 animate-spin text-blue-500" />;
+        return <Loader2 className="w-4 h-4 animate-spin text-[#505A4A]" />;
       case 'success':
-        return <CheckCircle className="w-5 h-5 text-green-500" />;
+        return <CheckCircle className="w-4 h-4 text-green-600" />;
       case 'error':
-        return <AlertCircle className="w-5 h-5 text-red-500" />;
+        return <AlertCircle className="w-4 h-4 text-red-500" />;
       default:
-        return null;
+        return <div className="w-4 h-4 rounded-full border-2 border-gray-200" />;
+    }
+  };
+
+  const getStatusBadge = (status: 'idle' | 'loading' | 'success' | 'error') => {
+    switch (status) {
+      case 'loading':
+        return <span className="text-xs text-[#505A4A] bg-[#505A4A]/10 px-2 py-0.5 rounded-full">Cargando...</span>;
+      case 'success':
+        return <span className="text-xs text-green-700 bg-green-50 px-2 py-0.5 rounded-full">Completado</span>;
+      case 'error':
+        return <span className="text-xs text-red-600 bg-red-50 px-2 py-0.5 rounded-full">Error</span>;
+      default:
+        return <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">Pendiente</span>;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
-      <div className="container mx-auto px-4 py-8 max-w-2xl">
-        {/* Header */}
-        <div className="mb-8">
-          <Link
-            href="/admin"
-            className="flex items-center gap-2 text-gray-500 hover:text-[#505A4A] transition-colors mb-4"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            Volver al panel
-          </Link>
-          <h1 className="text-3xl font-bold text-gray-900">
-            Configuración de Base de Datos
-          </h1>
-          <p className="text-gray-600 mt-1">
-            Inicializa Firebase con los datos de prueba
-          </p>
-        </div>
+    <div className="min-h-screen bg-gray-50/50 pt-20">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
+        <Link
+          href="/admin"
+          className="flex items-center gap-2 text-sm text-gray-500 hover:text-[#505A4A] transition-colors mb-6"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Volver al panel
+        </Link>
+
+        <PageHeader
+          title="Configuración"
+          description="Inicializa Firebase con los datos de prueba"
+        />
 
         {/* Seed Cards */}
-        <div className="space-y-6">
-          {/* Users */}
-          <Card className="border-0 shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Users className="w-5 h-5 text-blue-600" />
-                  Usuarios
+        <div className="space-y-4 mt-8">
+          {/* Users Card */}
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
+            <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center">
+                  <Users className="w-4 h-4 text-gray-600" />
                 </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-900">Usuarios</h3>
+                  <p className="text-xs text-gray-500">{INITIAL_USERS.length} usuarios de prueba</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                {getStatusBadge(seedStatus.users)}
                 {getStatusIcon(seedStatus.users)}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">
-                Crear {INITIAL_USERS.length} usuarios en Firebase Auth y Firestore
-              </p>
-
+              </div>
+            </div>
+            <div className="p-5">
               {/* User list preview */}
-              <div className="bg-gray-50 rounded-lg p-3 mb-4 text-sm">
-                <div className="space-y-1">
+              <div className="bg-gray-50 rounded-lg p-3 mb-4">
+                <div className="space-y-2">
                   {INITIAL_USERS.map((user) => (
-                    <div key={user.email} className="flex items-center gap-2">
-                      {user.role === 'admin' && <Shield className="w-4 h-4 text-red-500" />}
-                      {user.role === 'manager' && <UserCheck className="w-4 h-4 text-blue-500" />}
-                      {user.role === 'client' && <Users className="w-4 h-4 text-gray-500" />}
-                      <span className="text-gray-700">{user.name}</span>
-                      <span className="text-gray-500">({user.email})</span>
+                    <div key={user.email} className="flex items-center gap-2 text-xs sm:text-sm">
+                      {user.role === 'admin' && <Shield className="w-3.5 h-3.5 text-gray-900 flex-shrink-0" />}
+                      {user.role === 'manager' && <UserCheck className="w-3.5 h-3.5 text-gray-600 flex-shrink-0" />}
+                      {user.role === 'client' && <Users className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />}
+                      <span className="text-gray-800 font-medium truncate">{user.name}</span>
+                      <span className="text-gray-400 truncate hidden sm:inline">({user.email})</span>
+                      <span className="text-xs text-gray-400 bg-gray-200/60 px-1.5 py-0.5 rounded ml-auto flex-shrink-0">{user.role}</span>
                     </div>
                   ))}
                 </div>
@@ -260,9 +265,9 @@ export default function AdminSetupPage() {
 
               {/* User errors */}
               {seedStatus.userErrors.length > 0 && (
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4 text-sm">
-                  <p className="font-medium text-yellow-800 mb-2">Algunos usuarios no se pudieron crear:</p>
-                  <ul className="list-disc list-inside text-yellow-700 space-y-1">
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4 text-sm">
+                  <p className="font-medium text-amber-800 mb-1.5 text-xs">Algunos usuarios no se pudieron crear:</p>
+                  <ul className="list-disc list-inside text-amber-700 space-y-0.5 text-xs">
                     {seedStatus.userErrors.map((error, idx) => (
                       <li key={idx}>{error}</li>
                     ))}
@@ -270,144 +275,150 @@ export default function AdminSetupPage() {
                 </div>
               )}
 
-              <div className="flex gap-2">
-                <Button
-                  onClick={handleSeedUsers}
-                  disabled={isSeeding || seedStatus.users === 'loading'}
-                  className="bg-blue-600 hover:bg-blue-700"
-                >
-                  {seedStatus.users === 'loading' ? (
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  ) : (
-                    <Upload className="w-4 h-4 mr-2" />
-                  )}
-                  Crear Usuarios
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+              <button
+                onClick={handleSeedUsers}
+                disabled={isSeeding || seedStatus.users === 'loading'}
+                className="inline-flex items-center gap-2 bg-[#505A4A] hover:bg-[#414A3C] disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+              >
+                {seedStatus.users === 'loading' ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Upload className="w-4 h-4" />
+                )}
+                Crear Usuarios
+              </button>
+            </div>
+          </div>
 
-          {/* Categories */}
-          <Card className="border-0 shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Layers className="w-5 h-5 text-purple-600" />
-                  Categorías
+          {/* Categories Card */}
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
+            <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center">
+                  <Layers className="w-4 h-4 text-gray-600" />
                 </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-900">Categorías</h3>
+                  <p className="text-xs text-gray-500">{CategoriesData.length} categorías en Firestore</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                {getStatusBadge(seedStatus.categories)}
                 {getStatusIcon(seedStatus.categories)}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">
-                Crear {CategoriesData.length} categorías en Firestore
-              </p>
-              <div className="flex gap-2">
-                <Button
-                  onClick={handleSeedCategories}
-                  disabled={isSeeding || seedStatus.categories === 'loading'}
-                  className="bg-purple-600 hover:bg-purple-700"
-                >
-                  {seedStatus.categories === 'loading' ? (
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  ) : (
-                    <Upload className="w-4 h-4 mr-2" />
-                  )}
-                  Subir Categorías
-                </Button>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+            <div className="p-5">
+              <button
+                onClick={handleSeedCategories}
+                disabled={isSeeding || seedStatus.categories === 'loading'}
+                className="inline-flex items-center gap-2 bg-[#505A4A] hover:bg-[#414A3C] disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+              >
+                {seedStatus.categories === 'loading' ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Upload className="w-4 h-4" />
+                )}
+                Subir Categorías
+              </button>
+            </div>
+          </div>
 
-          {/* Products */}
-          <Card className="border-0 shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Package className="w-5 h-5 text-green-600" />
-                  Productos
+          {/* Products Card */}
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
+            <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center">
+                  <Package className="w-4 h-4 text-gray-600" />
                 </div>
-                {getStatusIcon(seedStatus.products)}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">
-                Crear {ProductsData.length} productos en Firestore
-              </p>
-              <div className="flex gap-2">
-                <Button
-                  onClick={handleSeedProducts}
-                  disabled={isSeeding || seedStatus.products === 'loading'}
-                  className="bg-green-600 hover:bg-green-700"
-                >
-                  {seedStatus.products === 'loading' ? (
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  ) : (
-                    <Upload className="w-4 h-4 mr-2" />
-                  )}
-                  Subir Productos
-                </Button>
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-900">Productos</h3>
+                  <p className="text-xs text-gray-500">{ProductsData.length} productos en Firestore</p>
+                </div>
               </div>
-            </CardContent>
-          </Card>
+              <div className="flex items-center gap-2">
+                {getStatusBadge(seedStatus.products)}
+                {getStatusIcon(seedStatus.products)}
+              </div>
+            </div>
+            <div className="p-5">
+              <button
+                onClick={handleSeedProducts}
+                disabled={isSeeding || seedStatus.products === 'loading'}
+                className="inline-flex items-center gap-2 bg-[#505A4A] hover:bg-[#414A3C] disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+              >
+                {seedStatus.products === 'loading' ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Upload className="w-4 h-4" />
+                )}
+                Subir Productos
+              </button>
+            </div>
+          </div>
 
           {/* Seed All */}
-          <Card className="border-0 shadow-lg bg-gradient-to-r from-[#505A4A] to-[#3d5636] text-white">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Database className="w-5 h-5" />
-                Inicializar Todo
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-white/90 mb-4">
-                Crear usuarios, categorías y productos de una vez
-              </p>
-              <Button
+          <div className="bg-[#505A4A] rounded-xl shadow-sm">
+            <div className="p-5 sm:p-6">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center">
+                  <Database className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-white">Inicializar Todo</h3>
+                  <p className="text-xs text-white/70">Usuarios, categorías y productos de una vez</p>
+                </div>
+              </div>
+              <button
                 onClick={handleSeedAll}
                 disabled={isSeeding}
-                variant="secondary"
-                className="bg-white text-[#505A4A] hover:bg-gray-100"
+                className="inline-flex items-center gap-2 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-[#505A4A] px-4 py-2 rounded-lg text-sm font-medium transition-colors"
               >
                 {isSeeding ? (
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
-                  <RefreshCw className="w-4 h-4 mr-2" />
+                  <RefreshCw className="w-4 h-4" />
                 )}
                 Inicializar Base de Datos
-              </Button>
-            </CardContent>
-          </Card>
+              </button>
+            </div>
+          </div>
 
           {/* Status Message */}
           {seedStatus.message && (
-            <Card className="border-0 shadow-lg">
-              <CardContent className="pt-6">
-                <p className="text-center text-lg">{seedStatus.message}</p>
-              </CardContent>
-            </Card>
+            <div className={`rounded-xl border p-4 text-center text-sm font-medium ${
+              seedStatus.message.includes('Error')
+                ? 'bg-red-50 border-red-200 text-red-700'
+                : 'bg-gray-50 border-gray-200 text-gray-700'
+            }`}>
+              {seedStatus.message}
+            </div>
           )}
         </div>
 
         {/* Next Steps */}
         {seedStatus.products === 'success' && seedStatus.categories === 'success' && seedStatus.users === 'success' && (
-          <div className="mt-8 p-6 bg-green-50 rounded-xl border border-green-200">
-            <h3 className="text-lg font-semibold text-green-800 mb-2">
-              ✅ ¡Base de datos inicializada!
-            </h3>
-            <p className="text-green-700 mb-4">
+          <div className="mt-6 p-5 bg-gray-50 rounded-xl border border-gray-200">
+            <div className="flex items-center gap-2 mb-2">
+              <CheckCircle className="w-4 h-4 text-green-600" />
+              <h3 className="text-sm font-semibold text-gray-900">
+                Base de datos inicializada
+              </h3>
+            </div>
+            <p className="text-xs text-gray-500 mb-4">
               Los usuarios, categorías y productos se han creado correctamente.
             </p>
-            <div className="flex gap-3">
-              <Link href="/admin/products">
-                <Button className="bg-green-600 hover:bg-green-700">
-                  Ir a Gestión de Productos
-                </Button>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Link
+                href="/admin/products"
+                className="inline-flex items-center justify-center gap-2 bg-[#505A4A] hover:bg-[#414A3C] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+              >
+                Ir a Productos
               </Link>
-              <Link href="/products">
-                <Button variant="outline">
-                  Ver Tienda
-                </Button>
+              <Link
+                href="/"
+                className="inline-flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+              >
+                Ver Tienda
               </Link>
             </div>
           </div>

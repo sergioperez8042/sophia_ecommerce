@@ -165,7 +165,7 @@ export default function AdminCategoriesPage() {
                         </Button>
                     </div>
 
-                    <Card className="border-0 shadow-lg overflow-hidden">
+                    <Card className="shadow-sm border border-gray-200 overflow-hidden">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Layers className="w-5 h-5" />
@@ -223,7 +223,7 @@ export default function AdminCategoriesPage() {
                                                         <button
                                                             onClick={() => toggleActive(category)}
                                                             className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium transition-colors ${category.active
-                                                                ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                                                                ? 'bg-[#505A4A]/10 text-[#505A4A] hover:bg-[#505A4A]/15'
                                                                 : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                                                                 }`}
                                                         >
@@ -246,7 +246,7 @@ export default function AdminCategoriesPage() {
                                                                 variant="ghost"
                                                                 size="sm"
                                                                 onClick={() => handleEdit(category)}
-                                                                className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                                                                className="text-gray-600 hover:text-gray-800 hover:bg-gray-100"
                                                             >
                                                                 <Pencil className="w-4 h-4" />
                                                             </Button>
@@ -330,7 +330,7 @@ export default function AdminCategoriesPage() {
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="max-w-3xl">
-                    <Card className="border-0 shadow-lg">
+                    <Card className="shadow-sm border border-gray-200">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Layers className="w-5 h-5" />
