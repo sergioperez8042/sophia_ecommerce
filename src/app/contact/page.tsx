@@ -322,32 +322,15 @@ export default function ContactPage() {
                                         />
                                     </div>
 
-                                    <motion.div
-                                        className="flex flex-col sm:flex-row gap-4 pt-2 sm:pt-4"
-                                        whileHover={{ scale: 1.01 }}
-                                    >
+                                    <div className="text-center pt-2 sm:pt-4">
                                         <Button
                                             type="submit"
-                                            className="flex-1 sm:flex-none bg-[#505A4A] hover:bg-[#414A3C] text-white font-bold px-10 sm:px-12 py-4 text-lg shadow-xl"
+                                            className="bg-[#505A4A] hover:bg-[#414A3C] text-white font-bold px-10 sm:px-12 py-4 text-lg shadow-xl"
                                         >
                                             <Send className="h-5 w-5 mr-3" />
                                             Enviar Mensaje
                                         </Button>
-                                        <a
-                                            href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hola%20Sophia!`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex-1 sm:flex-none"
-                                        >
-                                            <button
-                                                type="button"
-                                                className="w-full inline-flex items-center justify-center border-2 border-[#505A4A] bg-transparent text-[#505A4A] hover:bg-[#505A4A] hover:text-white font-bold px-10 sm:px-12 py-4 text-lg rounded-md transition-colors"
-                                            >
-                                                <MessageCircle className="h-5 w-5 mr-3" />
-                                                WhatsApp
-                                            </button>
-                                        </a>
-                                    </motion.div>
+                                    </div>
                                 </form>
                             </CardContent>
                         </Card>
