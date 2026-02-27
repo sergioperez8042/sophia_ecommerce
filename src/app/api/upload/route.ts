@@ -44,12 +44,7 @@ export async function POST(request: NextRequest) {
     try {
       const result = await cloudinary.uploader.upload(dataUri, {
         folder,
-        resource_type: 'auto',
-        transformation: [
-          { width: 1200, crop: 'limit' },
-          { quality: 'auto' },
-          { fetch_format: 'auto' },
-        ],
+        resource_type: 'image',
       });
 
       return NextResponse.json({
@@ -58,16 +53,27 @@ export async function POST(request: NextRequest) {
         fileName: result.public_id,
         storage: 'cloudinary',
       });
-    } catch (cloudinaryError) {
-      const errorMessage = cloudinaryError instanceof Error ? cloudinaryError.message : 'Error desconocido';
+    } catch (cloudinaryError: unknown) {
+      let errorMessage = 'Error desconocido';
+      if (cloudinaryError instanceof Error) {
+        errorMessage = cloudinaryError.message;
+      } else if (typeof cloudinaryError === 'object' && cloudinaryError !== null) {
+        const err = cloudinaryError as Record<string, unknown>;
+        errorMessage = (err.message as string) || (err.error as string) || JSON.stringify(err);
+      }
       return NextResponse.json(
         { error: `Error al subir a Cloudinary: ${errorMessage}` },
         { status: 500 }
       );
     }
 
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error desconocido';
+  } catch (error: unknown) {
+    let message = 'Error desconocido';
+    if (error instanceof Error) {
+      message = error.message;
+    } else if (typeof error === 'object' && error !== null) {
+      message = JSON.stringify(error);
+    }
     return NextResponse.json(
       { error: `Error al procesar el archivo: ${message}` },
       { status: 500 }
