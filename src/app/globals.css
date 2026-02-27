@@ -12,11 +12,13 @@
   --text-muted: #4A4A4A; /* Better contrast than gray-600 */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Dark mode variables - olive/sage tones matching brand */
+.dark {
+  --background: #1a1d19;
+  --foreground: #e8e4dc;
+  --warm-beige: #22261f;
+  --cream-white: #1a1d19;
+  --text-muted: #b8b0a2;
 }
 
 .hero-gradient {
@@ -29,10 +31,20 @@
   border: 1px solid rgba(80, 90, 74, 0.15);
 }
 
+.dark .product-card {
+  background: rgba(34, 38, 31, 0.95);
+  border: 1px solid rgba(196, 181, 144, 0.15);
+}
+
 .nav-glass {
   background: rgba(254, 252, 247, 0.95);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(80, 90, 74, 0.15);
+}
+
+.dark .nav-glass {
+  background: rgba(26, 29, 25, 0.95);
+  border-bottom: 1px solid rgba(196, 181, 144, 0.15);
 }
 
 body {

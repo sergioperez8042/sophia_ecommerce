@@ -3,8 +3,11 @@
 import "./globals.css";
 import Header from "@/components/Header";
 import { StoreProvider } from "@/store";
+import { ThemeProvider } from "@/store/ThemeContext";
 import { ToastProvider } from "@/components/ui/toast";
 import { usePathname } from "next/navigation";
+
+const FOUC_SCRIPT = `(function(){try{var t=localStorage.getItem('sophia-theme');if(t==='dark'||(t==null&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}})();`;
 
 export default function RootLayout({
   children,
@@ -21,6 +24,7 @@ export default function RootLayout({
     return (
       <html lang="es" suppressHydrationWarning={true}>
         <head>
+          <script dangerouslySetInnerHTML={{ __html: FOUC_SCRIPT }} />
           <title>Sophia Cosmética Botánica | Productos Naturales Artesanales</title>
           <meta name="description" content="Sophia Cosmética Botánica: productos de belleza natural elaborados artesanalmente con ingredientes orgánicos. Cremas, aceites y tratamientos para piel y cabello. Envíos a toda España." />
           <meta name="keywords" content="cosmética natural, cosmética botánica, productos artesanales, belleza natural, cremas naturales, aceites esenciales, skincare orgánico, Sophia cosmética, cuidado piel natural, cosmética vegana España" />
@@ -81,7 +85,9 @@ export default function RootLayout({
           <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
         </head>
         <body className="antialiased" style={{ fontFamily: 'Poppins, sans-serif' }} suppressHydrationWarning={true}>
-          {children}
+          <ThemeProvider>
+            {children}
+          </ThemeProvider>
         </body>
       </html>
     );

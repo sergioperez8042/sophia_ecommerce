@@ -1,14 +1,16 @@
 "use client";
 
-import { useState, useMemo, useEffect } from 'react';
-import { Star, Search, Grid3X3, List, Leaf, Phone, Mail, MessageCircle } from "lucide-react";
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { Star, Search, Grid3X3, List, Leaf, Phone, Mail, MessageCircle, Rabbit, Droplets, ShieldCheck, Hand, Sun, Moon } from "lucide-react";
 import Image from "next/image";
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTheme } from '@/store/ThemeContext';
 
 // Número de WhatsApp para pedidos
 const WHATSAPP_NUMBER = "34642633982";
+const HERO_VIDEOS = ["/videos/sophia_video.mp4", "/videos/sophia_video2.mp4"];
 
 interface Product {
     id: string;
@@ -36,6 +38,29 @@ export default function HomePage() {
     const [selectedCategory, setSelectedCategory] = useState<string>("all");
     const [searchTerm, setSearchTerm] = useState("");
     const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+    const [activeVideo, setActiveVideo] = useState(0);
+    const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+
+    const nextVideo = useCallback(() => {
+        setActiveVideo(prev => (prev + 1) % HERO_VIDEOS.length);
+    }, []);
+
+    useEffect(() => {
+        videoRefs.current.forEach((video, i) => {
+            if (!video) return;
+            if (i === activeVideo) {
+                video.currentTime = 0;
+                const tryPlay = () => video.play().catch(() => {});
+                if (video.readyState >= 3) {
+                    tryPlay();
+                } else {
+                    video.addEventListener('canplay', tryPlay, { once: true });
+                }
+            } else {
+                video.pause();
+            }
+        });
+    }, [activeVideo]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -95,9 +120,11 @@ export default function HomePage() {
         return categories.find(c => c.id === categoryId)?.name || "Sin categoría";
     };
 
+    const { isDark, toggleTheme } = useTheme();
+
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-[#FEFCF7]">
+            <div className="min-h-screen flex items-center justify-center bg-[var(--cream-white)]">
                 <motion.div
                     className="text-center"
                     initial={{ opacity: 0, scale: 0.8 }}
@@ -141,10 +168,10 @@ export default function HomePage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#FEFCF7]">
+        <div className={`min-h-screen transition-colors duration-300 ${isDark ? 'bg-[#1a1d19]' : 'bg-[#FEFCF7]'}`}>
             {/* Header */}
             <motion.header
-                className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-[#505A4A]/10"
+                className={`sticky top-0 z-40 backdrop-blur-xl border-b transition-colors duration-300 ${isDark ? 'bg-[#1a1d19]/95 border-[#C4B590]/15' : 'bg-white/80 border-[#505A4A]/10'}`}
                 initial={{ y: -100 }}
                 animate={{ y: 0 }}
                 transition={{ type: "spring", stiffness: 100 }}
@@ -188,18 +215,40 @@ export default function HomePage() {
                                     priority
                                 />
                             </div>
-                            <span className="hidden sm:block text-lg font-semibold text-[#505A4A] tracking-tight leading-tight">Sophia</span>
+                            <span className={`hidden sm:block text-lg font-semibold tracking-tight leading-tight ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>Sophia</span>
                         </motion.div>
 
                         {/* Title */}
                         <motion.h1
-                            className="text-sm sm:text-base md:text-lg font-semibold text-[#505A4A] tracking-tight"
+                            className={`text-sm sm:text-base md:text-lg font-semibold tracking-tight ${isDark ? 'text-[#e8e4dc]' : 'text-[#505A4A]'}`}
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3, duration: 0.4 }}
                         >
                             Explora nuestra colección
                         </motion.h1>
+
+                        <div className="flex items-center gap-2">
+                        {/* Dark mode toggle */}
+                        <motion.button
+                            onClick={toggleTheme}
+                            className={`p-2 rounded-xl transition-colors ${isDark ? 'bg-[#C4B590]/15 text-[#C4B590] hover:bg-[#C4B590]/25' : 'bg-[#505A4A]/10 text-[#505A4A] hover:bg-[#505A4A]/20'}`}
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            aria-label={isDark ? 'Modo claro' : 'Modo oscuro'}
+                        >
+                            <AnimatePresence mode="wait">
+                                {isDark ? (
+                                    <motion.div key="sun" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}>
+                                        <Sun className="w-4 h-4" />
+                                    </motion.div>
+                                ) : (
+                                    <motion.div key="moon" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}>
+                                        <Moon className="w-4 h-4" />
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </motion.button>
 
                         {/* CTA */}
                         <motion.a
@@ -214,22 +263,41 @@ export default function HomePage() {
                             <span className="hidden sm:inline">Pedir por WhatsApp</span>
                             <span className="sm:hidden">Pedir</span>
                         </motion.a>
+                        </div>
                     </div>
                 </div>
             </motion.header>
 
-            {/* Hero Section - Cover Photo */}
-            <section className="relative h-48 sm:h-56 md:h-72 overflow-hidden">
-                {/* Cover image - replace /images/hero-cover.jpg with your own product photo */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#505A4A] via-[#414A3C] to-[#363E31]" />
-                <img
-                    src="/images/hero-cover.jpg"
-                    alt="Productos naturales Sophia"
-                    className="absolute inset-0 w-full h-full object-cover"
-                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                />
-                {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#414A3C]/80 via-[#505A4A]/40 to-transparent" />
+            {/* Hero Section - Video Carousel */}
+            <section className="relative h-56 sm:h-64 md:h-80 overflow-hidden" style={{ clipPath: 'ellipse(75% 100% at 50% 0%)' }}>
+                {/* Video carousel */}
+                {HERO_VIDEOS.map((src, i) => (
+                    <video
+                        key={src}
+                        ref={el => { videoRefs.current[i] = el; }}
+                        autoPlay={i === 0}
+                        muted
+                        playsInline
+                        className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
+                        style={{ opacity: activeVideo === i ? 1 : 0 }}
+                        onEnded={nextVideo}
+                    >
+                        <source src={src} type="video/mp4" />
+                    </video>
+                ))}
+                {/* Gradient overlay for text readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#414A3C]/70 via-[#505A4A]/30 to-[#505A4A]/20" />
+
+                {/* Carousel indicators */}
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                    {HERO_VIDEOS.map((_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => setActiveVideo(i)}
+                            className={`h-1.5 rounded-full transition-all duration-500 ${activeVideo === i ? 'w-6 bg-white' : 'w-1.5 bg-white/50'}`}
+                        />
+                    ))}
+                </div>
 
                 {/* Content overlay */}
                 <div className="absolute inset-0 flex items-end justify-center pb-6 sm:pb-8 px-4">
@@ -266,6 +334,38 @@ export default function HomePage() {
                 </div>
             </section>
 
+            {/* Sellos de Calidad */}
+            <section className={`border-b transition-colors duration-300 ${isDark ? 'bg-[#22261f] border-[#C4B590]/10' : 'bg-white border-[#505A4A]/10'}`}>
+                <div className="max-w-7xl mx-auto px-4 py-4">
+                    <div className="flex items-center justify-center gap-6 sm:gap-10 overflow-x-auto">
+                        {[
+                            { icon: Rabbit, label: "Cruelty Free" },
+                            { icon: Droplets, label: "100% Orgánico" },
+                            { icon: ShieldCheck, label: "Sin Parabenos" },
+                            { icon: Hand, label: "Hecho a Mano" },
+                        ].map((badge, i) => (
+                            <motion.div
+                                key={badge.label}
+                                className="flex flex-col items-center gap-1.5 min-w-[70px] cursor-default"
+                                initial={{ opacity: 0, y: 15, scale: 0.8 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                transition={{ delay: 0.3 + i * 0.15, type: "spring", stiffness: 150 }}
+                                whileHover={{ scale: 1.1, y: -3 }}
+                            >
+                                <motion.div
+                                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center ${isDark ? 'bg-[#C4B590]/10' : 'bg-[#505A4A]/8'}`}
+                                    animate={{ y: [0, -3, 0] }}
+                                    transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.4, ease: "easeInOut" }}
+                                >
+                                    <badge.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`} />
+                                </motion.div>
+                                <span className={`text-[10px] sm:text-xs font-medium text-center leading-tight ${isDark ? 'text-[#b8b0a2]' : 'text-[#505A4A]'}`}>{badge.label}</span>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             {/* Filtros y Búsqueda */}
             <motion.section
                 className="max-w-7xl mx-auto px-4 py-6"
@@ -275,13 +375,13 @@ export default function HomePage() {
             >
                 <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
                     <div className="relative w-full md:w-96">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#505A4A]" />
+                        <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 ${isDark ? 'text-gray-400' : 'text-[#505A4A]'}`} />
                         <input
                             type="text"
                             placeholder="Buscar productos..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#505A4A]/20 bg-white focus:outline-none focus:ring-2 focus:ring-[#505A4A]/50 text-gray-900 transition-all"
+                            className={`w-full pl-10 pr-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-[#505A4A]/50 transition-all ${isDark ? 'border-[#C4B590]/15 bg-[#22261f] text-[#e8e4dc] placeholder-[#7a7568]' : 'border-[#505A4A]/20 bg-white text-gray-900'}`}
                         />
                     </div>
 
@@ -290,7 +390,7 @@ export default function HomePage() {
                             onClick={() => setSelectedCategory("all")}
                             className={`px-4 py-2 rounded-full text-sm whitespace-nowrap transition-all ${selectedCategory === "all"
                                 ? "bg-[#505A4A] text-white shadow-lg"
-                                : "bg-white text-gray-600 hover:bg-[#F5F1E8] border border-[#505A4A]/20"
+                                : isDark ? "bg-[#22261f] text-[#b8b0a2] hover:bg-[#2a2e26] border border-[#C4B590]/15" : "bg-white text-gray-600 hover:bg-[#F5F1E8] border border-[#505A4A]/20"
                                 }`}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
@@ -306,7 +406,7 @@ export default function HomePage() {
                                     onClick={() => setSelectedCategory(cat.id)}
                                     className={`px-4 py-2 rounded-full text-sm whitespace-nowrap transition-all ${selectedCategory === cat.id
                                         ? "bg-[#505A4A] text-white shadow-lg"
-                                        : "bg-white text-gray-600 hover:bg-[#F5F1E8] border border-[#505A4A]/20"
+                                        : isDark ? "bg-[#22261f] text-[#b8b0a2] hover:bg-[#2a2e26] border border-[#C4B590]/15" : "bg-white text-gray-600 hover:bg-[#F5F1E8] border border-[#505A4A]/20"
                                         }`}
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
@@ -317,10 +417,10 @@ export default function HomePage() {
                         })}
                     </div>
 
-                    <div className="hidden md:flex items-center gap-2 bg-white rounded-lg p-1 border border-[#505A4A]/20">
+                    <div className={`hidden md:flex items-center gap-2 rounded-lg p-1 border ${isDark ? 'bg-[#22261f] border-[#C4B590]/15' : 'bg-white border-[#505A4A]/20'}`}>
                         <motion.button
                             onClick={() => setViewMode("grid")}
-                            className={`p-2 rounded-md transition-colors ${viewMode === "grid" ? "bg-[#F5F1E8] text-[#505A4A]" : "text-gray-600"}`}
+                            className={`p-2 rounded-md transition-colors ${viewMode === "grid" ? isDark ? "bg-[#C4B590]/15 text-[#C4B590]" : "bg-[#F5F1E8] text-[#505A4A]" : isDark ? "text-[#8a8278]" : "text-gray-600"}`}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                         >
@@ -328,7 +428,7 @@ export default function HomePage() {
                         </motion.button>
                         <motion.button
                             onClick={() => setViewMode("list")}
-                            className={`p-2 rounded-md transition-colors ${viewMode === "list" ? "bg-[#F5F1E8] text-[#505A4A]" : "text-gray-600"}`}
+                            className={`p-2 rounded-md transition-colors ${viewMode === "list" ? isDark ? "bg-[#C4B590]/15 text-[#C4B590]" : "bg-[#F5F1E8] text-[#505A4A]" : isDark ? "text-[#8a8278]" : "text-gray-600"}`}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                         >
@@ -349,14 +449,14 @@ export default function HomePage() {
                             exit={{ opacity: 0, scale: 0.9 }}
                         >
                             <motion.div
-                                className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4"
+                                className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${isDark ? 'bg-[#C4B590]/15' : 'bg-gray-200'}`}
                                 animate={{ rotate: [0, 10, -10, 0] }}
                                 transition={{ duration: 2, repeat: Infinity }}
                             >
-                                <Search className="w-8 h-8 text-gray-400" />
+                                <Search className={`w-8 h-8 ${isDark ? 'text-[#7a7568]' : 'text-gray-400'}`} />
                             </motion.div>
-                            <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron productos</h3>
-                            <p className="text-gray-600">Prueba con otros filtros o términos de búsqueda</p>
+                            <h3 className={`text-lg font-medium mb-2 ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>No se encontraron productos</h3>
+                            <p className={isDark ? 'text-[#8a8278]' : 'text-gray-600'}>Prueba con otros filtros o términos de búsqueda</p>
                         </motion.div>
                     ) : (
                         <motion.div
@@ -434,6 +534,7 @@ function ProductCard({
     index: number;
 }) {
     const [isHovered, setIsHovered] = useState(false);
+    const { isDark } = useTheme();
 
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('es-ES', {
@@ -485,12 +586,12 @@ function ProductCard({
                 </div>
                 <div className="p-4 flex-1 flex flex-col justify-between">
                     <div>
-                        <span className="text-xs text-[#505A4A] font-medium">{categoryName}</span>
-                        <h3 className="font-semibold text-gray-900 mt-1">{product.name}</h3>
-                        <p className="text-sm text-gray-600 mt-1 line-clamp-2">{product.description}</p>
+                        <span className={`text-xs font-medium ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>{categoryName}</span>
+                        <h3 className={`font-semibold mt-1 ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>{product.name}</h3>
+                        <p className={`text-sm mt-1 line-clamp-2 ${isDark ? 'text-[#8a8278]' : 'text-gray-600'}`}>{product.description}</p>
                     </div>
                     <div className="flex items-center justify-between mt-3">
-                        <span className="text-xl font-bold text-[#505A4A]">{formatPrice(product.price)}</span>
+                        <span className={`text-xl font-bold ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>{formatPrice(product.price)}</span>
                         <motion.button
                             onClick={handleWhatsAppOrder}
                             className="bg-[#25D366] text-white px-3 py-1.5 rounded-full text-sm flex items-center gap-1"
@@ -559,18 +660,18 @@ function ProductCard({
             </div>
             <div className="p-4">
                 <motion.span
-                    className="text-xs text-[#505A4A] font-medium"
+                    className={`text-xs font-medium ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.2 }}
                 >
                     {categoryName}
                 </motion.span>
-                <h3 className="font-semibold text-gray-900 mt-1 line-clamp-1">{product.name}</h3>
-                <p className="text-sm text-gray-600 mt-1 line-clamp-2">{product.description}</p>
+                <h3 className={`font-semibold mt-1 line-clamp-1 ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>{product.name}</h3>
+                <p className={`text-sm mt-1 line-clamp-2 ${isDark ? 'text-[#8a8278]' : 'text-gray-600'}`}>{product.description}</p>
                 <div className="flex items-center justify-between mt-3">
                     <motion.span
-                        className="text-xl font-bold text-[#505A4A]"
+                        className={`text-xl font-bold ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}
                         initial={{ scale: 0.8 }}
                         animate={{ scale: 1 }}
                         transition={{ delay: 0.3, type: "spring" }}
@@ -578,7 +679,7 @@ function ProductCard({
                         {formatPrice(product.price)}
                     </motion.span>
                     {product.rating > 0 && (
-                        <div className="flex items-center gap-1 text-sm text-gray-600">
+                        <div className={`flex items-center gap-1 text-sm ${isDark ? 'text-[#8a8278]' : 'text-gray-600'}`}>
                             <Star className="w-4 h-4 fill-[#C4B590] text-[#C4B590]" />
                             <span>{product.rating.toFixed(1)}</span>
                         </div>
