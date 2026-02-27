@@ -304,7 +304,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     <Button
                                         onClick={handleAddToCart}
                                         className={`w-full h-12 text-lg font-bold shadow-lg transition-all ${addedToCart
-                                            ? 'bg-green-600 hover:bg-green-700'
+                                            ? 'bg-[#414A3C] hover:bg-[#414A3C]'
                                             : 'bg-[#505A4A] hover:bg-[#414A3C]'
                                             } text-white`}
                                     >

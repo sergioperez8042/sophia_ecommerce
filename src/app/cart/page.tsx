@@ -45,7 +45,7 @@ export default function CartPage() {
 
     if (items.length === 0) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100">
+            <div className="min-h-screen bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8]">
                 <div className="container mx-auto px-4 py-8">
                     <div className="mb-6">
                         <Breadcrumb items={[{ label: 'Carrito de Compras' }]} />
@@ -61,7 +61,7 @@ export default function CartPage() {
                             <h2 className="text-3xl font-bold text-gray-900 mb-4">Tu carrito está vacío</h2>
                             <p className="text-gray-600 mb-8 text-lg">Descubre nuestros productos naturales y añade algunos a tu carrito.</p>
                             <Link href="/products">
-                                <Button className="bg-[#505A4A] hover:bg-[#3d5636] text-white font-bold px-8 py-3 text-lg">
+                                <Button className="bg-[#505A4A] hover:bg-[#414A3C] text-white font-bold px-8 py-3 text-lg">
                                     Ver Productos
                                 </Button>
                             </Link>
@@ -73,7 +73,7 @@ export default function CartPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100">
+        <div className="min-h-screen bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8]">
             <div className="container mx-auto px-4 py-8">
                 <div className="mb-6">
                     <Breadcrumb items={[{ label: 'Carrito de Compras' }]} />
@@ -221,7 +221,7 @@ export default function CartPage() {
 
                                 <div className="space-y-3">
                                     <Link href="/checkout">
-                                        <Button className="w-full bg-[#505A4A] hover:bg-[#3d5636] text-white font-bold h-12 text-lg shadow-lg">
+                                        <Button className="w-full bg-[#505A4A] hover:bg-[#414A3C] text-white font-bold h-12 text-lg shadow-lg">
                                             Proceder al Checkout
                                         </Button>
                                     </Link>
@@ -234,7 +234,7 @@ export default function CartPage() {
                                 </div>
 
                                 {/* Beneficios */}
-                                <div className="mt-6 p-4 bg-green-50/50 rounded-lg border border-green-100">
+                                <div className="mt-6 p-4 bg-[#FEFCF7] rounded-lg border border-[#505A4A]/10">
                                     <div className="text-sm text-gray-700 space-y-2">
                                         <div className="flex items-center">
                                             <div className="h-2 w-2 bg-[#505A4A] rounded-full mr-2"></div>

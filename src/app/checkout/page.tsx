@@ -70,7 +70,7 @@ export default function CheckoutPage() {
     // Redirect if cart is empty
     if (items.length === 0 && !orderNumber) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 pt-20">
+            <div className="min-h-screen bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8] pt-20">
                 <div className="container mx-auto px-4 py-8">
                     <div className="text-center py-16">
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">Tu carrito está vacío</h2>
@@ -455,7 +455,7 @@ export default function CheckoutPage() {
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 pt-20">
+        <div className="min-h-screen bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8] pt-20">
             <div className="container mx-auto px-4 py-8">
                 {/* Breadcrumb */}
                 <div className="mb-6">
@@ -479,7 +479,7 @@ export default function CheckoutPage() {
                                 return (
                                     <div key={step.id} className="flex items-center">
                                         <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all ${isActive ? 'bg-[#505A4A] border-[#505A4A] text-white' :
-                                                isCompleted ? 'bg-green-100 border-[#505A4A] text-[#505A4A]' :
+                                                isCompleted ? 'bg-[#505A4A]/10 border-[#505A4A] text-[#505A4A]' :
                                                     'bg-gray-100 border-gray-300 text-gray-500'
                                             }`}>
                                             {isCompleted ? <CheckCircle className="w-5 h-5" /> : <Icon className="w-5 h-5" />}
@@ -656,9 +656,9 @@ export default function CheckoutPage() {
                                                 initial={{ scale: 0 }}
                                                 animate={{ scale: 1 }}
                                                 transition={{ type: "spring", duration: 0.5 }}
-                                                className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6"
+                                                className="w-20 h-20 bg-[#505A4A]/10 rounded-full flex items-center justify-center mx-auto mb-6"
                                             >
-                                                <CheckCircle className="w-10 h-10 text-green-600" />
+                                                <CheckCircle className="w-10 h-10 text-[#505A4A]" />
                                             </motion.div>
 
                                             <h2 className="text-3xl font-bold text-gray-900 mb-2">
@@ -673,7 +673,7 @@ export default function CheckoutPage() {
                                                 <p className="text-2xl font-bold text-[#505A4A]">{orderNumber}</p>
                                             </div>
 
-                                            <div className="text-left bg-green-50 rounded-lg p-4 mb-6">
+                                            <div className="text-left bg-[#FEFCF7] rounded-lg p-4 mb-6">
                                                 <h3 className="font-semibold text-gray-900 mb-2">Dirección de envío:</h3>
                                                 <p className="text-gray-700">
                                                     {shippingInfo.firstName} {shippingInfo.lastName}<br />
@@ -778,15 +778,15 @@ export default function CheckoutPage() {
 
                                     {/* Manager Discount Badge */}
                                     {isManager && (
-                                        <div className="mt-4 bg-gradient-to-r from-green-100 to-emerald-100 rounded-lg p-4 border border-green-200">
+                                        <div className="mt-4 bg-gradient-to-r from-[#505A4A]/10 to-[#414A3C]/10 rounded-lg p-4 border border-[#505A4A]/20">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center text-white">
+                                                <div className="w-10 h-10 rounded-full bg-[#505A4A] flex items-center justify-center text-white">
                                                     <Percent className="w-5 h-5" />
                                                 </div>
                                                 <div className="flex-1">
-                                                    <p className="text-xs text-green-700 font-medium">Precio de Gestor Aplicado</p>
-                                                    <p className="text-sm font-bold text-green-800">30% de descuento</p>
-                                                    <p className="text-xs text-green-600">{user?.name} • {user?.managerCode}</p>
+                                                    <p className="text-xs text-[#505A4A] font-medium">Precio de Gestor Aplicado</p>
+                                                    <p className="text-sm font-bold text-gray-900">30% de descuento</p>
+                                                    <p className="text-xs text-gray-600">{user?.name} • {user?.managerCode}</p>
                                                 </div>
                                             </div>
                                         </div>

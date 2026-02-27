@@ -450,7 +450,7 @@ export default function ProductsPage() {
 
                         <Button
                           className={`w-full font-semibold transition-all duration-200 ${addingToCart === product.id
-                            ? 'bg-green-600 hover:bg-green-700'
+                            ? 'bg-[#414A3C] hover:bg-[#414A3C]'
                             : 'bg-[#505A4A] hover:bg-[#414A3C]'
                             } text-white`}
                           disabled={!product.inStock || addingToCart === product.id}

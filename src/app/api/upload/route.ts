@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { storage } from '@/lib/firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
 
 export async function POST(request: NextRequest) {
   try {
@@ -33,6 +31,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (!storage) {
+      return NextResponse.json(
+        { error: 'Firebase Storage no está configurado. Activa Storage en la consola de Firebase (console.firebase.google.com → Storage → Get Started).' },
+        { status: 503 }
+      );
+    }
+
     const timestamp = Date.now();
     const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
     const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_').replace(/\.[^.]+$/, '');
@@ -40,43 +45,44 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = new Uint8Array(bytes);
 
-    // Try Firebase Storage first
-    if (storage) {
-      try {
-        const storageRef = ref(storage, `${folder}/${fileName}`);
-        await uploadBytes(storageRef, buffer, { contentType: file.type });
-        const downloadURL = await getDownloadURL(storageRef);
+    try {
+      const storageRef = ref(storage, `${folder}/${fileName}`);
+      await uploadBytes(storageRef, buffer, { contentType: file.type });
+      const downloadURL = await getDownloadURL(storageRef);
 
-        return NextResponse.json({
-          success: true,
-          url: downloadURL,
-          fileName,
-          storage: 'firebase',
-        });
-      } catch {
-        // Firebase Storage failed, fall through to local storage
+      return NextResponse.json({
+        success: true,
+        url: downloadURL,
+        fileName,
+        storage: 'firebase',
+      });
+    } catch (firebaseError) {
+      const errorMessage = firebaseError instanceof Error ? firebaseError.message : 'Error desconocido';
+
+      if (errorMessage.includes('does not exist') || errorMessage.includes('storage/unauthorized')) {
+        return NextResponse.json(
+          { error: 'Firebase Storage no está habilitado. Ve a console.firebase.google.com → Storage → Click "Get Started" para activarlo.' },
+          { status: 503 }
+        );
       }
+
+      if (errorMessage.includes('storage/unauthorized') || errorMessage.includes('permission')) {
+        return NextResponse.json(
+          { error: 'Permisos de Firebase Storage denegados. Configura las reglas de seguridad en la consola de Firebase.' },
+          { status: 403 }
+        );
+      }
+
+      return NextResponse.json(
+        { error: `Error al subir a Firebase Storage: ${errorMessage}` },
+        { status: 500 }
+      );
     }
 
-    // Fallback: save to local public/uploads directory
-    const uploadsDir = path.join(process.cwd(), 'public', 'uploads', folder);
-    await mkdir(uploadsDir, { recursive: true });
-
-    const filePath = path.join(uploadsDir, fileName);
-    await writeFile(filePath, buffer);
-
-    const publicUrl = `/uploads/${folder}/${fileName}`;
-
-    return NextResponse.json({
-      success: true,
-      url: publicUrl,
-      fileName,
-      storage: 'local',
-    });
-
-  } catch {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Error desconocido';
     return NextResponse.json(
-      { error: 'Error al subir el archivo. Intenta de nuevo.' },
+      { error: `Error al procesar el archivo: ${message}` },
       { status: 500 }
     );
   }

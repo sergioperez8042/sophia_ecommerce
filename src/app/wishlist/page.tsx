@@ -42,7 +42,7 @@ export default function WishlistPage() {
 
     if (wishlistItems.length === 0) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100">
+            <div className="min-h-screen bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8]">
                 <div className="container mx-auto px-4 py-8">
                     <div className="mb-6">
                         <Breadcrumb items={[{ label: 'Lista de Favoritos' }]} />
@@ -58,7 +58,7 @@ export default function WishlistPage() {
                             <h2 className="text-3xl font-bold text-gray-900 mb-4">Tu lista de favoritos está vacía</h2>
                             <p className="text-gray-700 mb-8 text-lg font-medium">Explora nuestros productos y guarda tus favoritos aquí.</p>
                             <Link href="/products">
-                                <Button className="bg-[#505A4A] hover:bg-[#3d5636] text-white font-bold px-8 py-3 text-lg shadow-lg">
+                                <Button className="bg-[#505A4A] hover:bg-[#414A3C] text-white font-bold px-8 py-3 text-lg shadow-lg">
                                     Explorar Productos
                                 </Button>
                             </Link>
@@ -70,7 +70,7 @@ export default function WishlistPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100">
+        <div className="min-h-screen bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8]">
             <div className="container mx-auto px-4 py-8">
                 <div className="mb-6">
                     <Breadcrumb items={[{ label: 'Lista de Favoritos' }]} />
@@ -144,7 +144,7 @@ export default function WishlistPage() {
                                             {/* Información del producto */}
                                             <div className="p-6 flex-1 flex flex-col">
                                                 <Link href={`/products/${product.id}`} className="mb-2 block">
-                                                    <h3 className="text-xl font-bold text-[#505A4A] hover:text-[#3d5636] transition-colors line-clamp-1">
+                                                    <h3 className="text-xl font-bold text-[#505A4A] hover:text-[#414A3C] transition-colors line-clamp-1">
                                                         {product.name}
                                                     </h3>
                                                 </Link>
@@ -159,7 +159,7 @@ export default function WishlistPage() {
                                                         <span className="text-2xl font-bold text-[#505A4A]">€{product.price.toFixed(2)}</span>
                                                         <Badge
                                                             variant="secondary"
-                                                            className={`${product.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'} font-semibold`}
+                                                            className={`${product.active ? 'bg-[#505A4A]/10 text-[#505A4A]' : 'bg-red-100 text-red-800'} font-semibold`}
                                                         >
                                                             {product.active ? 'En stock' : 'No disponible'}
                                                         </Badge>
@@ -169,7 +169,7 @@ export default function WishlistPage() {
                                                     <div className="flex flex-col gap-2">
                                                         <Button
                                                             onClick={() => addToCart(product)}
-                                                            className="w-full bg-[#505A4A] hover:bg-[#3d5636] text-white font-bold"
+                                                            className="w-full bg-[#505A4A] hover:bg-[#414A3C] text-white font-bold"
                                                             disabled={!product.active}
                                                         >
                                                             <ShoppingBag className="h-4 w-4 mr-2" />
