@@ -2,13 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Eye, EyeOff, Leaf, User, Mail, Phone, Lock, MapPin, Briefcase, ShoppingBag } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
+import { Eye, EyeOff, User, Mail, Phone, Lock, MapPin, Briefcase, ShoppingBag, ArrowLeft } from 'lucide-react';
 import { useAuth, RegisterData } from '@/store';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import BrandLogo from '@/components/BrandLogo';
 
 type AuthMode = 'login' | 'register' | 'reset';
 type UserType = 'client' | 'manager';
@@ -24,7 +22,6 @@ export default function AuthPage() {
   const [error, setError] = useState<string | null>(null);
   const [resetSuccess, setResetSuccess] = useState(false);
 
-  // Form fields
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -33,23 +30,18 @@ export default function AuthPage() {
     zone: '',
   });
 
-  // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
       router.push('/');
     }
   }, [isAuthenticated, router]);
 
-  // Show nothing while redirecting
   if (isAuthenticated) {
     return null;
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
     setError(null);
   };
 
@@ -57,25 +49,20 @@ export default function AuthPage() {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
-
     const result = await login(formData.email, formData.password);
-
     if (result.success) {
       router.push('/');
     } else {
       setError(result.error || 'Error al iniciar sesión');
     }
-
     setIsLoading(false);
   };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!userType) return;
-
     setIsLoading(true);
     setError(null);
-
     const registerData: RegisterData = {
       name: formData.name,
       email: formData.email,
@@ -84,15 +71,12 @@ export default function AuthPage() {
       role: userType,
       ...(userType === 'manager' && { zone: formData.zone }),
     };
-
     const result = await register(registerData);
-
     if (result.success) {
       router.push('/');
     } else {
       setError(result.error || 'Error al registrarse');
     }
-
     setIsLoading(false);
   };
 
@@ -101,15 +85,12 @@ export default function AuthPage() {
     setIsLoading(true);
     setError(null);
     setResetSuccess(false);
-
     const result = await resetPassword(formData.email);
-
     if (result.success) {
       setResetSuccess(true);
     } else {
       setError(result.error || 'Error al enviar el email');
     }
-
     setIsLoading(false);
   };
 
@@ -120,486 +101,341 @@ export default function AuthPage() {
     setResetSuccess(false);
   };
 
+  const inputClass = "w-full h-12 pl-11 pr-4 bg-[#f8f7f4] border border-[#e8e5df] rounded-lg text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#505A4A] focus:ring-1 focus:ring-[#505A4A]/20 transition-colors";
+  const iconClass = "absolute left-3.5 top-1/2 -translate-y-1/2 w-[18px] h-[18px] text-[#505A4A]/40";
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#505A4A]/10 via-white to-[#505A4A]/5 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#FEFCF7] flex flex-col items-center justify-center px-4 py-12">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md"
+        transition={{ duration: 0.4 }}
+        className="w-full max-w-sm"
       >
         {/* Logo */}
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-3 group">
-            <motion.div 
-              className="w-16 h-16 rounded-full bg-gradient-to-r from-[#505A4A] to-[#414A3C] flex items-center justify-center shadow-lg relative overflow-hidden"
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ 
-                type: "spring", 
-                stiffness: 200, 
-                damping: 15,
-                delay: 0.2 
-              }}
-              whileHover={{ 
-                scale: 1.1,
-                boxShadow: "0 0 25px rgba(74, 103, 65, 0.5)"
-              }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {/* Anillo giratorio */}
-              <motion.div
-                className="absolute inset-0 rounded-full border-2 border-white/30"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                style={{ borderStyle: "dashed" }}
-              />
-              {/* Brillo que pasa */}
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                animate={{ x: ["-100%", "100%"] }}
-                transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-              />
-              <motion.img
-                src="/images/sophia_logo_nuevo.jpeg"
-                alt="Sophia"
-                className="w-11 h-11 object-contain rounded-full relative z-10"
-                animate={{ 
-                  y: [0, -2, 0],
-                }}
-                transition={{ 
-                  duration: 2, 
-                  repeat: Infinity, 
-                  ease: "easeInOut" 
-                }}
-              />
-            </motion.div>
-            <motion.div 
-              className="text-left"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <motion.h1 
-                className="text-3xl font-bold text-gray-900"
-                style={{ fontFamily: 'Cinzel, serif' }}
-                whileHover={{ color: "#505A4A" }}
-              >
-                Sophia
-              </motion.h1>
-              <motion.p 
-                className="text-sm text-[#505A4A] font-medium"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.6 }}
-              >
-                Cosmética Botánica
-              </motion.p>
-            </motion.div>
-          </Link>
+        <div className="flex justify-center mb-10">
+          <BrandLogo size="lg" showText linkTo="/" />
         </div>
 
-        <Card className="shadow-2xl border-0">
-          <CardContent className="p-8">
-            {/* Tabs */}
-            <div className="flex mb-8 bg-gray-100 rounded-lg p-1">
+        {/* Card */}
+        <div className="bg-white rounded-2xl shadow-sm border border-[#e8e5df]/60 p-7">
+          {/* Tabs */}
+          {mode !== 'reset' && (
+            <div className="flex gap-1 mb-7">
               <button
                 onClick={() => { setMode('login'); resetForm(); }}
-                className={`flex-1 py-2.5 rounded-md font-medium transition-all ${mode === 'login' || mode === 'reset'
-                  ? 'bg-white text-[#505A4A] shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-                  }`}
+                className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all ${
+                  mode === 'login'
+                    ? 'bg-[#505A4A] text-white'
+                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                }`}
               >
                 Iniciar Sesión
               </button>
               <button
                 onClick={() => { setMode('register'); resetForm(); }}
-                className={`flex-1 py-2.5 rounded-md font-medium transition-all ${mode === 'register'
-                  ? 'bg-white text-[#505A4A] shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-                  }`}
+                className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all ${
+                  mode === 'register'
+                    ? 'bg-[#505A4A] text-white'
+                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                }`}
               >
                 Registrarse
               </button>
             </div>
+          )}
 
-            <AnimatePresence mode="wait">
-              {/* LOGIN */}
-              {mode === 'login' && (
-                <motion.form
-                  key="login"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  onSubmit={handleLogin}
-                  className="space-y-4"
+          <AnimatePresence mode="wait">
+            {/* LOGIN */}
+            {mode === 'login' && (
+              <motion.form
+                key="login"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                onSubmit={handleLogin}
+                className="space-y-4"
+              >
+                <div className="relative">
+                  <Mail className={iconClass} />
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="Email"
+                    className={inputClass}
+                    required
+                  />
+                </div>
+
+                <div className="relative">
+                  <Lock className={iconClass} />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    placeholder="Contraseña"
+                    className={`${inputClass} pr-11`}
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    {showPassword ? <EyeOff className="w-[18px] h-[18px]" /> : <Eye className="w-[18px] h-[18px]" />}
+                  </button>
+                </div>
+
+                {error && (
+                  <p className="text-red-600 text-xs text-center py-2 px-3 bg-red-50 rounded-lg">{error}</p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full h-12 bg-[#505A4A] hover:bg-[#434d3e] disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
                 >
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Email
-                    </label>
+                  {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => { setMode('reset'); setError(null); setResetSuccess(false); }}
+                  className="w-full text-xs text-[#505A4A]/70 hover:text-[#505A4A] transition-colors pt-1"
+                >
+                  ¿Olvidaste tu contraseña?
+                </button>
+              </motion.form>
+            )}
+
+            {/* RESET PASSWORD */}
+            {mode === 'reset' && (
+              <motion.form
+                key="reset"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                onSubmit={handleResetPassword}
+                className="space-y-4"
+              >
+                <button
+                  type="button"
+                  onClick={() => { setMode('login'); resetForm(); }}
+                  className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-[#505A4A] transition-colors mb-1"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  Volver
+                </button>
+
+                <div>
+                  <h3 className="text-base font-semibold text-gray-800 mb-1">Restablecer contraseña</h3>
+                  <p className="text-xs text-gray-500 leading-relaxed">
+                    Ingresa tu email y recibirás un enlace para crear una nueva contraseña.
+                  </p>
+                </div>
+
+                <div className="relative">
+                  <Mail className={iconClass} />
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="Email"
+                    className={inputClass}
+                    required
+                  />
+                </div>
+
+                {error && (
+                  <p className="text-red-600 text-xs text-center py-2 px-3 bg-red-50 rounded-lg">{error}</p>
+                )}
+
+                {resetSuccess && (
+                  <p className="text-[#505A4A] text-xs text-center py-3 px-3 bg-[#505A4A]/5 rounded-lg">
+                    Email enviado. Revisa tu bandeja de entrada.
+                  </p>
+                )}
+
+                {!resetSuccess && (
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full h-12 bg-[#505A4A] hover:bg-[#434d3e] disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
+                  >
+                    {isLoading ? 'Enviando...' : 'Enviar enlace'}
+                  </button>
+                )}
+              </motion.form>
+            )}
+
+            {/* REGISTER */}
+            {mode === 'register' && (
+              <motion.div
+                key="register"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {!userType && (
+                  <div className="space-y-3">
+                    <p className="text-sm text-gray-600 text-center mb-4">Selecciona tu tipo de cuenta</p>
+
+                    <button
+                      type="button"
+                      onClick={() => setUserType('client')}
+                      className="w-full flex items-center gap-4 p-4 border border-[#e8e5df] rounded-xl hover:border-[#505A4A]/40 hover:bg-[#505A4A]/[0.02] transition-all"
+                    >
+                      <div className="w-11 h-11 bg-[#505A4A]/8 rounded-full flex items-center justify-center flex-shrink-0">
+                        <ShoppingBag className="w-5 h-5 text-[#505A4A]" />
+                      </div>
+                      <div className="text-left">
+                        <h4 className="text-sm font-semibold text-gray-800">Cliente</h4>
+                        <p className="text-xs text-gray-500">Compra productos para uso personal</p>
+                      </div>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setUserType('manager')}
+                      className="w-full flex items-center gap-4 p-4 border border-[#e8e5df] rounded-xl hover:border-[#505A4A]/40 hover:bg-[#505A4A]/[0.02] transition-all"
+                    >
+                      <div className="w-11 h-11 bg-[#505A4A]/8 rounded-full flex items-center justify-center flex-shrink-0">
+                        <Briefcase className="w-5 h-5 text-[#505A4A]" />
+                      </div>
+                      <div className="text-left">
+                        <h4 className="text-sm font-semibold text-gray-800">Gestor / Distribuidor</h4>
+                        <p className="text-xs text-gray-500">Precios especiales para reventa</p>
+                      </div>
+                    </button>
+                  </div>
+                )}
+
+                {userType && (
+                  <motion.form
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    onSubmit={handleRegister}
+                    className="space-y-3.5"
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <button
+                        type="button"
+                        onClick={() => setUserType(null)}
+                        className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-[#505A4A] transition-colors"
+                      >
+                        <ArrowLeft className="w-3.5 h-3.5" />
+                        Atrás
+                      </button>
+                      <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-[#505A4A]/8 text-[#505A4A]">
+                        {userType === 'manager' ? 'Gestor' : 'Cliente'}
+                      </span>
+                    </div>
+
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
-                      <Input
+                      <User className={iconClass} />
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        placeholder="Nombre completo"
+                        className={inputClass}
+                        required
+                      />
+                    </div>
+
+                    <div className="relative">
+                      <Mail className={iconClass} />
+                      <input
                         type="email"
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        placeholder="tu@email.com"
-                        className="pl-10"
+                        placeholder="Email"
+                        className={inputClass}
                         required
                       />
                     </div>
-                  </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Contraseña
-                    </label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
-                      <Input
+                      <Phone className={iconClass} />
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        placeholder="Teléfono"
+                        className={inputClass}
+                      />
+                    </div>
+
+                    {userType === 'manager' && (
+                      <div className="relative">
+                        <MapPin className={iconClass} />
+                        <input
+                          type="text"
+                          name="zone"
+                          value={formData.zone}
+                          onChange={handleInputChange}
+                          placeholder="Zona de trabajo"
+                          className={inputClass}
+                          required
+                        />
+                      </div>
+                    )}
+
+                    <div className="relative">
+                      <Lock className={iconClass} />
+                      <input
                         type={showPassword ? 'text' : 'password'}
                         name="password"
                         value={formData.password}
                         onChange={handleInputChange}
-                        placeholder="••••••••"
-                        className="pl-10 pr-10"
+                        placeholder="Contraseña (mín. 6 caracteres)"
+                        className={`${inputClass} pr-11`}
+                        minLength={6}
                         required
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-600"
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                       >
-                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                        {showPassword ? <EyeOff className="w-[18px] h-[18px]" /> : <Eye className="w-[18px] h-[18px]" />}
                       </button>
                     </div>
-                  </div>
 
-                  {error && (
-                    <motion.p
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="text-red-500 text-sm text-center bg-red-50 p-2 rounded"
-                    >
-                      {error}
-                    </motion.p>
-                  )}
+                    {error && (
+                      <p className="text-red-600 text-xs text-center py-2 px-3 bg-red-50 rounded-lg">{error}</p>
+                    )}
 
-                  <Button
-                    type="submit"
-                    disabled={isLoading}
-                    className="w-full bg-[#505A4A] hover:bg-[#414A3C] text-white py-6"
-                  >
-                    {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
-                  </Button>
-
-                  <button
-                    type="button"
-                    onClick={() => { setMode('reset'); setError(null); setResetSuccess(false); }}
-                    className="w-full text-sm text-[#505A4A] hover:underline mt-2"
-                  >
-                    ¿Olvidaste tu contraseña?
-                  </button>
-                </motion.form>
-              )}
-
-              {/* RESET PASSWORD */}
-              {mode === 'reset' && (
-                <motion.form
-                  key="reset"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  onSubmit={handleResetPassword}
-                  className="space-y-4"
-                >
-                  <button
-                    type="button"
-                    onClick={() => { setMode('login'); resetForm(); }}
-                    className="text-sm text-gray-500 hover:text-[#505A4A] mb-2"
-                  >
-                    ← Volver al inicio de sesión
-                  </button>
-
-                  <p className="text-sm text-gray-600">
-                    Introduce tu email y te enviaremos un enlace para restablecer tu contraseña.
-                  </p>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Email
-                    </label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
-                      <Input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        placeholder="tu@email.com"
-                        className="pl-10"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  {error && (
-                    <motion.p
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="text-red-500 text-sm text-center bg-red-50 p-2 rounded"
-                    >
-                      {error}
-                    </motion.p>
-                  )}
-
-                  {resetSuccess && (
-                    <motion.p
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="text-green-700 text-sm text-center bg-green-50 p-3 rounded"
-                    >
-                      ✓ Email enviado. Revisa tu bandeja de entrada para restablecer tu contraseña.
-                    </motion.p>
-                  )}
-
-                  {!resetSuccess && (
-                    <Button
+                    <button
                       type="submit"
                       disabled={isLoading}
-                      className="w-full bg-[#505A4A] hover:bg-[#414A3C] text-white py-6"
+                      className="w-full h-12 bg-[#505A4A] hover:bg-[#434d3e] disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
                     >
-                      {isLoading ? 'Enviando...' : 'Enviar enlace de restablecimiento'}
-                    </Button>
-                  )}
-                </motion.form>
-              )}
-
-              {/* REGISTER */}
-              {mode === 'register' && (
-                <motion.div
-                  key="register"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                >
-                  {/* Step 1: Choose user type */}
-                  {!userType && (
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-gray-900 text-center mb-6">
-                        ¿Cómo deseas registrarte?
-                      </h3>
-
-                      <motion.button
-                        type="button"
-                        onClick={() => setUserType('client')}
-                        className="w-full p-6 border-2 border-gray-200 rounded-xl hover:border-[#505A4A] hover:bg-[#505A4A]/5 transition-all group"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-[#505A4A]/20">
-                            <ShoppingBag className="w-7 h-7 text-blue-600 group-hover:text-[#505A4A]" />
-                          </div>
-                          <div className="text-left">
-                            <h4 className="font-semibold text-gray-900">Cliente</h4>
-                            <p className="text-sm text-gray-500">Quiero comprar productos para uso personal</p>
-                          </div>
-                        </div>
-                      </motion.button>
-
-                      <motion.button
-                        type="button"
-                        onClick={() => setUserType('manager')}
-                        className="w-full p-6 border-2 border-gray-200 rounded-xl hover:border-[#505A4A] hover:bg-[#505A4A]/5 transition-all group"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="w-14 h-14 bg-amber-100 rounded-full flex items-center justify-center group-hover:bg-[#505A4A]/20">
-                            <Briefcase className="w-7 h-7 text-amber-600 group-hover:text-[#505A4A]" />
-                          </div>
-                          <div className="text-left">
-                            <h4 className="font-semibold text-gray-900">Gestor / Distribuidor</h4>
-                            <p className="text-sm text-gray-500">Quiero vender productos con precios especiales</p>
-                          </div>
-                        </div>
-                      </motion.button>
-                    </div>
-                  )}
-
-                  {/* Step 2: Registration form */}
-                  {userType && (
-                    <motion.form
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      onSubmit={handleRegister}
-                      className="space-y-4"
-                    >
-                      {/* Back button */}
-                      <button
-                        type="button"
-                        onClick={() => setUserType(null)}
-                        className="text-sm text-gray-500 hover:text-[#505A4A] mb-2"
-                      >
-                        ← Cambiar tipo de cuenta
-                      </button>
-
-                      {/* Badge */}
-                      <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${userType === 'manager'
-                        ? 'bg-amber-100 text-amber-800'
-                        : 'bg-blue-100 text-blue-800'
-                        }`}>
-                        {userType === 'manager' ? (
-                          <><Briefcase className="w-4 h-4" /> Registro de Gestor</>
-                        ) : (
-                          <><ShoppingBag className="w-4 h-4" /> Registro de Cliente</>
-                        )}
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Nombre completo
-                        </label>
-                        <div className="relative">
-                          <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
-                          <Input
-                            type="text"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleInputChange}
-                            placeholder="Tu nombre"
-                            className="pl-10"
-                            required
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Email
-                        </label>
-                        <div className="relative">
-                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
-                          <Input
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            placeholder="tu@email.com"
-                            className="pl-10"
-                            required
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Teléfono
-                        </label>
-                        <div className="relative">
-                          <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
-                          <Input
-                            type="tel"
-                            name="phone"
-                            value={formData.phone}
-                            onChange={handleInputChange}
-                            placeholder="+34 600 000 000"
-                            className="pl-10"
-                          />
-                        </div>
-                      </div>
-
-                      {/* Zone field for managers */}
-                      {userType === 'manager' && (
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Zona de trabajo
-                          </label>
-                          <div className="relative">
-                            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
-                            <Input
-                              type="text"
-                              name="zone"
-                              value={formData.zone}
-                              onChange={handleInputChange}
-                              placeholder="Ej: Madrid Centro"
-                              className="pl-10"
-                              required
-                            />
-                          </div>
-                        </div>
-                      )}
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Contraseña
-                        </label>
-                        <div className="relative">
-                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
-                          <Input
-                            type={showPassword ? 'text' : 'password'}
-                            name="password"
-                            value={formData.password}
-                            onChange={handleInputChange}
-                            placeholder="Mínimo 6 caracteres"
-                            className="pl-10 pr-10"
-                            minLength={6}
-                            required
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-600"
-                          >
-                            {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                          </button>
-                        </div>
-                      </div>
-
-                      {userType === 'manager' && (
-                        <div className="bg-amber-50 p-3 rounded-lg text-sm text-amber-800">
-                          <p className="font-medium">Beneficios de gestor:</p>
-                          <ul className="list-disc list-inside mt-1 text-amber-700">
-                            <li>Precios especiales con hasta 33% de descuento</li>
-                            <li>Panel de control con tus estadísticas</li>
-                            <li>Historial de pedidos y comisiones</li>
-                          </ul>
-                        </div>
-                      )}
-
-                      {error && (
-                        <motion.p
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          className="text-red-500 text-sm text-center bg-red-50 p-2 rounded"
-                        >
-                          {error}
-                        </motion.p>
-                      )}
-
-                      <Button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-full bg-[#505A4A] hover:bg-[#414A3C] text-white py-6"
-                      >
-                        {isLoading ? 'Registrando...' : 'Crear cuenta'}
-                      </Button>
-                    </motion.form>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </CardContent>
-        </Card>
+                      {isLoading ? 'Registrando...' : 'Crear cuenta'}
+                    </button>
+                  </motion.form>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
 
         {/* Footer */}
-        <p className="text-center text-sm text-gray-500 mt-6">
+        <p className="text-center text-[11px] text-gray-400 mt-6">
           Al continuar, aceptas nuestros{' '}
-          <Link href="#" className="text-[#505A4A] hover:underline">Términos de servicio</Link>
+          <Link href="/terms" className="text-gray-500 hover:text-[#505A4A]">Términos</Link>
           {' '}y{' '}
-          <Link href="#" className="text-[#505A4A] hover:underline">Política de privacidad</Link>
+          <Link href="/privacy" className="text-gray-500 hover:text-[#505A4A]">Privacidad</Link>
         </p>
       </motion.div>
     </div>

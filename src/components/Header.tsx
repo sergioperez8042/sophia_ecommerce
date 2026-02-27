@@ -80,9 +80,9 @@ export default function Header() {
                                 className="relative w-20 h-8 sm:w-28 sm:h-12 md:w-44 md:h-16 lg:w-52 lg:h-20"
                             >
                                 <img
-                                    src="/images/logo-sophia.png"
+                                    src="/images/sophia_logo_nuevo.jpeg"
                                     alt="Sophia - Cosmética Botánica"
-                                    className="w-full h-full object-contain"
+                                    className="w-full h-full object-contain rounded-full"
                                 />
                             </motion.div>
                             {/* Mobile tagline - visible only on small screens */}

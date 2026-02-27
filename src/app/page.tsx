@@ -1,16 +1,17 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { Star, Search, Grid3X3, List, Leaf, Phone, Mail, MessageCircle, Rabbit, Droplets, ShieldCheck, Hand, Sun, Moon } from "lucide-react";
 import Image from "next/image";
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/store/ThemeContext';
+import BrandLogo from '@/components/BrandLogo';
 
 // Número de WhatsApp para pedidos
 const WHATSAPP_NUMBER = "34642633982";
-const HERO_VIDEO = "/videos/sophia_video.mp4";
+const HERO_VIDEOS = ["/videos/sophi.mp4", "/videos/sophia_video.mp4"];
 
 interface Product {
     id: string;
@@ -38,7 +39,29 @@ export default function HomePage() {
     const [selectedCategory, setSelectedCategory] = useState<string>("all");
     const [searchTerm, setSearchTerm] = useState("");
     const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-    const videoRef = useRef<HTMLVideoElement | null>(null);
+    const [activeVideo, setActiveVideo] = useState(0);
+    const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+
+    const nextVideo = useCallback(() => {
+        setActiveVideo(prev => (prev + 1) % HERO_VIDEOS.length);
+    }, []);
+
+    useEffect(() => {
+        videoRefs.current.forEach((video, i) => {
+            if (!video) return;
+            if (i === activeVideo) {
+                video.currentTime = 0;
+                const tryPlay = () => video.play().catch(() => {});
+                if (video.readyState >= 3) {
+                    tryPlay();
+                } else {
+                    video.addEventListener('canplay', tryPlay, { once: true });
+                }
+            } else {
+                video.pause();
+            }
+        });
+    }, [activeVideo]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -103,61 +126,7 @@ export default function HomePage() {
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-[var(--cream-white)]">
-                <motion.div
-                    className="flex items-center gap-3"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                >
-                    <motion.div
-                        className="w-16 h-16 rounded-full bg-gradient-to-r from-[#505A4A] to-[#414A3C] flex items-center justify-center shadow-lg relative overflow-hidden"
-                        initial={{ scale: 0, rotate: -180 }}
-                        animate={{ scale: 1, rotate: 0 }}
-                        transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
-                    >
-                        {/* Anillo giratorio */}
-                        <motion.div
-                            className="absolute inset-0 rounded-full border-2 border-white/30"
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                            style={{ borderStyle: "dashed" }}
-                        />
-                        {/* Brillo que pasa */}
-                        <motion.div
-                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                            animate={{ x: ["-100%", "100%"] }}
-                            transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-                        />
-                        <motion.img
-                            src="/images/sophia_logo_nuevo.jpeg"
-                            alt="Sophia"
-                            className="w-11 h-11 object-contain rounded-full relative z-10"
-                            animate={{ y: [0, -2, 0] }}
-                            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                        />
-                    </motion.div>
-                    <motion.div
-                        className="text-left"
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.4 }}
-                    >
-                        <motion.h1
-                            className="text-3xl font-bold text-[#505A4A]"
-                            style={{ fontFamily: 'Cinzel, serif' }}
-                        >
-                            Sophia
-                        </motion.h1>
-                        <motion.p
-                            className="text-sm text-[#505A4A] font-medium"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.6 }}
-                        >
-                            Cosmética Botánica
-                        </motion.p>
-                    </motion.div>
-                </motion.div>
+                <BrandLogo size="lg" showText />
             </div>
         );
     }
@@ -235,19 +204,34 @@ export default function HomePage() {
 
             {/* Hero Section - Video Carousel */}
             <section className="relative h-64 sm:h-72 md:h-80 overflow-hidden">
-                {/* Hero video */}
-                <video
-                    ref={videoRef}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    className="absolute inset-0 w-full h-full object-cover"
-                >
-                    <source src={HERO_VIDEO} type="video/mp4" />
-                </video>
+                {/* Video carousel */}
+                {HERO_VIDEOS.map((src, i) => (
+                    <video
+                        key={src}
+                        ref={el => { videoRefs.current[i] = el; }}
+                        autoPlay={i === 0}
+                        muted
+                        playsInline
+                        className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
+                        style={{ opacity: activeVideo === i ? 1 : 0 }}
+                        onEnded={nextVideo}
+                    >
+                        <source src={src} type="video/mp4" />
+                    </video>
+                ))}
                 {/* Gradient overlay for text readability */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#414A3C]/70 via-[#505A4A]/30 to-[#505A4A]/20" />
+
+                {/* Carousel indicators */}
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                    {HERO_VIDEOS.map((_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => setActiveVideo(i)}
+                            className={`h-1.5 rounded-full transition-all duration-500 ${activeVideo === i ? 'w-6 bg-white' : 'w-1.5 bg-white/50'}`}
+                        />
+                    ))}
+                </div>
 
                 {/* Content overlay */}
                 <div className="absolute inset-0 flex items-center justify-center px-4">

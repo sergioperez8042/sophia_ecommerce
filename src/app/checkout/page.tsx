@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Truck, CheckCircle, ArrowLeft, MapPin, Download, User, Percent } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -30,9 +31,17 @@ interface ShippingInfo {
 }
 
 export default function CheckoutPage() {
+    const router = useRouter();
     const { items, subtotal, shipping, total, clearCart } = useCart();
-    const { user, isAuthenticated, isManager } = useAuth();
+    const { user, isAuthenticated, isManager, isLoaded } = useAuth();
     const { getPrice, getPriceInfo } = usePricing();
+
+    // Proteger ruta - redirigir si no está autenticado
+    useEffect(() => {
+        if (isLoaded && !isAuthenticated) {
+            router.push('/auth');
+        }
+    }, [isLoaded, isAuthenticated, router]);
 
     const [currentStep, setCurrentStep] = useState<CheckoutStep>('shipping');
     const [isProcessing, setIsProcessing] = useState(false);
