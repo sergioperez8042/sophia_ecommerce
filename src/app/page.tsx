@@ -174,25 +174,6 @@ export default function HomePage() {
                 animate={{ y: 0 }}
                 transition={{ type: "spring", stiffness: 100 }}
             >
-                {/* Top bar - contact info (desktop only) */}
-                <div className="hidden md:block bg-[#505A4A] text-white/90">
-                    <div className="max-w-7xl mx-auto px-6 py-1.5 flex items-center justify-end gap-6 text-xs">
-                        <a
-                            href="tel:+34642633982"
-                            className="flex items-center gap-1.5 hover:text-white transition-colors"
-                        >
-                            <Phone className="w-3 h-3" />
-                            <span>+34 642 63 39 82</span>
-                        </a>
-                        <a
-                            href="mailto:chavesophia1994@gmail.com"
-                            className="flex items-center gap-1.5 hover:text-white transition-colors"
-                        >
-                            <Mail className="w-3 h-3" />
-                            <span>chavesophia1994@gmail.com</span>
-                        </a>
-                    </div>
-                </div>
 
                 {/* Main header */}
                 <div className="max-w-7xl mx-auto px-4 sm:px-6">
