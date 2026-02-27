@@ -138,16 +138,16 @@ export default function CategoriesPage() {
                                         <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/95 backdrop-blur-sm h-full flex flex-col">
                                             <CardContent className="p-0 flex-1 flex flex-col">
                                                 {/* Imagen de la categoría */}
-                                                <div className="relative aspect-square bg-gray-100 overflow-hidden">
+                                                <div className="relative aspect-square bg-[#F5F1E8] overflow-hidden">
                                                     <ProductImage
                                                         src={category.image}
                                                         alt={category.name}
                                                         className="object-cover transition-transform duration-300 group-hover:scale-110"
                                                     />
-                                                    {/* Overlay con contador */}
-                                                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors">
+                                                    {/* Overlay con contador — solo oscuro si hay imagen real */}
+                                                    <div className={`absolute inset-0 transition-colors ${category.image ? 'bg-black/20 group-hover:bg-black/30' : 'bg-transparent'}`}>
                                                         <div className="absolute bottom-4 right-4">
-                                                            <Badge className="bg-white/90 text-[#505A4A] hover:bg-white">
+                                                            <Badge className="bg-white/90 text-[#505A4A] hover:bg-white shadow-sm">
                                                                 {productCount} productos
                                                             </Badge>
                                                         </div>

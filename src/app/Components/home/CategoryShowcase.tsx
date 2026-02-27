@@ -66,15 +66,17 @@ export default function CategoryShowcase({ categories, isLoading }: CategoryShow
                             <Link href={`/products?category=${category.slug}`}>
                                 <Card className="product-card group hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
                                     <div className="relative overflow-hidden">
-                                        <div className="relative w-full h-48">
+                                        <div className="relative w-full h-48 bg-[#F5F1E8]">
                                             <ProductImage
                                                 src={category.image_url || category.image}
                                                 alt={category.name}
                                                 className="object-cover group-hover:scale-110 transition-transform duration-300"
                                             />
                                         </div>
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent group-hover:from-black/50 transition-all duration-300"></div>
-                                        <ArrowRight className="absolute top-4 right-4 w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0" />
+                                        {(category.image_url || category.image) && (
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent group-hover:from-black/50 transition-all duration-300"></div>
+                                        )}
+                                        <ArrowRight className={`absolute top-4 right-4 w-5 h-5 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 ${(category.image_url || category.image) ? 'text-white' : 'text-[#505A4A]'}`} />
                                     </div>
 
                                     <CardContent className="p-6">
