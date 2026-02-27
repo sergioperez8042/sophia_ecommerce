@@ -579,7 +579,7 @@ function ProductCard({
                         <span className={`text-xl font-bold ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>{formatPrice(product.price)}</span>
                         <motion.button
                             onClick={handleWhatsAppOrder}
-                            className="bg-[#25D366] text-white px-3 py-1.5 rounded-full text-sm flex items-center gap-1"
+                            className="bg-[#505A4A] text-white px-3 py-1.5 rounded-full text-sm flex items-center gap-1"
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                         >
@@ -631,7 +631,7 @@ function ProductCard({
                 >
                     <motion.button
                         onClick={handleWhatsAppOrder}
-                        className="bg-[#25D366] text-white px-4 py-2 rounded-full flex items-center gap-2 font-medium"
+                        className="bg-[#505A4A] text-white px-4 py-2 rounded-full flex items-center gap-2 font-medium"
                         initial={{ y: 20, opacity: 0 }}
                         animate={{ y: isHovered ? 0 : 20, opacity: isHovered ? 1 : 0 }}
                         transition={{ duration: 0.3 }}
