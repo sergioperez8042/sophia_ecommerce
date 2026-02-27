@@ -39,7 +39,7 @@ export function ToggleSwitch({
             disabled={disabled}
             onClick={() => onCheckedChange(!checked)}
             className={cn(
-                "relative inline-flex shrink-0 cursor-pointer items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4A6741] focus-visible:ring-offset-2",
+                "relative inline-flex shrink-0 cursor-pointer items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#505A4A] focus-visible:ring-offset-2",
                 currentSize.track,
                 checked ? activeColor : "bg-gray-300",
                 disabled && "cursor-not-allowed opacity-50",

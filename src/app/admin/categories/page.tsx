@@ -65,7 +65,7 @@ export default function AdminCategoriesPage() {
     if (!isLoaded || isLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4A6741]" />
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#505A4A]" />
             </div>
         );
     }
@@ -148,7 +148,7 @@ export default function AdminCategoriesPage() {
                         <div>
                             <Link
                                 href="/admin"
-                                className="flex items-center gap-2 text-gray-600 hover:text-[#4A6741] transition-colors mb-2"
+                                className="flex items-center gap-2 text-gray-600 hover:text-[#505A4A] transition-colors mb-2"
                             >
                                 <ArrowLeft className="w-4 h-4" />
                                 Volver al panel
@@ -158,7 +158,7 @@ export default function AdminCategoriesPage() {
                         </div>
                         <Button
                             onClick={handleCreate}
-                            className="bg-[#4A6741] hover:bg-[#3d5636] text-white"
+                            className="bg-[#505A4A] hover:bg-[#3d5636] text-white"
                         >
                             <Plus className="w-5 h-5 mr-2" />
                             Nueva Categoría
@@ -313,7 +313,7 @@ export default function AdminCategoriesPage() {
                 <div className="mb-8">
                     <button
                         onClick={resetForm}
-                        className="flex items-center gap-2 text-gray-600 hover:text-[#4A6741] transition-colors mb-4"
+                        className="flex items-center gap-2 text-gray-600 hover:text-[#505A4A] transition-colors mb-4"
                     >
                         <ArrowLeft className="w-5 h-5" />
                         Volver a la lista
@@ -375,7 +375,7 @@ export default function AdminCategoriesPage() {
                                             id="active"
                                             checked={formData.active}
                                             onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
-                                            className="w-4 h-4 text-[#4A6741] focus:ring-[#4A6741] rounded"
+                                            className="w-4 h-4 text-[#505A4A] focus:ring-[#505A4A] rounded"
                                         />
                                         <label htmlFor="active" className="text-sm font-medium text-gray-700 select-none">
                                             Categoría Visible al público
@@ -430,7 +430,7 @@ export default function AdminCategoriesPage() {
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                     rows={3}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6741] text-gray-900 placeholder:text-gray-400"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#505A4A] text-gray-900 placeholder:text-gray-400"
                                     placeholder="Breve descripción de la categoría..."
                                 />
                             </div>
@@ -446,7 +446,7 @@ export default function AdminCategoriesPage() {
                                 </Button>
                                 <Button
                                     type="submit"
-                                    className="bg-[#4A6741] hover:bg-[#3d5636] text-white min-w-[150px]"
+                                    className="bg-[#505A4A] hover:bg-[#3d5636] text-white min-w-[150px]"
                                     disabled={isSaving}
                                 >
                                     {isSaving ? (

@@ -102,7 +102,7 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#4A6741]/10 via-white to-[#4A6741]/5 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#505A4A]/10 via-white to-[#505A4A]/5 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -112,7 +112,7 @@ export default function AuthPage() {
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-3 group">
             <motion.div 
-              className="w-16 h-16 rounded-full bg-gradient-to-r from-[#4A6741] to-[#3F5D4C] flex items-center justify-center shadow-lg relative overflow-hidden"
+              className="w-16 h-16 rounded-full bg-gradient-to-r from-[#505A4A] to-[#414A3C] flex items-center justify-center shadow-lg relative overflow-hidden"
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{ 
@@ -163,17 +163,17 @@ export default function AuthPage() {
               <motion.h1 
                 className="text-3xl font-bold text-gray-900"
                 style={{ fontFamily: 'Cinzel, serif' }}
-                whileHover={{ color: "#4A6741" }}
+                whileHover={{ color: "#505A4A" }}
               >
                 Sophia
               </motion.h1>
               <motion.p 
-                className="text-sm text-[#4A6741] font-medium"
+                className="text-sm text-[#505A4A] font-medium"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6 }}
               >
-                Cosmética Natural
+                Cosmética Botánica
               </motion.p>
             </motion.div>
           </Link>
@@ -186,7 +186,7 @@ export default function AuthPage() {
               <button
                 onClick={() => { setMode('login'); resetForm(); }}
                 className={`flex-1 py-2.5 rounded-md font-medium transition-all ${mode === 'login'
-                  ? 'bg-white text-[#4A6741] shadow-sm'
+                  ? 'bg-white text-[#505A4A] shadow-sm'
                   : 'text-gray-600 hover:text-gray-900'
                   }`}
               >
@@ -195,7 +195,7 @@ export default function AuthPage() {
               <button
                 onClick={() => { setMode('register'); resetForm(); }}
                 className={`flex-1 py-2.5 rounded-md font-medium transition-all ${mode === 'register'
-                  ? 'bg-white text-[#4A6741] shadow-sm'
+                  ? 'bg-white text-[#505A4A] shadow-sm'
                   : 'text-gray-600 hover:text-gray-900'
                   }`}
               >
@@ -270,7 +270,7 @@ export default function AuthPage() {
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full bg-[#4A6741] hover:bg-[#3F5D4C] text-white py-6"
+                    className="w-full bg-[#505A4A] hover:bg-[#414A3C] text-white py-6"
                   >
                     {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
                   </Button>
@@ -295,13 +295,13 @@ export default function AuthPage() {
                       <motion.button
                         type="button"
                         onClick={() => setUserType('client')}
-                        className="w-full p-6 border-2 border-gray-200 rounded-xl hover:border-[#4A6741] hover:bg-[#4A6741]/5 transition-all group"
+                        className="w-full p-6 border-2 border-gray-200 rounded-xl hover:border-[#505A4A] hover:bg-[#505A4A]/5 transition-all group"
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
                         <div className="flex items-center gap-4">
-                          <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-[#4A6741]/20">
-                            <ShoppingBag className="w-7 h-7 text-blue-600 group-hover:text-[#4A6741]" />
+                          <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-[#505A4A]/20">
+                            <ShoppingBag className="w-7 h-7 text-blue-600 group-hover:text-[#505A4A]" />
                           </div>
                           <div className="text-left">
                             <h4 className="font-semibold text-gray-900">Cliente</h4>
@@ -313,13 +313,13 @@ export default function AuthPage() {
                       <motion.button
                         type="button"
                         onClick={() => setUserType('manager')}
-                        className="w-full p-6 border-2 border-gray-200 rounded-xl hover:border-[#4A6741] hover:bg-[#4A6741]/5 transition-all group"
+                        className="w-full p-6 border-2 border-gray-200 rounded-xl hover:border-[#505A4A] hover:bg-[#505A4A]/5 transition-all group"
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
                         <div className="flex items-center gap-4">
-                          <div className="w-14 h-14 bg-amber-100 rounded-full flex items-center justify-center group-hover:bg-[#4A6741]/20">
-                            <Briefcase className="w-7 h-7 text-amber-600 group-hover:text-[#4A6741]" />
+                          <div className="w-14 h-14 bg-amber-100 rounded-full flex items-center justify-center group-hover:bg-[#505A4A]/20">
+                            <Briefcase className="w-7 h-7 text-amber-600 group-hover:text-[#505A4A]" />
                           </div>
                           <div className="text-left">
                             <h4 className="font-semibold text-gray-900">Gestor / Distribuidor</h4>
@@ -342,7 +342,7 @@ export default function AuthPage() {
                       <button
                         type="button"
                         onClick={() => setUserType(null)}
-                        className="text-sm text-gray-500 hover:text-[#4A6741] mb-2"
+                        className="text-sm text-gray-500 hover:text-[#505A4A] mb-2"
                       >
                         ← Cambiar tipo de cuenta
                       </button>
@@ -483,7 +483,7 @@ export default function AuthPage() {
                       <Button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full bg-[#4A6741] hover:bg-[#3F5D4C] text-white py-6"
+                        className="w-full bg-[#505A4A] hover:bg-[#414A3C] text-white py-6"
                       >
                         {isLoading ? 'Registrando...' : 'Crear cuenta'}
                       </Button>
@@ -498,9 +498,9 @@ export default function AuthPage() {
         {/* Footer */}
         <p className="text-center text-sm text-gray-500 mt-6">
           Al continuar, aceptas nuestros{' '}
-          <Link href="#" className="text-[#4A6741] hover:underline">Términos de servicio</Link>
+          <Link href="#" className="text-[#505A4A] hover:underline">Términos de servicio</Link>
           {' '}y{' '}
-          <Link href="#" className="text-[#4A6741] hover:underline">Política de privacidad</Link>
+          <Link href="#" className="text-[#505A4A] hover:underline">Política de privacidad</Link>
         </p>
       </motion.div>
     </div>

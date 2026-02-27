@@ -66,7 +66,7 @@ export default function AboutPage() {
                 className="relative min-h-screen flex items-center justify-center overflow-hidden"
             >
                 {/* Background Pattern */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#4A6741]/5 via-transparent to-[#4A6741]/10" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#505A4A]/5 via-transparent to-[#505A4A]/10" />
 
                 <motion.div
                     variants={containerVariants}
@@ -82,12 +82,12 @@ export default function AboutPage() {
                                 animate={heroInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
                                 transition={{ duration: 0.8, delay: 0.2 }}
                             >
-                                <Badge className="bg-[#4A6741]/10 text-[#4A6741] font-bold text-sm sm:text-base lg:text-lg px-4 sm:px-6 py-2 mb-4 sm:mb-6">
+                                <Badge className="bg-[#505A4A]/10 text-[#505A4A] font-bold text-sm sm:text-base lg:text-lg px-4 sm:px-6 py-2 mb-4 sm:mb-6">
                                     Nuestra Historia
                                 </Badge>
                                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-gray-900 leading-tight">
                                     De Cuba a
-                                    <span className="bg-gradient-to-r from-[#4A6741] to-[#6B8E5A] bg-clip-text text-transparent"> Europa</span>
+                                    <span className="bg-gradient-to-r from-[#505A4A] to-[#6B8E5A] bg-clip-text text-transparent"> Europa</span>
                                 </h1>
                             </motion.div>
 
@@ -95,17 +95,17 @@ export default function AboutPage() {
                                 variants={itemVariants}
                                 className="text-base sm:text-lg lg:text-xl text-gray-700 font-medium leading-relaxed"
                             >
-                                La historia de <strong className="text-[#4A6741]">Sophia Natural</strong> es la historia de una mujer valiente que transformó su pasión por la belleza natural en un imperio de bienestar que ahora cruza océanos.
+                                La historia de <strong className="text-[#505A4A]">Sophia Natural</strong> es la historia de una mujer valiente que transformó su pasión por la belleza natural en un imperio de bienestar que ahora cruza océanos.
                             </motion.p>
 
                             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
                                 <Link href="/products">
-                                    <Button className="w-full sm:w-auto bg-[#4A6741] hover:bg-[#3F5D4C] text-white font-bold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg shadow-lg">
+                                    <Button className="w-full sm:w-auto bg-[#505A4A] hover:bg-[#414A3C] text-white font-bold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg shadow-lg">
                                         Descubre Nuestros Productos
                                     </Button>
                                 </Link>
                                 <button
-                                    className="w-full sm:w-auto border-2 border-[#4A6741] bg-transparent text-[#4A6741] hover:bg-[#4A6741] hover:text-white font-bold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg transition-colors rounded-md"
+                                    className="w-full sm:w-auto border-2 border-[#505A4A] bg-transparent text-[#505A4A] hover:bg-[#505A4A] hover:text-white font-bold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg transition-colors rounded-md"
                                     onClick={() => storyRef.current?.scrollIntoView({ behavior: 'smooth' })}
                                 >
                                     Conoce la Historia
@@ -135,7 +135,7 @@ export default function AboutPage() {
                                         repeat: Infinity,
                                         ease: "linear"
                                     }}
-                                    className="absolute -top-4 -left-4 w-24 h-24 bg-gradient-to-r from-[#4A6741]/20 to-[#6B8E5A]/20 rounded-full blur-xl"
+                                    className="absolute -top-4 -left-4 w-24 h-24 bg-gradient-to-r from-[#505A4A]/20 to-[#6B8E5A]/20 rounded-full blur-xl"
                                 />
                                 <motion.div
                                     animate={{
@@ -147,7 +147,7 @@ export default function AboutPage() {
                                         repeat: Infinity,
                                         ease: "linear"
                                     }}
-                                    className="absolute -bottom-8 -right-8 w-32 h-32 bg-gradient-to-l from-[#4A6741]/15 to-[#6B8E5A]/15 rounded-full blur-2xl"
+                                    className="absolute -bottom-8 -right-8 w-32 h-32 bg-gradient-to-l from-[#505A4A]/15 to-[#6B8E5A]/15 rounded-full blur-2xl"
                                 />
 
                                 <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br from-white to-gray-50 p-4">
@@ -171,7 +171,7 @@ export default function AboutPage() {
                 ref={storyRef}
                 className="py-16 sm:py-24 lg:py-32 relative overflow-hidden"
             >
-                <div className="absolute inset-0 bg-gradient-to-r from-[#4A6741]/5 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#505A4A]/5 to-transparent" />
 
                 <motion.div
                     variants={containerVariants}
@@ -181,7 +181,7 @@ export default function AboutPage() {
                 >
                     <motion.div variants={itemVariants} className="text-center mb-12 sm:mb-16 lg:mb-20">
                         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6">
-                            Una Historia de <span className="text-[#4A6741]">Determinación</span>
+                            Una Historia de <span className="text-[#505A4A]">Determinación</span>
                         </h2>
                         <p className="text-base sm:text-lg lg:text-xl text-gray-700 max-w-3xl mx-auto font-medium leading-relaxed">
                             Desde las calles de La Habana hasta las capitales europeas, esta es la historia de cómo la pasión y la perseverancia pueden cambiar el mundo.
@@ -197,7 +197,7 @@ export default function AboutPage() {
                                     animate={storyInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
                                     transition={{ duration: 0.6, delay: 0.2 }}
                                 >
-                                    <h3 className="text-2xl font-bold text-[#4A6741] flex items-center gap-3">
+                                    <h3 className="text-2xl font-bold text-[#505A4A] flex items-center gap-3">
                                         <Heart className="h-6 w-6 text-red-500" />
                                         Los Inicios en Cuba
                                     </h3>
@@ -211,7 +211,7 @@ export default function AboutPage() {
                                     animate={storyInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
                                     transition={{ duration: 0.6, delay: 0.4 }}
                                 >
-                                    <h3 className="text-2xl font-bold text-[#4A6741] flex items-center gap-3">
+                                    <h3 className="text-2xl font-bold text-[#505A4A] flex items-center gap-3">
                                         <TrendingUp className="h-6 w-6 text-green-500" />
                                         El Crecimiento
                                     </h3>
@@ -225,7 +225,7 @@ export default function AboutPage() {
                                     animate={storyInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
                                     transition={{ duration: 0.6, delay: 0.6 }}
                                 >
-                                    <h3 className="text-2xl font-bold text-[#4A6741] flex items-center gap-3">
+                                    <h3 className="text-2xl font-bold text-[#505A4A] flex items-center gap-3">
                                         <Globe className="h-6 w-6 text-blue-500" />
                                         La Conquista Europea
                                     </h3>
@@ -239,9 +239,9 @@ export default function AboutPage() {
                         {/* Stats Cards */}
                         <motion.div variants={itemVariants} className="space-y-6">
                             <motion.div variants={cardVariants}>
-                                <Card className="border-0 shadow-xl bg-gradient-to-r from-[#4A6741]/5 to-[#4A6741]/10 backdrop-blur-sm">
+                                <Card className="border-0 shadow-xl bg-gradient-to-r from-[#505A4A]/5 to-[#505A4A]/10 backdrop-blur-sm">
                                     <CardContent className="p-8 text-center">
-                                        <Award className="h-12 w-12 text-[#4A6741] mx-auto mb-4" />
+                                        <Award className="h-12 w-12 text-[#505A4A] mx-auto mb-4" />
                                         <h4 className="text-3xl font-bold text-gray-900 mb-2">7</h4>
                                         <p className="text-gray-700 font-semibold">Años de Experiencia</p>
                                     </CardContent>
@@ -275,7 +275,7 @@ export default function AboutPage() {
             {/* Values Section */}
             <motion.section
                 ref={valuesRef}
-                className="py-32 bg-gradient-to-r from-[#4A6741]/5 via-transparent to-[#4A6741]/5"
+                className="py-32 bg-gradient-to-r from-[#505A4A]/5 via-transparent to-[#505A4A]/5"
             >
                 <motion.div
                     variants={containerVariants}
@@ -285,7 +285,7 @@ export default function AboutPage() {
                 >
                     <motion.div variants={itemVariants} className="text-center mb-20">
                         <h2 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
-                            Nuestros <span className="text-[#4A6741]">Valores</span>
+                            Nuestros <span className="text-[#505A4A]">Valores</span>
                         </h2>
                         <p className="text-xl text-gray-700 max-w-3xl mx-auto font-medium">
                             Los principios que nos guían en cada paso de nuestro viaje hacia la belleza natural y el empoderamiento femenino.
@@ -341,7 +341,7 @@ export default function AboutPage() {
             </motion.section>
 
             {/* CTA Section */}
-            <motion.section className="py-32 bg-gradient-to-r from-[#4A6741] to-[#6B8E5A] text-white">
+            <motion.section className="py-32 bg-gradient-to-r from-[#505A4A] to-[#6B8E5A] text-white">
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -359,14 +359,14 @@ export default function AboutPage() {
                         <Link href="/products">
                             <Button
                                 size="lg"
-                                className="bg-white text-[#4A6741] hover:bg-gray-100 font-bold px-12 py-4 text-xl shadow-xl"
+                                className="bg-white text-[#505A4A] hover:bg-gray-100 font-bold px-12 py-4 text-xl shadow-xl"
                             >
                                 Comprar Ahora
                             </Button>
                         </Link>
                         <Link href="/contact">
                             <button
-                                className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-[#4A6741] font-bold px-12 py-4 text-xl rounded-md transition-colors"
+                                className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-[#505A4A] font-bold px-12 py-4 text-xl rounded-md transition-colors"
                             >
                                 Contáctanos
                             </button>

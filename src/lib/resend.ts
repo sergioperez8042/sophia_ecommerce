@@ -15,8 +15,8 @@ function getResend(): Resend {
 }
 
 // Brand colors
-const BRAND_GREEN = '#4A6741';
-const BRAND_GREEN_DARK = '#3F5D4C';
+const BRAND_GREEN = '#505A4A';
+const BRAND_GREEN_DARK = '#414A3C';
 
 interface SendWelcomeEmailParams {
   to: string;

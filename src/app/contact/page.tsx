@@ -67,7 +67,7 @@ export default function ContactPage() {
                 ref={heroRef}
                 className="relative pt-24 pb-16 overflow-hidden"
             >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#4A6741]/5 via-transparent to-[#4A6741]/10" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#505A4A]/5 via-transparent to-[#505A4A]/10" />
 
                 <motion.div
                     variants={containerVariants}
@@ -88,12 +88,12 @@ export default function ContactPage() {
                         {/* Text Content */}
                         <motion.div variants={itemVariants} className="space-y-8">
                             <div>
-                                <Badge className="bg-[#4A6741]/10 text-[#4A6741] font-bold text-lg px-6 py-2 mb-6">
+                                <Badge className="bg-[#505A4A]/10 text-[#505A4A] font-bold text-lg px-6 py-2 mb-6">
                                     Contáctanos
                                 </Badge>
                                 <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
                                     Estamos Aquí Para
-                                    <span className="bg-gradient-to-r from-[#4A6741] to-[#6B8E5A] bg-clip-text text-transparent"> Ayudarte</span>
+                                    <span className="bg-gradient-to-r from-[#505A4A] to-[#6B8E5A] bg-clip-text text-transparent"> Ayudarte</span>
                                 </h1>
                                 <p className="text-xl text-gray-700 font-medium leading-relaxed">
                                     ¿Tienes preguntas sobre nuestros productos? ¿Quieres conocer más sobre nuestra historia?
@@ -110,7 +110,7 @@ export default function ContactPage() {
                                 >
                                     <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
                                         <CardContent className="p-6">
-                                            <Mail className="h-8 w-8 text-[#4A6741] mb-4" />
+                                            <Mail className="h-8 w-8 text-[#505A4A] mb-4" />
                                             <h3 className="text-lg font-bold text-gray-900 mb-2">Email</h3>
                                             <p className="text-gray-700 font-medium">chavesophia1994@gmail.com</p>
                                         </CardContent>
@@ -124,7 +124,7 @@ export default function ContactPage() {
                                 >
                                     <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
                                         <CardContent className="p-6">
-                                            <Phone className="h-8 w-8 text-[#4A6741] mb-4" />
+                                            <Phone className="h-8 w-8 text-[#505A4A] mb-4" />
                                             <h3 className="text-lg font-bold text-gray-900 mb-2">Teléfono</h3>
                                             <p className="text-gray-700 font-medium">+34 642 63 39 82</p>
                                         </CardContent>
@@ -138,7 +138,7 @@ export default function ContactPage() {
                                 >
                                     <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
                                         <CardContent className="p-6">
-                                            <MapPin className="h-8 w-8 text-[#4A6741] mb-4" />
+                                            <MapPin className="h-8 w-8 text-[#505A4A] mb-4" />
                                             <h3 className="text-lg font-bold text-gray-900 mb-2">Ubicación</h3>
                                             <p className="text-gray-700 font-medium">Madrid, España</p>
                                         </CardContent>
@@ -152,7 +152,7 @@ export default function ContactPage() {
                                 >
                                     <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
                                         <CardContent className="p-6">
-                                            <Clock className="h-8 w-8 text-[#4A6741] mb-4" />
+                                            <Clock className="h-8 w-8 text-[#505A4A] mb-4" />
                                             <h3 className="text-lg font-bold text-gray-900 mb-2">Horario</h3>
                                             <p className="text-gray-700 font-medium">Lun - Vie: 9:00 - 18:00</p>
                                         </CardContent>
@@ -173,7 +173,7 @@ export default function ContactPage() {
                                     repeat: Infinity,
                                     ease: "linear"
                                 }}
-                                className="absolute top-10 right-10 w-20 h-20 bg-gradient-to-r from-[#4A6741]/20 to-[#6B8E5A]/20 rounded-full blur-xl"
+                                className="absolute top-10 right-10 w-20 h-20 bg-gradient-to-r from-[#505A4A]/20 to-[#6B8E5A]/20 rounded-full blur-xl"
                             />
                             <motion.div
                                 animate={{
@@ -185,7 +185,7 @@ export default function ContactPage() {
                                     repeat: Infinity,
                                     ease: "linear"
                                 }}
-                                className="absolute bottom-20 left-10 w-32 h-32 bg-gradient-to-l from-[#4A6741]/15 to-[#6B8E5A]/15 rounded-full blur-2xl"
+                                className="absolute bottom-20 left-10 w-32 h-32 bg-gradient-to-l from-[#505A4A]/15 to-[#6B8E5A]/15 rounded-full blur-2xl"
                             />
 
                             <Card className="border-0 shadow-2xl bg-gradient-to-br from-white to-gray-50 p-8">
@@ -201,7 +201,7 @@ export default function ContactPage() {
                                             animate={{ scale: [1, 1.2, 1] }}
                                             transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
                                         >
-                                            <Leaf className="h-12 w-12 text-[#4A6741]" />
+                                            <Leaf className="h-12 w-12 text-[#505A4A]" />
                                         </motion.div>
                                         <motion.div
                                             animate={{ rotate: [0, -10, 10, 0] }}
@@ -226,7 +226,7 @@ export default function ContactPage() {
             {/* Contact Form Section */}
             <motion.section
                 ref={formRef}
-                className="py-32 bg-gradient-to-r from-[#4A6741]/5 via-transparent to-[#4A6741]/5"
+                className="py-32 bg-gradient-to-r from-[#505A4A]/5 via-transparent to-[#505A4A]/5"
             >
                 <motion.div
                     variants={containerVariants}
@@ -236,7 +236,7 @@ export default function ContactPage() {
                 >
                     <motion.div variants={itemVariants} className="text-center mb-16">
                         <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-                            Envíanos un <span className="text-[#4A6741]">Mensaje</span>
+                            Envíanos un <span className="text-[#505A4A]">Mensaje</span>
                         </h2>
                         <p className="text-xl text-gray-700 max-w-2xl mx-auto font-medium">
                             Cuéntanos cómo podemos ayudarte. Respondemos todos los mensajes en menos de 24 horas.
@@ -263,7 +263,7 @@ export default function ContactPage() {
                                                 name="name"
                                                 value={formData.name}
                                                 onChange={handleChange}
-                                                className="border-2 border-gray-200 focus:border-[#4A6741] rounded-lg p-4 text-lg placeholder:text-gray-600 text-gray-800"
+                                                className="border-2 border-gray-200 focus:border-[#505A4A] rounded-lg p-4 text-lg placeholder:text-gray-600 text-gray-800"
                                                 placeholder="Tu nombre"
                                                 required
                                                 autoComplete="name"
@@ -283,7 +283,7 @@ export default function ContactPage() {
                                                 name="email"
                                                 value={formData.email}
                                                 onChange={handleChange}
-                                                className="border-2 border-gray-200 focus:border-[#4A6741] rounded-lg p-4 text-lg placeholder:text-gray-600 text-gray-800"
+                                                className="border-2 border-gray-200 focus:border-[#505A4A] rounded-lg p-4 text-lg placeholder:text-gray-600 text-gray-800"
                                                 placeholder="tu@email.com"
                                                 required
                                                 autoComplete="email"
@@ -306,7 +306,7 @@ export default function ContactPage() {
                                             name="subject"
                                             value={formData.subject}
                                             onChange={handleChange}
-                                            className="border-2 border-gray-200 focus:border-[#4A6741] rounded-lg p-4 text-lg placeholder:text-gray-600 text-gray-800"
+                                            className="border-2 border-gray-200 focus:border-[#505A4A] rounded-lg p-4 text-lg placeholder:text-gray-600 text-gray-800"
                                             placeholder="¿En qué podemos ayudarte?"
                                             required
                                             data-lpignore="true"
@@ -325,7 +325,7 @@ export default function ContactPage() {
                                             value={formData.message}
                                             onChange={handleChange}
                                             rows={6}
-                                            className="w-full border-2 border-gray-200 focus:border-[#4A6741] rounded-lg p-4 text-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#4A6741]/20 placeholder:text-gray-600 text-gray-800"
+                                            className="w-full border-2 border-gray-200 focus:border-[#505A4A] rounded-lg p-4 text-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#505A4A]/20 placeholder:text-gray-600 text-gray-800"
                                             placeholder="Cuéntanos más detalles..."
                                             required
                                             data-lpignore="true"
@@ -339,7 +339,7 @@ export default function ContactPage() {
                                     >
                                         <Button
                                             type="submit"
-                                            className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white font-bold px-12 py-4 text-xl shadow-xl"
+                                            className="bg-[#505A4A] hover:bg-[#414A3C] text-white font-bold px-12 py-4 text-xl shadow-xl"
                                         >
                                             <Send className="h-5 w-5 mr-3" />
                                             Enviar Mensaje

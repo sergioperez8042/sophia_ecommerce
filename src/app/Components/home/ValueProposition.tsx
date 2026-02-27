@@ -56,7 +56,7 @@ export default function ValueProposition() {
                                 transition={{ duration: 0.6, delay: index * 0.1 }}
                                 className="text-center group"
                             >
-                                <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-r from-[#4A6741] to-[#3F5D4C] flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
+                                <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-r from-[#505A4A] to-[#414A3C] flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
                                     <Icon className="w-8 h-8 text-white" />
                                 </div>
                                 <h3 className="text-xl font-semibold text-gray-900 mb-3">

@@ -59,7 +59,7 @@ export default function AdminPage() {
   if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4A6741]" />
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#505A4A]" />
       </div>
     );
   }
@@ -196,7 +196,7 @@ export default function AdminPage() {
                 <Users className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                 <p className="text-gray-500">No hay gestores registrados</p>
                 <p className="text-sm text-gray-400 mt-1">
-                  Ve a <Link href="/admin/setup" className="text-[#4A6741] hover:underline">Setup</Link> para crear usuarios iniciales
+                  Ve a <Link href="/admin/setup" className="text-[#505A4A] hover:underline">Setup</Link> para crear usuarios iniciales
                 </p>
               </div>
             ) : (

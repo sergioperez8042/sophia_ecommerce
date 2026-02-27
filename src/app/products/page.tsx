@@ -165,13 +165,13 @@ export default function ProductsPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-lg font-bold mt-4 text-gray-900 flex items-center">
-                    <SlidersHorizontal className="h-5 w-5 mr-2 text-[#4A6741]" />
+                    <SlidersHorizontal className="h-5 w-5 mr-2 text-[#505A4A]" />
                     Filtros
                   </h2>
                   {activeFiltersCount > 0 && (
                     <button
                       onClick={clearAllFilters}
-                      className="text-sm text-[#4A6741] hover:text-[#3F5D4C] font-medium transition-colors"
+                      className="text-sm text-[#505A4A] hover:text-[#414A3C] font-medium transition-colors"
                     >
                       Limpiar ({activeFiltersCount})
                     </button>
@@ -192,9 +192,9 @@ export default function ProductsPage() {
                             setSelectedCategories([...selectedCategories, category.name]);
                           }
                         }}
-                        className={`w-full flex items-center justify-between text-left p-2 rounded-lg transition-colors hover:bg-[#4A6741]/10 ${selectedCategories.includes(category.name)
-                          ? 'bg-[#4A6741]/10 text-[#4A6741] font-medium'
-                          : 'text-gray-700 hover:text-[#4A6741]'
+                        className={`w-full flex items-center justify-between text-left p-2 rounded-lg transition-colors hover:bg-[#505A4A]/10 ${selectedCategories.includes(category.name)
+                          ? 'bg-[#505A4A]/10 text-[#505A4A] font-medium'
+                          : 'text-gray-700 hover:text-[#505A4A]'
                           }`}
                       >
                         <span className="text-sm flex-1">
@@ -222,9 +222,9 @@ export default function ProductsPage() {
                             setSelectedPriceRanges([...selectedPriceRanges, range.value]);
                           }
                         }}
-                        className={`w-full flex items-center justify-between text-left p-2 rounded-lg transition-colors hover:bg-[#4A6741]/10 ${selectedPriceRanges.includes(range.value)
-                          ? 'bg-[#4A6741]/10 text-[#4A6741] font-medium'
-                          : 'text-gray-700 hover:text-[#4A6741]'
+                        className={`w-full flex items-center justify-between text-left p-2 rounded-lg transition-colors hover:bg-[#505A4A]/10 ${selectedPriceRanges.includes(range.value)
+                          ? 'bg-[#505A4A]/10 text-[#505A4A] font-medium'
+                          : 'text-gray-700 hover:text-[#505A4A]'
                           }`}
                       >
                         <span className="text-sm flex-1">
@@ -240,9 +240,9 @@ export default function ProductsPage() {
                   <h3 className="font-semibold text-gray-900 mb-3">Disponibilidad</h3>
                   <button
                     onClick={() => setInStockOnly(!inStockOnly)}
-                    className={`w-full flex items-center text-left p-2 rounded-lg transition-colors hover:bg-[#4A6741]/10 ${inStockOnly
-                      ? 'bg-[#4A6741]/10 text-[#4A6741] font-medium'
-                      : 'text-gray-700 hover:text-[#4A6741]'
+                    className={`w-full flex items-center text-left p-2 rounded-lg transition-colors hover:bg-[#505A4A]/10 ${inStockOnly
+                      ? 'bg-[#505A4A]/10 text-[#505A4A] font-medium'
+                      : 'text-gray-700 hover:text-[#505A4A]'
                       }`}
                   >
                     <span className="text-sm">
@@ -272,7 +272,7 @@ export default function ProductsPage() {
                       variant="outline"
                       size="sm"
                       onClick={() => setShowMobileFilters(true)}
-                      className="lg:hidden border-[#4A6741] text-[#4A6741] hover:bg-[#4A6741] hover:text-white"
+                      className="lg:hidden border-[#505A4A] text-[#505A4A] hover:bg-[#505A4A] hover:text-white"
                     >
                       <Filter className="h-4 w-4 mr-2" />
                       Filtros {activeFiltersCount > 0 && `(${activeFiltersCount})`}
@@ -281,7 +281,7 @@ export default function ProductsPage() {
 
                   <div className="flex items-center justify-center sm:justify-end gap-3">
                     <Select value={sortBy} onValueChange={setSortBy}>
-                      <SelectTrigger className="w-48 border-[#4A6741] text-gray-900 bg-white hover:border-[#3F5D4C] focus:border-[#4A6741] focus:ring-[#4A6741]/20">
+                      <SelectTrigger className="w-48 border-[#505A4A] text-gray-900 bg-white hover:border-[#414A3C] focus:border-[#505A4A] focus:ring-[#505A4A]/20">
                         <SelectValue placeholder="Ordenar por" className="text-gray-600" />
                       </SelectTrigger>
                       <SelectContent className="bg-white border mt-4 border-gray-200 shadow-lg">
@@ -299,7 +299,7 @@ export default function ProductsPage() {
                         variant={viewMode === "grid" ? "default" : "ghost"}
                         size="icon"
                         onClick={() => setViewMode("grid")}
-                        className={`rounded-none h-full w-10 ${viewMode === "grid" ? "bg-[#4A6741] text-white hover:bg-[#3F5D4C]" : "hover:bg-gray-100"}`}
+                        className={`rounded-none h-full w-10 ${viewMode === "grid" ? "bg-[#505A4A] text-white hover:bg-[#414A3C]" : "hover:bg-gray-100"}`}
                       >
                         <Grid3X3 className="h-4 w-4" />
                       </Button>
@@ -308,7 +308,7 @@ export default function ProductsPage() {
                         variant={viewMode === "list" ? "default" : "ghost"}
                         size="icon"
                         onClick={() => setViewMode("list")}
-                        className={`rounded-none h-full w-10 ${viewMode === "list" ? "bg-[#4A6741] text-white hover:bg-[#3F5D4C]" : "hover:bg-gray-100"}`}
+                        className={`rounded-none h-full w-10 ${viewMode === "list" ? "bg-[#505A4A] text-white hover:bg-[#414A3C]" : "hover:bg-gray-100"}`}
                       >
                         <List className="h-4 w-4" />
                       </Button>
@@ -320,7 +320,7 @@ export default function ProductsPage() {
                 {activeFiltersCount > 0 && (
                   <div className="mt-4 flex flex-wrap justify-center sm:justify-start gap-2">
                     {selectedCategories.map(category => (
-                      <Badge key={category} variant="secondary" className="bg-[#4A6741]/10 text-[#4A6741] flex items-center gap-1">
+                      <Badge key={category} variant="secondary" className="bg-[#505A4A]/10 text-[#505A4A] flex items-center gap-1">
                         {category}
                         <X
                           className="h-3 w-3 cursor-pointer hover:text-red-500"
@@ -330,7 +330,7 @@ export default function ProductsPage() {
                     ))}
 
                     {selectedPriceRanges.map(range => (
-                      <Badge key={range} variant="secondary" className="bg-[#4A6741]/10 text-[#4A6741] flex items-center gap-1">
+                      <Badge key={range} variant="secondary" className="bg-[#505A4A]/10 text-[#505A4A] flex items-center gap-1">
                         {priceRanges.find(r => r.value === range)?.name}
                         <X
                           className="h-3 w-3 cursor-pointer hover:text-red-500"
@@ -339,7 +339,7 @@ export default function ProductsPage() {
                       </Badge>
                     ))}
                     {inStockOnly && (
-                      <Badge variant="secondary" className="bg-[#4A6741]/10 text-[#4A6741] flex items-center gap-1">
+                      <Badge variant="secondary" className="bg-[#505A4A]/10 text-[#505A4A] flex items-center gap-1">
                         En stock
                         <X
                           className="h-3 w-3 cursor-pointer hover:text-red-500"
@@ -400,7 +400,7 @@ export default function ProductsPage() {
 
                       <div className="p-4">
                         <div className="flex items-center justify-between mb-2">
-                          <Badge variant="secondary" className="text-xs px-2.5 py-0.5 font-medium bg-[#4A6741]/10 text-[#4A6741] hover:bg-[#4A6741]/20">
+                          <Badge variant="secondary" className="text-xs px-2.5 py-0.5 font-medium bg-[#505A4A]/10 text-[#505A4A] hover:bg-[#505A4A]/20">
                             {product.category}
                           </Badge>
 
@@ -418,7 +418,7 @@ export default function ProductsPage() {
                             />
                           </button>
                         </div>                        <Link href={`/products/${product.id}`} prefetch={false}>
-                          <h3 className="text-lg font-bold text-[#4A6741] mb-2 hover:text-[#3F5D4C] transition-colors cursor-pointer line-clamp-2">
+                          <h3 className="text-lg font-bold text-[#505A4A] mb-2 hover:text-[#414A3C] transition-colors cursor-pointer line-clamp-2">
                             {product.name}
                           </h3>
                         </Link>
@@ -444,7 +444,7 @@ export default function ProductsPage() {
 
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center gap-2">
-                            <span className="text-xl font-bold text-[#4A6741]">€{product.price.toFixed(2)}</span>
+                            <span className="text-xl font-bold text-[#505A4A]">€{product.price.toFixed(2)}</span>
                             {product.originalPrice > product.price && (
                               <span className="text-sm text-gray-500 line-through">€{product.originalPrice.toFixed(2)}</span>
                             )}
@@ -454,7 +454,7 @@ export default function ProductsPage() {
                         <Button
                           className={`w-full font-semibold transition-all duration-200 ${addingToCart === product.id
                             ? 'bg-green-600 hover:bg-green-700'
-                            : 'bg-[#4A6741] hover:bg-[#3F5D4C]'
+                            : 'bg-[#505A4A] hover:bg-[#414A3C]'
                             } text-white`}
                           disabled={!product.inStock || addingToCart === product.id}
                           onClick={(e) => addToCart(product, e)}
@@ -487,7 +487,7 @@ export default function ProductsPage() {
                   <p className="text-gray-600 mb-4">Intenta ajustar tus filtros para ver más resultados.</p>
                   <Button
                     onClick={clearAllFilters}
-                    className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white"
+                    className="bg-[#505A4A] hover:bg-[#414A3C] text-white"
                   >
                     Limpiar filtros
                   </Button>

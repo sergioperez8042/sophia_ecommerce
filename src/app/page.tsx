@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
-import { Star, Search, Grid3X3, List, Sparkles, Leaf, Phone, Mail, MessageCircle, ArrowRight } from "lucide-react";
+import { Star, Search, Grid3X3, List, Leaf, Phone, Mail, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
@@ -105,7 +105,7 @@ export default function HomePage() {
                     transition={{ duration: 0.5 }}
                 >
                     <motion.div
-                        className="w-24 h-24 rounded-full bg-gradient-to-br from-[#4A6741] to-[#3F5D4C] flex items-center justify-center mx-auto mb-4 shadow-lg"
+                        className="w-24 h-24 rounded-full bg-gradient-to-br from-[#505A4A] to-[#414A3C] flex items-center justify-center mx-auto mb-4 shadow-lg"
                         animate={{ 
                             scale: [1, 1.15, 1, 1.1, 1],
                             boxShadow: [
@@ -142,131 +142,127 @@ export default function HomePage() {
 
     return (
         <div className="min-h-screen bg-[#FEFCF7]">
-            {/* Floating WhatsApp Button */}
-            <motion.a
-                href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hola! Me gustaría hacer un pedido`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:shadow-xl"
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 1, type: "spring", stiffness: 200 }}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-            >
-                <MessageCircle className="w-6 h-6" />
-            </motion.a>
-
             {/* Header */}
             <motion.header
-                className="nav-glass sticky top-0 z-40"
+                className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-[#505A4A]/10"
                 initial={{ y: -100 }}
                 animate={{ y: 0 }}
                 transition={{ type: "spring", stiffness: 100 }}
             >
-                <div className="max-w-7xl mx-auto px-4 py-2">
-                    <div className="flex items-center justify-between">
+                {/* Top bar - contact info (desktop only) */}
+                <div className="hidden md:block bg-[#505A4A] text-white/90">
+                    <div className="max-w-7xl mx-auto px-6 py-1.5 flex items-center justify-end gap-6 text-xs">
+                        <a
+                            href="tel:+34642633982"
+                            className="flex items-center gap-1.5 hover:text-white transition-colors"
+                        >
+                            <Phone className="w-3 h-3" />
+                            <span>+34 642 63 39 82</span>
+                        </a>
+                        <a
+                            href="mailto:chavesophia1994@gmail.com"
+                            className="flex items-center gap-1.5 hover:text-white transition-colors"
+                        >
+                            <Mail className="w-3 h-3" />
+                            <span>chavesophia1994@gmail.com</span>
+                        </a>
+                    </div>
+                </div>
+
+                {/* Main header */}
+                <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                    <div className="flex items-center justify-between h-16 sm:h-20">
+                        {/* Logo */}
                         <motion.div
                             className="flex items-center gap-3"
                             whileHover={{ scale: 1.02 }}
+                            transition={{ duration: 0.2 }}
                         >
-                            <motion.div
-                                whileHover={{ scale: 1.05 }}
-                                transition={{ duration: 0.3 }}
-                                className="relative h-20"
-                            >
-                                <img
-                                    src="/images/logo-sophia.png"
-                                    alt="Sophia"
-                                    className="h-full w-auto object-contain"
+                            <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#505A4A]/15">
+                                <Image
+                                    src="/images/sophia_logo_nuevo.jpeg"
+                                    alt="Sophia Cosmética Botánica"
+                                    fill
+                                    sizes="56px"
+                                    className="object-cover"
+                                    priority
                                 />
-                            </motion.div>
+                            </div>
+                            <span className="hidden sm:block text-lg font-semibold text-[#505A4A] tracking-tight leading-tight">Sophia</span>
                         </motion.div>
 
-                        <div className="hidden md:flex items-center gap-6 text-sm text-gray-600">
-                            <div className="flex items-center gap-2">
-                                <motion.div
-                                    animate={{ x: [0, 5, 0] }}
-                                    transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
-                                    className="text-[#4A6741]"
-                                >
-                                    <ArrowRight className="w-5 h-5" />
-                                </motion.div>
-                                <motion.a
-                                    href="tel:+34642633982"
-                                    className="flex items-center gap-2 hover:text-[#4A6741] transition-colors font-medium"
-                                    whileHover={{ scale: 1.05 }}
-                                >
-                                    <Phone className="w-4 h-4" />
-                                    <span>+34 642 63 39 82</span>
-                                </motion.a>
-                            </div>
-                            <motion.a
-                                href="mailto:chavesophia1994@gmail.com"
-                                className="flex items-center gap-2 hover:text-[#4A6741] transition-colors"
-                                whileHover={{ scale: 1.05 }}
-                            >
-                                <Mail className="w-4 h-4" />
-                                <span>chavesophia1994@gmail.com</span>
-                            </motion.a>
-                        </div>
+                        {/* Title */}
+                        <motion.h1
+                            className="text-sm sm:text-base md:text-lg font-semibold text-[#505A4A] tracking-tight"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3, duration: 0.4 }}
+                        >
+                            Explora nuestra colección
+                        </motion.h1>
+
+                        {/* CTA */}
+                        <motion.a
+                            href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hola! Me gustaría hacer un pedido`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 bg-[#505A4A] text-white px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium hover:bg-[#414A3C] transition-colors shadow-sm"
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
+                        >
+                            <MessageCircle className="w-4 h-4" />
+                            <span className="hidden sm:inline">Pedir por WhatsApp</span>
+                            <span className="sm:hidden">Pedir</span>
+                        </motion.a>
                     </div>
                 </div>
             </motion.header>
 
-            {/* Hero Section */}
-            <section className="hero-gradient py-16 px-4 relative overflow-hidden">
-                {/* Animated background elements */}
-                <motion.div
-                    className="absolute top-10 left-10 w-32 h-32 rounded-full bg-[#4A6741]/10 blur-3xl"
-                    animate={{
-                        scale: [1, 1.2, 1],
-                        opacity: [0.3, 0.6, 0.3],
-                    }}
-                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            {/* Hero Section - Cover Photo */}
+            <section className="relative h-48 sm:h-56 md:h-72 overflow-hidden">
+                {/* Cover image - replace /images/hero-cover.jpg with your own product photo */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#505A4A] via-[#414A3C] to-[#363E31]" />
+                <img
+                    src="/images/hero-cover.jpg"
+                    alt="Productos naturales Sophia"
+                    className="absolute inset-0 w-full h-full object-cover"
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                 />
-                <motion.div
-                    className="absolute bottom-10 right-10 w-48 h-48 rounded-full bg-[#D4AF37]/10 blur-3xl"
-                    animate={{
-                        scale: [1.2, 1, 1.2],
-                        opacity: [0.2, 0.5, 0.2],
-                    }}
-                    transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-                />
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#414A3C]/80 via-[#505A4A]/40 to-transparent" />
 
-                <div className="max-w-7xl mx-auto text-center relative z-10">
+                {/* Content overlay */}
+                <div className="absolute inset-0 flex items-end justify-center pb-6 sm:pb-8 px-4">
                     <motion.div
-                        className="inline-flex items-center gap-2 bg-[#4A6741]/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6"
+                        className="text-center"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
                     >
                         <motion.div
-                            animate={{ rotate: [0, 360] }}
-                            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                            className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full mb-3"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
                         >
-                            <Sparkles className="w-4 h-4 text-[#4A6741]" />
+                            <motion.div
+                                animate={{ rotate: [0, 10, -10, 0] }}
+                                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                            >
+                                <Leaf className="w-3.5 h-3.5 text-white" />
+                            </motion.div>
+                            <span className="text-xs sm:text-sm text-white font-medium">Cosmética Botánica</span>
                         </motion.div>
-                        <span className="text-sm text-[#4A6741] font-medium">Cosmética Natural Artesanal</span>
+
+                        <motion.p
+                            className="text-white/90 max-w-xl mx-auto text-sm sm:text-base"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.4 }}
+                        >
+                            Productos naturales elaborados con ingredientes orgánicos de la más alta calidad.
+                        </motion.p>
                     </motion.div>
-
-                    <motion.h2
-                        className="text-4xl md:text-5xl font-bold text-gray-900 mb-4"
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3, duration: 0.6 }}
-                    >
-                        Nuestro Catálogo
-                    </motion.h2>
-
-                    <motion.p
-                        className="text-gray-600 max-w-2xl mx-auto text-lg"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.4 }}
-                    >
-                        Descubre nuestra colección de productos naturales elaborados con ingredientes orgánicos de la más alta calidad.
-                    </motion.p>
                 </div>
             </section>
 
@@ -279,13 +275,13 @@ export default function HomePage() {
             >
                 <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
                     <div className="relative w-full md:w-96">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#4A6741]" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#505A4A]" />
                         <input
                             type="text"
                             placeholder="Buscar productos..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#4A6741]/20 bg-white focus:outline-none focus:ring-2 focus:ring-[#4A6741]/50 text-gray-900 transition-all"
+                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#505A4A]/20 bg-white focus:outline-none focus:ring-2 focus:ring-[#505A4A]/50 text-gray-900 transition-all"
                         />
                     </div>
 
@@ -293,8 +289,8 @@ export default function HomePage() {
                         <motion.button
                             onClick={() => setSelectedCategory("all")}
                             className={`px-4 py-2 rounded-full text-sm whitespace-nowrap transition-all ${selectedCategory === "all"
-                                ? "bg-[#4A6741] text-white shadow-lg"
-                                : "bg-white text-gray-600 hover:bg-[#F5F1E8] border border-[#4A6741]/20"
+                                ? "bg-[#505A4A] text-white shadow-lg"
+                                : "bg-white text-gray-600 hover:bg-[#F5F1E8] border border-[#505A4A]/20"
                                 }`}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
@@ -309,8 +305,8 @@ export default function HomePage() {
                                     key={cat.id}
                                     onClick={() => setSelectedCategory(cat.id)}
                                     className={`px-4 py-2 rounded-full text-sm whitespace-nowrap transition-all ${selectedCategory === cat.id
-                                        ? "bg-[#4A6741] text-white shadow-lg"
-                                        : "bg-white text-gray-600 hover:bg-[#F5F1E8] border border-[#4A6741]/20"
+                                        ? "bg-[#505A4A] text-white shadow-lg"
+                                        : "bg-white text-gray-600 hover:bg-[#F5F1E8] border border-[#505A4A]/20"
                                         }`}
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
@@ -321,10 +317,10 @@ export default function HomePage() {
                         })}
                     </div>
 
-                    <div className="hidden md:flex items-center gap-2 bg-white rounded-lg p-1 border border-[#4A6741]/20">
+                    <div className="hidden md:flex items-center gap-2 bg-white rounded-lg p-1 border border-[#505A4A]/20">
                         <motion.button
                             onClick={() => setViewMode("grid")}
-                            className={`p-2 rounded-md transition-colors ${viewMode === "grid" ? "bg-[#F5F1E8] text-[#4A6741]" : "text-gray-600"}`}
+                            className={`p-2 rounded-md transition-colors ${viewMode === "grid" ? "bg-[#F5F1E8] text-[#505A4A]" : "text-gray-600"}`}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                         >
@@ -332,7 +328,7 @@ export default function HomePage() {
                         </motion.button>
                         <motion.button
                             onClick={() => setViewMode("list")}
-                            className={`p-2 rounded-md transition-colors ${viewMode === "list" ? "bg-[#F5F1E8] text-[#4A6741]" : "text-gray-600"}`}
+                            className={`p-2 rounded-md transition-colors ${viewMode === "list" ? "bg-[#F5F1E8] text-[#505A4A]" : "text-gray-600"}`}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                         >
@@ -353,11 +349,11 @@ export default function HomePage() {
                             exit={{ opacity: 0, scale: 0.9 }}
                         >
                             <motion.div
-                                className="w-16 h-16 bg-[#4A6741]/10 rounded-full flex items-center justify-center mx-auto mb-4"
+                                className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4"
                                 animate={{ rotate: [0, 10, -10, 0] }}
                                 transition={{ duration: 2, repeat: Infinity }}
                             >
-                                <Search className="w-8 h-8 text-[#4A6741]" />
+                                <Search className="w-8 h-8 text-gray-400" />
                             </motion.div>
                             <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron productos</h3>
                             <p className="text-gray-600">Prueba con otros filtros o términos de búsqueda</p>
@@ -389,27 +385,12 @@ export default function HomePage() {
 
             {/* Footer */}
             <motion.footer
-                className="bg-[#3F5D4C] text-white py-8 sm:py-10 px-4 pb-24 sm:pb-10"
+                className="bg-[#414A3C] text-white py-8 sm:py-10 px-4 pb-24 sm:pb-10"
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
             >
                 <div className="max-w-7xl mx-auto">
-                    {/* Logo y nombre */}
-                    <motion.div
-                        className="flex items-center justify-center gap-3 mb-4"
-                        whileHover={{ scale: 1.05 }}
-                    >
-                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#4A6741] to-[#3F5D4C] rounded-full flex items-center justify-center border border-white/20 overflow-hidden">
-                            <img src="/images/logo_hand2.png" alt="Sophia" className="w-8 h-8 sm:w-10 sm:h-10 object-contain" />
-                        </div>
-                        <span className="text-lg sm:text-xl font-semibold">Sophia Cosmética Natural</span>
-                    </motion.div>
-                    
-                    <p className="text-white/70 text-sm text-center mb-6">
-                        Productos artesanales con ingredientes 100% naturales
-                    </p>
-                    
                     {/* Contact info - stacked on mobile */}
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-sm">
                         <a 
@@ -431,7 +412,7 @@ export default function HomePage() {
                     {/* Copyright */}
                     <div className="mt-6 pt-4 border-t border-white/10 text-center">
                         <p className="text-white/50 text-xs">
-                            © {new Date().getFullYear()} Sophia. Todos los derechos reservados.
+                            © 2022 Sophia. Todos los derechos reservados.
                         </p>
                     </div>
                 </div>
@@ -492,7 +473,7 @@ function ProductCard({
                     />
                     {product.featured && (
                         <motion.div
-                            className="absolute top-2 left-2 bg-[#D4AF37] text-white text-xs px-2 py-1 rounded-full flex items-center gap-1"
+                            className="absolute top-2 left-2 bg-[#C4B590] text-white text-xs px-2 py-1 rounded-full flex items-center gap-1"
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
                             transition={{ delay: 0.3, type: "spring" }}
@@ -504,12 +485,12 @@ function ProductCard({
                 </div>
                 <div className="p-4 flex-1 flex flex-col justify-between">
                     <div>
-                        <span className="text-xs text-[#4A6741] font-medium">{categoryName}</span>
+                        <span className="text-xs text-[#505A4A] font-medium">{categoryName}</span>
                         <h3 className="font-semibold text-gray-900 mt-1">{product.name}</h3>
                         <p className="text-sm text-gray-600 mt-1 line-clamp-2">{product.description}</p>
                     </div>
                     <div className="flex items-center justify-between mt-3">
-                        <span className="text-xl font-bold text-[#4A6741]">{formatPrice(product.price)}</span>
+                        <span className="text-xl font-bold text-[#505A4A]">{formatPrice(product.price)}</span>
                         <motion.button
                             onClick={handleWhatsAppOrder}
                             className="bg-[#25D366] text-white px-3 py-1.5 rounded-full text-sm flex items-center gap-1"
@@ -545,7 +526,7 @@ function ProductCard({
                 />
                 {product.featured && (
                     <motion.div
-                        className="absolute top-3 left-3 bg-[#D4AF37] text-white text-xs px-2 py-1 rounded-full flex items-center gap-1"
+                        className="absolute top-3 left-3 bg-[#C4B590] text-white text-xs px-2 py-1 rounded-full flex items-center gap-1"
                         initial={{ scale: 0, rotate: -10 }}
                         animate={{ scale: 1, rotate: 0 }}
                         transition={{ delay: 0.3, type: "spring" }}
@@ -578,7 +559,7 @@ function ProductCard({
             </div>
             <div className="p-4">
                 <motion.span
-                    className="text-xs text-[#4A6741] font-medium"
+                    className="text-xs text-[#505A4A] font-medium"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.2 }}
@@ -589,7 +570,7 @@ function ProductCard({
                 <p className="text-sm text-gray-600 mt-1 line-clamp-2">{product.description}</p>
                 <div className="flex items-center justify-between mt-3">
                     <motion.span
-                        className="text-xl font-bold text-[#4A6741]"
+                        className="text-xl font-bold text-[#505A4A]"
                         initial={{ scale: 0.8 }}
                         animate={{ scale: 1 }}
                         transition={{ delay: 0.3, type: "spring" }}
@@ -598,7 +579,7 @@ function ProductCard({
                     </motion.span>
                     {product.rating > 0 && (
                         <div className="flex items-center gap-1 text-sm text-gray-600">
-                            <Star className="w-4 h-4 fill-[#D4AF37] text-[#D4AF37]" />
+                            <Star className="w-4 h-4 fill-[#C4B590] text-[#C4B590]" />
                             <span>{product.rating.toFixed(1)}</span>
                         </div>
                     )}

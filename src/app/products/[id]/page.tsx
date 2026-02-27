@@ -218,8 +218,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     whileTap={{ scale: 0.95 }}
                                     onClick={() => setSelectedImage(index)}
                                     className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all duration-300 ${selectedImage === index
-                                        ? 'border-[#4A6741] shadow-md'
-                                        : 'border-gray-200 hover:border-[#4A6741]/50'
+                                        ? 'border-[#505A4A] shadow-md'
+                                        : 'border-gray-200 hover:border-[#505A4A]/50'
                                         }`}
                                 >
                                     <Image
@@ -237,7 +237,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     <motion.div variants={itemVariants} className="space-y-6">
                         {/* Header del producto */}
                         <div>
-                            <Badge variant="secondary" className="mb-2 bg-[#4A6741]/10 text-[#4A6741] hover:bg-[#4A6741]/20 font-semibold">
+                            <Badge variant="secondary" className="mb-2 bg-[#505A4A]/10 text-[#505A4A] hover:bg-[#505A4A]/20 font-semibold">
                                 {product.category}
                             </Badge>
                             <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
@@ -263,7 +263,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
                         {/* Precio */}
                         <div className="flex items-center gap-3">
-                            <span className="text-3xl font-bold text-[#4A6741]">${product.price}</span>
+                            <span className="text-3xl font-bold text-[#505A4A]">${product.price}</span>
                             {product.originalPrice > product.price && (
                                 <span className="text-xl text-gray-500 line-through">${product.originalPrice}</span>
                             )}
@@ -276,12 +276,12 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         <div className="space-y-4">
                             <div className="flex items-center gap-4">
                                 <span className="font-bold text-gray-900">Cantidad:</span>
-                                <div className="flex items-center bg-white border-2 border-[#4A6741]/40 rounded-lg shadow-md hover:border-[#4A6741]/60 transition-all duration-200">
+                                <div className="flex items-center bg-white border-2 border-[#505A4A]/40 rounded-lg shadow-md hover:border-[#505A4A]/60 transition-all duration-200">
                                     <Button
                                         variant="ghost"
                                         size="sm"
                                         onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                        className="h-10 w-10 p-0 hover:bg-[#4A6741] hover:text-white border-r-2 border-[#4A6741]/40 rounded-r-none text-[#4A6741] font-bold transition-all"
+                                        className="h-10 w-10 p-0 hover:bg-[#505A4A] hover:text-white border-r-2 border-[#505A4A]/40 rounded-r-none text-[#505A4A] font-bold transition-all"
                                     >
                                         <Minus className="h-5 w-5 stroke-[3]" />
                                     </Button>
@@ -292,7 +292,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                         variant="ghost"
                                         size="sm"
                                         onClick={() => setQuantity(quantity + 1)}
-                                        className="h-10 w-10 p-0 hover:bg-[#4A6741] hover:text-white border-l-2 border-[#4A6741]/40 rounded-l-none text-[#4A6741] font-bold transition-all"
+                                        className="h-10 w-10 p-0 hover:bg-[#505A4A] hover:text-white border-l-2 border-[#505A4A]/40 rounded-l-none text-[#505A4A] font-bold transition-all"
                                     >
                                         <Plus className="h-5 w-5 stroke-[3]" />
                                     </Button>
@@ -305,7 +305,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                         onClick={handleAddToCart}
                                         className={`w-full h-12 text-lg font-bold shadow-lg transition-all ${addedToCart
                                             ? 'bg-green-600 hover:bg-green-700'
-                                            : 'bg-[#4A6741] hover:bg-[#3F5D4C]'
+                                            : 'bg-[#505A4A] hover:bg-[#414A3C]'
                                             } text-white`}
                                     >
                                         <ShoppingBag className="mr-2 h-6 w-6 stroke-2 fill-white/20" />
@@ -333,17 +333,17 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             className="grid grid-cols-3 gap-4 py-6 border-t border-b border-gray-200"
                         >
                             <div className="flex flex-col items-center text-center">
-                                <Truck className="h-8 w-8 text-[#4A6741] mb-2 stroke-2" />
+                                <Truck className="h-8 w-8 text-[#505A4A] mb-2 stroke-2" />
                                 <span className="text-sm font-semibold text-gray-900">Envío gratis</span>
                                 <span className="text-xs text-gray-600">Pedidos +$50</span>
                             </div>
                             <div className="flex flex-col items-center text-center">
-                                <Shield className="h-8 w-8 text-[#4A6741] mb-2 stroke-2" />
+                                <Shield className="h-8 w-8 text-[#505A4A] mb-2 stroke-2" />
                                 <span className="text-sm font-semibold text-gray-900">Garantía</span>
                                 <span className="text-xs text-gray-600">30 días</span>
                             </div>
                             <div className="flex flex-col items-center text-center">
-                                <RotateCcw className="h-8 w-8 text-[#4A6741] mb-2 stroke-2" />
+                                <RotateCcw className="h-8 w-8 text-[#505A4A] mb-2 stroke-2" />
                                 <span className="text-sm font-semibold text-gray-900">Devoluciones</span>
                                 <span className="text-xs text-gray-600">Sin costo</span>
                             </div>
@@ -371,14 +371,14 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id)}
                                         className={`flex-1 py-6 px-6 font-semibold text-lg transition-all duration-300 relative ${activeTab === tab.id
-                                            ? 'text-[#4A6741] bg-white'
-                                            : 'text-gray-600 hover:text-[#4A6741] hover:bg-white/50'
+                                            ? 'text-[#505A4A] bg-white'
+                                            : 'text-gray-600 hover:text-[#505A4A] hover:bg-white/50'
                                             }`}
                                     >
                                         {tab.label}
                                         {activeTab === tab.id && (
                                             <motion.div
-                                                className="absolute bottom-0 left-0 right-0 h-1 bg-[#4A6741]"
+                                                className="absolute bottom-0 left-0 right-0 h-1 bg-[#505A4A]"
                                                 layoutId="activeTab"
                                                 initial={false}
                                                 transition={{ type: "spring", stiffness: 500, damping: 30 }}
@@ -415,7 +415,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                     transition={{ duration: 0.3, delay: index * 0.1 }}
                                                     className="flex items-start space-x-4 p-4 bg-green-50/50 rounded-lg border border-green-100 hover:shadow-sm transition-shadow duration-200"
                                                 >
-                                                    <div className="h-3 w-3 bg-[#4A6741] rounded-full flex-shrink-0 mt-1.5" />
+                                                    <div className="h-3 w-3 bg-[#505A4A] rounded-full flex-shrink-0 mt-1.5" />
                                                     <span className="text-gray-800 font-medium text-base">{feature}</span>
                                                 </motion.div>
                                             ))}
@@ -425,7 +425,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     {activeTab === 'ingredients' && (
                                         <div className="prose prose-gray max-w-none">
                                             <div className="bg-amber-50/80 border border-amber-200 rounded-xl p-6">
-                                                <h4 className="text-lg font-semibold text-[#4A6741] mb-4 flex items-center">
+                                                <h4 className="text-lg font-semibold text-[#505A4A] mb-4 flex items-center">
                                                     <Sparkles className="w-5 h-5 mr-2 stroke-2 text-amber-600" />
                                                     Ingredientes principales:
                                                 </h4>

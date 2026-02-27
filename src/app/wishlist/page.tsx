@@ -35,7 +35,7 @@ export default function WishlistPage() {
     if (!isLoaded || productsLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <Loader2 className="w-12 h-12 animate-spin text-[#4A6741]" />
+                <Loader2 className="w-12 h-12 animate-spin text-[#505A4A]" />
             </div>
         );
     }
@@ -54,11 +54,11 @@ export default function WishlistPage() {
                         className="text-center py-16"
                     >
                         <div className="max-w-md mx-auto">
-                            <Heart className="h-24 w-24 text-[#4A6741]/40 mx-auto mb-6" />
+                            <Heart className="h-24 w-24 text-[#505A4A]/40 mx-auto mb-6" />
                             <h2 className="text-3xl font-bold text-gray-900 mb-4">Tu lista de favoritos está vacía</h2>
                             <p className="text-gray-700 mb-8 text-lg font-medium">Explora nuestros productos y guarda tus favoritos aquí.</p>
                             <Link href="/products">
-                                <Button className="bg-[#4A6741] hover:bg-[#3d5636] text-white font-bold px-8 py-3 text-lg shadow-lg">
+                                <Button className="bg-[#505A4A] hover:bg-[#3d5636] text-white font-bold px-8 py-3 text-lg shadow-lg">
                                     Explorar Productos
                                 </Button>
                             </Link>
@@ -95,7 +95,7 @@ export default function WishlistPage() {
                                             </p>
                                         </div>
                                     </div>
-                                    <Badge variant="secondary" className="bg-[#4A6741]/10 text-[#4A6741] font-bold text-lg px-4 py-2">
+                                    <Badge variant="secondary" className="bg-[#505A4A]/10 text-[#505A4A] font-bold text-lg px-4 py-2">
                                         {wishlistItems.length} productos
                                     </Badge>
                                 </div>
@@ -144,7 +144,7 @@ export default function WishlistPage() {
                                             {/* Información del producto */}
                                             <div className="p-6 flex-1 flex flex-col">
                                                 <Link href={`/products/${product.id}`} className="mb-2 block">
-                                                    <h3 className="text-xl font-bold text-[#4A6741] hover:text-[#3d5636] transition-colors line-clamp-1">
+                                                    <h3 className="text-xl font-bold text-[#505A4A] hover:text-[#3d5636] transition-colors line-clamp-1">
                                                         {product.name}
                                                     </h3>
                                                 </Link>
@@ -156,7 +156,7 @@ export default function WishlistPage() {
                                                 <div className="mt-auto">
                                                     {/* Precio */}
                                                     <div className="flex items-center justify-between mb-4">
-                                                        <span className="text-2xl font-bold text-[#4A6741]">€{product.price.toFixed(2)}</span>
+                                                        <span className="text-2xl font-bold text-[#505A4A]">€{product.price.toFixed(2)}</span>
                                                         <Badge
                                                             variant="secondary"
                                                             className={`${product.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'} font-semibold`}
@@ -169,7 +169,7 @@ export default function WishlistPage() {
                                                     <div className="flex flex-col gap-2">
                                                         <Button
                                                             onClick={() => addToCart(product)}
-                                                            className="w-full bg-[#4A6741] hover:bg-[#3d5636] text-white font-bold"
+                                                            className="w-full bg-[#505A4A] hover:bg-[#3d5636] text-white font-bold"
                                                             disabled={!product.active}
                                                         >
                                                             <ShoppingBag className="h-4 w-4 mr-2" />
@@ -178,7 +178,7 @@ export default function WishlistPage() {
                                                         <Link href={`/products/${product.id}`} className="w-full">
                                                             <Button
                                                                 variant="outline"
-                                                                className="w-full border-[#4A6741] text-[#4A6741] hover:bg-[#4A6741] hover:text-white"
+                                                                className="w-full border-[#505A4A] text-[#505A4A] hover:bg-[#505A4A] hover:text-white"
                                                             >
                                                                 <Eye className="h-4 w-4 mr-2" />
                                                                 Ver Detalles
@@ -197,7 +197,7 @@ export default function WishlistPage() {
                     {/* Footer Actions */}
                     <motion.div variants={itemVariants} className="mt-12 text-center">
                         <Link href="/products">
-                            <Button variant="outline" className="border-[#4A6741] text-[#4A6741] hover:bg-[#4A6741] hover:text-white font-bold px-8 py-3 text-lg">
+                            <Button variant="outline" className="border-[#505A4A] text-[#505A4A] hover:bg-[#505A4A] hover:text-white font-bold px-8 py-3 text-lg">
                                 <ArrowLeft className="h-5 w-5 mr-2" />
                                 Seguir Explorando
                             </Button>

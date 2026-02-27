@@ -54,7 +54,7 @@ export default function HomePage() {
                             transition={{ duration: 0.8 }}
                         >
                             <div className="flex items-center gap-2 mb-6">
-                                <Badge className="bg-[#4A6741]/10 text-[#4A6741] border-[#4A6741]/20">
+                                <Badge className="bg-[#505A4A]/10 text-[#505A4A] border-[#505A4A]/20">
                                     <Leaf className="w-3 h-3 mr-1" />
                                     100% Natural
                                 </Badge>
@@ -62,7 +62,7 @@ export default function HomePage() {
 
                             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 leading-tight mb-6">
                                 Belleza natural
-                                <span className="block text-[#4A6741]">para tu piel</span>
+                                <span className="block text-[#505A4A]">para tu piel</span>
                             </h1>
 
                             <p className="text-xl text-gray-800 leading-relaxed mb-8 max-w-xl">
@@ -73,13 +73,13 @@ export default function HomePage() {
 
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <Link href="/products">
-                                    <Button size="lg" className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white px-8 py-3 text-lg">
+                                    <Button size="lg" className="bg-[#505A4A] hover:bg-[#414A3C] text-white px-8 py-3 text-lg">
                                         Explorar productos
                                         <ArrowRight className="w-5 h-5 ml-2" />
                                     </Button>
                                 </Link>
                                 <Link href="/about">
-                                    <Button variant="outline" size="lg" className="border-[#4A6741] text-[#4A6741] hover:bg-[#4A6741] hover:text-white px-8 py-3 text-lg">
+                                    <Button variant="outline" size="lg" className="border-[#505A4A] text-[#505A4A] hover:bg-[#505A4A] hover:text-white px-8 py-3 text-lg">
                                         Nuestra historia
                                     </Button>
                                 </Link>
@@ -121,7 +121,7 @@ export default function HomePage() {
             <CategoryShowcase categories={categories} isLoading={isLoading} />
 
             {/* Newsletter Section */}
-            <section className="py-16 bg-gradient-to-r from-[#4A6741] to-[#3F5D4C]">
+            <section className="py-16 bg-gradient-to-r from-[#505A4A] to-[#414A3C]">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -142,7 +142,7 @@ export default function HomePage() {
                                 placeholder="Tu email"
                                 className="flex-1 px-6 py-3 rounded-lg border-2 border-white/60 bg-white/95 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-white focus:border-white focus:bg-white transition-all duration-200 shadow-sm"
                             />
-                            <Button className="bg-white text-[#4A6741] hover:bg-gray-100 px-8 py-3 font-semibold">
+                            <Button className="bg-white text-[#505A4A] hover:bg-gray-100 px-8 py-3 font-semibold">
                                 Suscribirme
                             </Button>
                         </div>

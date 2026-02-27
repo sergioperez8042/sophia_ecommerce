@@ -46,7 +46,7 @@ export default function CategoriesPage() {
     if (isLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <Loader2 className="w-12 h-12 animate-spin text-[#4A6741]" />
+                <Loader2 className="w-12 h-12 animate-spin text-[#505A4A]" />
             </div>
         );
     }
@@ -55,7 +55,7 @@ export default function CategoriesPage() {
         <div className="min-h-screen hero-gradient relative overflow-hidden">
             {/* Animated background elements (Hero Gradient Style) */}
             <motion.div
-                className="absolute top-20 left-10 w-32 h-32 rounded-full bg-[#4A6741]/10 blur-3xl"
+                className="absolute top-20 left-10 w-32 h-32 rounded-full bg-[#505A4A]/10 blur-3xl"
                 animate={{
                     scale: [1, 1.2, 1],
                     opacity: [0.3, 0.6, 0.3],
@@ -68,7 +68,7 @@ export default function CategoriesPage() {
                 }}
             />
             <motion.div
-                className="absolute bottom-20 right-10 w-48 h-48 rounded-full bg-[#D4AF37]/10 blur-3xl"
+                className="absolute bottom-20 right-10 w-48 h-48 rounded-full bg-[#C4B590]/10 blur-3xl"
                 animate={{
                     scale: [1.2, 1, 1.2],
                     opacity: [0.2, 0.5, 0.2],
@@ -149,7 +149,7 @@ export default function CategoriesPage() {
                                                     {/* Overlay con contador */}
                                                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors">
                                                         <div className="absolute bottom-4 right-4">
-                                                            <Badge className="bg-white/90 text-[#4A6741] hover:bg-white">
+                                                            <Badge className="bg-white/90 text-[#505A4A] hover:bg-white">
                                                                 {productCount} productos
                                                             </Badge>
                                                         </div>
@@ -159,7 +159,7 @@ export default function CategoriesPage() {
                                                 {/* Información de la categoría */}
                                                 <div className="p-6 flex-1 flex flex-col justify-between">
                                                     <div>
-                                                        <h3 className="text-xl font-bold text-[#4A6741] mb-2 group-hover:text-[#3F5D4C] transition-colors">
+                                                        <h3 className="text-xl font-bold text-[#505A4A] mb-2 group-hover:text-[#414A3C] transition-colors">
                                                             {category.name}
                                                         </h3>
                                                         <p className="text-gray-700 text-sm line-clamp-2">
@@ -184,7 +184,7 @@ export default function CategoriesPage() {
                                 <Button
                                     variant="outline"
                                     onClick={() => setSelectedCategory(null)}
-                                    className="border-[#4A6741] text-[#4A6741] hover:bg-[#4A6741] hover:text-white"
+                                    className="border-[#505A4A] text-[#505A4A] hover:bg-[#505A4A] hover:text-white"
                                 >
                                     ← Volver a Categorías
                                 </Button>
@@ -195,7 +195,7 @@ export default function CategoriesPage() {
                                         variant={viewMode === 'grid' ? 'default' : 'outline'}
                                         size="sm"
                                         onClick={() => setViewMode('grid')}
-                                        className={viewMode === 'grid' ? 'bg-[#4A6741] text-white' : 'border-[#4A6741] text-[#4A6741]'}
+                                        className={viewMode === 'grid' ? 'bg-[#505A4A] text-white' : 'border-[#505A4A] text-[#505A4A]'}
                                     >
                                         <Grid3X3 className="h-4 w-4" />
                                     </Button>
@@ -203,7 +203,7 @@ export default function CategoriesPage() {
                                         variant={viewMode === 'list' ? 'default' : 'outline'}
                                         size="sm"
                                         onClick={() => setViewMode('list')}
-                                        className={viewMode === 'list' ? 'bg-[#4A6741] text-white' : 'border-[#4A6741] text-[#4A6741]'}
+                                        className={viewMode === 'list' ? 'bg-[#505A4A] text-white' : 'border-[#505A4A] text-[#505A4A]'}
                                     >
                                         <List className="h-4 w-4" />
                                     </Button>
@@ -257,7 +257,7 @@ export default function CategoriesPage() {
                                                             <div>
                                                                 <div className="flex items-start justify-between gap-2 mb-2">
                                                                     <Link href={`/products/${product.id}`} prefetch={false} className="flex-1">
-                                                                        <h3 className="font-semibold text-lg text-gray-900 group-hover:text-[#4A6741] transition-colors line-clamp-2">
+                                                                        <h3 className="font-semibold text-lg text-gray-900 group-hover:text-[#505A4A] transition-colors line-clamp-2">
                                                                             {product.name}
                                                                         </h3>
                                                                     </Link>
@@ -281,7 +281,7 @@ export default function CategoriesPage() {
                                                                     {[...Array(5)].map((_, i) => (
                                                                         <Star
                                                                             key={i}
-                                                                            className={`w-4 h-4 ${i < Math.round(product.rating || 0) ? 'fill-[#D4AF37] text-[#D4AF37]' : 'text-gray-300'}`}
+                                                                            className={`w-4 h-4 ${i < Math.round(product.rating || 0) ? 'fill-[#C4B590] text-[#C4B590]' : 'text-gray-300'}`}
                                                                         />
                                                                     ))}
                                                                     <span className="text-sm text-gray-500 ml-2">
@@ -294,7 +294,7 @@ export default function CategoriesPage() {
                                                                 {/* Precio */}
                                                                 <div className="flex items-center justify-between mb-4">
                                                                     <div className="flex items-center gap-2">
-                                                                        <span className="text-2xl font-bold text-[#4A6741]">
+                                                                        <span className="text-2xl font-bold text-[#505A4A]">
                                                                             €{product.price.toFixed(2)}
                                                                         </span>
                                                                     </div>
@@ -306,7 +306,7 @@ export default function CategoriesPage() {
                                                                 {/* Botón de agregar al carrito */}
                                                                 <Button
                                                                     onClick={() => addToCart(product)}
-                                                                    className="w-full bg-[#4A6741] hover:bg-[#3F5D4C] text-white"
+                                                                    className="w-full bg-[#505A4A] hover:bg-[#414A3C] text-white"
                                                                 >
                                                                     <ShoppingBag className="w-4 h-4 mr-2" />
                                                                     Agregar al Carrito

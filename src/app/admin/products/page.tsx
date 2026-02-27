@@ -87,7 +87,7 @@ export default function AdminProductsPage() {
     if (!isLoaded || isLoading || categoriesLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4A6741]" />
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#505A4A]" />
             </div>
         );
     }
@@ -204,7 +204,7 @@ export default function AdminProductsPage() {
                             <div className="flex items-center gap-2 mb-2">
                                 <Link
                                     href="/admin"
-                                    className="text-gray-500 hover:text-[#4A6741] transition-colors"
+                                    className="text-gray-500 hover:text-[#505A4A] transition-colors"
                                 >
                                     <ArrowLeft className="w-5 h-5" />
                                 </Link>
@@ -218,7 +218,7 @@ export default function AdminProductsPage() {
                         </div>
                         <Button
                             onClick={handleCreateNew}
-                            className="bg-[#4A6741] hover:bg-[#3d5636] text-white"
+                            className="bg-[#505A4A] hover:bg-[#3d5636] text-white"
                         >
                             <Plus className="w-4 h-4 mr-2" />
                             Nuevo Producto
@@ -242,7 +242,7 @@ export default function AdminProductsPage() {
                                 <select
                                     value={categoryFilter}
                                     onChange={(e) => setCategoryFilter(e.target.value)}
-                                    className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6741] text-gray-900 bg-white"
+                                    className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#505A4A] text-gray-900 bg-white"
                                 >
                                     <option value="all" className="text-gray-900">Todas las categorías</option>
                                     {categories.map((cat) => (
@@ -495,7 +495,7 @@ export default function AdminProductsPage() {
                 <div className="mb-8">
                     <button
                         onClick={handleCancel}
-                        className="flex items-center gap-2 text-gray-600 hover:text-[#4A6741] transition-colors mb-4"
+                        className="flex items-center gap-2 text-gray-600 hover:text-[#505A4A] transition-colors mb-4"
                     >
                         <ArrowLeft className="w-5 h-5" />
                         Volver a la lista
@@ -549,7 +549,7 @@ export default function AdminProductsPage() {
                                             }
                                             placeholder="Describe el producto..."
                                             rows={4}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6741] text-gray-900 placeholder:text-gray-500"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#505A4A] text-gray-900 placeholder:text-gray-500"
                                             required
                                         />
                                     </div>
@@ -588,7 +588,7 @@ export default function AdminProductsPage() {
                                                 onChange={(e) =>
                                                     setFormData({ ...formData, category_id: e.target.value })
                                                 }
-                                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6741] text-gray-900 bg-white"
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#505A4A] text-gray-900 bg-white"
                                                 required
                                             >
                                                 <option value="" className="text-gray-500">Seleccionar categoría</option>
@@ -645,7 +645,7 @@ export default function AdminProductsPage() {
                                             onChange={(e) => setIngredientsInput(e.target.value)}
                                             placeholder="Ej: aloe vera, aceite de jojoba, manteca de karité"
                                             rows={2}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4A6741] text-gray-900 placeholder:text-gray-500"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#505A4A] text-gray-900 placeholder:text-gray-500"
                                         />
                                     </div>
                                 </CardContent>
@@ -721,7 +721,7 @@ export default function AdminProductsPage() {
                                                         setIsUploading(false);
                                                     }
                                                 }}
-                                                className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#4A6741] file:text-white hover:file:bg-[#3d5636] cursor-pointer"
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#505A4A] file:text-white hover:file:bg-[#3d5636] cursor-pointer"
                                                 disabled={isUploading}
                                             />
                                         </div>
@@ -731,7 +731,7 @@ export default function AdminProductsPage() {
                                             <div className="mt-2">
                                                 <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                                                     <div
-                                                        className="h-full bg-[#4A6741] transition-all duration-300"
+                                                        className="h-full bg-[#505A4A] transition-all duration-300"
                                                         style={{ width: `${uploadProgress}%` }}
                                                     />
                                                 </div>
@@ -850,7 +850,7 @@ export default function AdminProductsPage() {
                                 <Button
                                     type="submit"
                                     disabled={isSaving}
-                                    className="w-full bg-[#4A6741] hover:bg-[#3d5636] text-white"
+                                    className="w-full bg-[#505A4A] hover:bg-[#3d5636] text-white"
                                 >
                                     {isSaving ? (
                                         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />

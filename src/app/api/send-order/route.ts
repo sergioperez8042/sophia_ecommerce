@@ -73,13 +73,13 @@ export async function POST(request: NextRequest) {
             subject: `🛒 Nuevo Pedido ${orderNumber} - ${customerName}`,
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                    <div style="background-color: #4A6741; padding: 20px; text-align: center;">
+                    <div style="background-color: #505A4A; padding: 20px; text-align: center;">
                         <h1 style="color: white; margin: 0;">SOPHIA</h1>
                         <p style="color: #E8F5E9; margin: 5px 0;">Nuevo Pedido Recibido</p>
                     </div>
                     
                     <div style="padding: 20px; background-color: #f9f9f9;">
-                        <h2 style="color: #4A6741;">Pedido: ${orderNumber}</h2>
+                        <h2 style="color: #505A4A;">Pedido: ${orderNumber}</h2>
                         
                         <div style="background-color: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
                             <h3 style="color: #333; margin-top: 0;">👤 Cliente</h3>
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
                             <div>${orderDetails.replace(/\n/g, '<br>')}</div>
                         </div>
                         
-                        <div style="background-color: #4A6741; color: white; padding: 15px; border-radius: 8px; text-align: center;">
+                        <div style="background-color: #505A4A; color: white; padding: 15px; border-radius: 8px; text-align: center;">
                             <p style="margin: 5px 0;">Subtotal: ${subtotal.toFixed(2)}€</p>
                             <p style="margin: 5px 0;">Envío: ${shipping === 0 ? 'GRATIS' : shipping.toFixed(2) + '€'}</p>
                             <h2 style="margin: 10px 0;">TOTAL: ${total.toFixed(2)}€</h2>
@@ -127,13 +127,13 @@ export async function POST(request: NextRequest) {
             subject: `✨ Confirmación de Pedido ${orderNumber} - Sophia`,
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                    <div style="background-color: #4A6741; padding: 30px; text-align: center;">
+                    <div style="background-color: #505A4A; padding: 30px; text-align: center;">
                         <h1 style="color: white; margin: 0; font-size: 28px;">SOPHIA</h1>
-                        <p style="color: #E8F5E9; margin: 5px 0;">Cosmética Natural & Ecológica</p>
+                        <p style="color: #E8F5E9; margin: 5px 0;">Cosmética Botánica</p>
                     </div>
                     
                     <div style="padding: 30px; background-color: #f9f9f9;">
-                        <h2 style="color: #4A6741; text-align: center;">¡Gracias por tu pedido, ${shippingInfo.firstName}!</h2>
+                        <h2 style="color: #505A4A; text-align: center;">¡Gracias por tu pedido, ${shippingInfo.firstName}!</h2>
                         
                         <p style="text-align: center; color: #666;">
                             Hemos recibido tu pedido y lo estamos procesando.
@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
                         
                         <div style="background-color: white; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
                             <p style="color: #666; margin: 0;">Número de pedido</p>
-                            <h2 style="color: #4A6741; margin: 10px 0;">${orderNumber}</h2>
+                            <h2 style="color: #505A4A; margin: 10px 0;">${orderNumber}</h2>
                         </div>
                         
                         <div style="background-color: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
@@ -150,7 +150,7 @@ export async function POST(request: NextRequest) {
                         </div>
                         
                         <div style="background-color: #E8F5E9; padding: 20px; border-radius: 8px; text-align: center;">
-                            <h3 style="color: #4A6741; margin-top: 0;">Total: ${total.toFixed(2)}€</h3>
+                            <h3 style="color: #505A4A; margin-top: 0;">Total: ${total.toFixed(2)}€</h3>
                             <p style="color: #666; font-size: 14px;">Pago: Contra entrega / Transferencia bancaria</p>
                         </div>
                         
@@ -159,9 +159,9 @@ export async function POST(request: NextRequest) {
                         </p>
                     </div>
                     
-                    <div style="background-color: #4A6741; color: white; padding: 20px; text-align: center; font-size: 12px;">
+                    <div style="background-color: #505A4A; color: white; padding: 20px; text-align: center; font-size: 12px;">
                         <p style="margin: 5px 0;">www.sophia-cosmetica.com</p>
-                        <p style="margin: 10px 0 0;">© 2025 Sophia - Cosmética Natural</p>
+                        <p style="margin: 10px 0 0;">© 2022 Sophia - Cosmética Botánica</p>
                     </div>
                 </div>
             `,

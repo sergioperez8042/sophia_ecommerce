@@ -38,7 +38,7 @@ export default function CartPage() {
     if (!isLoaded) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4A6741]" />
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#505A4A]" />
             </div>
         );
     }
@@ -57,11 +57,11 @@ export default function CartPage() {
                         className="text-center py-16"
                     >
                         <div className="max-w-md mx-auto">
-                            <ShoppingBag className="h-24 w-24 text-[#4A6741]/40 mx-auto mb-6" />
+                            <ShoppingBag className="h-24 w-24 text-[#505A4A]/40 mx-auto mb-6" />
                             <h2 className="text-3xl font-bold text-gray-900 mb-4">Tu carrito está vacío</h2>
                             <p className="text-gray-600 mb-8 text-lg">Descubre nuestros productos naturales y añade algunos a tu carrito.</p>
                             <Link href="/products">
-                                <Button className="bg-[#4A6741] hover:bg-[#3d5636] text-white font-bold px-8 py-3 text-lg">
+                                <Button className="bg-[#505A4A] hover:bg-[#3d5636] text-white font-bold px-8 py-3 text-lg">
                                     Ver Productos
                                 </Button>
                             </Link>
@@ -91,10 +91,10 @@ export default function CartPage() {
                             <CardContent className="p-6">
                                 <div className="flex items-center justify-between mb-6">
                                     <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-                                        <ShoppingBag className="h-6 w-6 mr-2 text-[#4A6741]" />
+                                        <ShoppingBag className="h-6 w-6 mr-2 text-[#505A4A]" />
                                         Carrito de Compras
                                     </h1>
-                                    <Badge variant="secondary" className="bg-[#4A6741]/10 text-[#4A6741] font-bold">
+                                    <Badge variant="secondary" className="bg-[#505A4A]/10 text-[#505A4A] font-bold">
                                         {totalItems} productos
                                     </Badge>
                                 </div>
@@ -122,13 +122,13 @@ export default function CartPage() {
                                                 {/* Información del producto */}
                                                 <div className="flex-1">
                                                     {item.product.category && (
-                                                        <Badge variant="secondary" className="text-xs mb-1 bg-[#4A6741]/10 text-[#4A6741]">
+                                                        <Badge variant="secondary" className="text-xs mb-1 bg-[#505A4A]/10 text-[#505A4A]">
                                                             {item.product.category}
                                                         </Badge>
                                                     )}
                                                     <h3 className="font-bold text-gray-900 mb-1">{item.product.name}</h3>
                                                     <div className="flex items-center gap-2">
-                                                        <span className="text-lg font-bold text-[#4A6741]">${item.product.price.toFixed(2)}</span>
+                                                        <span className="text-lg font-bold text-[#505A4A]">${item.product.price.toFixed(2)}</span>
                                                         {item.product.originalPrice && item.product.originalPrice > item.product.price && (
                                                             <span className="text-sm text-gray-500 line-through">${item.product.originalPrice.toFixed(2)}</span>
                                                         )}
@@ -137,12 +137,12 @@ export default function CartPage() {
 
                                                 {/* Controles de cantidad */}
                                                 <div className="flex items-center gap-2">
-                                                    <div className="flex items-center bg-white border-2 border-[#4A6741]/30 rounded-lg shadow-sm">
+                                                    <div className="flex items-center bg-white border-2 border-[#505A4A]/30 rounded-lg shadow-sm">
                                                         <Button
                                                             variant="ghost"
                                                             size="sm"
                                                             onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                                                            className="h-8 w-8 p-0 hover:bg-[#4A6741] hover:text-white text-[#4A6741] rounded-r-none"
+                                                            className="h-8 w-8 p-0 hover:bg-[#505A4A] hover:text-white text-[#505A4A] rounded-r-none"
                                                         >
                                                             <Minus className="h-4 w-4 stroke-2" />
                                                         </Button>
@@ -153,7 +153,7 @@ export default function CartPage() {
                                                             variant="ghost"
                                                             size="sm"
                                                             onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                                                            className="h-8 w-8 p-0 hover:bg-[#4A6741] hover:text-white text-[#4A6741] rounded-l-none"
+                                                            className="h-8 w-8 p-0 hover:bg-[#505A4A] hover:text-white text-[#505A4A] rounded-l-none"
                                                         >
                                                             <Plus className="h-4 w-4 stroke-2" />
                                                         </Button>
@@ -215,18 +215,18 @@ export default function CartPage() {
                                     <hr className="border-gray-200" />
                                     <div className="flex justify-between text-xl font-bold text-gray-900">
                                         <span>Total:</span>
-                                        <span className="text-[#4A6741]">${total.toFixed(2)}</span>
+                                        <span className="text-[#505A4A]">${total.toFixed(2)}</span>
                                     </div>
                                 </div>
 
                                 <div className="space-y-3">
                                     <Link href="/checkout">
-                                        <Button className="w-full bg-[#4A6741] hover:bg-[#3d5636] text-white font-bold h-12 text-lg shadow-lg">
+                                        <Button className="w-full bg-[#505A4A] hover:bg-[#3d5636] text-white font-bold h-12 text-lg shadow-lg">
                                             Proceder al Checkout
                                         </Button>
                                     </Link>
                                     <Link href="/products">
-                                        <Button variant="outline" className="w-full border-[#4A6741] text-[#4A6741] hover:bg-[#4A6741] hover:text-white font-bold">
+                                        <Button variant="outline" className="w-full border-[#505A4A] text-[#505A4A] hover:bg-[#505A4A] hover:text-white font-bold">
                                             <ArrowLeft className="h-4 w-4 mr-2" />
                                             Seguir Comprando
                                         </Button>
@@ -237,15 +237,15 @@ export default function CartPage() {
                                 <div className="mt-6 p-4 bg-green-50/50 rounded-lg border border-green-100">
                                     <div className="text-sm text-gray-700 space-y-2">
                                         <div className="flex items-center">
-                                            <div className="h-2 w-2 bg-[#4A6741] rounded-full mr-2"></div>
+                                            <div className="h-2 w-2 bg-[#505A4A] rounded-full mr-2"></div>
                                             <span className="font-medium">Envío gratis en pedidos +$50</span>
                                         </div>
                                         <div className="flex items-center">
-                                            <div className="h-2 w-2 bg-[#4A6741] rounded-full mr-2"></div>
+                                            <div className="h-2 w-2 bg-[#505A4A] rounded-full mr-2"></div>
                                             <span className="font-medium">Devoluciones gratuitas</span>
                                         </div>
                                         <div className="flex items-center">
-                                            <div className="h-2 w-2 bg-[#4A6741] rounded-full mr-2"></div>
+                                            <div className="h-2 w-2 bg-[#505A4A] rounded-full mr-2"></div>
                                             <span className="font-medium">Garantía de 30 días</span>
                                         </div>
                                     </div>

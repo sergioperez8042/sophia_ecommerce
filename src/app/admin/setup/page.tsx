@@ -103,7 +103,7 @@ export default function AdminSetupPage() {
   if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4A6741]" />
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#505A4A]" />
       </div>
     );
   }
@@ -212,7 +212,7 @@ export default function AdminSetupPage() {
         <div className="mb-8">
           <Link
             href="/admin"
-            className="flex items-center gap-2 text-gray-500 hover:text-[#4A6741] transition-colors mb-4"
+            className="flex items-center gap-2 text-gray-500 hover:text-[#505A4A] transition-colors mb-4"
           >
             <ArrowLeft className="w-5 h-5" />
             Volver al panel
@@ -352,7 +352,7 @@ export default function AdminSetupPage() {
           </Card>
 
           {/* Seed All */}
-          <Card className="border-0 shadow-lg bg-gradient-to-r from-[#4A6741] to-[#3d5636] text-white">
+          <Card className="border-0 shadow-lg bg-gradient-to-r from-[#505A4A] to-[#3d5636] text-white">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Database className="w-5 h-5" />
@@ -367,7 +367,7 @@ export default function AdminSetupPage() {
                 onClick={handleSeedAll}
                 disabled={isSeeding}
                 variant="secondary"
-                className="bg-white text-[#4A6741] hover:bg-gray-100"
+                className="bg-white text-[#505A4A] hover:bg-gray-100"
               >
                 {isSeeding ? (
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />

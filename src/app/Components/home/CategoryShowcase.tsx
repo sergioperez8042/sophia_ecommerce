@@ -78,7 +78,7 @@ export default function CategoryShowcase({ categories, isLoading }: CategoryShow
                                     </div>
 
                                     <CardContent className="p-6">
-                                        <h3 className="font-semibold text-lg text-gray-900 mb-2 group-hover:text-[#4A6741] transition-colors">
+                                        <h3 className="font-semibold text-lg text-gray-900 mb-2 group-hover:text-[#505A4A] transition-colors">
                                             {category.name}
                                         </h3>
                                         <p className="text-gray-700 text-sm">

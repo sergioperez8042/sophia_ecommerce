@@ -37,7 +37,7 @@ export default function Header() {
                             variant="ghost"
                             size="icon"
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className="hover:bg-[#4A6741]/10 h-9 w-9"
+                            className="hover:bg-[#505A4A]/10 h-9 w-9"
                         >
                             <AnimatePresence mode="wait">
                                 {isMenuOpen ? (
@@ -48,7 +48,7 @@ export default function Header() {
                                         exit={{ rotate: 90, opacity: 0 }}
                                         transition={{ duration: 0.2 }}
                                     >
-                                        <X className="w-5 h-5 text-[#4A6741]" />
+                                        <X className="w-5 h-5 text-[#505A4A]" />
                                     </motion.div>
                                 ) : (
                                     <motion.div
@@ -81,14 +81,14 @@ export default function Header() {
                             >
                                 <img
                                     src="/images/logo-sophia.png"
-                                    alt="Sophia - Cosmética Natural"
+                                    alt="Sophia - Cosmética Botánica"
                                     className="w-full h-full object-contain"
                                 />
                             </motion.div>
                             {/* Mobile tagline - visible only on small screens */}
-                            <div className="flex sm:hidden flex-col border-l border-[#4A6741]/30 pl-2">
-                                <span className="text-[11px] text-[#4A6741] font-semibold leading-tight tracking-tight">Cosmética</span>
-                                <span className="text-[10px] text-[#4A6741]/70 leading-tight">Natural Artesanal</span>
+                            <div className="flex sm:hidden flex-col border-l border-[#505A4A]/30 pl-2">
+                                <span className="text-[11px] text-[#505A4A] font-semibold leading-tight tracking-tight">Cosmética</span>
+                                <span className="text-[10px] text-[#505A4A]/70 leading-tight">Natural Artesanal</span>
                             </div>
                         </Link>
                     </motion.div>
@@ -110,11 +110,11 @@ export default function Header() {
                                 >
                                     <Link
                                         href={item.href}
-                                        className={`font-medium transition-colors duration-200 relative group ${isActive ? 'text-[#4A6741]' : 'text-gray-700 hover:text-[#4A6741]'
+                                        className={`font-medium transition-colors duration-200 relative group ${isActive ? 'text-[#505A4A]' : 'text-gray-700 hover:text-[#505A4A]'
                                             }`}
                                     >
                                         {item.name}
-                                        <span className={`absolute inset-x-0 -bottom-1 h-0.5 bg-[#4A6741] transform transition-transform duration-200 ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                                        <span className={`absolute inset-x-0 -bottom-1 h-0.5 bg-[#505A4A] transform transition-transform duration-200 ${isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
                                             }`}></span>
                                     </Link>
                                 </motion.div>
@@ -139,13 +139,13 @@ export default function Header() {
                             whileTap={{ scale: 0.9 }}
                         >
                             <Link href="/cart">
-                                <Button variant="ghost" size="icon" className="hover:bg-[#4A6741]/10 hover:text-[#4A6741] transition-colors relative h-9 w-9 sm:h-10 sm:w-10">
+                                <Button variant="ghost" size="icon" className="hover:bg-[#505A4A]/10 hover:text-[#505A4A] transition-colors relative h-9 w-9 sm:h-10 sm:w-10">
                                     <ShoppingBag className="w-5 h-5 text-gray-700" />
                                     {cartCount > 0 && (
                                         <motion.div
                                             initial={{ scale: 0 }}
                                             animate={{ scale: 1 }}
-                                            className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 bg-[#4A6741] text-white text-[10px] sm:text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center font-bold shadow-sm"
+                                            className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 bg-[#505A4A] text-white text-[10px] sm:text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center font-bold shadow-sm"
                                         >
                                             {cartCount > 9 ? '9+' : cartCount}
                                         </motion.div>
@@ -201,7 +201,7 @@ export default function Header() {
                             className="fixed left-0 top-14 bottom-0 w-72 bg-white shadow-xl md:hidden z-50 overflow-y-auto"
                         >
                             {/* User section at top of mobile menu */}
-                            <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-[#4A6741]/5 to-transparent">
+                            <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-[#505A4A]/5 to-transparent">
                                 <UserMenu />
                             </div>
 
@@ -221,17 +221,17 @@ export default function Header() {
                                                 href={item.href}
                                                 className={`flex items-center gap-4 px-6 py-4 transition-all duration-200 ${
                                                     isActive 
-                                                        ? 'bg-[#4A6741]/10 text-[#4A6741] border-l-4 border-[#4A6741]' 
-                                                        : 'text-gray-700 hover:bg-gray-50 hover:text-[#4A6741] border-l-4 border-transparent'
+                                                        ? 'bg-[#505A4A]/10 text-[#505A4A] border-l-4 border-[#505A4A]' 
+                                                        : 'text-gray-700 hover:bg-gray-50 hover:text-[#505A4A] border-l-4 border-transparent'
                                                 }`}
                                                 onClick={() => setIsMenuOpen(false)}
                                             >
-                                                <Icon className={`w-5 h-5 ${isActive ? 'text-[#4A6741]' : 'text-gray-500'}`} />
+                                                <Icon className={`w-5 h-5 ${isActive ? 'text-[#505A4A]' : 'text-gray-500'}`} />
                                                 <span className="font-medium text-base">{item.name}</span>
                                                 {isActive && (
                                                     <motion.div
                                                         layoutId="activeIndicator"
-                                                        className="ml-auto w-2 h-2 rounded-full bg-[#4A6741]"
+                                                        className="ml-auto w-2 h-2 rounded-full bg-[#505A4A]"
                                                     />
                                                 )}
                                             </Link>
@@ -241,10 +241,10 @@ export default function Header() {
                             </nav>
 
                             {/* Bottom decoration */}
-                            <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-100 bg-gradient-to-t from-[#4A6741]/5 to-transparent">
+                            <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-100 bg-gradient-to-t from-[#505A4A]/5 to-transparent">
                                 <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-                                    <Leaf className="w-4 h-4 text-[#4A6741]" />
-                                    <span>Cosmética Natural Artesanal</span>
+                                    <Leaf className="w-4 h-4 text-[#505A4A]" />
+                                    <span>Cosmética Botánica Artesanal</span>
                                 </div>
                             </div>
                         </motion.div>

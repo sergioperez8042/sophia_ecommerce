@@ -3,12 +3,12 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --sage-green: #4A6741; /* Darker for better contrast */
-  --sage-green-light: #87A96B; /* Original color for backgrounds */
+  --sage-green: #505A4A; /* Olive sage from logo */
+  --sage-green-light: #6A7363; /* Lighter olive */
   --warm-beige: #F5F1E8;
   --cream-white: #FEFCF7;
-  --eucalyptus: #3F5D4C; /* Darker for better contrast */
-  --soft-gold: #B8941F; /* Darker for better contrast */
+  --eucalyptus: #414A3C; /* Dark olive */
+  --soft-gold: #C4B590; /* Champagne from logo text */
   --text-muted: #4A4A4A; /* Better contrast than gray-600 */
 }
 
@@ -26,13 +26,13 @@
 .product-card {
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(74, 103, 65, 0.15);
+  border: 1px solid rgba(80, 90, 74, 0.15);
 }
 
 .nav-glass {
   background: rgba(254, 252, 247, 0.95);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(74, 103, 65, 0.15);
+  border-bottom: 1px solid rgba(80, 90, 74, 0.15);
 }
 
 body {

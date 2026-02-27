@@ -181,13 +181,13 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
 
                                 <CardContent className="p-6">
                                     <div className="mb-2">
-                                        <Badge variant="outline" className="text-[#4A6741] border-[#4A6741]/30 text-xs">
+                                        <Badge variant="outline" className="text-[#505A4A] border-[#505A4A]/30 text-xs">
                                             {product.category_name || 'Sin categoría'}
                                         </Badge>
                                     </div>
 
                                     <div className="flex items-start justify-between gap-2 mb-2">
-                                        <h3 className="font-semibold text-lg text-gray-900 group-hover:text-[#4A6741] transition-colors line-clamp-2 flex-1">
+                                        <h3 className="font-semibold text-lg text-gray-900 group-hover:text-[#505A4A] transition-colors line-clamp-2 flex-1">
                                             {product.name}
                                         </h3>
                                         <button
@@ -207,7 +207,7 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
 
                                     <div className="flex items-center gap-1 mb-4">
                                         {[...Array(5)].map((_, i) => (
-                                            <Star key={i} className="w-4 h-4 fill-[#D4AF37] text-[#D4AF37]" />
+                                            <Star key={i} className="w-4 h-4 fill-[#C4B590] text-[#C4B590]" />
                                         ))}
                                         <span className="text-sm text-gray-700 ml-1">(12)</span>
                                     </div>
@@ -227,7 +227,7 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                                         <div className="flex items-center gap-2">
                                             <Button
                                                 onClick={(e) => addToCart(product, e)}
-                                                className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white flex-1"
+                                                className="bg-[#505A4A] hover:bg-[#414A3C] text-white flex-1"
                                                 disabled={product.stock === 0}
                                             >
                                                 <ShoppingBag className="w-4 h-4 mr-2" />
@@ -278,13 +278,13 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                                     <CardContent className="p-6 flex-1 flex justify-between">
                                         <div className="flex-1">
                                             <div className="mb-2">
-                                                <Badge variant="outline" className="text-[#4A6741] border-[#4A6741]/30 text-xs">
+                                                <Badge variant="outline" className="text-[#505A4A] border-[#505A4A]/30 text-xs">
                                                     {product.category_name || 'Sin categoría'}
                                                 </Badge>
                                             </div>
 
                                             <div className="flex items-start justify-between gap-2 mb-2">
-                                                <h3 className="font-semibold text-xl text-gray-900 group-hover:text-[#4A6741] transition-colors flex-1">
+                                                <h3 className="font-semibold text-xl text-gray-900 group-hover:text-[#505A4A] transition-colors flex-1">
                                                     {product.name}
                                                 </h3>
                                                 <button
@@ -304,7 +304,7 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
 
                                             <div className="flex items-center gap-1 mb-4">
                                                 {[...Array(5)].map((_, i) => (
-                                                    <Star key={i} className="w-4 h-4 fill-[#D4AF37] text-[#D4AF37]" />
+                                                    <Star key={i} className="w-4 h-4 fill-[#C4B590] text-[#C4B590]" />
                                                 ))}
                                                 <span className="text-sm text-gray-700 ml-1">(12 reseñas)</span>
                                             </div>
@@ -339,7 +339,7 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                                             <div className="flex items-center gap-2">
                                                 <Button
                                                     onClick={(e) => addToCart(product, e)}
-                                                    className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white"
+                                                    className="bg-[#505A4A] hover:bg-[#414A3C] text-white"
                                                     disabled={product.stock === 0}
                                                 >
                                                     <ShoppingBag className="w-4 h-4 mr-2" />

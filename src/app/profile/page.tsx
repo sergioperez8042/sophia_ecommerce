@@ -92,7 +92,7 @@ export default function ProfilePage() {
   if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center pt-20">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4A6741]" />
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#505A4A]" />
       </div>
     );
   }
@@ -104,10 +104,10 @@ export default function ProfilePage() {
   // Determinar el color del perfil según el rol
   const getProfileColors = () => {
     // Admin ahora usa el color corporativo (verde) para consistencia
-    if (isAdmin) return { gradient: 'from-[#4A6741] to-[#2E4529]', accent: 'green' };
+    if (isAdmin) return { gradient: 'from-[#505A4A] to-[#2E4529]', accent: 'green' };
     if (isManager) return { gradient: 'from-amber-600 to-amber-800', accent: 'amber' };
     // Cliente
-    return { gradient: 'from-[#4A6741] to-[#3F5D4C]', accent: 'green' };
+    return { gradient: 'from-[#505A4A] to-[#414A3C]', accent: 'green' };
   };
 
   const colors = getProfileColors();
@@ -176,10 +176,10 @@ export default function ProfilePage() {
         <Card className="mb-8 border-0 shadow-md">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="flex items-center gap-2 text-gray-900">
-              <User className="w-5 h-5 text-[#4A6741]" />
+              <User className="w-5 h-5 text-[#505A4A]" />
               Información de Contacto
             </CardTitle>
-            <Button variant="ghost" size="sm" className="text-[#4A6741] hover:text-[#3F5D4C] hover:bg-green-50">
+            <Button variant="ghost" size="sm" className="text-[#505A4A] hover:text-[#414A3C] hover:bg-green-50">
               <Edit className="w-4 h-4 mr-2" />
               Editar
             </Button>
@@ -187,7 +187,7 @@ export default function ProfilePage() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-100 hover:shadow-sm transition-shadow">
-                <div className="p-2 bg-white rounded-full text-[#4A6741] shadow-sm">
+                <div className="p-2 bg-white rounded-full text-[#505A4A] shadow-sm">
                   <Mail className="w-5 h-5" />
                 </div>
                 <div>
@@ -196,7 +196,7 @@ export default function ProfilePage() {
                 </div>
               </div>
               <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-100 hover:shadow-sm transition-shadow">
-                <div className="p-2 bg-white rounded-full text-[#4A6741] shadow-sm">
+                <div className="p-2 bg-white rounded-full text-[#505A4A] shadow-sm">
                   <Phone className="w-5 h-5" />
                 </div>
                 <div>
@@ -206,7 +206,7 @@ export default function ProfilePage() {
               </div>
               {isManager && (
                 <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-100 hover:shadow-sm transition-shadow">
-                  <div className="p-2 bg-white rounded-full text-[#4A6741] shadow-sm">
+                  <div className="p-2 bg-white rounded-full text-[#505A4A] shadow-sm">
                     <MapPin className="w-5 h-5" />
                   </div>
                   <div>
@@ -217,7 +217,7 @@ export default function ProfilePage() {
               )}
               {isClient && (
                 <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-100 hover:shadow-sm transition-shadow">
-                  <div className="p-2 bg-white rounded-full text-[#4A6741] shadow-sm">
+                  <div className="p-2 bg-white rounded-full text-[#505A4A] shadow-sm">
                     <MapPin className="w-5 h-5" />
                   </div>
                   <div>
@@ -424,12 +424,12 @@ export default function ProfilePage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm text-gray-500">Total Gastado</p>
-                      <p className="text-2xl font-bold text-[#4A6741]">
+                      <p className="text-2xl font-bold text-[#505A4A]">
                         €{mockClientStats.totalSpent.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
                       </p>
                     </div>
                     <div className="p-3 bg-green-100 rounded-full">
-                      <DollarSign className="w-6 h-6 text-[#4A6741]" />
+                      <DollarSign className="w-6 h-6 text-[#505A4A]" />
                     </div>
                   </div>
                 </CardContent>
@@ -509,12 +509,12 @@ export default function ProfilePage() {
             </Card>
 
             {/* CTA para seguir comprando */}
-            <Card className="bg-gradient-to-r from-[#4A6741] to-[#3F5D4C] text-white">
+            <Card className="bg-gradient-to-r from-[#505A4A] to-[#414A3C] text-white">
               <CardContent className="pt-6 text-center">
                 <h3 className="text-2xl font-bold mb-2">¿Lista para más belleza natural?</h3>
                 <p className="opacity-90 mb-4">Descubre nuestros nuevos productos de temporada</p>
                 <Link href="/products">
-                  <Button className="bg-white text-[#4A6741] hover:bg-gray-100">
+                  <Button className="bg-white text-[#505A4A] hover:bg-gray-100">
                     Ver Productos
                   </Button>
                 </Link>
@@ -525,12 +525,12 @@ export default function ProfilePage() {
 
         {/* Contenido para admin */}
         {isAdmin && (
-          <Card className="bg-gradient-to-r from-[#4A6741] to-[#3F5D4C] text-white">
+          <Card className="bg-gradient-to-r from-[#505A4A] to-[#414A3C] text-white">
             <CardContent className="pt-6 text-center">
               <h3 className="text-2xl font-bold mb-2">Panel de Administración</h3>
               <p className="opacity-90 mb-4">Gestiona tu equipo y visualiza las estadísticas de ventas</p>
               <Link href="/admin">
-                <Button className="bg-white text-[#4A6741] hover:bg-gray-100 font-bold">
+                <Button className="bg-white text-[#505A4A] hover:bg-gray-100 font-bold">
                   Ir al Panel Admin
                 </Button>
               </Link>

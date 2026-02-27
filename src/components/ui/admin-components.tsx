@@ -52,7 +52,7 @@ export function LoadingSpinner({
     return (
         <div className={`min-h-screen flex items-center justify-center ${className}`}>
             <div
-                className={`animate-spin rounded-full border-b-2 border-[#4A6741] ${sizes[size]}`}
+                className={`animate-spin rounded-full border-b-2 border-[#505A4A] ${sizes[size]}`}
             />
         </div>
     );
@@ -145,7 +145,7 @@ export function PageHeader({
                 {backHref && (
                     <a
                         href={backHref}
-                        className="flex items-center gap-2 text-gray-600 hover:text-[#4A6741] transition-colors mb-2"
+                        className="flex items-center gap-2 text-gray-600 hover:text-[#505A4A] transition-colors mb-2"
                     >
                         <svg
                             className="w-5 h-5"

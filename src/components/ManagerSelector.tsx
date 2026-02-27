@@ -34,13 +34,13 @@ export default function ManagerSelector() {
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
         className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${isManagerLoggedIn
-            ? 'bg-[#4A6741]/10 hover:bg-[#4A6741]/20 text-[#4A6741]'
+            ? 'bg-[#505A4A]/10 hover:bg-[#505A4A]/20 text-[#505A4A]'
             : 'bg-amber-100 hover:bg-amber-200 text-amber-800'
           }`}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >
-        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${isManagerLoggedIn ? 'bg-[#4A6741] text-white' : 'bg-amber-500 text-white'
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${isManagerLoggedIn ? 'bg-[#505A4A] text-white' : 'bg-amber-500 text-white'
           }`}>
           {isManagerLoggedIn ? (
             <UserCheck className="w-4 h-4" />
@@ -82,7 +82,7 @@ export default function ManagerSelector() {
               className="absolute right-0 top-full mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden"
             >
               {/* Header */}
-              <div className="bg-gradient-to-r from-[#4A6741] to-[#3F5D4C] px-4 py-3">
+              <div className="bg-gradient-to-r from-[#505A4A] to-[#414A3C] px-4 py-3">
                 <h3 className="text-white font-semibold text-sm">
                   {isManagerLoggedIn ? 'Gestor Activo' : 'Selecciona un Gestor'}
                 </h3>
@@ -97,7 +97,7 @@ export default function ManagerSelector() {
               {isManagerLoggedIn && manager && (
                 <div className="px-4 py-3 bg-green-50 border-b border-green-100">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[#4A6741] flex items-center justify-center text-white font-bold">
+                    <div className="w-10 h-10 rounded-full bg-[#505A4A] flex items-center justify-center text-white font-bold">
                       {manager.name.split(' ').map(n => n[0]).join('')}
                     </div>
                     <div className="flex-1">
@@ -122,19 +122,19 @@ export default function ManagerSelector() {
                     whileHover={{ x: 4 }}
                   >
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${manager?.id === m.id
-                        ? 'bg-[#4A6741] text-white'
+                        ? 'bg-[#505A4A] text-white'
                         : 'bg-gray-200 text-gray-600'
                       }`}>
                       {m.name.split(' ').map(n => n[0]).join('')}
                     </div>
                     <div className="flex-1 text-left">
-                      <p className={`font-medium ${manager?.id === m.id ? 'text-[#4A6741]' : 'text-gray-900'}`}>
+                      <p className={`font-medium ${manager?.id === m.id ? 'text-[#505A4A]' : 'text-gray-900'}`}>
                         {m.name}
                       </p>
                       <p className="text-xs text-gray-500">{m.zone} • {m.code}</p>
                     </div>
                     {manager?.id === m.id && (
-                      <div className="w-2 h-2 rounded-full bg-[#4A6741]" />
+                      <div className="w-2 h-2 rounded-full bg-[#505A4A]" />
                     )}
                   </motion.button>
                 ))}
@@ -146,7 +146,7 @@ export default function ManagerSelector() {
                   <Link
                     href="/profile"
                     onClick={() => setIsOpen(false)}
-                    className="w-full flex items-center gap-2 px-4 py-2 text-[#4A6741] hover:bg-[#4A6741]/10 rounded-lg transition-colors"
+                    className="w-full flex items-center gap-2 px-4 py-2 text-[#505A4A] hover:bg-[#505A4A]/10 rounded-lg transition-colors"
                   >
                     <UserCircle className="w-4 h-4" />
                     <span className="text-sm font-medium">Ver mi perfil</span>

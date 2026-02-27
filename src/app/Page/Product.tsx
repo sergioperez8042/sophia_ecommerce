@@ -115,7 +115,7 @@ export default function ProductsPage() {
                 placeholder="Buscar productos..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-12 h-12 text-lg border-gray-200 focus:border-[#4A6741]"
+                className="pl-12 h-12 text-lg border-gray-200 focus:border-[#505A4A]"
               />
             </div>
 
@@ -153,7 +153,7 @@ export default function ProductsPage() {
                 variant={viewMode === "grid" ? "default" : "ghost"}
                 size="icon"
                 onClick={() => setViewMode("grid")}
-                className={viewMode === "grid" ? "bg-[#4A6741] text-white" : ""}
+                className={viewMode === "grid" ? "bg-[#505A4A] text-white" : ""}
               >
                 <Grid className="w-5 h-5" />
               </Button>
@@ -161,7 +161,7 @@ export default function ProductsPage() {
                 variant={viewMode === "list" ? "default" : "ghost"}
                 size="icon"
                 onClick={() => setViewMode("list")}
-                className={viewMode === "list" ? "bg-[#4A6741] text-white" : ""}
+                className={viewMode === "list" ? "bg-[#505A4A] text-white" : ""}
               >
                 <List className="w-5 h-5" />
               </Button>

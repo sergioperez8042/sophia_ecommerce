@@ -145,7 +145,7 @@ export default function FeaturedProducts({ products, isLoading }: FeaturedProduc
 
                                 <CardContent className="p-6">
                                     <div className="flex items-center justify-between mb-2">
-                                        <Badge variant="outline" className="text-[#4A6741] border-[#4A6741]/30 text-xs">
+                                        <Badge variant="outline" className="text-[#505A4A] border-[#505A4A]/30 text-xs">
                                             {product.category_name || 'Sin categoría'}
                                         </Badge>
 
@@ -164,7 +164,7 @@ export default function FeaturedProducts({ products, isLoading }: FeaturedProduc
                                                 }`} />
                                         </button>
                                     </div>                                    <Link href={`/product?id=${product.id}`}>
-                                        <h3 className="font-semibold text-lg text-gray-900 mb-2 hover:text-[#4A6741] transition-colors">
+                                        <h3 className="font-semibold text-lg text-gray-900 mb-2 hover:text-[#505A4A] transition-colors">
                                             {product.name}
                                         </h3>
                                     </Link>
@@ -194,7 +194,7 @@ export default function FeaturedProducts({ products, isLoading }: FeaturedProduc
 
                                         <Button
                                             onClick={() => addToCart(product)}
-                                            className="bg-[#4A6741] hover:bg-[#3F5D4C] text-white"
+                                            className="bg-[#505A4A] hover:bg-[#414A3C] text-white"
                                         >
                                             <ShoppingBag className="w-4 h-4 mr-2" />
                                             Añadir
@@ -214,7 +214,7 @@ export default function FeaturedProducts({ products, isLoading }: FeaturedProduc
                     className="text-center mt-12"
                 >
                     <Link href="/products">
-                        <Button size="lg" variant="outline" className="border-[#4A6741] text-[#4A6741] hover:bg-[#4A6741] hover:text-white">
+                        <Button size="lg" variant="outline" className="border-[#505A4A] text-[#505A4A] hover:bg-[#505A4A] hover:text-white">
                             Ver todos los productos
                         </Button>
                     </Link>
