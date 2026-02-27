@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { storage } from '@/lib/firebase';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { cloudinary } from '@/lib/cloudinary';
 
 export async function POST(request: NextRequest) {
   try {
@@ -31,50 +30,38 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!storage) {
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
       return NextResponse.json(
-        { error: 'Firebase Storage no está configurado. Activa Storage en la consola de Firebase (console.firebase.google.com → Storage → Get Started).' },
+        { error: 'Cloudinary no está configurado. Agrega CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY y CLOUDINARY_API_SECRET en las variables de entorno.' },
         { status: 503 }
       );
     }
 
-    const timestamp = Date.now();
-    const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
-    const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_').replace(/\.[^.]+$/, '');
-    const fileName = `${timestamp}_${safeName}.${ext}`;
-    const bytes = await file.arrayBuffer();
-    const buffer = new Uint8Array(bytes);
+    const arrayBuffer = await file.arrayBuffer();
+    const base64 = Buffer.from(arrayBuffer).toString('base64');
+    const dataUri = `data:${file.type};base64,${base64}`;
 
     try {
-      const storageRef = ref(storage, `${folder}/${fileName}`);
-      await uploadBytes(storageRef, buffer, { contentType: file.type });
-      const downloadURL = await getDownloadURL(storageRef);
+      const result = await cloudinary.uploader.upload(dataUri, {
+        folder,
+        resource_type: 'auto',
+        transformation: [
+          { width: 1200, crop: 'limit' },
+          { quality: 'auto' },
+          { fetch_format: 'auto' },
+        ],
+      });
 
       return NextResponse.json({
         success: true,
-        url: downloadURL,
-        fileName,
-        storage: 'firebase',
+        url: result.secure_url,
+        fileName: result.public_id,
+        storage: 'cloudinary',
       });
-    } catch (firebaseError) {
-      const errorMessage = firebaseError instanceof Error ? firebaseError.message : 'Error desconocido';
-
-      if (errorMessage.includes('does not exist') || errorMessage.includes('storage/unauthorized')) {
-        return NextResponse.json(
-          { error: 'Firebase Storage no está habilitado. Ve a console.firebase.google.com → Storage → Click "Get Started" para activarlo.' },
-          { status: 503 }
-        );
-      }
-
-      if (errorMessage.includes('storage/unauthorized') || errorMessage.includes('permission')) {
-        return NextResponse.json(
-          { error: 'Permisos de Firebase Storage denegados. Configura las reglas de seguridad en la consola de Firebase.' },
-          { status: 403 }
-        );
-      }
-
+    } catch (cloudinaryError) {
+      const errorMessage = cloudinaryError instanceof Error ? cloudinaryError.message : 'Error desconocido';
       return NextResponse.json(
-        { error: `Error al subir a Firebase Storage: ${errorMessage}` },
+        { error: `Error al subir a Cloudinary: ${errorMessage}` },
         { status: 500 }
       );
     }
