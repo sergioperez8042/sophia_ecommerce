@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Leaf, Heart, ShoppingBag, Menu, X, Home, Package, Grid3X3, Users, Phone, Sun, Moon } from "lucide-react";
 import Link from "next/link";
@@ -24,12 +24,10 @@ export default function Header() {
     const { totalItems: wishlistCount } = useWishlist();
     const { isDark, toggleTheme } = useTheme();
 
-    // Close menu on route change (derived during render, no useEffect needed)
-    const prevPathname = useRef(pathname);
-    if (pathname !== prevPathname.current) {
-        prevPathname.current = pathname;
-        if (isMenuOpen) setIsMenuOpen(false);
-    }
+    // Close menu on route change
+    useEffect(() => {
+        setIsMenuOpen(false);
+    }, [pathname]);
 
     // Prevent body scroll when menu is open
     useEffect(() => {

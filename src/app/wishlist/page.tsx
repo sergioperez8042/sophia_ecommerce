@@ -1,7 +1,7 @@
 "use client";
 
 import { useWishlist, useProducts, useCart } from "@/store";
-import { Heart, Star, ShoppingBag, ArrowLeft, X, Eye, Loader2 } from "lucide-react";
+import { Heart, ShoppingBag, ArrowLeft, X, Eye, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";

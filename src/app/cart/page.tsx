@@ -127,6 +127,7 @@ export default function CartPage() {
                                                             <button
                                                                 onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
                                                                 className="w-[38px] h-full flex items-center justify-center text-[#999] hover:text-[#333] transition-colors"
+                                                                aria-label="Disminuir cantidad"
                                                             >
                                                                 <Minus className="h-3 w-3" strokeWidth={1.5} />
                                                             </button>
@@ -136,6 +137,7 @@ export default function CartPage() {
                                                             <button
                                                                 onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
                                                                 className="w-[38px] h-full flex items-center justify-center text-[#999] hover:text-[#333] transition-colors"
+                                                                aria-label="Aumentar cantidad"
                                                             >
                                                                 <Plus className="h-3 w-3" strokeWidth={1.5} />
                                                             </button>

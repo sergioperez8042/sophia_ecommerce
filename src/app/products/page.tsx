@@ -36,7 +36,7 @@ export default function ProductsPage() {
   const [inStockOnly, setInStockOnly] = useState(false);
   const [sortBy, setSortBy] = useState("featured");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [showMobileFilters, setShowMobileFilters] = useState(false); // TODO: implement mobile filter panel
   const [addingToCart, setAddingToCart] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
@@ -69,7 +69,7 @@ export default function ProductsPage() {
         priceRange
       };
     });
-  }, [allProducts]);
+  }, [allProducts, categoriesData]);
 
   // Dynamic categories from products
   const categories = useMemo(() => {

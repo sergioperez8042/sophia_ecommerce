@@ -102,7 +102,7 @@ export default function ProfilePage() {
               <User className="w-5 h-5 text-[#505A4A]" />
               Información de Contacto
             </CardTitle>
-            <Button variant="ghost" size="sm" className="text-[#505A4A] hover:text-[#414A3C] hover:bg-green-50">
+            <Button variant="ghost" size="sm" className="text-[#505A4A] hover:text-[#414A3C] hover:bg-[#505A4A]/5">
               <Edit className="w-4 h-4 mr-2" />
               Editar
             </Button>

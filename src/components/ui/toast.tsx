@@ -111,11 +111,11 @@ function ToastItem({ toast, onClose }: { toast: Toast; onClose: () => void }) {
   const config = {
     success: {
       icon: CheckCircle,
-      bgColor: 'bg-green-50',
-      borderColor: 'border-green-200',
-      iconColor: 'text-green-500',
-      titleColor: 'text-green-800',
-      messageColor: 'text-green-600',
+      bgColor: 'bg-[#505A4A]/10',
+      borderColor: 'border-[#505A4A]/30',
+      iconColor: 'text-[#505A4A]',
+      titleColor: 'text-[#505A4A]',
+      messageColor: 'text-[#505A4A]/80',
     },
     error: {
       icon: XCircle,
@@ -161,6 +161,7 @@ function ToastItem({ toast, onClose }: { toast: Toast; onClose: () => void }) {
       <button
         onClick={onClose}
         className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
+        aria-label="Cerrar notificación"
       >
         <X className="w-4 h-4" />
       </button>

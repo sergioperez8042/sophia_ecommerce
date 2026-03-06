@@ -763,7 +763,7 @@ export default function CheckoutPage() {
                                         </div>
                                         <div className="flex justify-between text-sm">
                                             <span className="text-gray-700 font-medium">Envío</span>
-                                            <span className={shipping === 0 ? 'text-green-600 font-semibold' : 'text-gray-900 font-semibold'}>
+                                            <span className={shipping === 0 ? 'text-[#505A4A] font-semibold' : 'text-gray-900 font-semibold'}>
                                                 {shipping === 0 ? 'Gratis' : `$${shipping.toFixed(2)}`}
                                             </span>
                                         </div>

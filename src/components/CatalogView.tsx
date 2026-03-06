@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
-import { Star, Search, Leaf, Phone, Mail, MessageCircle, Rabbit, Droplets, ShieldCheck, Hand, Sun, Moon } from "lucide-react";
+import { Star, Search, Leaf, Phone, Mail, Instagram, MessageCircle, Rabbit, Droplets, ShieldCheck, Hand, Sun, Moon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import ProductImage from "@/components/ui/product-image";
@@ -232,6 +232,7 @@ export default function CatalogView({ initialProducts, initialCategories }: Cata
                                 placeholder="Buscar productos..."
                                 value={searchTerm}
                                 onChange={(e) => { setSearchTerm(e.target.value); setVisibleCount(5); }}
+                                aria-label="Buscar productos"
                                 className={`w-full pl-9 sm:pl-10 pr-4 py-2.5 sm:py-3 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-[#505A4A]/50 transition-all ${isDark ? 'border-[#C4B590]/15 bg-[#22261f] text-[#e8e4dc] placeholder-[#7a7568]' : 'border-[#505A4A]/20 bg-white text-gray-900'}`}
                             />
                         </div>
@@ -355,6 +356,16 @@ export default function CatalogView({ initialProducts, initialCategories }: Cata
                             <Mail className="w-3.5 h-3.5" />
                             <span>chavesophia1994@gmail.com</span>
                         </a>
+                        <span className="hidden sm:inline text-white/20">|</span>
+                        <a
+                            href="https://www.instagram.com/sophia.products_/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 text-white/70 hover:text-white transition-colors text-xs"
+                        >
+                            <Instagram className="w-3.5 h-3.5" />
+                            <span>@sophia.products_</span>
+                        </a>
                     </div>
 
                     {/* Separador + Copyright */}
@@ -459,78 +470,5 @@ function ProductCard({
         );
     }
 
-    return (
-        <m.div
-            className={`rounded-2xl overflow-hidden shadow-sm group ${isDark ? 'bg-[#22261f]' : 'bg-white'}`}
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05, duration: 0.4, type: "spring", stiffness: 100 }}
-            whileHover={{ y: -8, boxShadow: "0 20px 40px rgba(0,0,0,0.12)" }}
-            onHoverStart={() => setIsHovered(true)}
-            onHoverEnd={() => setIsHovered(false)}
-        >
-            <Link href={`/catalogo/${product.id}`} className="block relative aspect-square overflow-hidden">
-                <ProductImage
-                    src={product.image}
-                    alt={product.name}
-                    className={`object-cover transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
-                />
-                {product.featured && (
-                    <div className="absolute top-3 left-3 bg-[#C4B590] text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
-                        <Star className="w-3 h-3 fill-current" />
-                        Destacado
-                    </div>
-                )}
-
-                {/* Hover overlay - desktop only */}
-                <m.div
-                    className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent hidden sm:flex items-end justify-center pb-4"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: isHovered ? 1 : 0 }}
-                    transition={{ duration: 0.3 }}
-                >
-                    <m.button
-                        onClick={(e) => { e.preventDefault(); handleWhatsAppOrder(); }}
-                        className="bg-[#505A4A] text-white px-4 py-2 rounded-full flex items-center gap-2 font-medium"
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: isHovered ? 0 : 20, opacity: isHovered ? 1 : 0 }}
-                        transition={{ duration: 0.3 }}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                    >
-                        <MessageCircle className="w-4 h-4" />
-                        Hacer Pedido
-                    </m.button>
-                </m.div>
-            </Link>
-            <div className="p-4">
-                <Link href={`/catalogo/${product.id}`}>
-                    <span className={`text-xs font-medium ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>
-                        {categoryName}
-                    </span>
-                    <h3 className={`font-semibold mt-1 line-clamp-1 ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>{product.name}</h3>
-                    <p className={`text-sm mt-1 line-clamp-2 ${isDark ? 'text-[#8a8278]' : 'text-gray-600'}`}>{product.description}</p>
-                </Link>
-                <div className="flex items-center justify-between mt-3">
-                    <span className={`text-lg font-bold ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>
-                        {formatPrice(product.price)}
-                    </span>
-                    {product.rating > 0 && (
-                        <div className={`hidden sm:flex items-center gap-1 text-sm ${isDark ? 'text-[#8a8278]' : 'text-gray-600'}`}>
-                            <Star className="w-4 h-4 fill-[#C4B590] text-[#C4B590]" />
-                            <span>{product.rating.toFixed(1)}</span>
-                        </div>
-                    )}
-                </div>
-                {/* Mobile CTA button - always visible */}
-                <button
-                    onClick={handleWhatsAppOrder}
-                    className="sm:hidden w-full mt-3 bg-[#505A4A] text-white py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 active:bg-[#414A3C] transition-colors"
-                >
-                    <MessageCircle className="w-4 h-4" />
-                    Hacer Pedido
-                </button>
-            </div>
-        </m.div>
-    );
+    return null;
 }

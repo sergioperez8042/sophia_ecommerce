@@ -220,6 +220,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     <button
                                         onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
                                         className="w-[44px] h-full flex items-center justify-center text-[#999] dark:text-[#8a8273] hover:text-[#333] dark:hover:text-[#e8e4dc] transition-colors"
+                                        aria-label="Disminuir cantidad"
                                     >
                                         <Minus className="h-3.5 w-3.5" strokeWidth={1.5} />
                                     </button>
@@ -229,6 +230,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     <button
                                         onClick={() => setQuantity(prev => prev + 1)}
                                         className="w-[44px] h-full flex items-center justify-center text-[#999] dark:text-[#8a8273] hover:text-[#333] dark:hover:text-[#e8e4dc] transition-colors"
+                                        aria-label="Aumentar cantidad"
                                     >
                                         <Plus className="h-3.5 w-3.5" strokeWidth={1.5} />
                                     </button>

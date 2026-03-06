@@ -2,7 +2,7 @@
 
 import { m, useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
-import { Mail, Phone, MapPin, Clock, Send, Leaf, MessageCircle } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, Send, Leaf, MessageCircle, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -21,6 +21,8 @@ export default function ContactPage() {
         subject: '',
         message: ''
     });
+    const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+    const [formError, setFormError] = useState('');
 
     const heroInView = useInView(heroRef, { once: true, amount: 0.3 });
     const formInView = useInView(formRef, { once: true, amount: 0.2 });
@@ -29,9 +31,31 @@ export default function ContactPage() {
         setIsHydrated(true);
     }, []);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // TODO: Handle form submission
+        setFormStatus('sending');
+        setFormError('');
+
+        try {
+            const res = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                setFormStatus('error');
+                setFormError(data.error || 'Error al enviar el mensaje');
+                return;
+            }
+
+            setFormStatus('success');
+            setFormData({ name: '', email: '', subject: '', message: '' });
+        } catch {
+            setFormStatus('error');
+            setFormError('Error de conexión. Inténtalo de nuevo.');
+        }
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -73,6 +97,12 @@ export default function ContactPage() {
             title: "Teléfono",
             value: "+34 642 63 39 82",
             href: "tel:+34642633982"
+        },
+        {
+            icon: Instagram,
+            title: "Instagram",
+            value: "@sophia.products_",
+            href: "https://www.instagram.com/sophia.products_/"
         },
         {
             icon: MapPin,
@@ -322,13 +352,36 @@ export default function ContactPage() {
                                         />
                                     </div>
 
+                                    {formStatus === 'success' && (
+                                        <div className="bg-[#505A4A]/10 border border-[#505A4A]/30 rounded-lg p-4 text-center">
+                                            <p className="text-[#505A4A] font-semibold">¡Mensaje enviado correctamente!</p>
+                                            <p className="text-[#505A4A]/80 text-sm mt-1">Te responderemos en menos de 24 horas.</p>
+                                        </div>
+                                    )}
+
+                                    {formStatus === 'error' && (
+                                        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
+                                            <p className="text-red-700 font-medium">{formError}</p>
+                                        </div>
+                                    )}
+
                                     <div className="text-center pt-2 sm:pt-4">
                                         <Button
                                             type="submit"
-                                            className="bg-[#505A4A] hover:bg-[#414A3C] text-white font-bold px-10 sm:px-12 py-4 text-lg shadow-xl"
+                                            disabled={formStatus === 'sending'}
+                                            className="bg-[#505A4A] hover:bg-[#414A3C] text-white font-bold px-10 sm:px-12 py-4 text-lg shadow-xl disabled:opacity-60"
                                         >
-                                            <Send className="h-5 w-5 mr-3" />
-                                            Enviar Mensaje
+                                            {formStatus === 'sending' ? (
+                                                <>
+                                                    <div className="h-5 w-5 mr-3 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                                                    Enviando...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Send className="h-5 w-5 mr-3" />
+                                                    Enviar Mensaje
+                                                </>
+                                            )}
                                         </Button>
                                     </div>
                                 </form>

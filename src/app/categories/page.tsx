@@ -263,6 +263,7 @@ export default function CategoriesPage() {
                                                                             ? 'text-red-500'
                                                                             : 'text-gray-400 hover:text-red-500'
                                                                             }`}
+                                                                        aria-label={isInWishlist(product.id) ? 'Quitar de favoritos' : 'Agregar a favoritos'}
                                                                     >
                                                                         <Heart className={`w-5 h-5 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
                                                                     </button>
