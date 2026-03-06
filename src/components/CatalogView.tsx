@@ -340,30 +340,28 @@ export default function CatalogView({ initialProducts, initialCategories }: Cata
                     </p>
 
                     {/* Contacto */}
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 mb-6">
+                    <div className="inline-flex flex-col gap-2.5 mb-6">
                         <a
                             href="tel:+34642633982"
-                            className="flex items-center gap-2 text-white/70 hover:text-white transition-colors text-xs"
+                            className="flex items-center gap-2.5 text-white/70 hover:text-white transition-colors text-xs"
                         >
-                            <Phone className="w-3.5 h-3.5" />
+                            <Phone className="w-3.5 h-3.5 flex-shrink-0" />
                             <span>+34 642 63 39 82</span>
                         </a>
-                        <span className="hidden sm:inline text-white/20">|</span>
                         <a
                             href="mailto:chavesophia1994@gmail.com"
-                            className="flex items-center gap-2 text-white/70 hover:text-white transition-colors text-xs"
+                            className="flex items-center gap-2.5 text-white/70 hover:text-white transition-colors text-xs"
                         >
-                            <Mail className="w-3.5 h-3.5" />
+                            <Mail className="w-3.5 h-3.5 flex-shrink-0" />
                             <span>chavesophia1994@gmail.com</span>
                         </a>
-                        <span className="hidden sm:inline text-white/20">|</span>
                         <a
                             href="https://www.instagram.com/sophia.products_/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-white/70 hover:text-white transition-colors text-xs"
+                            className="flex items-center gap-2.5 text-white/70 hover:text-white transition-colors text-xs"
                         >
-                            <Instagram className="w-3.5 h-3.5" />
+                            <Instagram className="w-3.5 h-3.5 flex-shrink-0" />
                             <span>@sophia.products_</span>
                         </a>
                     </div>
