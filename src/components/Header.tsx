@@ -59,7 +59,7 @@ export default function Header() {
                                 )}
                             </button>
 
-                            <Link href="/" className="flex items-center gap-2">
+                            <Link href="/" className="hidden md:flex items-center gap-2">
                                 <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#505A4A]/15 flex-shrink-0">
                                     <Image
                                         src="/images/sophia_logo_nuevo.jpeg"
@@ -75,6 +75,11 @@ export default function Header() {
                                     <span className="text-[10px] sm:text-xs text-[#505A4A]/60 leading-tight">Cosmética Botánica</span>
                                 </div>
                             </Link>
+
+                            {/* Mobile: UserMenu (replaces logo) */}
+                            <div className="md:hidden">
+                                <UserMenu />
+                            </div>
                         </div>
 
                         {/* Center: Desktop Navigation */}
@@ -100,7 +105,7 @@ export default function Header() {
 
                         {/* Right: Actions */}
                         <div className="flex items-center gap-1 sm:gap-1.5">
-                            <div className="hidden sm:block">
+                            <div className="hidden md:block">
                                 <UserMenu />
                             </div>
 
@@ -146,9 +151,23 @@ export default function Header() {
                     <nav
                         className="absolute left-0 top-0 bottom-0 w-72 bg-white shadow-2xl overflow-y-auto animate-slide-in-left"
                     >
-                        {/* User section */}
+                        {/* Logo + Brand (moved from header on mobile) */}
                         <div className="p-4 border-b border-gray-100">
-                            <UserMenu />
+                            <Link href="/" className="flex items-center gap-3" onClick={() => setIsMenuOpen(false)}>
+                                <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#505A4A]/15 flex-shrink-0">
+                                    <Image
+                                        src="/images/sophia_logo_nuevo.jpeg"
+                                        alt="Sophia"
+                                        fill
+                                        sizes="40px"
+                                        className="object-cover"
+                                    />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-base font-semibold text-[#505A4A] leading-tight">Sophia</span>
+                                    <span className="text-xs text-[#505A4A]/60 leading-tight">Cosmética Botánica</span>
+                                </div>
+                            </Link>
                         </div>
 
                         {/* Navigation Links */}

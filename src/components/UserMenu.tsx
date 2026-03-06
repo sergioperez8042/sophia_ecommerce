@@ -30,7 +30,7 @@ export default function UserMenu() {
           whileTap={{ scale: 0.98 }}
         >
           <LogIn className="w-4 h-4" />
-          <span className="text-sm font-medium hidden sm:block">Iniciar Sesión</span>
+          <span className="text-sm font-medium">Iniciar Sesión</span>
         </motion.button>
       </Link>
     );
