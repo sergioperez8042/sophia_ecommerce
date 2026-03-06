@@ -66,7 +66,7 @@ export default function RootLayout({
                 "telephone": "+34642633982",
                 "email": "chavesophia1994@gmail.com",
                 "foundingDate": "2022",
-                "priceRange": "€€",
+                "priceRange": "$$",
                 "sameAs": [],
                 "address": {
                   "@type": "PostalAddress",

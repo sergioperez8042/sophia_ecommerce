@@ -102,7 +102,7 @@ function ProductListItem({
                     {/* Price + Actions */}
                     <div className="flex items-center justify-between mt-2 sm:mt-3">
                         <span className="text-base sm:text-lg font-bold text-gray-900">
-                            €{product.price.toFixed(2)}
+                            ${product.price.toFixed(2)}
                         </span>
 
                         <div className="flex items-center gap-1">
@@ -570,7 +570,7 @@ export default function AdminProductsPage() {
 
                         <div className="grid grid-cols-2 gap-3">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1.5">Precio (€) *</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1.5">Precio ($) *</label>
                                 <input
                                     type="text"
                                     inputMode="decimal"

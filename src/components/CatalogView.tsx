@@ -3,6 +3,7 @@
 import { useState, useMemo, useRef } from 'react';
 import { Star, Search, Grid3X3, List, Leaf, Phone, Mail, MessageCircle, Rabbit, Droplets, ShieldCheck, Hand, Sun, Moon } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import ProductImage from "@/components/ui/product-image";
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/store/ThemeContext';
@@ -365,10 +366,7 @@ function ProductCard({
     const { isDark } = useTheme();
 
     const formatPrice = (price: number) => {
-        return new Intl.NumberFormat('es-ES', {
-            style: 'currency',
-            currency: 'EUR'
-        }).format(price);
+        return `$${price.toFixed(2)}`;
     };
 
     const handleWhatsAppOrder = () => {
@@ -392,7 +390,7 @@ function ProductCard({
                 onHoverStart={() => setIsHovered(true)}
                 onHoverEnd={() => setIsHovered(false)}
             >
-                <div className="relative w-32 sm:w-40 h-32 sm:h-40 flex-shrink-0 overflow-hidden">
+                <Link href={`/products/${product.id}`} className="relative w-32 sm:w-40 h-32 sm:h-40 flex-shrink-0 overflow-hidden">
                     <ProductImage
                         src={product.image}
                         alt={product.name}
@@ -404,13 +402,13 @@ function ProductCard({
                             Destacado
                         </div>
                     )}
-                </div>
+                </Link>
                 <div className="p-4 flex-1 flex flex-col justify-between">
-                    <div>
+                    <Link href={`/products/${product.id}`}>
                         <span className={`text-xs font-medium ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>{categoryName}</span>
                         <h3 className={`font-semibold mt-1 ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>{product.name}</h3>
                         <p className={`text-sm mt-1 line-clamp-2 ${isDark ? 'text-[#8a8278]' : 'text-gray-600'}`}>{product.description}</p>
-                    </div>
+                    </Link>
                     <div className="flex items-center justify-between mt-3">
                         <span className={`text-xl font-bold ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>{formatPrice(product.price)}</span>
                         <button
@@ -436,7 +434,7 @@ function ProductCard({
             onHoverStart={() => setIsHovered(true)}
             onHoverEnd={() => setIsHovered(false)}
         >
-            <div className="relative aspect-square overflow-hidden">
+            <Link href={`/products/${product.id}`} className="block relative aspect-square overflow-hidden">
                 <ProductImage
                     src={product.image}
                     alt={product.name}
@@ -457,7 +455,7 @@ function ProductCard({
                     transition={{ duration: 0.3 }}
                 >
                     <motion.button
-                        onClick={handleWhatsAppOrder}
+                        onClick={(e) => { e.preventDefault(); handleWhatsAppOrder(); }}
                         className="bg-[#505A4A] text-white px-4 py-2 rounded-full flex items-center gap-2 font-medium"
                         initial={{ y: 20, opacity: 0 }}
                         animate={{ y: isHovered ? 0 : 20, opacity: isHovered ? 1 : 0 }}
@@ -469,13 +467,15 @@ function ProductCard({
                         Hacer Pedido
                     </motion.button>
                 </motion.div>
-            </div>
+            </Link>
             <div className="p-4">
-                <span className={`text-xs font-medium ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>
-                    {categoryName}
-                </span>
-                <h3 className={`font-semibold mt-1 line-clamp-1 ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>{product.name}</h3>
-                <p className={`text-sm mt-1 line-clamp-2 ${isDark ? 'text-[#8a8278]' : 'text-gray-600'}`}>{product.description}</p>
+                <Link href={`/products/${product.id}`}>
+                    <span className={`text-xs font-medium ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>
+                        {categoryName}
+                    </span>
+                    <h3 className={`font-semibold mt-1 line-clamp-1 ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>{product.name}</h3>
+                    <p className={`text-sm mt-1 line-clamp-2 ${isDark ? 'text-[#8a8278]' : 'text-gray-600'}`}>{product.description}</p>
+                </Link>
                 <div className="flex items-center justify-between mt-3">
                     <span className={`text-lg font-bold ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>
                         {formatPrice(product.price)}

@@ -154,7 +154,7 @@ export default function WishlistPage() {
                                                 <div className="mt-auto">
                                                     {/* Precio */}
                                                     <div className="flex items-center justify-between mb-4">
-                                                        <span className="text-2xl font-bold text-[#505A4A]">€{product.price.toFixed(2)}</span>
+                                                        <span className="text-2xl font-bold text-[#505A4A]">${product.price.toFixed(2)}</span>
                                                         <Badge
                                                             variant="secondary"
                                                             className={`${product.active ? 'bg-[#505A4A]/10 text-[#505A4A]' : 'bg-red-100 text-red-800'} font-semibold`}

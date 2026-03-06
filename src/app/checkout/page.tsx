@@ -209,8 +209,8 @@ export default function CheckoutPage() {
             (index + 1).toString(),
             item.product.name,
             item.quantity.toString(),
-            `${item.product.price.toFixed(2)} €`,
-            `${(item.quantity * item.product.price).toFixed(2)} €`
+            `$${item.product.price.toFixed(2)}`,
+            `$${(item.quantity * item.product.price).toFixed(2)}`
         ]);
 
         autoTable(doc, {
@@ -256,10 +256,10 @@ export default function CheckoutPage() {
         doc.setFontSize(10);
         doc.setFont('helvetica', 'normal');
         doc.text('Subtotal:', 125, yPos + 5);
-        doc.text(`${cartSubtotal.toFixed(2)} €`, 190, yPos + 5, { align: 'right' });
+        doc.text(`$${cartSubtotal.toFixed(2)}`, 190, yPos + 5, { align: 'right' });
 
         doc.text('Envío:', 125, yPos + 14);
-        doc.text(cartShipping === 0 ? 'GRATIS' : `${cartShipping.toFixed(2)} €`, 190, yPos + 14, { align: 'right' });
+        doc.text(cartShipping === 0 ? 'GRATIS' : `$${cartShipping.toFixed(2)}`, 190, yPos + 14, { align: 'right' });
 
         doc.setDrawColor(200, 200, 200);
         doc.line(125, yPos + 19, 190, yPos + 19);
@@ -268,7 +268,7 @@ export default function CheckoutPage() {
         doc.setFontSize(12);
         doc.setFont('helvetica', 'bold');
         doc.text('TOTAL:', 125, yPos + 28);
-        doc.text(`${cartTotal.toFixed(2)} €`, 190, yPos + 28, { align: 'right' });
+        doc.text(`$${cartTotal.toFixed(2)}`, 190, yPos + 28, { align: 'right' });
 
         // Método de pago
         yPos = yPos + 50;
@@ -633,7 +633,7 @@ export default function CheckoutPage() {
                                                             Procesando...
                                                         </span>
                                                     ) : (
-                                                        `Realizar Pedido €${total.toFixed(2)}`
+                                                        `Realizar Pedido $${total.toFixed(2)}`
                                                     )}
                                                 </Button>
                                             </div>
@@ -739,11 +739,11 @@ export default function CheckoutPage() {
                                                         {item.product.name}
                                                     </p>
                                                     <p className="text-sm text-gray-700 font-medium">
-                                                        €{item.product.price.toFixed(2)} x {item.quantity}
+                                                        ${item.product.price.toFixed(2)} x {item.quantity}
                                                     </p>
                                                 </div>
                                                 <span className="text-sm font-bold text-gray-900">
-                                                    €{(item.product.price * item.quantity).toFixed(2)}
+                                                    ${(item.product.price * item.quantity).toFixed(2)}
                                                 </span>
                                             </div>
                                         ))}
@@ -752,24 +752,24 @@ export default function CheckoutPage() {
                                     <div className="border-t pt-4 space-y-2">
                                         <div className="flex justify-between text-sm">
                                             <span className="text-gray-700 font-medium">Subtotal</span>
-                                            <span className="text-gray-900 font-semibold">€{subtotal.toFixed(2)}</span>
+                                            <span className="text-gray-900 font-semibold">${subtotal.toFixed(2)}</span>
                                         </div>
                                         <div className="flex justify-between text-sm">
                                             <span className="text-gray-700 font-medium">Envío</span>
                                             <span className={shipping === 0 ? 'text-green-600 font-semibold' : 'text-gray-900 font-semibold'}>
-                                                {shipping === 0 ? 'Gratis' : `€${shipping.toFixed(2)}`}
+                                                {shipping === 0 ? 'Gratis' : `$${shipping.toFixed(2)}`}
                                             </span>
                                         </div>
                                         <div className="flex justify-between text-lg font-bold pt-2 border-t">
                                             <span className="text-gray-900">Total</span>
-                                            <span className="text-[#505A4A]">€{total.toFixed(2)}</span>
+                                            <span className="text-[#505A4A]">${total.toFixed(2)}</span>
                                         </div>
                                     </div>
 
                                     {shipping > 0 && (
                                         <div className="mt-4 bg-yellow-50 rounded-lg p-3 text-sm">
                                             <p className="text-yellow-800">
-                                                Añade €{(50 - subtotal).toFixed(2)} más para envío gratis
+                                                Añade ${(50 - subtotal).toFixed(2)} más para envío gratis
                                             </p>
                                         </div>
                                     )}

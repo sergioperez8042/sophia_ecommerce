@@ -215,11 +215,11 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <span className="text-2xl font-bold text-gray-900">
-                                                €{product.price.toFixed(2)}
+                                                ${product.price.toFixed(2)}
                                             </span>
                                             {product.compare_price && product.compare_price > product.price && (
                                                 <span className="text-lg text-gray-600 line-through">
-                                                    €{product.compare_price.toFixed(2)}
+                                                    ${product.compare_price.toFixed(2)}
                                                 </span>
                                             )}
                                         </div>
@@ -312,11 +312,11 @@ export default function ProductGrid({ products, isLoading, viewMode = "grid" }: 
                                             <div className="text-right mb-4">
                                                 <div className="flex items-center gap-2 mb-2">
                                                     <span className="text-3xl font-bold text-gray-900">
-                                                        €{product.price.toFixed(2)}
+                                                        ${product.price.toFixed(2)}
                                                     </span>
                                                     {product.compare_price && product.compare_price > product.price && (
                                                         <span className="text-xl text-gray-600 line-through">
-                                                            €{product.compare_price.toFixed(2)}
+                                                            ${product.compare_price.toFixed(2)}
                                                         </span>
                                                     )}
                                                 </div>

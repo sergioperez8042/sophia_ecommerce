@@ -291,7 +291,7 @@ export default function CategoriesPage() {
                                                                 <div className="flex items-center justify-between mb-4">
                                                                     <div className="flex items-center gap-2">
                                                                         <span className="text-2xl font-bold text-[#505A4A]">
-                                                                            €{product.price.toFixed(2)}
+                                                                            ${product.price.toFixed(2)}
                                                                         </span>
                                                                     </div>
                                                                     <Badge variant="secondary" className="bg-[#505A4A]/10 text-[#505A4A]">

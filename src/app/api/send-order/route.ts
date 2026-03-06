@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
         
         // Generar detalles de productos
         const orderDetails = items.map((item, i) => 
-            `${i + 1}. ${item.product.name} - ${item.quantity} x ${item.product.price.toFixed(2)}€ = ${(item.quantity * item.product.price).toFixed(2)}€`
+            `${i + 1}. ${item.product.name} - ${item.quantity} x $${item.product.price.toFixed(2)} = $${(item.quantity * item.product.price).toFixed(2)}`
         ).join('\n');
 
         // Configurar transporte de email
@@ -99,9 +99,9 @@ export async function POST(request: NextRequest) {
                         </div>
                         
                         <div style="background-color: #505A4A; color: white; padding: 15px; border-radius: 8px; text-align: center;">
-                            <p style="margin: 5px 0;">Subtotal: ${subtotal.toFixed(2)}€</p>
-                            <p style="margin: 5px 0;">Envío: ${shipping === 0 ? 'GRATIS' : shipping.toFixed(2) + '€'}</p>
-                            <h2 style="margin: 10px 0;">TOTAL: ${total.toFixed(2)}€</h2>
+                            <p style="margin: 5px 0;">Subtotal: $${subtotal.toFixed(2)}</p>
+                            <p style="margin: 5px 0;">Envío: ${shipping === 0 ? 'GRATIS' : '$' + shipping.toFixed(2)}</p>
+                            <h2 style="margin: 10px 0;">TOTAL: $${total.toFixed(2)}</h2>
                         </div>
                     </div>
                     
@@ -150,7 +150,7 @@ export async function POST(request: NextRequest) {
                         </div>
                         
                         <div style="background-color: #E8F5E9; padding: 20px; border-radius: 8px; text-align: center;">
-                            <h3 style="color: #505A4A; margin-top: 0;">Total: ${total.toFixed(2)}€</h3>
+                            <h3 style="color: #505A4A; margin-top: 0;">Total: $${total.toFixed(2)}</h3>
                             <p style="color: #666; font-size: 14px;">Pago: Contra entrega / Transferencia bancaria</p>
                         </div>
                         

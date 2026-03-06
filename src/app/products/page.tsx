@@ -60,9 +60,9 @@ export default function ProductsPage() {
   }, [displayProducts]);
 
   const priceRanges = [
-    { name: "0 - 20 €", value: "0-20" },
-    { name: "20 - 50 €", value: "20-50" },
-    { name: "50+ €", value: "50+" }
+    { name: "$0 - $20", value: "0-20" },
+    { name: "$20 - $50", value: "20-50" },
+    { name: "$50+", value: "50+" }
   ];
 
   const filteredProducts = useMemo(() => {
@@ -441,9 +441,9 @@ export default function ProductsPage() {
 
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center gap-2">
-                            <span className="text-xl font-bold text-[#505A4A]">€{product.price.toFixed(2)}</span>
+                            <span className="text-xl font-bold text-[#505A4A]">${product.price.toFixed(2)}</span>
                             {product.originalPrice > product.price && (
-                              <span className="text-sm text-gray-500 line-through">€{product.originalPrice.toFixed(2)}</span>
+                              <span className="text-sm text-gray-500 line-through">${product.originalPrice.toFixed(2)}</span>
                             )}
                           </div>
                         </div>

@@ -66,7 +66,7 @@ export function PricingProvider({ children }: { children: ReactNode }) {
   };
 
   const formatPrice = (price: number): string => {
-    return `€${price.toFixed(2)}`;
+    return `$${price.toFixed(2)}`;
   };
 
   const getPriceInfo = (productId: string, basePrice?: number) => {
