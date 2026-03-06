@@ -39,7 +39,7 @@ const emptyCategory: Omit<ICategory, 'id'> = {
 
 function CategoryTreeItem({
     category,
-    children: childCategories,
+    childCategories,
     level,
     onEdit,
     onDelete,
@@ -52,7 +52,7 @@ function CategoryTreeItem({
     allCategories,
 }: {
     category: ICategory;
-    children: ICategory[];
+    childCategories: ICategory[];
     level: number;
     onEdit: (cat: ICategory) => void;
     onDelete: (id: string) => void;
@@ -213,7 +213,7 @@ function CategoryTreeItem({
                         <CategoryTreeItem
                             key={child.id}
                             category={child}
-                            children={getChildrenOf(child.id)}
+                            childCategories={getChildrenOf(child.id)}
                             level={level + 1}
                             onEdit={onEdit}
                             onDelete={onDelete}
@@ -503,7 +503,7 @@ export default function AdminCategoriesPage() {
                                 <CategoryTreeItem
                                     key={category.id}
                                     category={category}
-                                    children={getChildrenOf(category.id)}
+                                    childCategories={getChildrenOf(category.id)}
                                     level={0}
                                     onEdit={handleEdit}
                                     onDelete={handleDelete}
@@ -564,7 +564,7 @@ export default function AdminCategoriesPage() {
                 <form onSubmit={handleSubmit} className="space-y-5">
                     {/* Image */}
                     <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
-                        <label className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-3">
+                        <label htmlFor="category-image" className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-3">
                             <ImageIcon className="w-4 h-4 text-gray-500" />
                             Imagen
                         </label>
@@ -590,6 +590,7 @@ export default function AdminCategoriesPage() {
                         </div>
 
                         <input
+                            id="category-image"
                             type="file"
                             accept="image/*"
                             onChange={(e) => {
@@ -625,8 +626,9 @@ export default function AdminCategoriesPage() {
                         </h2>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1.5">Nombre *</label>
+                            <label htmlFor="category-name" className="block text-sm font-medium text-gray-700 mb-1.5">Nombre *</label>
                             <input
+                                id="category-name"
                                 type="text"
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -637,8 +639,9 @@ export default function AdminCategoriesPage() {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1.5">Descripción</label>
+                            <label htmlFor="category-description" className="block text-sm font-medium text-gray-700 mb-1.5">Descripción</label>
                             <textarea
+                                id="category-description"
                                 value={formData.description}
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                 placeholder="Breve descripción..."
@@ -649,10 +652,11 @@ export default function AdminCategoriesPage() {
 
                         {/* Parent Category Selector */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                            <label htmlFor="category-parent" className="block text-sm font-medium text-gray-700 mb-1.5">
                                 Categoría padre
                             </label>
                             <select
+                                id="category-parent"
                                 value={formData.parent_id || ''}
                                 onChange={(e) => setFormData({ ...formData, parent_id: e.target.value })}
                                 className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all"
@@ -676,8 +680,9 @@ export default function AdminCategoriesPage() {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1.5">Orden</label>
+                            <label htmlFor="category-sort-order" className="block text-sm font-medium text-gray-700 mb-1.5">Orden</label>
                             <input
+                                id="category-sort-order"
                                 type="number"
                                 value={formData.sort_order}
                                 onChange={(e) => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })}

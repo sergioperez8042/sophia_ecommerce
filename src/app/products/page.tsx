@@ -7,10 +7,28 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ProductImage from "@/components/ui/product-image";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import Link from "next/link";
 import Breadcrumb from "@/components/ui/breadcrumb";
 import { useCart, useWishlist, useProducts, useCategories } from "@/store";
+
+interface DisplayProduct {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  originalPrice: number;
+  rating: number;
+  reviews: number;
+  image: string;
+  category: string;
+  category_id: string;
+  inStock: boolean;
+  isNew: boolean;
+  isBestseller: boolean;
+  priceRange: string;
+  brand?: string;
+}
 
 export default function ProductsPage() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -115,7 +133,7 @@ export default function ProductsPage() {
 
   const activeFiltersCount = selectedCategories.length + selectedPriceRanges.length + (inStockOnly ? 1 : 0);
 
-  const addToCart = async (product: any, e: React.MouseEvent) => {
+  const addToCart = async (product: DisplayProduct, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -139,7 +157,7 @@ export default function ProductsPage() {
     }, 1000);
   };
 
-  const toggleWishlist = (product: any, e: React.MouseEvent) => {
+  const toggleWishlist = (product: DisplayProduct, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -147,8 +165,8 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-6">
+    <div className="min-h-screen bg-gray-50 pt-20">
+      <div className="container mx-auto px-4 pb-6">
         {/* Breadcrumb */}
         <div className="mb-6">
           <Breadcrumb
@@ -355,14 +373,14 @@ export default function ProductsPage() {
             </Card>
 
             {/* Grid de productos */}
-            <motion.div
+            <m.div
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3 }}
             >
               {filteredProducts.map((product, index) => (
-                <motion.div
+                <m.div
                   key={product.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -432,7 +450,7 @@ export default function ProductsPage() {
                         <div className="flex items-center gap-1 mb-3">
                           {[...Array(5)].map((_, i) => (
                             <Star
-                              key={i}
+                              key={`star-${i}`}
                               className={`h-3 w-3 ${i < Math.floor(product.rating)
                                 ? 'text-yellow-500 fill-yellow-400'
                                 : 'text-gray-300 fill-gray-200'
@@ -470,13 +488,13 @@ export default function ProductsPage() {
                       </div>
                     </CardContent>
                   </Card>
-                </motion.div>
+                </m.div>
               ))}
-            </motion.div>
+            </m.div>
 
             {/* Mensaje si no hay productos */}
             {filteredProducts.length === 0 && (
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="text-center py-12"
@@ -494,7 +512,7 @@ export default function ProductsPage() {
                     Limpiar filtros
                   </Button>
                 </div>
-              </motion.div>
+              </m.div>
             )}
           </div>
         </div>

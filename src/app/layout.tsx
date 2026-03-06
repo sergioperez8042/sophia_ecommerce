@@ -6,6 +6,23 @@ import { StoreProvider } from "@/store";
 import { ThemeProvider } from "@/store/ThemeContext";
 import { ToastProvider } from "@/components/ui/toast";
 import { usePathname } from "next/navigation";
+import Script from "next/script";
+import { Poppins, Cinzel } from "next/font/google";
+import { LazyMotion, domAnimation, MotionConfig } from "framer-motion";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-poppins",
+});
+
+const cinzel = Cinzel({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-cinzel",
+});
 
 const FOUC_SCRIPT = `(function(){try{var t=localStorage.getItem('sophia-theme');if(t==='dark'||(t==null&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}})();`;
 
@@ -26,7 +43,7 @@ export default function RootLayout({
     return (
       <html lang="es" suppressHydrationWarning={true}>
         <head>
-          <script dangerouslySetInnerHTML={{ __html: FOUC_SCRIPT }} />
+          <Script id="fouc-prevention" strategy="beforeInteractive">{FOUC_SCRIPT}</Script>
           <title>Sophia Cosmética Botánica | Productos Naturales Artesanales</title>
           <meta name="description" content="Sophia Cosmética Botánica: productos de belleza natural elaborados artesanalmente con ingredientes orgánicos. Cremas, aceites y tratamientos para piel y cabello. Envíos a toda España." />
           <meta name="keywords" content="cosmética natural, cosmética botánica, productos artesanales, belleza natural, cremas naturales, aceites esenciales, skincare orgánico, Sophia cosmética, cuidado piel natural, cosmética vegana España" />
@@ -51,45 +68,32 @@ export default function RootLayout({
           <meta name="twitter:description" content="Productos de cosmética natural elaborados artesanalmente con ingredientes orgánicos." />
           <meta name="twitter:image" content="https://sophia-cosmetic.vercel.app/images/sophia_logo_nuevo.jpeg" />
 
-          {/* Structured Data - LocalBusiness */}
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "Store",
-                "name": "Sophia Cosmética Botánica",
-                "description": "Tienda de cosmética natural y botánica artesanal con ingredientes orgánicos",
-                "url": "https://sophia-cosmetic.vercel.app",
-                "logo": "https://sophia-cosmetic.vercel.app/images/sophia_logo_nuevo.jpeg",
-                "image": "https://sophia-cosmetic.vercel.app/images/sophia_logo_nuevo.jpeg",
-                "telephone": "+34642633982",
-                "email": "chavesophia1994@gmail.com",
-                "foundingDate": "2022",
-                "priceRange": "$$",
-                "sameAs": [],
-                "address": {
-                  "@type": "PostalAddress",
-                  "addressCountry": "ES"
-                },
-                "contactPoint": {
-                  "@type": "ContactPoint",
-                  "telephone": "+34642633982",
-                  "contactType": "customer service",
-                  "availableLanguage": ["Spanish"]
-                }
-              })
-            }}
-          />
-
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-          <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+          {/* Structured Data - Store */}
+          <Script id="structured-data-store" type="application/ld+json">{JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Store",
+            "name": "Sophia Cosmética Botánica",
+            "description": "Tienda de cosmética natural y botánica artesanal con ingredientes orgánicos",
+            "url": "https://sophia-cosmetic.vercel.app",
+            "logo": "https://sophia-cosmetic.vercel.app/images/sophia_logo_nuevo.jpeg",
+            "image": "https://sophia-cosmetic.vercel.app/images/sophia_logo_nuevo.jpeg",
+            "telephone": "+34642633982",
+            "email": "chavesophia1994@gmail.com",
+            "foundingDate": "2022",
+            "priceRange": "$$",
+            "sameAs": [],
+            "address": { "@type": "PostalAddress", "addressCountry": "ES" },
+            "contactPoint": { "@type": "ContactPoint", "telephone": "+34642633982", "contactType": "customer service", "availableLanguage": ["Spanish"] }
+          })}</Script>
         </head>
-        <body className="antialiased" style={{ fontFamily: 'Poppins, sans-serif' }} suppressHydrationWarning={true}>
-          <ThemeProvider>
-            {children}
-          </ThemeProvider>
+        <body className={`${poppins.variable} ${cinzel.variable} antialiased`} style={{ fontFamily: 'var(--font-poppins), sans-serif' }} suppressHydrationWarning={true}>
+          <LazyMotion features={domAnimation} strict>
+            <MotionConfig reducedMotion="user">
+              <ThemeProvider>
+                {children}
+              </ThemeProvider>
+            </MotionConfig>
+          </LazyMotion>
         </body>
       </html>
     );
@@ -101,19 +105,20 @@ export default function RootLayout({
         <title>Sophia Cosmética Botánica | Panel de Administración</title>
         <meta name="robots" content="noindex, nofollow" />
         <meta name="description" content="Panel de administración de Sophia Cosmética Botánica" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="antialiased" style={{ fontFamily: 'Poppins, sans-serif' }} suppressHydrationWarning={true}>
-        <StoreProvider>
-          <ToastProvider>
-            {!isAuthPage && !isLegalPage && <Header />}
-            <div className={`min-h-screen ${isAuthPage || isLegalPage ? '' : 'bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8]'}`}>
-              {children}
-            </div>
-          </ToastProvider>
-        </StoreProvider>
+      <body className={`${poppins.variable} ${cinzel.variable} antialiased`} style={{ fontFamily: 'var(--font-poppins), sans-serif' }} suppressHydrationWarning={true}>
+        <LazyMotion features={domAnimation} strict>
+          <MotionConfig reducedMotion="user">
+            <StoreProvider>
+              <ToastProvider>
+                {!isAuthPage && !isLegalPage && <Header />}
+                <div className={`min-h-screen ${isAuthPage || isLegalPage ? '' : 'bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8]'}`}>
+                  {children}
+                </div>
+              </ToastProvider>
+            </StoreProvider>
+          </MotionConfig>
+        </LazyMotion>
       </body>
     </html>
   );

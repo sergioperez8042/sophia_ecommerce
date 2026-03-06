@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import { m, useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { Mail, Phone, MapPin, Clock, Send, Leaf, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -91,30 +91,30 @@ export default function ContactPage() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#FEFCF7] via-white to-[#F5F1E8]">
             {/* Hero Section */}
-            <motion.section
+            <m.section
                 ref={heroRef}
                 className="relative pt-24 pb-16 overflow-hidden"
             >
                 <div className="absolute inset-0 bg-gradient-to-br from-[#505A4A]/5 via-transparent to-[#C4B590]/10" />
 
-                <motion.div
+                <m.div
                     variants={containerVariants}
                     initial="hidden"
                     animate={heroInView ? "visible" : "hidden"}
                     className="container mx-auto px-4 relative z-10"
                 >
                     {/* Breadcrumb */}
-                    <motion.div variants={itemVariants} className="mb-8">
+                    <m.div variants={itemVariants} className="mb-8">
                         <Breadcrumb
                             items={[
                                 { label: 'Contacto' }
                             ]}
                         />
-                    </motion.div>
+                    </m.div>
 
                     <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
                         {/* Text Content */}
-                        <motion.div variants={itemVariants} className="space-y-8">
+                        <m.div variants={itemVariants} className="space-y-8">
                             <div>
                                 <Badge className="bg-[#505A4A]/10 text-[#505A4A] font-bold text-base sm:text-lg px-5 sm:px-6 py-2 mb-6">
                                     Contáctanos
@@ -147,7 +147,7 @@ export default function ContactPage() {
                                     );
 
                                     return (
-                                        <motion.div
+                                        <m.div
                                             key={info.title}
                                             variants={itemVariants}
                                             whileHover={{ y: -4 }}
@@ -156,14 +156,14 @@ export default function ContactPage() {
                                             {info.href ? (
                                                 <a href={info.href} className="block">{cardContent}</a>
                                             ) : cardContent}
-                                        </motion.div>
+                                        </m.div>
                                     );
                                 })}
                             </div>
-                        </motion.div>
+                        </m.div>
 
                         {/* WhatsApp CTA + Quick Info */}
-                        <motion.div variants={itemVariants} className="space-y-6">
+                        <m.div variants={itemVariants} className="space-y-6">
                             {/* WhatsApp Card */}
                             <Card className="border-0 shadow-2xl bg-[#505A4A] text-white overflow-hidden">
                                 <CardContent className="p-8 sm:p-10 relative">
@@ -216,32 +216,32 @@ export default function ContactPage() {
                                     </CardContent>
                                 </Card>
                             </div>
-                        </motion.div>
+                        </m.div>
                     </div>
-                </motion.div>
-            </motion.section>
+                </m.div>
+            </m.section>
 
             {/* Contact Form Section */}
-            <motion.section
+            <m.section
                 ref={formRef}
                 className="py-20 sm:py-32 bg-gradient-to-b from-[#F5F1E8]/30 via-transparent to-[#F5F1E8]/30"
             >
-                <motion.div
+                <m.div
                     variants={containerVariants}
                     initial="hidden"
                     animate={formInView ? "visible" : "hidden"}
                     className="container mx-auto px-4"
                 >
-                    <motion.div variants={itemVariants} className="text-center mb-12 sm:mb-16">
+                    <m.div variants={itemVariants} className="text-center mb-12 sm:mb-16">
                         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
                             Envíanos un <span className="text-[#505A4A]">Mensaje</span>
                         </h2>
                         <p className="text-lg sm:text-xl text-gray-700 max-w-2xl mx-auto font-medium">
                             Cuéntanos cómo podemos ayudarte. Respondemos todos los mensajes en menos de 24 horas.
                         </p>
-                    </motion.div>
+                    </m.div>
 
-                    <motion.div
+                    <m.div
                         variants={itemVariants}
                         className="max-w-4xl mx-auto"
                     >
@@ -250,10 +250,11 @@ export default function ContactPage() {
                                 <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
                                     <div className="grid sm:grid-cols-2 gap-5 sm:gap-6">
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-900 mb-2">
+                                            <label htmlFor="contact-name" className="block text-sm font-bold text-gray-900 mb-2">
                                                 Nombre Completo
                                             </label>
                                             <Input
+                                                id="contact-name"
                                                 type="text"
                                                 name="name"
                                                 value={formData.name}
@@ -267,10 +268,11 @@ export default function ContactPage() {
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-900 mb-2">
+                                            <label htmlFor="contact-email" className="block text-sm font-bold text-gray-900 mb-2">
                                                 Email
                                             </label>
                                             <Input
+                                                id="contact-email"
                                                 type="email"
                                                 name="email"
                                                 value={formData.email}
@@ -287,10 +289,11 @@ export default function ContactPage() {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-900 mb-2">
+                                        <label htmlFor="contact-subject" className="block text-sm font-bold text-gray-900 mb-2">
                                             Asunto
                                         </label>
                                         <Input
+                                            id="contact-subject"
                                             type="text"
                                             name="subject"
                                             value={formData.subject}
@@ -303,10 +306,11 @@ export default function ContactPage() {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-900 mb-2">
+                                        <label htmlFor="contact-message" className="block text-sm font-bold text-gray-900 mb-2">
                                             Mensaje
                                         </label>
                                         <textarea
+                                            id="contact-message"
                                             name="message"
                                             value={formData.message}
                                             onChange={handleChange}
@@ -330,9 +334,9 @@ export default function ContactPage() {
                                 </form>
                             </CardContent>
                         </Card>
-                    </motion.div>
-                </motion.div>
-            </motion.section>
+                    </m.div>
+                </m.div>
+            </m.section>
         </div>
     );
 }

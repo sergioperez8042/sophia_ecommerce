@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import ProductImage from "@/components/ui/product-image";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Breadcrumb from "@/components/ui/breadcrumb";
 
@@ -42,13 +42,13 @@ export default function WishlistPage() {
 
     if (wishlistItems.length === 0) {
         return (
-            <div className="min-h-screen bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8]">
-                <div className="container mx-auto px-4 py-8">
+            <div className="min-h-screen bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8] pt-20">
+                <div className="container mx-auto px-4 pb-8">
                     <div className="mb-6">
                         <Breadcrumb items={[{ label: 'Lista de Favoritos' }]} />
                     </div>
 
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="text-center py-16"
@@ -63,26 +63,26 @@ export default function WishlistPage() {
                                 </Button>
                             </Link>
                         </div>
-                    </motion.div>
+                    </m.div>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8]">
-            <div className="container mx-auto px-4 py-8">
+        <div className="min-h-screen bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8] pt-20">
+            <div className="container mx-auto px-4 pb-8">
                 <div className="mb-6">
                     <Breadcrumb items={[{ label: 'Lista de Favoritos' }]} />
                 </div>
 
-                <motion.div
+                <m.div
                     variants={containerVariants}
                     initial="hidden"
                     animate="visible"
                 >
                     {/* Header */}
-                    <motion.div variants={itemVariants} className="mb-8">
+                    <m.div variants={itemVariants} className="mb-8">
                         <Card className="shadow-xl border-0 bg-white/90 backdrop-blur-sm">
                             <CardContent className="p-6">
                                 <div className="flex items-center justify-between">
@@ -101,16 +101,16 @@ export default function WishlistPage() {
                                 </div>
                             </CardContent>
                         </Card>
-                    </motion.div>
+                    </m.div>
 
                     {/* Grid de productos */}
                     <AnimatePresence>
-                        <motion.div
+                        <m.div
                             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
                             variants={containerVariants}
                         >
                             {wishlistItems.map((product, index) => (
-                                <motion.div
+                                <m.div
                                     key={product.id}
                                     variants={itemVariants}
                                     exit="exit"
@@ -120,7 +120,7 @@ export default function WishlistPage() {
                                     <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/95 backdrop-blur-sm h-full flex flex-col">
                                         <CardContent className="p-0 relative flex-1 flex flex-col">
                                             {/* Botón eliminar */}
-                                            <motion.button
+                                            <m.button
                                                 onClick={() => removeFromWishlist(product.id)}
                                                 className="absolute top-3 right-3 z-10 bg-white/90 hover:bg-white text-gray-600 hover:text-[#505A4A] rounded-full p-2 shadow-md transition-all duration-200"
                                                 whileHover={{ scale: 1.1 }}
@@ -128,7 +128,7 @@ export default function WishlistPage() {
                                                 title="Eliminar producto"
                                             >
                                                 <X className="h-4 w-4" />
-                                            </motion.button>
+                                            </m.button>
 
                                             {/* Imagen del producto */}
                                             <Link href={`/products/${product.id}`} className="relative aspect-square bg-gray-100 overflow-hidden block">
@@ -187,21 +187,21 @@ export default function WishlistPage() {
                                             </div>
                                         </CardContent>
                                     </Card>
-                                </motion.div>
+                                </m.div>
                             ))}
-                        </motion.div>
+                        </m.div>
                     </AnimatePresence>
 
                     {/* Footer Actions */}
-                    <motion.div variants={itemVariants} className="mt-12 text-center">
+                    <m.div variants={itemVariants} className="mt-12 text-center">
                         <Link href="/products">
                             <Button variant="outline" className="border-[#505A4A] text-[#505A4A] hover:bg-[#505A4A] hover:text-white font-bold px-8 py-3 text-lg">
                                 <ArrowLeft className="h-5 w-5 mr-2" />
                                 Seguir Explorando
                             </Button>
                         </Link>
-                    </motion.div>
-                </motion.div>
+                    </m.div>
+                </m.div>
             </div>
         </div>
     );

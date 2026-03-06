@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { writeFile, readFile, mkdir } from 'fs/promises';
 import path from 'path';
+import { isAuthorized, unauthorizedResponse } from '@/lib/api-auth';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 const SUBSCRIBERS_FILE = path.join(DATA_DIR, 'subscribers.json');
@@ -25,9 +26,13 @@ async function saveSubscribers(subscribers: Subscriber[]) {
   await writeFile(SUBSCRIBERS_FILE, JSON.stringify(subscribers, null, 2));
 }
 
-// DELETE - Remove a subscriber
+// DELETE - Remove a subscriber (admin only)
 export async function DELETE(request: NextRequest) {
   try {
+    if (!isAuthorized(request)) {
+      return unauthorizedResponse();
+    }
+
     const body = await request.json();
     const { email } = body;
 
@@ -63,9 +68,13 @@ export async function DELETE(request: NextRequest) {
   }
 }
 
-// POST - Send newsletter (future feature)
+// POST - Send newsletter (admin only)
 export async function POST(request: NextRequest) {
   try {
+    if (!isAuthorized(request)) {
+      return unauthorizedResponse();
+    }
+
     const body = await request.json();
     const { subject, content, testEmail } = body;
 

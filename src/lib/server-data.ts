@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, query, where } from 'firebase/firestore';
 import { db } from './firebase';
 
 interface Product {
@@ -35,6 +35,19 @@ export async function getActiveProducts(): Promise<Product[]> {
     })) as Product[];
   } catch {
     return [];
+  }
+}
+
+export async function getProductById(id: string): Promise<Product | null> {
+  if (!db) return null;
+
+  try {
+    const docRef = doc(db, 'products', id);
+    const snapshot = await getDoc(docRef);
+    if (!snapshot.exists()) return null;
+    return { id: snapshot.id, ...snapshot.data() } as Product;
+  } catch {
+    return null;
   }
 }
 

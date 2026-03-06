@@ -9,17 +9,14 @@ import { ProductProvider } from './ProductContext';
 import { CategoryProvider } from './CategoryContext';
 import { ThemeProvider } from './ThemeContext';
 
-export { useCart, CartProvider } from './CartContext';
-export { useWishlist, WishlistProvider } from './WishlistContext';
-export { useAuth, AuthProvider } from './AuthContext';
-export { usePricing, PricingProvider } from './PricingContext';
-export { useManager, ManagerProvider, AVAILABLE_MANAGERS } from './ManagerContext';
-export { useProducts, ProductProvider } from './ProductContext';
-export { useCategories, CategoryProvider } from './CategoryContext';
-export { useTheme, ThemeProvider } from './ThemeContext';
-export type { CartProduct, CartItem } from './CartContext';
-export type { User, UserRole, RegisterData } from './AuthContext';
-export type { Manager } from './ManagerContext';
+export { useCart } from './CartContext';
+export { useWishlist } from './WishlistContext';
+export { useAuth } from './AuthContext';
+export { usePricing } from './PricingContext';
+export { useProducts } from './ProductContext';
+export { useCategories } from './CategoryContext';
+export { useTheme } from './ThemeContext';
+export type { User, RegisterData } from './AuthContext';
 
 interface StoreProviderProps {
   children: ReactNode;

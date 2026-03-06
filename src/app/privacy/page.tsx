@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import BackButton from '@/components/BackButton';
 
 export default function PrivacyPage() {
@@ -7,7 +8,7 @@ export default function PrivacyPage() {
         <BackButton />
 
         <div className="flex items-center gap-3 mb-8">
-          <img src="/images/sophia_logo_nuevo.jpeg" alt="Sophia" className="w-10 h-10 rounded-2xl" />
+          <Image src="/images/sophia_logo_nuevo.jpeg" alt="Sophia" width={40} height={40} className="rounded-2xl" />
           <h1 className="text-2xl font-semibold text-gray-900" style={{ fontFamily: 'Cinzel, serif' }}>
             Política de Privacidad
           </h1>

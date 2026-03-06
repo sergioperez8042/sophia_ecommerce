@@ -489,7 +489,7 @@ export default function AdminProductsPage() {
                 <form onSubmit={handleSubmit} className="space-y-5">
                     {/* Image Upload */}
                     <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
-                        <label className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-3">
+                        <label htmlFor="product-image" className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-3">
                             <ImageIcon className="w-4 h-4 text-gray-500" />
                             Imagen del producto <span className="text-red-500">*</span>
                         </label>
@@ -510,6 +510,7 @@ export default function AdminProductsPage() {
                         </div>
 
                         <input
+                            id="product-image"
                             type="file"
                             accept="image/*"
                             onChange={(e) => {
@@ -545,8 +546,9 @@ export default function AdminProductsPage() {
                         </h2>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1.5">Nombre *</label>
+                            <label htmlFor="product-name" className="block text-sm font-medium text-gray-700 mb-1.5">Nombre *</label>
                             <input
+                                id="product-name"
                                 type="text"
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -557,8 +559,9 @@ export default function AdminProductsPage() {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1.5">Descripción *</label>
+                            <label htmlFor="product-description" className="block text-sm font-medium text-gray-700 mb-1.5">Descripción *</label>
                             <textarea
+                                id="product-description"
                                 value={formData.description}
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                 placeholder="Describe el producto..."
@@ -570,8 +573,9 @@ export default function AdminProductsPage() {
 
                         <div className="grid grid-cols-2 gap-3">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1.5">Precio ($) *</label>
+                                <label htmlFor="product-price" className="block text-sm font-medium text-gray-700 mb-1.5">Precio ($) *</label>
                                 <input
+                                    id="product-price"
                                     type="text"
                                     inputMode="decimal"
                                     value={formData.price === 0 ? '' : formData.price.toString()}
@@ -587,8 +591,9 @@ export default function AdminProductsPage() {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1.5">Categoría *</label>
+                                <label htmlFor="product-category" className="block text-sm font-medium text-gray-700 mb-1.5">Categoría *</label>
                                 <select
+                                    id="product-category"
                                     value={formData.category_id}
                                     onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
                                     className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all"
@@ -611,8 +616,9 @@ export default function AdminProductsPage() {
                         </h2>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1.5">Etiquetas (separadas por coma)</label>
+                            <label htmlFor="product-tags" className="block text-sm font-medium text-gray-700 mb-1.5">Etiquetas (separadas por coma)</label>
                             <input
+                                id="product-tags"
                                 type="text"
                                 value={tagsInput}
                                 onChange={(e) => setTagsInput(e.target.value)}
@@ -621,16 +627,17 @@ export default function AdminProductsPage() {
                             />
                             {tagsInput && (
                                 <div className="flex flex-wrap gap-1.5 mt-2">
-                                    {tagsInput.split(',').map((t) => t.trim()).filter((t) => t).map((tag, i) => (
-                                        <span key={i} className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-lg">{tag}</span>
+                                    {tagsInput.split(',').map((t) => t.trim()).filter((t) => t).map((tag) => (
+                                        <span key={tag} className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-lg">{tag}</span>
                                     ))}
                                 </div>
                             )}
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1.5">Ingredientes (separados por coma)</label>
+                            <label htmlFor="product-ingredients" className="block text-sm font-medium text-gray-700 mb-1.5">Ingredientes (separados por coma)</label>
                             <textarea
+                                id="product-ingredients"
                                 value={ingredientsInput}
                                 onChange={(e) => setIngredientsInput(e.target.value)}
                                 placeholder="aloe vera, aceite de jojoba, manteca de karité"

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { User, ChevronDown, LogOut, UserCircle, Settings, LayoutDashboard, ShoppingBag, LogIn } from 'lucide-react';
 import { useAuth } from '@/store';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 
@@ -31,15 +31,12 @@ export default function UserMenu({ compact = false }: { compact?: boolean }) {
       );
     }
     return (
-      <Link href="/auth">
-        <motion.button
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#505A4A] text-white hover:bg-[#414A3C] transition-all"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          <LogIn className="w-4 h-4" />
-          <span className="text-sm font-medium">Iniciar Sesión</span>
-        </motion.button>
+      <Link
+        href="/auth"
+        className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:text-[#505A4A] hover:bg-[#505A4A]/5 transition-all"
+      >
+        <User className="w-5 h-5" />
+        <span className="text-sm font-medium">Iniciar Sesión</span>
       </Link>
     );
   }
@@ -70,7 +67,7 @@ export default function UserMenu({ compact = false }: { compact?: boolean }) {
 
   return (
     <div className="relative">
-      <motion.button
+      <m.button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-all"
         whileHover={{ scale: 1.02 }}
@@ -88,13 +85,13 @@ export default function UserMenu({ compact = false }: { compact?: boolean }) {
           </p>
         </div>
         <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-      </motion.button>
+      </m.button>
 
       <AnimatePresence>
         {isOpen && (
           <>
             {/* Backdrop */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -103,7 +100,7 @@ export default function UserMenu({ compact = false }: { compact?: boolean }) {
             />
 
             {/* Dropdown */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: -10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
@@ -187,7 +184,7 @@ export default function UserMenu({ compact = false }: { compact?: boolean }) {
                   <span className="font-medium">Cerrar Sesión</span>
                 </button>
               </div>
-            </motion.div>
+            </m.div>
           </>
         )}
       </AnimatePresence>

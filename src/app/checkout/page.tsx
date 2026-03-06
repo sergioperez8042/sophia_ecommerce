@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import ProductImage from "@/components/ui/product-image";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Breadcrumb from "@/components/ui/breadcrumb";
 import { useCart, useAuth } from "@/store";
@@ -504,7 +504,7 @@ export default function CheckoutPage() {
                         <AnimatePresence mode="wait">
                             {/* Shipping Step */}
                             {currentStep === 'shipping' && (
-                                <motion.div
+                                <m.div
                                     key="shipping"
                                     initial={{ opacity: 0, x: 20 }}
                                     animate={{ opacity: 1, x: 0 }}
@@ -519,10 +519,11 @@ export default function CheckoutPage() {
 
                                             <div className="grid md:grid-cols-2 gap-4">
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                    <label htmlFor="checkout-firstname" className="block text-sm font-medium text-gray-700 mb-1">
                                                         Nombre *
                                                     </label>
                                                     <Input
+                                                        id="checkout-firstname"
                                                         value={shippingInfo.firstName}
                                                         onChange={(e) => setShippingInfo({ ...shippingInfo, firstName: e.target.value })}
                                                         className={errors.firstName ? 'border-red-500' : ''}
@@ -532,10 +533,11 @@ export default function CheckoutPage() {
                                                 </div>
 
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                    <label htmlFor="checkout-lastname" className="block text-sm font-medium text-gray-700 mb-1">
                                                         Apellido *
                                                     </label>
                                                     <Input
+                                                        id="checkout-lastname"
                                                         value={shippingInfo.lastName}
                                                         onChange={(e) => setShippingInfo({ ...shippingInfo, lastName: e.target.value })}
                                                         className={errors.lastName ? 'border-red-500' : ''}
@@ -545,10 +547,11 @@ export default function CheckoutPage() {
                                                 </div>
 
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                    <label htmlFor="checkout-email" className="block text-sm font-medium text-gray-700 mb-1">
                                                         Email *
                                                     </label>
                                                     <Input
+                                                        id="checkout-email"
                                                         type="email"
                                                         value={shippingInfo.email}
                                                         onChange={(e) => setShippingInfo({ ...shippingInfo, email: e.target.value })}
@@ -559,10 +562,11 @@ export default function CheckoutPage() {
                                                 </div>
 
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                    <label htmlFor="checkout-phone" className="block text-sm font-medium text-gray-700 mb-1">
                                                         Teléfono *
                                                     </label>
                                                     <Input
+                                                        id="checkout-phone"
                                                         type="tel"
                                                         value={shippingInfo.phone}
                                                         onChange={(e) => setShippingInfo({ ...shippingInfo, phone: e.target.value })}
@@ -573,10 +577,11 @@ export default function CheckoutPage() {
                                                 </div>
 
                                                 <div className="md:col-span-2">
-                                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                    <label htmlFor="checkout-address" className="block text-sm font-medium text-gray-700 mb-1">
                                                         Dirección *
                                                     </label>
                                                     <Input
+                                                        id="checkout-address"
                                                         value={shippingInfo.address}
                                                         onChange={(e) => setShippingInfo({ ...shippingInfo, address: e.target.value })}
                                                         className={errors.address ? 'border-red-500' : ''}
@@ -586,10 +591,11 @@ export default function CheckoutPage() {
                                                 </div>
 
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                    <label htmlFor="checkout-city" className="block text-sm font-medium text-gray-700 mb-1">
                                                         Ciudad *
                                                     </label>
                                                     <Input
+                                                        id="checkout-city"
                                                         value={shippingInfo.city}
                                                         onChange={(e) => setShippingInfo({ ...shippingInfo, city: e.target.value })}
                                                         className={errors.city ? 'border-red-500' : ''}
@@ -599,10 +605,11 @@ export default function CheckoutPage() {
                                                 </div>
 
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                    <label htmlFor="checkout-postalcode" className="block text-sm font-medium text-gray-700 mb-1">
                                                         Código Postal *
                                                     </label>
                                                     <Input
+                                                        id="checkout-postalcode"
                                                         value={shippingInfo.postalCode}
                                                         onChange={(e) => setShippingInfo({ ...shippingInfo, postalCode: e.target.value })}
                                                         className={errors.postalCode ? 'border-red-500' : ''}
@@ -639,26 +646,26 @@ export default function CheckoutPage() {
                                             </div>
                                         </CardContent>
                                     </Card>
-                                </motion.div>
+                                </m.div>
                             )}
 
                             {/* Confirmation Step */}
                             {currentStep === 'confirmation' && (
-                                <motion.div
+                                <m.div
                                     key="confirmation"
                                     initial={{ opacity: 0, scale: 0.95 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                 >
                                     <Card className="shadow-lg border-0">
                                         <CardContent className="p-8 text-center">
-                                            <motion.div
-                                                initial={{ scale: 0 }}
+                                            <m.div
+                                                initial={{ scale: 0.95 }}
                                                 animate={{ scale: 1 }}
                                                 transition={{ type: "spring", duration: 0.5 }}
                                                 className="w-20 h-20 bg-[#505A4A]/10 rounded-full flex items-center justify-center mx-auto mb-6"
                                             >
                                                 <CheckCircle className="w-10 h-10 text-[#505A4A]" />
-                                            </motion.div>
+                                            </m.div>
 
                                             <h2 className="text-3xl font-bold text-gray-900 mb-2">
                                                 ¡Pedido Enviado!
@@ -709,7 +716,7 @@ export default function CheckoutPage() {
                                             </div>
                                         </CardContent>
                                     </Card>
-                                </motion.div>
+                                </m.div>
                             )}
                         </AnimatePresence>
                     </div>

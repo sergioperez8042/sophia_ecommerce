@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import ProductImage from "@/components/ui/product-image";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Breadcrumb from "@/components/ui/breadcrumb";
 import { useCategories, useProducts, useWishlist, useCart } from "@/store";
@@ -52,9 +52,9 @@ export default function CategoriesPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8] relative overflow-hidden">
+        <div className="min-h-screen bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8] pt-20 relative overflow-hidden">
             {/* Animated background elements (Hero Gradient Style) */}
-            <motion.div
+            <m.div
                 className="absolute top-20 left-10 w-32 h-32 rounded-full bg-[#505A4A]/10 blur-3xl"
                 animate={{
                     scale: [1, 1.2, 1],
@@ -67,7 +67,7 @@ export default function CategoriesPage() {
                     ease: "easeInOut"
                 }}
             />
-            <motion.div
+            <m.div
                 className="absolute bottom-20 right-10 w-48 h-48 rounded-full bg-[#C4B590]/10 blur-3xl"
                 animate={{
                     scale: [1.2, 1, 1.2],
@@ -93,13 +93,13 @@ export default function CategoriesPage() {
                     />
                 </div>
 
-                <motion.div
+                <m.div
                     variants={containerVariants}
                     initial="hidden"
                     animate="visible"
                 >
                     {/* Header */}
-                    <motion.div variants={itemVariants} className="text-center mb-12 px-4">
+                    <m.div variants={itemVariants} className="text-center mb-12 px-4">
                         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">
                             {selectedCategory
                                 ? activeCategories.find(c => c.id === selectedCategory)?.name
@@ -112,11 +112,11 @@ export default function CategoriesPage() {
                                 : "Descubre nuestra amplia gama de productos naturales organizados por categorías"
                             }
                         </p>
-                    </motion.div>
+                    </m.div>
 
                     {!selectedCategory ? (
                         /* Vista de Categorías */
-                        <motion.div
+                        <m.div
                             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
                             variants={containerVariants}
                         >
@@ -128,7 +128,7 @@ export default function CategoriesPage() {
                                 if (productCount === 0) return null;
 
                                 return (
-                                    <motion.div
+                                    <m.div
                                         key={category.id}
                                         variants={itemVariants}
                                         whileHover={{ y: -10, scale: 1.02 }}
@@ -167,15 +167,15 @@ export default function CategoriesPage() {
                                                 </div>
                                             </CardContent>
                                         </Card>
-                                    </motion.div>
+                                    </m.div>
                                 );
                             })}
-                        </motion.div>
+                        </m.div>
                     ) : (
                         /* Vista de Productos de la Categoría Seleccionada */
                         <div>
                             {/* Header de la categoría seleccionada */}
-                            <motion.div
+                            <m.div
                                 variants={itemVariants}
                                 className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4"
                             >
@@ -206,12 +206,12 @@ export default function CategoriesPage() {
                                         <List className="h-4 w-4" />
                                     </Button>
                                 </div>
-                            </motion.div>
+                            </m.div>
 
                             {/* Grid de productos */}
                             <AnimatePresence>
                                 {selectedProducts.length > 0 ? (
-                                    <motion.div
+                                    <m.div
                                         className={`grid gap-6 ${viewMode === 'grid'
                                             ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
                                             : 'grid-cols-1'
@@ -219,7 +219,7 @@ export default function CategoriesPage() {
                                         variants={containerVariants}
                                     >
                                         {selectedProducts.map((product) => (
-                                            <motion.div
+                                            <m.div
                                                 key={product.id}
                                                 variants={itemVariants}
                                                 whileHover={{ y: -5 }}
@@ -276,7 +276,7 @@ export default function CategoriesPage() {
                                                                 <div className="flex items-center gap-1 mb-4">
                                                                     {[...Array(5)].map((_, i) => (
                                                                         <Star
-                                                                            key={i}
+                                                                            key={`star-${i}`}
                                                                             className={`w-4 h-4 ${i < Math.round(product.rating || 0) ? 'fill-[#C4B590] text-[#C4B590]' : 'text-gray-300'}`}
                                                                         />
                                                                     ))}
@@ -311,9 +311,9 @@ export default function CategoriesPage() {
                                                         </div>
                                                     </CardContent>
                                                 </Card>
-                                            </motion.div>
+                                            </m.div>
                                         ))}
-                                    </motion.div>
+                                    </m.div>
                                 ) : (
                                     <div className="text-center py-20 bg-white/50 rounded-xl">
                                         <ShoppingBag className="w-16 h-16 mx-auto mb-4 text-gray-300" />
@@ -323,7 +323,7 @@ export default function CategoriesPage() {
                             </AnimatePresence>
                         </div>
                     )}
-                </motion.div>
+                </m.div>
             </div>
         </div>
     );

@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v2 as cloudinary } from 'cloudinary';
+import { isAuthorized, unauthorizedResponse } from '@/lib/api-auth';
 
 export async function POST(request: NextRequest) {
   try {
+    // Admin-only: require authentication
+    if (!isAuthorized(request)) {
+      return unauthorizedResponse();
+    }
+
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const folder = (formData.get('folder') as string) || 'products';

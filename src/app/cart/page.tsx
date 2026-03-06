@@ -3,7 +3,7 @@
 import { useCart } from "@/store";
 import { Minus, Plus, ShoppingBag, ArrowLeft, X } from "lucide-react";
 import ProductImage from "@/components/ui/product-image";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Breadcrumb from "@/components/ui/breadcrumb";
 
@@ -29,10 +29,10 @@ export default function CartPage() {
 
     if (items.length === 0) {
         return (
-            <div className="min-h-screen bg-[#FEFCF7]">
-                <div className="max-w-xl mx-auto px-6 py-16">
+            <div className="min-h-screen bg-[#FEFCF7] pt-20">
+                <div className="max-w-xl mx-auto px-6 pb-16">
                     <Breadcrumb items={[{ label: 'Carrito' }]} />
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.6 }}
@@ -51,18 +51,18 @@ export default function CartPage() {
                         >
                             Ver Productos
                         </Link>
-                    </motion.div>
+                    </m.div>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-[#FEFCF7]">
-            <div className="max-w-[1200px] mx-auto px-6 lg:px-10 py-8 sm:py-14">
+        <div className="min-h-screen bg-[#FEFCF7] pt-20">
+            <div className="max-w-[1200px] mx-auto px-6 lg:px-10 pb-8 sm:pb-14">
                 <Breadcrumb items={[{ label: 'Carrito' }]} />
 
-                <motion.div
+                <m.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5 }}
@@ -80,7 +80,7 @@ export default function CartPage() {
                             <div className="border-t border-[#E8E4DD]">
                                 <AnimatePresence mode="popLayout">
                                     {items.map((item) => (
-                                        <motion.div
+                                        <m.div
                                             key={item.product.id}
                                             layout
                                             initial={{ opacity: 0 }}
@@ -156,7 +156,7 @@ export default function CartPage() {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </motion.div>
+                                        </m.div>
                                     ))}
                                 </AnimatePresence>
                             </div>
@@ -232,7 +232,7 @@ export default function CartPage() {
                             </div>
                         </div>
                     </div>
-                </motion.div>
+                </m.div>
             </div>
         </div>
     );

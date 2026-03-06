@@ -4,7 +4,7 @@
 import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
 import { getFirestore, Firestore } from 'firebase/firestore';
 import { getAuth, Auth } from 'firebase/auth';
-import { getStorage, FirebaseStorage } from 'firebase/storage';
+import { getStorage } from 'firebase/storage';
 
 // Helper to check if a value is a valid env var (not undefined, not empty, not the string "undefined")
 const isValidEnvVar = (value: string | undefined): value is string => {
@@ -30,7 +30,7 @@ const isFirebaseConfigValid =
 let app: FirebaseApp | null = null;
 let db: Firestore | null = null;
 let auth: Auth | null = null;
-let storage: FirebaseStorage | null = null;
+let storage: ReturnType<typeof getStorage> | null = null;
 
 // Initialize Firebase if config is valid
 // This will work on both client (browser) and server (API routes)
@@ -48,5 +48,4 @@ if (isFirebaseConfigValid) {
 
 // Export with type assertions - consumers should check if these are null
 // when used in contexts where Firebase might not be initialized
-export { db, auth, storage, isFirebaseConfigValid };
-export default app;
+export { db, auth, storage };

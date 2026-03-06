@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { ChevronRight, Home } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 
 interface BreadcrumbItem {
     label: string;
@@ -13,41 +13,41 @@ interface BreadcrumbProps {
 
 export default function Breadcrumb({ items }: BreadcrumbProps) {
     return (
-        <motion.nav
+        <m.nav
             className="flex items-center space-x-2 text-sm sm:text-base"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
         >
             {/* Home icon */}
-            <Link href="/" className="flex items-center text-gray-800 hover:text-[#505A4A] transition-colors duration-200">
+            <Link href="/" className="flex items-center text-gray-800 dark:text-gray-300 hover:text-[#505A4A] dark:hover:text-[#C4B590] transition-colors duration-200">
                 <Home className="w-4 h-4 sm:w-5 sm:h-5" />
             </Link>
 
             {items.map((item, index) => (
-                <motion.div
-                    key={index}
+                <m.div
+                    key={`${item.label}-${index}`}
                     className="flex items-center space-x-2"
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.1 }}
                 >
-                    <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
+                    <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-500" />
 
                     {item.href ? (
                         <Link
                             href={item.href}
-                            className="text-gray-800 hover:text-[#505A4A] transition-colors duration-200 font-medium"
+                            className="text-gray-800 dark:text-gray-300 hover:text-[#505A4A] dark:hover:text-[#C4B590] transition-colors duration-200 font-medium"
                         >
                             {item.label}
                         </Link>
                     ) : (
-                        <span className="text-[#505A4A] font-bold">
+                        <span className="text-[#505A4A] dark:text-[#C4B590] font-bold">
                             {item.label}
                         </span>
                     )}
-                </motion.div>
+                </m.div>
             ))}
-        </motion.nav>
+        </m.nav>
     );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { Eye, EyeOff, User, Mail, Phone, Lock, MapPin, Briefcase, ShoppingBag, ArrowLeft } from 'lucide-react';
 import { useAuth, RegisterData } from '@/store';
 import { useRouter } from 'next/navigation';
@@ -106,7 +106,7 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen bg-[#FEFCF7] flex flex-col items-center justify-center px-4 py-12">
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
@@ -148,7 +148,7 @@ export default function AuthPage() {
           <AnimatePresence mode="wait">
             {/* LOGIN */}
             {mode === 'login' && (
-              <motion.form
+              <m.form
                 key="login"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -209,12 +209,12 @@ export default function AuthPage() {
                 >
                   ¿Olvidaste tu contraseña?
                 </button>
-              </motion.form>
+              </m.form>
             )}
 
             {/* RESET PASSWORD */}
             {mode === 'reset' && (
-              <motion.form
+              <m.form
                 key="reset"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -271,12 +271,12 @@ export default function AuthPage() {
                     {isLoading ? 'Enviando...' : 'Enviar enlace'}
                   </button>
                 )}
-              </motion.form>
+              </m.form>
             )}
 
             {/* REGISTER */}
             {mode === 'register' && (
-              <motion.div
+              <m.div
                 key="register"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -318,7 +318,7 @@ export default function AuthPage() {
                 )}
 
                 {userType && (
-                  <motion.form
+                  <m.form
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     onSubmit={handleRegister}
@@ -423,9 +423,9 @@ export default function AuthPage() {
                     >
                       {isLoading ? 'Registrando...' : 'Crear cuenta'}
                     </button>
-                  </motion.form>
+                  </m.form>
                 )}
-              </motion.div>
+              </m.div>
             )}
           </AnimatePresence>
         </div>
@@ -437,7 +437,7 @@ export default function AuthPage() {
           {' '}y{' '}
           <Link href="/privacy" className="text-gray-500 hover:text-[#505A4A]">Privacidad</Link>
         </p>
-      </motion.div>
+      </m.div>
     </div>
   );
 }
