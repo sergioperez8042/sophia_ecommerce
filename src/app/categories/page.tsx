@@ -52,7 +52,7 @@ export default function CategoriesPage() {
     }
 
     return (
-        <div className="min-h-screen hero-gradient relative overflow-hidden">
+        <div className="min-h-screen bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8] relative overflow-hidden">
             {/* Animated background elements (Hero Gradient Style) */}
             <motion.div
                 className="absolute top-20 left-10 w-32 h-32 rounded-full bg-[#505A4A]/10 blur-3xl"

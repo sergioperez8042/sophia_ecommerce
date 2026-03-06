@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Star, Heart, ShoppingBag, Filter, Grid3X3, List, SlidersHorizontal, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -20,6 +20,9 @@ export default function ProductsPage() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [addingToCart, setAddingToCart] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   const { addItem: addToCartStore } = useCart();
   const { toggleItem, isInWishlist } = useWishlist();
@@ -256,14 +259,12 @@ export default function ProductsPage() {
             {/* Header con controles */}
             <Card className="mb-8 mt-5 shadow-sm border-0 bg-white">
               <CardContent className="py-5 px-6">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-center sm:justify-between gap-4">
-                  <div className="flex items-center mt-5 justify-center sm:justify-start gap-4">
-                    <h1 className="text-xl font-bold text-gray-900">
-                      Resultados
-                    </h1>
-                    <span className="text-sm text-gray-600">
-                      {filteredProducts.length} productos
-                    </span>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div className="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-auto">
+                    <div className="flex items-baseline gap-2">
+                      <h1 className="text-xl font-bold text-gray-900">Resultados</h1>
+                      <span className="text-sm text-gray-500 whitespace-nowrap">{filteredProducts.length} productos</span>
+                    </div>
 
                     <Button
                       variant="outline"
@@ -277,19 +278,23 @@ export default function ProductsPage() {
                   </div>
 
                   <div className="flex items-center justify-center sm:justify-end gap-3">
-                    <Select value={sortBy} onValueChange={setSortBy}>
-                      <SelectTrigger className="w-48 border-[#505A4A] text-gray-900 bg-white hover:border-[#414A3C] focus:border-[#505A4A] focus:ring-[#505A4A]/20">
-                        <SelectValue placeholder="Ordenar por" className="text-gray-600" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white border mt-4 border-gray-200 shadow-lg">
-                        <SelectItem value="featured" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Destacados</SelectItem>
-                        <SelectItem value="price-low" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Precio: menor a mayor</SelectItem>
-                        <SelectItem value="price-high" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Precio: mayor a menor</SelectItem>
-                        <SelectItem value="rating" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Mejor valorados</SelectItem>
-                        <SelectItem value="reviews" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Más reseñas</SelectItem>
-                        <SelectItem value="newest" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Más nuevos</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    {mounted ? (
+                      <Select value={sortBy} onValueChange={setSortBy}>
+                        <SelectTrigger className="w-48 border-[#505A4A] text-gray-900 bg-white hover:border-[#414A3C] focus:border-[#505A4A] focus:ring-[#505A4A]/20">
+                          <SelectValue placeholder="Ordenar por" className="text-gray-600" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white border mt-4 border-gray-200 shadow-lg">
+                          <SelectItem value="featured" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Destacados</SelectItem>
+                          <SelectItem value="price-low" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Precio: menor a mayor</SelectItem>
+                          <SelectItem value="price-high" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Precio: mayor a menor</SelectItem>
+                          <SelectItem value="rating" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Mejor valorados</SelectItem>
+                          <SelectItem value="reviews" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Más reseñas</SelectItem>
+                          <SelectItem value="newest" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Más nuevos</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <div className="w-48 h-10 rounded-md border border-[#505A4A] bg-white" />
+                    )}
 
                     <div className="flex border border-gray-300 rounded-lg overflow-hidden h-10">
                       <Button

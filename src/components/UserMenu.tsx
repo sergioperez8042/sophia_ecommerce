@@ -7,11 +7,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 
-export default function UserMenu() {
+export default function UserMenu({ compact = false }: { compact?: boolean }) {
   const { user, isAuthenticated, isAdmin, isManager, logout, isLoaded } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   if (!isLoaded) {
+    if (compact) return <div className="h-9 w-9 rounded-lg bg-gray-100 animate-pulse" />;
     return (
       <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 animate-pulse">
         <div className="w-8 h-8 rounded-full bg-gray-200" />
@@ -22,6 +23,13 @@ export default function UserMenu() {
 
   // Not authenticated - show login button
   if (!isAuthenticated) {
+    if (compact) {
+      return (
+        <Link href="/auth" className="flex items-center justify-center h-9 w-9 rounded-lg hover:bg-gray-100 transition-colors">
+          <User className="w-5 h-5 text-gray-600" />
+        </Link>
+      );
+    }
     return (
       <Link href="/auth">
         <motion.button
@@ -32,6 +40,17 @@ export default function UserMenu() {
           <LogIn className="w-4 h-4" />
           <span className="text-sm font-medium">Iniciar Sesión</span>
         </motion.button>
+      </Link>
+    );
+  }
+
+  // Compact mode for authenticated user - small avatar icon
+  if (compact) {
+    return (
+      <Link href="/profile" className="flex items-center justify-center h-9 w-9 rounded-lg hover:bg-gray-100 transition-colors">
+        <div className={`w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-[10px] ${isAdmin ? 'bg-[#505A4A]' : isManager ? 'bg-amber-600' : 'bg-blue-600'}`}>
+          {user?.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+        </div>
       </Link>
     );
   }

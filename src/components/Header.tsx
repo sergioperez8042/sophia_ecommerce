@@ -76,10 +76,6 @@ export default function Header() {
                                 </div>
                             </Link>
 
-                            {/* Mobile: UserMenu (replaces logo) */}
-                            <div className="md:hidden">
-                                <UserMenu />
-                            </div>
                         </div>
 
                         {/* Center: Desktop Navigation */}
@@ -105,6 +101,11 @@ export default function Header() {
 
                         {/* Right: Actions */}
                         <div className="flex items-center gap-1 sm:gap-1.5">
+                            {/* Mobile: compact icon */}
+                            <div className="md:hidden">
+                                <UserMenu compact />
+                            </div>
+                            {/* Desktop: full button */}
                             <div className="hidden md:block">
                                 <UserMenu />
                             </div>
@@ -151,7 +152,7 @@ export default function Header() {
                     <nav
                         className="absolute left-0 top-0 bottom-0 w-72 bg-white shadow-2xl overflow-y-auto animate-slide-in-left"
                     >
-                        {/* Logo + Brand (moved from header on mobile) */}
+                        {/* Logo + Brand */}
                         <div className="p-4 border-b border-gray-100">
                             <Link href="/" className="flex items-center gap-3" onClick={() => setIsMenuOpen(false)}>
                                 <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#505A4A]/15 flex-shrink-0">
@@ -168,6 +169,11 @@ export default function Header() {
                                     <span className="text-xs text-[#505A4A]/60 leading-tight">Cosmética Botánica</span>
                                 </div>
                             </Link>
+                        </div>
+
+                        {/* User section */}
+                        <div className="px-4 py-3 border-b border-gray-100">
+                            <UserMenu />
                         </div>
 
                         {/* Navigation Links */}
