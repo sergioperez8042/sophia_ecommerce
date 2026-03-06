@@ -24,6 +24,7 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ProductImage from '@/components/ui/product-image';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 type ViewMode = 'list' | 'create' | 'edit';
 
@@ -39,6 +40,7 @@ const emptyProduct: Omit<IProduct, 'id' | 'created_date'> = {
     ingredients: [],
     active: true,
     featured: false,
+    weight: 0,
 };
 
 function ProductListItem({
@@ -424,16 +426,17 @@ export default function AdminProductsPage() {
                                 className="w-full pl-9 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] transition-all"
                             />
                         </div>
-                        <select
-                            value={categoryFilter}
-                            onChange={(e) => setCategoryFilter(e.target.value)}
-                            className="px-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] min-w-[120px] sm:min-w-[160px]"
-                        >
-                            <option value="all">Todas</option>
-                            {categoryOptions.map((opt) => (
-                                <option key={opt.id} value={opt.id}>{opt.label}</option>
-                            ))}
-                        </select>
+                        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                            <SelectTrigger className="px-3 py-2.5 h-auto bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] min-w-[120px] sm:min-w-[160px]">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">Todas</SelectItem>
+                                {categoryOptions.map((opt) => (
+                                    <SelectItem key={opt.id} value={opt.id}>{opt.label}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
 
                     {/* Products List */}
@@ -571,7 +574,7 @@ export default function AdminProductsPage() {
                             />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                             <div>
                                 <label htmlFor="product-price" className="block text-sm font-medium text-gray-700 mb-1.5">Precio ($) *</label>
                                 <input
@@ -591,19 +594,34 @@ export default function AdminProductsPage() {
                                 />
                             </div>
                             <div>
+                                <label htmlFor="product-weight" className="block text-sm font-medium text-gray-700 mb-1.5">Peso</label>
+                                <input
+                                    id="product-weight"
+                                    type="text"
+                                    inputMode="decimal"
+                                    value={!formData.weight ? '' : formData.weight.toString()}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                                            setFormData({ ...formData, weight: value === '' ? 0 : parseFloat(value) || 0 });
+                                        }
+                                    }}
+                                    placeholder="0"
+                                    className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all"
+                                />
+                            </div>
+                            <div className="col-span-2 sm:col-span-1">
                                 <label htmlFor="product-category" className="block text-sm font-medium text-gray-700 mb-1.5">Categoría *</label>
-                                <select
-                                    id="product-category"
-                                    value={formData.category_id}
-                                    onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
-                                    className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all"
-                                    required
-                                >
-                                    <option value="">Seleccionar</option>
-                                    {categoryOptions.map((opt) => (
-                                        <option key={opt.id} value={opt.id}>{opt.label}</option>
-                                    ))}
-                                </select>
+                                <Select value={formData.category_id} onValueChange={(value) => setFormData({ ...formData, category_id: value })}>
+                                    <SelectTrigger className="w-full px-3 py-2.5 h-auto bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all">
+                                        <SelectValue placeholder="Seleccionar" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {categoryOptions.map((opt) => (
+                                            <SelectItem key={opt.id} value={opt.id}>{opt.label}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                             </div>
                         </div>
                     </div>

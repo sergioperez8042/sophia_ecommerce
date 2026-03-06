@@ -211,6 +211,13 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 </span>
                             </div>
 
+                            {/* Peso */}
+                            {product.weight && product.weight > 0 && (
+                                <p className="text-[13px] text-[#999] dark:text-[#8a8273] mb-6">
+                                    Peso: {product.weight}
+                                </p>
+                            )}
+
                             {/* Cantidad */}
                             <div className="mb-6">
                                 <span className="text-[12px] uppercase tracking-[0.12em] text-[#999] dark:text-[#8a8273] block mb-3">

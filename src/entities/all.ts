@@ -13,6 +13,7 @@ export interface IProduct {
   active: boolean;
   created_date: string;
   featured: boolean;
+  weight?: number;
 }
 
 export interface ICategory {
