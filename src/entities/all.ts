@@ -13,7 +13,9 @@ export interface IProduct {
   active: boolean;
   created_date: string;
   featured: boolean;
+  usage?: string;
   weight?: number;
+  weight_unit?: string;
 }
 
 export interface ICategory {

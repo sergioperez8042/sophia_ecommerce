@@ -25,12 +25,17 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ProductImage from '@/components/ui/product-image';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { productSchema, type ProductFormData } from '@/lib/validations';
+import { toast } from 'sonner';
 
 type ViewMode = 'list' | 'create' | 'edit';
 
 const emptyProduct: Omit<IProduct, 'id' | 'created_date'> = {
     name: '',
     description: '',
+    usage: '',
     price: 0,
     category_id: '',
     image: '',
@@ -41,6 +46,7 @@ const emptyProduct: Omit<IProduct, 'id' | 'created_date'> = {
     active: true,
     featured: false,
     weight: 0,
+    weight_unit: 'g',
 };
 
 function ProductListItem({
@@ -190,7 +196,6 @@ export default function AdminProductsPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [categoryFilter, setCategoryFilter] = useState<string>('all');
     const [editingProduct, setEditingProduct] = useState<IProduct | null>(null);
-    const [formData, setFormData] = useState<Omit<IProduct, 'id' | 'created_date'>>(emptyProduct);
     const [tagsInput, setTagsInput] = useState('');
     const [ingredientsInput, setIngredientsInput] = useState('');
     const [isSaving, setIsSaving] = useState(false);
@@ -198,6 +203,33 @@ export default function AdminProductsPage() {
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadError, setUploadError] = useState<string | null>(null);
+
+    const form = useForm<ProductFormData>({
+        resolver: zodResolver(productSchema),
+        defaultValues: {
+            name: '',
+            description: '',
+            usage: '',
+            price: 0,
+            category_id: '',
+            image: '',
+            rating: 0,
+            reviews_count: 0,
+            tags: [],
+            ingredients: [],
+            active: true,
+            featured: false,
+            weight: 0,
+            weight_unit: 'g',
+        },
+    });
+
+    const { register, control, handleSubmit: rhfHandleSubmit, formState: { errors }, setValue, watch, reset } = form;
+    const formImage = watch('image');
+    const formActive = watch('active');
+    const formFeatured = watch('featured');
+    const formPrice = watch('price');
+    const formWeight = watch('weight');
 
     useEffect(() => {
         if (isLoaded && (!isAuthenticated || !isAdmin)) {
@@ -232,20 +264,24 @@ export default function AdminProductsPage() {
     };
 
     const handleCreateNew = () => {
-        setFormData(emptyProduct);
+        reset({
+            name: '', description: '', usage: '', price: 0, category_id: '',
+            image: '', rating: 0, reviews_count: 0, tags: [], ingredients: [],
+            active: true, featured: false, weight: 0, weight_unit: 'g',
+        });
         setTagsInput('');
         setIngredientsInput('');
         setEditingProduct(null);
         setUploadError(null);
-
         setViewMode('create');
     };
 
     const handleEdit = (product: IProduct) => {
         setEditingProduct(product);
-        setFormData({
+        reset({
             name: product.name,
             description: product.description,
+            usage: product.usage || '',
             price: product.price,
             category_id: product.category_id,
             image: product.image,
@@ -255,46 +291,56 @@ export default function AdminProductsPage() {
             ingredients: product.ingredients,
             active: product.active,
             featured: product.featured,
+            weight: product.weight || 0,
+            weight_unit: product.weight_unit || 'g',
         });
         setTagsInput(product.tags.join(', '));
         setIngredientsInput(product.ingredients.join(', '));
         setUploadError(null);
-
         setViewMode('edit');
     };
 
     const handleDelete = async (id: string) => {
-        await deleteProduct(id);
+        try {
+            await deleteProduct(id);
+            toast.success('Producto eliminado');
+        } catch {
+            toast.error('Error al eliminar el producto');
+        }
         setDeleteConfirm(null);
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        if (!formData.image || formData.image === '/images/no-image.svg') {
+    const onSubmit = async (data: ProductFormData) => {
+        if (!data.image || data.image === '/images/no-image.svg') {
             setUploadError('La imagen del producto es requerida');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
         }
 
         setIsSaving(true);
         try {
             const productData = {
-                ...formData,
+                ...data,
                 tags: tagsInput.split(',').map((t) => t.trim()).filter((t) => t),
                 ingredients: ingredientsInput.split(',').map((i) => i.trim()).filter((i) => i),
             };
 
             if (viewMode === 'create') {
                 await addProduct(productData);
+                toast.success('Producto creado correctamente');
             } else if (editingProduct) {
                 await updateProduct(editingProduct.id, productData);
+                toast.success('Producto actualizado correctamente');
             }
 
-            setViewMode('list');
-            setFormData(emptyProduct);
-            setEditingProduct(null);
-        } catch {
-            // Error handled by context
+            setTimeout(() => {
+                setViewMode('list');
+                reset();
+                setEditingProduct(null);
+            }, 800);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : 'Error al guardar el producto';
+            toast.error(msg);
         } finally {
             setIsSaving(false);
         }
@@ -302,7 +348,7 @@ export default function AdminProductsPage() {
 
     const handleCancel = () => {
         setViewMode('list');
-        setFormData(emptyProduct);
+        reset();
         setEditingProduct(null);
         setTagsInput('');
         setIngredientsInput('');
@@ -311,7 +357,7 @@ export default function AdminProductsPage() {
 
     const handleFileUpload = async (file: File) => {
         const localPreviewUrl = URL.createObjectURL(file);
-        setFormData(prev => ({ ...prev, image: localPreviewUrl }));
+        setValue('image', localPreviewUrl, { shouldValidate: true });
 
         setIsUploading(true);
         setUploadProgress(10);
@@ -336,7 +382,7 @@ export default function AdminProductsPage() {
             }
 
             URL.revokeObjectURL(localPreviewUrl);
-            setFormData(prev => ({ ...prev, image: result.url }));
+            setValue('image', result.url, { shouldValidate: true });
             setUploadProgress(100);
         } catch (error: unknown) {
             const msg = error instanceof Error ? error.message : 'No se pudo subir la imagen';
@@ -426,17 +472,16 @@ export default function AdminProductsPage() {
                                 className="w-full pl-9 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] transition-all"
                             />
                         </div>
-                        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                            <SelectTrigger className="px-3 py-2.5 h-auto bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] min-w-[120px] sm:min-w-[160px]">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="all">Todas</SelectItem>
-                                {categoryOptions.map((opt) => (
-                                    <SelectItem key={opt.id} value={opt.id}>{opt.label}</SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+                        <select
+                            value={categoryFilter}
+                            onChange={(e) => setCategoryFilter(e.target.value)}
+                            className="px-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] min-w-[120px] sm:min-w-[160px]"
+                        >
+                            <option value="all">Todas</option>
+                            {categoryOptions.map((opt) => (
+                                <option key={opt.id} value={opt.id}>{opt.label}</option>
+                            ))}
+                        </select>
                     </div>
 
                     {/* Products List */}
@@ -455,8 +500,8 @@ export default function AdminProductsPage() {
                                     categoryName={getCategoryName(product.category_id)}
                                     onEdit={() => handleEdit(product)}
                                     onDelete={() => handleDelete(product.id)}
-                                    onToggleActive={() => toggleProductActive(product.id)}
-                                    onToggleFeatured={() => toggleProductFeatured(product.id)}
+                                    onToggleActive={async () => { await toggleProductActive(product.id); toast.success(product.active ? 'Producto oculto' : 'Producto visible'); }}
+                                    onToggleFeatured={async () => { await toggleProductFeatured(product.id); toast.success(product.featured ? 'Destacado quitado' : 'Producto destacado'); }}
                                     deleteConfirm={deleteConfirm === product.id}
                                     setDeleteConfirm={setDeleteConfirm}
                                 />
@@ -489,7 +534,7 @@ export default function AdminProductsPage() {
                     )}
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form onSubmit={rhfHandleSubmit(onSubmit)} className="space-y-5">
                     {/* Image Upload */}
                     <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
                         <label htmlFor="product-image" className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-3">
@@ -498,9 +543,9 @@ export default function AdminProductsPage() {
                         </label>
 
                         <div className="relative w-full h-48 sm:h-56 bg-gray-100 rounded-xl overflow-hidden mb-3">
-                            {formData.image && formData.image !== '/images/placeholder.jpg' && formData.image !== '' ? (
+                            {formImage && formImage !== '/images/placeholder.jpg' && formImage !== '' ? (
                                 <ProductImage
-                                    src={formData.image}
+                                    src={formImage}
                                     alt="Vista previa"
                                     className="object-cover"
                                 />
@@ -549,80 +594,119 @@ export default function AdminProductsPage() {
                         </h2>
 
                         <div>
-                            <label htmlFor="product-name" className="block text-sm font-medium text-gray-700 mb-1.5">Nombre *</label>
+                            <label htmlFor="product-name" className="block text-sm font-medium text-gray-700 mb-1.5">Nombre <span className="text-red-500">*</span></label>
                             <input
                                 id="product-name"
                                 type="text"
-                                value={formData.name}
-                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                {...register('name')}
                                 placeholder="Ej: Crema Hidratante Natural"
-                                className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all"
-                                required
+                                className={`w-full px-3 py-2.5 bg-gray-50 border rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all ${errors.name ? 'border-red-400 bg-red-50/30' : 'border-gray-200'}`}
                             />
+                            {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>}
                         </div>
 
                         <div>
-                            <label htmlFor="product-description" className="block text-sm font-medium text-gray-700 mb-1.5">Descripción *</label>
+                            <label htmlFor="product-description" className="block text-sm font-medium text-gray-700 mb-1.5">Descripción <span className="text-red-500">*</span></label>
                             <textarea
                                 id="product-description"
-                                value={formData.description}
-                                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                {...register('description')}
                                 placeholder="Describe el producto..."
                                 rows={3}
-                                className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all resize-none"
-                                required
+                                className={`w-full px-3 py-2.5 bg-gray-50 border rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all resize-none ${errors.description ? 'border-red-400 bg-red-50/30' : 'border-gray-200'}`}
                             />
+                            {errors.description && <p className="text-xs text-red-500 mt-1">{errors.description.message}</p>}
                         </div>
 
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        <div>
+                            <label htmlFor="product-usage" className="block text-sm font-medium text-gray-700 mb-1.5">Modo de uso <span className="text-red-500">*</span></label>
+                            <textarea
+                                id="product-usage"
+                                {...register('usage')}
+                                placeholder="Explica cómo usar el producto..."
+                                rows={3}
+                                className={`w-full px-3 py-2.5 bg-gray-50 border rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all resize-none ${errors.usage ? 'border-red-400 bg-red-50/30' : 'border-gray-200'}`}
+                            />
+                            {errors.usage && <p className="text-xs text-red-500 mt-1">{errors.usage.message}</p>}
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3">
                             <div>
-                                <label htmlFor="product-price" className="block text-sm font-medium text-gray-700 mb-1.5">Precio ($) *</label>
+                                <label htmlFor="product-price" className="block text-sm font-medium text-gray-700 mb-1.5">Precio ($) <span className="text-red-500">*</span></label>
                                 <input
                                     id="product-price"
                                     type="text"
                                     inputMode="decimal"
-                                    value={formData.price === 0 ? '' : formData.price.toString()}
+                                    value={formPrice === 0 ? '' : formPrice?.toString() ?? ''}
                                     onChange={(e) => {
                                         const value = e.target.value;
                                         if (value === '' || /^\d*\.?\d*$/.test(value)) {
-                                            setFormData({ ...formData, price: value === '' ? 0 : parseFloat(value) || 0 });
+                                            setValue('price', value === '' ? 0 : parseFloat(value) || 0, { shouldValidate: true });
                                         }
                                     }}
                                     placeholder="0.00"
-                                    className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all"
-                                    required
+                                    className={`w-full px-3 py-2.5 bg-gray-50 border rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all ${errors.price ? 'border-red-400 bg-red-50/30' : 'border-gray-200'}`}
                                 />
+                                {errors.price && <p className="text-xs text-red-500 mt-1">{errors.price.message}</p>}
                             </div>
                             <div>
                                 <label htmlFor="product-weight" className="block text-sm font-medium text-gray-700 mb-1.5">Peso</label>
-                                <input
-                                    id="product-weight"
-                                    type="text"
-                                    inputMode="decimal"
-                                    value={!formData.weight ? '' : formData.weight.toString()}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-                                        if (value === '' || /^\d*\.?\d*$/.test(value)) {
-                                            setFormData({ ...formData, weight: value === '' ? 0 : parseFloat(value) || 0 });
-                                        }
-                                    }}
-                                    placeholder="0"
-                                    className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all"
-                                />
+                                <div className="flex gap-2">
+                                    <input
+                                        id="product-weight"
+                                        type="text"
+                                        inputMode="decimal"
+                                        value={!formWeight ? '' : formWeight.toString()}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                                                setValue('weight', value === '' ? 0 : parseFloat(value) || 0);
+                                            }
+                                        }}
+                                        placeholder="0"
+                                        className="flex-1 min-w-0 px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all"
+                                    />
+                                    <Controller
+                                        name="weight_unit"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <Select value={field.value || 'g'} onValueChange={field.onChange}>
+                                                <SelectTrigger className="!w-16 shrink-0 px-2 py-2.5 h-auto bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all">
+                                                    <SelectValue />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="g">g</SelectItem>
+                                                    <SelectItem value="kg">kg</SelectItem>
+                                                    <SelectItem value="ml">ml</SelectItem>
+                                                    <SelectItem value="l">l</SelectItem>
+                                                    <SelectItem value="oz">oz</SelectItem>
+                                                    <SelectItem value="lb">lb</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        )}
+                                    />
+                                </div>
                             </div>
-                            <div className="col-span-2 sm:col-span-1">
-                                <label htmlFor="product-category" className="block text-sm font-medium text-gray-700 mb-1.5">Categoría *</label>
-                                <Select value={formData.category_id} onValueChange={(value) => setFormData({ ...formData, category_id: value })}>
-                                    <SelectTrigger className="w-full px-3 py-2.5 h-auto bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all">
-                                        <SelectValue placeholder="Seleccionar" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {categoryOptions.map((opt) => (
-                                            <SelectItem key={opt.id} value={opt.id}>{opt.label}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div>
+                        </div>
+
+                        <div>
+                            <label htmlFor="product-category" className="block text-sm font-medium text-gray-700 mb-1.5">Categoría <span className="text-red-500">*</span></label>
+                            <Controller
+                                name="category_id"
+                                control={control}
+                                render={({ field }) => (
+                                    <Select value={field.value} onValueChange={field.onChange}>
+                                        <SelectTrigger className={`w-full px-3 py-2.5 h-auto bg-gray-50 border rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all ${errors.category_id ? 'border-red-400 bg-red-50/30' : 'border-gray-200'}`}>
+                                            <SelectValue placeholder="Seleccionar" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {categoryOptions.map((opt) => (
+                                                <SelectItem key={opt.id} value={opt.id}>{opt.label}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                )}
+                            />
+                            {errors.category_id && <p className="text-xs text-red-500 mt-1">{errors.category_id.message}</p>}
                         </div>
                     </div>
 
@@ -671,21 +755,21 @@ export default function AdminProductsPage() {
 
                         <div className="flex items-center justify-between py-2">
                             <div className="flex items-center gap-2.5">
-                                {formData.active ? (
+                                {formActive ? (
                                     <Eye className="w-4 h-4 text-emerald-600" />
                                 ) : (
                                     <EyeOff className="w-4 h-4 text-gray-400" />
                                 )}
                                 <p className="text-sm font-medium text-gray-900">
-                                    {formData.active ? 'Visible en catálogo' : 'Oculto del catálogo'}
+                                    {formActive ? 'Visible en catálogo' : 'Oculto del catálogo'}
                                 </p>
                             </div>
                             <button
                                 type="button"
-                                onClick={() => setFormData({ ...formData, active: !formData.active })}
-                                className={`relative w-11 h-6 rounded-full transition-colors ${formData.active ? 'bg-[#505A4A]' : 'bg-gray-300'}`}
+                                onClick={() => setValue('active', !formActive)}
+                                className={`relative w-11 h-6 rounded-full transition-colors ${formActive ? 'bg-[#505A4A]' : 'bg-gray-300'}`}
                             >
-                                <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${formData.active ? 'left-[22px]' : 'left-0.5'}`} />
+                                <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${formActive ? 'left-[22px]' : 'left-0.5'}`} />
                             </button>
                         </div>
 
@@ -693,17 +777,17 @@ export default function AdminProductsPage() {
 
                         <div className="flex items-center justify-between py-2">
                             <div className="flex items-center gap-2.5">
-                                <Star className={`w-4 h-4 ${formData.featured ? 'text-[#C4B590] fill-current' : 'text-gray-400'}`} />
+                                <Star className={`w-4 h-4 ${formFeatured ? 'text-[#C4B590] fill-current' : 'text-gray-400'}`} />
                                 <p className="text-sm font-medium text-gray-900">
-                                    {formData.featured ? 'Producto destacado' : 'No destacado'}
+                                    {formFeatured ? 'Producto destacado' : 'No destacado'}
                                 </p>
                             </div>
                             <button
                                 type="button"
-                                onClick={() => setFormData({ ...formData, featured: !formData.featured })}
-                                className={`relative w-11 h-6 rounded-full transition-colors ${formData.featured ? 'bg-[#505A4A]' : 'bg-gray-300'}`}
+                                onClick={() => setValue('featured', !formFeatured)}
+                                className={`relative w-11 h-6 rounded-full transition-colors ${formFeatured ? 'bg-[#505A4A]' : 'bg-gray-300'}`}
                             >
-                                <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${formData.featured ? 'left-[22px]' : 'left-0.5'}`} />
+                                <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${formFeatured ? 'left-[22px]' : 'left-0.5'}`} />
                             </button>
                         </div>
                     </div>

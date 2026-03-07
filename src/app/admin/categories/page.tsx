@@ -1,6 +1,10 @@
 "use client";
 
 import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { categorySchema, type CategoryFormData } from '@/lib/validations';
+import { toast } from 'sonner';
 import { useAuth, useCategories } from '@/store';
 import { ICategory } from '@/entities/all';
 import {
@@ -248,7 +252,18 @@ export default function AdminCategoriesPage() {
 
     const [viewMode, setViewMode] = useState<ViewMode>('list');
     const [editingCategory, setEditingCategory] = useState<ICategory | null>(null);
-    const [formData, setFormData] = useState<Omit<ICategory, 'id'>>(emptyCategory);
+    const {
+        register,
+        handleSubmit: rhfHandleSubmit,
+        reset,
+        setValue,
+        watch,
+        formState: { errors },
+    } = useForm<CategoryFormData>({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        resolver: zodResolver(categorySchema) as any,
+        defaultValues: emptyCategory,
+    });
     const [isSaving, setIsSaving] = useState(false);
     const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState(false);
@@ -298,7 +313,7 @@ export default function AdminCategoriesPage() {
     if (!isAdmin) return null;
 
     const resetForm = () => {
-        setFormData(emptyCategory);
+        reset(emptyCategory);
         setEditingCategory(null);
         setViewMode('list');
         setDeleteConfirm(null);
@@ -312,7 +327,7 @@ export default function AdminCategoriesPage() {
             : rootCategories;
         const maxOrder = Math.max(...siblings.map(c => c.sort_order || 0), 0);
 
-        setFormData({
+        reset({
             ...emptyCategory,
             sort_order: maxOrder + 1,
             parent_id: parentId || '',
@@ -328,9 +343,9 @@ export default function AdminCategoriesPage() {
 
     const handleEdit = (category: ICategory) => {
         setEditingCategory(category);
-        setFormData({
+        reset({
             name: category.name,
-            description: category.description,
+            description: category.description || '',
             image: category.image || '',
             active: category.active,
             sort_order: category.sort_order || 0,
@@ -346,24 +361,28 @@ export default function AdminCategoriesPage() {
         try {
             await deleteCategory(id);
             setDeleteConfirm(null);
-        } catch {
-            // Error handled by context
+            toast.success('Categoría eliminada');
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : 'Error al eliminar la categoría';
+            toast.error(msg);
         }
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const onSubmit = async (data: CategoryFormData) => {
         setIsSaving(true);
         try {
             if (viewMode === 'create') {
-                await createCategory(formData);
+                await createCategory(data);
+                toast.success('Categoría creada');
             } else if (viewMode === 'edit' && editingCategory) {
-                await updateCategory(editingCategory.id, formData);
+                await updateCategory(editingCategory.id, data);
+                toast.success('Categoría actualizada');
             }
             resetForm();
             await refreshCategories();
-        } catch {
-            // Error handled by context
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : 'Error al guardar la categoría';
+            toast.error(msg);
         } finally {
             setIsSaving(false);
         }
@@ -372,14 +391,16 @@ export default function AdminCategoriesPage() {
     const toggleActive = async (category: ICategory) => {
         try {
             await updateCategory(category.id, { active: !category.active });
-        } catch {
-            // Error handled by context
+            toast.success(`Categoría ${!category.active ? 'activada' : 'ocultada'}`);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : 'Error al cambiar el estado';
+            toast.error(msg);
         }
     };
 
     const handleFileUpload = async (file: File) => {
         const localPreviewUrl = URL.createObjectURL(file);
-        setFormData(prev => ({ ...prev, image: localPreviewUrl }));
+        setValue('image', localPreviewUrl);
         setFormImgError(false);
         setIsUploading(true);
         setUploadProgress(10);
@@ -404,7 +425,7 @@ export default function AdminCategoriesPage() {
             }
 
             URL.revokeObjectURL(localPreviewUrl);
-            setFormData(prev => ({ ...prev, image: result.url }));
+            setValue('image', result.url);
             setUploadProgress(100);
         } catch (error: unknown) {
             const msg = error instanceof Error ? error.message : 'No se pudo subir la imagen';
@@ -524,7 +545,12 @@ export default function AdminCategoriesPage() {
     }
 
     // ─── CREATE / EDIT FORM ──────────────────────────────────────
-    const parentBreadcrumb = formData.parent_id ? getCategoryPath(formData.parent_id) : [];
+    const formParentId = watch('parent_id');
+    const formSortOrder = watch('sort_order');
+    const formImage = watch('image');
+    const formActive = watch('active');
+
+    const parentBreadcrumb = formParentId ? getCategoryPath(formParentId) : [];
     const availableParents = getAvailableParents();
 
     return (
@@ -541,11 +567,11 @@ export default function AdminCategoriesPage() {
                     </button>
                     <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
                         {viewMode === 'create'
-                            ? (formData.parent_id ? 'Nueva Subcategoría' : 'Nueva Categoría')
+                            ? (formParentId ? 'Nueva Subcategoría' : 'Nueva Categoría')
                             : 'Editar Categoría'
                         }
                     </h1>
-                    {viewMode === 'create' && formData.parent_id && (
+                    {viewMode === 'create' && formParentId && (
                         <div className="flex items-center gap-1.5 mt-2 text-sm text-gray-500">
                             <span>Dentro de:</span>
                             {parentBreadcrumb.map((p, i) => (
@@ -561,7 +587,7 @@ export default function AdminCategoriesPage() {
                     )}
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form onSubmit={rhfHandleSubmit(onSubmit)} className="space-y-5">
                     {/* Image */}
                     <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
                         <label htmlFor="category-image" className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-3">
@@ -570,9 +596,9 @@ export default function AdminCategoriesPage() {
                         </label>
 
                         <div className="relative w-full h-40 sm:h-48 bg-gray-100 rounded-xl overflow-hidden mb-3">
-                            {formData.image && formData.image !== '' && !formImgError ? (
+                            {formImage && formImage !== '' && !formImgError ? (
                                 <ProductImage
-                                    src={formData.image}
+                                    src={formImage}
                                     alt="Vista previa"
                                     className="object-cover"
                                 />
@@ -580,9 +606,9 @@ export default function AdminCategoriesPage() {
                                 <div className="flex flex-col items-center justify-center h-full text-gray-400">
                                     <ImageIcon className="w-10 h-10 mb-2" />
                                     <span className="text-sm">{formImgError ? 'Imagen no disponible' : 'Sin imagen'}</span>
-                                    {formImgError && formData.image && (
+                                    {formImgError && formImage && (
                                         <span className="text-xs text-gray-400 mt-1 px-4 text-center truncate max-w-full">
-                                            {formData.image}
+                                            {formImage}
                                         </span>
                                     )}
                                 </div>
@@ -630,20 +656,18 @@ export default function AdminCategoriesPage() {
                             <input
                                 id="category-name"
                                 type="text"
-                                value={formData.name}
-                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                placeholder={formData.parent_id ? 'Ej: Cremas Hidratantes' : 'Ej: Cuidado Facial'}
-                                className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all"
-                                required
+                                {...register('name')}
+                                placeholder={formParentId ? 'Ej: Cremas Hidratantes' : 'Ej: Cuidado Facial'}
+                                className={`w-full px-3 py-2.5 bg-gray-50 border ${errors.name ? 'border-red-400 bg-red-50/30' : 'border-gray-200'} rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all`}
                             />
+                            {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>}
                         </div>
 
                         <div>
                             <label htmlFor="category-description" className="block text-sm font-medium text-gray-700 mb-1.5">Descripción</label>
                             <textarea
                                 id="category-description"
-                                value={formData.description}
-                                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                {...register('description')}
                                 placeholder="Breve descripción..."
                                 rows={3}
                                 className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all resize-none"
@@ -657,8 +681,8 @@ export default function AdminCategoriesPage() {
                             </label>
                             <select
                                 id="category-parent"
-                                value={formData.parent_id || ''}
-                                onChange={(e) => setFormData({ ...formData, parent_id: e.target.value })}
+                                value={formParentId || ''}
+                                onChange={(e) => setValue('parent_id', e.target.value)}
                                 className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all"
                             >
                                 <option value="">— Ninguna (categoría principal) —</option>
@@ -684,8 +708,8 @@ export default function AdminCategoriesPage() {
                             <input
                                 id="category-sort-order"
                                 type="number"
-                                value={formData.sort_order}
-                                onChange={(e) => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })}
+                                value={formSortOrder}
+                                onChange={(e) => setValue('sort_order', parseInt(e.target.value) || 0)}
                                 min="0"
                                 className="w-24 px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white transition-all"
                             />
@@ -697,26 +721,26 @@ export default function AdminCategoriesPage() {
                     <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2.5">
-                                {formData.active ? (
+                                {formActive ? (
                                     <Eye className="w-4 h-4 text-emerald-600" />
                                 ) : (
                                     <EyeOff className="w-4 h-4 text-gray-400" />
                                 )}
                                 <div>
                                     <p className="text-sm font-medium text-gray-900">
-                                        {formData.active ? 'Visible en catálogo' : 'Oculta del catálogo'}
+                                        {formActive ? 'Visible en catálogo' : 'Oculta del catálogo'}
                                     </p>
                                     <p className="text-xs text-gray-500">
-                                        Los clientes {formData.active ? 'pueden' : 'no pueden'} ver esta categoría
+                                        Los clientes {formActive ? 'pueden' : 'no pueden'} ver esta categoría
                                     </p>
                                 </div>
                             </div>
                             <button
                                 type="button"
-                                onClick={() => setFormData({ ...formData, active: !formData.active })}
-                                className={`relative w-11 h-6 rounded-full transition-colors ${formData.active ? 'bg-[#505A4A]' : 'bg-gray-300'}`}
+                                onClick={() => setValue('active', !formActive)}
+                                className={`relative w-11 h-6 rounded-full transition-colors ${formActive ? 'bg-[#505A4A]' : 'bg-gray-300'}`}
                             >
-                                <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${formData.active ? 'left-[22px]' : 'left-0.5'}`} />
+                                <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${formActive ? 'left-[22px]' : 'left-0.5'}`} />
                             </button>
                         </div>
                     </div>
@@ -734,7 +758,7 @@ export default function AdminCategoriesPage() {
                                 <>
                                     <Save className="w-4 h-4" />
                                     {viewMode === 'create'
-                                        ? (formData.parent_id ? 'Crear Subcategoría' : 'Crear Categoría')
+                                        ? (formParentId ? 'Crear Subcategoría' : 'Crear Categoría')
                                         : 'Guardar Cambios'
                                     }
                                 </>

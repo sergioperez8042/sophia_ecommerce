@@ -3,6 +3,16 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ContactPage from './page';
 
+// --- Mock sonner ---
+const mockToastSuccess = jest.fn();
+const mockToastError = jest.fn();
+jest.mock('sonner', () => ({
+  toast: {
+    get success() { return mockToastSuccess; },
+    get error() { return mockToastError; },
+  },
+}));
+
 // --- Mocks ---
 
 jest.mock('framer-motion', () => {
@@ -233,12 +243,18 @@ describe('ContactPage', () => {
       expect(screen.getByPlaceholderText('Cuéntanos más detalles...')).toBeInTheDocument();
     });
 
-    it('todos los campos son requeridos', () => {
+    it('muestra errores de validación al enviar sin llenar campos', async () => {
+      const user = userEvent.setup();
       render(<ContactPage />);
-      expect(screen.getByLabelText('Nombre Completo')).toBeRequired();
-      expect(screen.getByLabelText(/^Email$/)).toBeRequired();
-      expect(screen.getByLabelText('Asunto')).toBeRequired();
-      expect(screen.getByLabelText('Mensaje')).toBeRequired();
+
+      await user.click(screen.getByRole('button', { name: /enviar mensaje/i }));
+
+      await waitFor(() => {
+        expect(screen.getByText('El nombre es requerido')).toBeInTheDocument();
+        expect(screen.getByText('El email es requerido')).toBeInTheDocument();
+        expect(screen.getByText('El asunto es requerido')).toBeInTheDocument();
+        expect(screen.getByText('El mensaje es requerido')).toBeInTheDocument();
+      });
     });
 
     it('el campo de email tiene type="email"', () => {
@@ -302,7 +318,7 @@ describe('ContactPage', () => {
   });
 
   describe('Envío del formulario - éxito', () => {
-    it('muestra mensaje de éxito cuando se envía correctamente', async () => {
+    it('muestra toast de éxito cuando se envía correctamente', async () => {
       const user = userEvent.setup();
       mockFetchSuccess();
 
@@ -313,23 +329,7 @@ describe('ContactPage', () => {
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(screen.getByText('¡Mensaje enviado correctamente!')).toBeInTheDocument();
-      });
-    });
-
-    it('muestra mensaje secundario de respuesta en 24 horas', async () => {
-      const user = userEvent.setup();
-      mockFetchSuccess();
-
-      render(<ContactPage />);
-      fillContactForm();
-
-      await user.click(screen.getByRole('button', { name: /enviar mensaje/i }));
-
-      await waitFor(() => {
-        expect(
-          screen.getByText('Te responderemos en menos de 24 horas.')
-        ).toBeInTheDocument();
+        expect(mockToastSuccess).toHaveBeenCalledWith('¡Mensaje enviado correctamente!');
       });
     });
 
@@ -352,7 +352,7 @@ describe('ContactPage', () => {
   });
 
   describe('Envío del formulario - error del servidor', () => {
-    it('muestra el mensaje de error del servidor', async () => {
+    it('muestra toast de error del servidor', async () => {
       const user = userEvent.setup();
       mockFetchError('Datos inválidos');
 
@@ -362,11 +362,11 @@ describe('ContactPage', () => {
       await user.click(screen.getByRole('button', { name: /enviar mensaje/i }));
 
       await waitFor(() => {
-        expect(screen.getByText('Datos inválidos')).toBeInTheDocument();
+        expect(mockToastError).toHaveBeenCalledWith('Datos inválidos');
       });
     });
 
-    it('muestra un mensaje de error genérico si el servidor no envía mensaje', async () => {
+    it('muestra toast de error genérico si el servidor no envía mensaje', async () => {
       const user = userEvent.setup();
       global.fetch = jest.fn().mockResolvedValue({
         ok: false,
@@ -379,13 +379,13 @@ describe('ContactPage', () => {
       await user.click(screen.getByRole('button', { name: /enviar mensaje/i }));
 
       await waitFor(() => {
-        expect(screen.getByText('Error al enviar el mensaje')).toBeInTheDocument();
+        expect(mockToastError).toHaveBeenCalledWith('Error al enviar el mensaje');
       });
     });
   });
 
   describe('Envío del formulario - error de red', () => {
-    it('muestra mensaje de error de conexión', async () => {
+    it('muestra toast de error de conexión', async () => {
       const user = userEvent.setup();
       mockFetchNetworkError();
 
@@ -395,9 +395,7 @@ describe('ContactPage', () => {
       await user.click(screen.getByRole('button', { name: /enviar mensaje/i }));
 
       await waitFor(() => {
-        expect(
-          screen.getByText('Error de conexión. Inténtalo de nuevo.')
-        ).toBeInTheDocument();
+        expect(mockToastError).toHaveBeenCalledWith('Error de conexión. Inténtalo de nuevo.');
       });
     });
   });

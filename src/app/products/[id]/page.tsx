@@ -177,6 +177,30 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 {product.description}
                             </p>
 
+                            {product.tags && product.tags.length > 0 && (
+                                <div className="flex flex-wrap gap-1.5 mb-6">
+                                    {product.tags.map((tag) => (
+                                        <span
+                                            key={tag}
+                                            className="text-[11px] uppercase tracking-[0.05em] px-2.5 py-1 bg-[#505A4A]/8 text-[#505A4A] dark:bg-[#505A4A]/20 dark:text-[#b8b0a2] rounded-full"
+                                        >
+                                            {tag}
+                                        </span>
+                                    ))}
+                                </div>
+                            )}
+
+                            {product.usage && (
+                                <div className="mb-6 pb-6 border-b border-[#E8E4DD] dark:border-[#3a3d36]">
+                                    <span className="text-[12px] uppercase tracking-[0.12em] text-[#999] dark:text-[#8a8273] block mb-2">
+                                        Modo de uso
+                                    </span>
+                                    <p className="text-[14px] text-[#666] dark:text-[#a09889] font-light leading-relaxed">
+                                        {product.usage}
+                                    </p>
+                                </div>
+                            )}
+
                             {/* Rating */}
                             {product.rating > 0 && (
                                 <div className="flex items-center gap-3 mb-6">
@@ -214,7 +238,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             {/* Peso */}
                             {product.weight && product.weight > 0 && (
                                 <p className="text-[13px] text-[#999] dark:text-[#8a8273] mb-6">
-                                    Peso: {product.weight}
+                                    Peso: {product.weight} {product.weight_unit || 'g'}
                                 </p>
                             )}
 

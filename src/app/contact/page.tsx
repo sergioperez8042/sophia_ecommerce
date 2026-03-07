@@ -8,6 +8,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import Breadcrumb from "@/components/ui/breadcrumb";
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { contactSchema, type ContactFormData } from '@/lib/validations';
+import { toast } from 'sonner';
 
 const WHATSAPP_NUMBER = "34642633982";
 
@@ -15,14 +19,10 @@ export default function ContactPage() {
     const heroRef = useRef<HTMLDivElement>(null);
     const formRef = useRef<HTMLDivElement>(null);
     const [isHydrated, setIsHydrated] = useState(false);
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        subject: '',
-        message: ''
+    const { register, handleSubmit: rhfHandleSubmit, formState: { errors, isSubmitting }, reset } = useForm<ContactFormData>({
+        resolver: zodResolver(contactSchema),
+        defaultValues: { name: '', email: '', subject: '', message: '' },
     });
-    const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
-    const [formError, setFormError] = useState('');
 
     const heroInView = useInView(heroRef, { once: true, amount: 0.3 });
     const formInView = useInView(formRef, { once: true, amount: 0.2 });
@@ -31,38 +31,23 @@ export default function ContactPage() {
         setIsHydrated(true);
     }, []);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setFormStatus('sending');
-        setFormError('');
-
+    const onSubmit = async (data: ContactFormData) => {
         try {
             const res = await fetch('/api/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(data),
             });
-            const data = await res.json();
-
+            const result = await res.json();
             if (!res.ok) {
-                setFormStatus('error');
-                setFormError(data.error || 'Error al enviar el mensaje');
+                toast.error(result.error || 'Error al enviar el mensaje');
                 return;
             }
-
-            setFormStatus('success');
-            setFormData({ name: '', email: '', subject: '', message: '' });
+            toast.success('¡Mensaje enviado correctamente!');
+            reset();
         } catch {
-            setFormStatus('error');
-            setFormError('Error de conexión. Inténtalo de nuevo.');
+            toast.error('Error de conexión. Inténtalo de nuevo.');
         }
-    };
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
     };
 
     const containerVariants = {
@@ -277,7 +262,7 @@ export default function ContactPage() {
                     >
                         <Card className="border-0 shadow-2xl bg-white/95 backdrop-blur-sm">
                             <CardContent className="p-6 sm:p-8 md:p-12">
-                                <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
+                                <form onSubmit={rhfHandleSubmit(onSubmit)} className="space-y-6 sm:space-y-8">
                                     <div className="grid sm:grid-cols-2 gap-5 sm:gap-6">
                                         <div>
                                             <label htmlFor="contact-name" className="block text-sm font-bold text-gray-900 mb-2">
@@ -286,15 +271,13 @@ export default function ContactPage() {
                                             <Input
                                                 id="contact-name"
                                                 type="text"
-                                                name="name"
-                                                value={formData.name}
-                                                onChange={handleChange}
-                                                className="border-2 border-gray-200 focus:border-[#505A4A] rounded-lg p-4 text-base sm:text-lg placeholder:text-gray-500 text-gray-800"
+                                                {...register('name')}
+                                                className={`border-2 border-gray-200 focus:border-[#505A4A] rounded-lg p-4 text-base sm:text-lg placeholder:text-gray-500 text-gray-800${errors.name ? ' border-red-400' : ''}`}
                                                 placeholder="Tu nombre"
-                                                required
                                                 autoComplete="name"
                                                 data-lpignore="true"
                                             />
+                                            {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>}
                                         </div>
 
                                         <div>
@@ -304,17 +287,15 @@ export default function ContactPage() {
                                             <Input
                                                 id="contact-email"
                                                 type="email"
-                                                name="email"
-                                                value={formData.email}
-                                                onChange={handleChange}
-                                                className="border-2 border-gray-200 focus:border-[#505A4A] rounded-lg p-4 text-base sm:text-lg placeholder:text-gray-500 text-gray-800"
+                                                {...register('email')}
+                                                className={`border-2 border-gray-200 focus:border-[#505A4A] rounded-lg p-4 text-base sm:text-lg placeholder:text-gray-500 text-gray-800${errors.email ? ' border-red-400' : ''}`}
                                                 placeholder="tu@email.com"
-                                                required
                                                 autoComplete="email"
                                                 data-lpignore="true"
                                                 data-form-type="other"
                                                 suppressHydrationWarning={true}
                                             />
+                                            {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email.message}</p>}
                                         </div>
                                     </div>
 
@@ -325,14 +306,12 @@ export default function ContactPage() {
                                         <Input
                                             id="contact-subject"
                                             type="text"
-                                            name="subject"
-                                            value={formData.subject}
-                                            onChange={handleChange}
-                                            className="border-2 border-gray-200 focus:border-[#505A4A] rounded-lg p-4 text-base sm:text-lg placeholder:text-gray-500 text-gray-800"
+                                            {...register('subject')}
+                                            className={`border-2 border-gray-200 focus:border-[#505A4A] rounded-lg p-4 text-base sm:text-lg placeholder:text-gray-500 text-gray-800${errors.subject ? ' border-red-400' : ''}`}
                                             placeholder="¿En qué podemos ayudarte?"
-                                            required
                                             data-lpignore="true"
                                         />
+                                        {errors.subject && <p className="text-xs text-red-500 mt-1">{errors.subject.message}</p>}
                                     </div>
 
                                     <div>
@@ -341,37 +320,22 @@ export default function ContactPage() {
                                         </label>
                                         <textarea
                                             id="contact-message"
-                                            name="message"
-                                            value={formData.message}
-                                            onChange={handleChange}
+                                            {...register('message')}
                                             rows={6}
-                                            className="w-full border-2 border-gray-200 focus:border-[#505A4A] rounded-lg p-4 text-base sm:text-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#505A4A]/20 placeholder:text-gray-500 text-gray-800"
+                                            className={`w-full border-2 border-gray-200 focus:border-[#505A4A] rounded-lg p-4 text-base sm:text-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#505A4A]/20 placeholder:text-gray-500 text-gray-800${errors.message ? ' border-red-400' : ''}`}
                                             placeholder="Cuéntanos más detalles..."
-                                            required
                                             data-lpignore="true"
                                         />
+                                        {errors.message && <p className="text-xs text-red-500 mt-1">{errors.message.message}</p>}
                                     </div>
-
-                                    {formStatus === 'success' && (
-                                        <div className="bg-[#505A4A]/10 border border-[#505A4A]/30 rounded-lg p-4 text-center">
-                                            <p className="text-[#505A4A] font-semibold">¡Mensaje enviado correctamente!</p>
-                                            <p className="text-[#505A4A]/80 text-sm mt-1">Te responderemos en menos de 24 horas.</p>
-                                        </div>
-                                    )}
-
-                                    {formStatus === 'error' && (
-                                        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
-                                            <p className="text-red-700 font-medium">{formError}</p>
-                                        </div>
-                                    )}
 
                                     <div className="text-center pt-2 sm:pt-4">
                                         <Button
                                             type="submit"
-                                            disabled={formStatus === 'sending'}
+                                            disabled={isSubmitting}
                                             className="bg-[#505A4A] hover:bg-[#414A3C] text-white font-bold px-10 sm:px-12 py-4 text-lg shadow-xl disabled:opacity-60"
                                         >
-                                            {formStatus === 'sending' ? (
+                                            {isSubmitting ? (
                                                 <>
                                                     <div className="h-5 w-5 mr-3 animate-spin rounded-full border-2 border-white border-t-transparent" />
                                                     Enviando...

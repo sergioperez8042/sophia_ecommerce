@@ -7,9 +7,15 @@ import { useAuth, RegisterData } from '@/store';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import BrandLogo from '@/components/BrandLogo';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { loginSchema, registerSchema, resetPasswordSchema, type LoginFormData, type ResetPasswordFormData } from '@/lib/validations';
+import type { z } from 'zod';
+import { toast } from 'sonner';
 
 type AuthMode = 'login' | 'register' | 'reset';
 type UserType = 'client' | 'manager';
+type RegisterInput = z.input<typeof registerSchema>;
 
 export default function AuthPage() {
   const router = useRouter();
@@ -19,16 +25,7 @@ export default function AuthPage() {
   const [userType, setUserType] = useState<UserType | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [resetSuccess, setResetSuccess] = useState(false);
-
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    phone: '',
-    zone: '',
-  });
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -40,68 +37,78 @@ export default function AuthPage() {
     return null;
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
-    setError(null);
-  };
+  const loginForm = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: '', password: '' },
+  });
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const registerForm = useForm<RegisterInput>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: { name: '', email: '', password: '', phone: '', zone: '' },
+  });
+
+  const resetPwForm = useForm<ResetPasswordFormData>({
+    resolver: zodResolver(resetPasswordSchema),
+    defaultValues: { email: '' },
+  });
+
+  const onLogin = async (data: LoginFormData) => {
     setIsLoading(true);
-    setError(null);
-    const result = await login(formData.email, formData.password);
+    const result = await login(data.email, data.password);
     if (result.success) {
       router.push('/');
     } else {
-      setError(result.error || 'Error al iniciar sesión');
+      toast.error(result.error || 'Error al iniciar sesión');
     }
     setIsLoading(false);
   };
 
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onRegister = async (data: RegisterInput) => {
     if (!userType) return;
+    if (userType === 'manager' && !data.zone?.trim()) {
+      registerForm.setError('zone', { message: 'La zona de trabajo es requerida' });
+      return;
+    }
     setIsLoading(true);
-    setError(null);
     const registerData: RegisterData = {
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
-      phone: formData.phone,
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      phone: data.phone || '',
       role: userType,
-      ...(userType === 'manager' && { zone: formData.zone }),
+      ...(userType === 'manager' && { zone: data.zone }),
     };
     const result = await register(registerData);
     if (result.success) {
       router.push('/');
     } else {
-      setError(result.error || 'Error al registrarse');
+      toast.error(result.error || 'Error al registrarse');
     }
     setIsLoading(false);
   };
 
-  const handleResetPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onResetPassword = async (data: ResetPasswordFormData) => {
     setIsLoading(true);
-    setError(null);
     setResetSuccess(false);
-    const result = await resetPassword(formData.email);
+    const result = await resetPassword(data.email);
     if (result.success) {
       setResetSuccess(true);
     } else {
-      setError(result.error || 'Error al enviar el email');
+      toast.error(result.error || 'Error al enviar el email');
     }
     setIsLoading(false);
   };
 
-  const resetForm = () => {
-    setFormData({ name: '', email: '', password: '', phone: '', zone: '' });
+  const resetAllForms = () => {
+    loginForm.reset();
+    registerForm.reset();
+    resetPwForm.reset();
     setUserType(null);
-    setError(null);
     setResetSuccess(false);
   };
 
-  const inputClass = "w-full h-12 pl-11 pr-4 bg-[#f8f7f4] border border-[#e8e5df] rounded-lg text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#505A4A] focus:ring-1 focus:ring-[#505A4A]/20 transition-colors";
+  const inputClass = (hasError?: boolean) =>
+    `w-full h-12 pl-11 pr-4 bg-[#f8f7f4] border ${hasError ? 'border-red-400' : 'border-[#e8e5df]'} rounded-lg text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#505A4A] focus:ring-1 focus:ring-[#505A4A]/20 transition-colors`;
   const iconClass = "absolute left-3.5 top-1/2 -translate-y-1/2 w-[18px] h-[18px] text-[#505A4A]/40";
 
   return (
@@ -123,7 +130,7 @@ export default function AuthPage() {
           {mode !== 'reset' && (
             <div className="flex gap-1 mb-7">
               <button
-                onClick={() => { setMode('login'); resetForm(); }}
+                onClick={() => { setMode('login'); resetAllForms(); }}
                 className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all ${
                   mode === 'login'
                     ? 'bg-[#505A4A] text-white'
@@ -133,7 +140,7 @@ export default function AuthPage() {
                 Iniciar Sesión
               </button>
               <button
-                onClick={() => { setMode('register'); resetForm(); }}
+                onClick={() => { setMode('register'); resetAllForms(); }}
                 className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all ${
                   mode === 'register'
                     ? 'bg-[#505A4A] text-white'
@@ -154,45 +161,41 @@ export default function AuthPage() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                onSubmit={handleLogin}
+                onSubmit={loginForm.handleSubmit(onLogin)}
                 className="space-y-4"
               >
-                <div className="relative">
-                  <Mail className={iconClass} />
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="Email"
-                    className={inputClass}
-                    required
-                  />
+                <div>
+                  <div className="relative">
+                    <Mail className={iconClass} />
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      className={inputClass(!!loginForm.formState.errors.email)}
+                      {...loginForm.register('email')}
+                    />
+                  </div>
+                  {loginForm.formState.errors.email && <p className="text-xs text-red-500 mt-1 pl-11">{loginForm.formState.errors.email.message}</p>}
                 </div>
 
-                <div className="relative">
-                  <Lock className={iconClass} />
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    name="password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    placeholder="Contraseña"
-                    className={`${inputClass} pr-11`}
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  >
-                    {showPassword ? <EyeOff className="w-[18px] h-[18px]" /> : <Eye className="w-[18px] h-[18px]" />}
-                  </button>
+                <div>
+                  <div className="relative">
+                    <Lock className={iconClass} />
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="Contraseña"
+                      className={`${inputClass(!!loginForm.formState.errors.password)} pr-11`}
+                      {...loginForm.register('password')}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      {showPassword ? <EyeOff className="w-[18px] h-[18px]" /> : <Eye className="w-[18px] h-[18px]" />}
+                    </button>
+                  </div>
+                  {loginForm.formState.errors.password && <p className="text-xs text-red-500 mt-1 pl-11">{loginForm.formState.errors.password.message}</p>}
                 </div>
-
-                {error && (
-                  <p className="text-red-600 text-xs text-center py-2 px-3 bg-red-50 rounded-lg">{error}</p>
-                )}
 
                 <button
                   type="submit"
@@ -204,7 +207,7 @@ export default function AuthPage() {
 
                 <button
                   type="button"
-                  onClick={() => { setMode('reset'); setError(null); setResetSuccess(false); }}
+                  onClick={() => { setMode('reset'); setResetSuccess(false); }}
                   className="w-full text-xs text-[#505A4A]/70 hover:text-[#505A4A] transition-colors pt-1"
                 >
                   ¿Olvidaste tu contraseña?
@@ -220,12 +223,12 @@ export default function AuthPage() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                onSubmit={handleResetPassword}
+                onSubmit={resetPwForm.handleSubmit(onResetPassword)}
                 className="space-y-4"
               >
                 <button
                   type="button"
-                  onClick={() => { setMode('login'); resetForm(); }}
+                  onClick={() => { setMode('login'); resetAllForms(); }}
                   className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-[#505A4A] transition-colors mb-1"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
@@ -239,22 +242,18 @@ export default function AuthPage() {
                   </p>
                 </div>
 
-                <div className="relative">
-                  <Mail className={iconClass} />
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="Email"
-                    className={inputClass}
-                    required
-                  />
+                <div>
+                  <div className="relative">
+                    <Mail className={iconClass} />
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      className={inputClass(!!resetPwForm.formState.errors.email)}
+                      {...resetPwForm.register('email')}
+                    />
+                  </div>
+                  {resetPwForm.formState.errors.email && <p className="text-xs text-red-500 mt-1 pl-11">{resetPwForm.formState.errors.email.message}</p>}
                 </div>
-
-                {error && (
-                  <p className="text-red-600 text-xs text-center py-2 px-3 bg-red-50 rounded-lg">{error}</p>
-                )}
 
                 {resetSuccess && (
                   <p className="text-[#505A4A] text-xs text-center py-3 px-3 bg-[#505A4A]/5 rounded-lg">
@@ -321,7 +320,7 @@ export default function AuthPage() {
                   <m.form
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    onSubmit={handleRegister}
+                    onSubmit={registerForm.handleSubmit(onRegister)}
                     className="space-y-3.5"
                   >
                     <div className="flex items-center justify-between mb-1">
@@ -338,83 +337,79 @@ export default function AuthPage() {
                       </span>
                     </div>
 
-                    <div className="relative">
-                      <User className={iconClass} />
-                      <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        placeholder="Nombre completo"
-                        className={inputClass}
-                        required
-                      />
+                    <div>
+                      <div className="relative">
+                        <User className={iconClass} />
+                        <input
+                          type="text"
+                          placeholder="Nombre completo"
+                          className={inputClass(!!registerForm.formState.errors.name)}
+                          {...registerForm.register('name')}
+                        />
+                      </div>
+                      {registerForm.formState.errors.name && <p className="text-xs text-red-500 mt-1 pl-11">{registerForm.formState.errors.name.message}</p>}
                     </div>
 
-                    <div className="relative">
-                      <Mail className={iconClass} />
-                      <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        placeholder="Email"
-                        className={inputClass}
-                        required
-                      />
+                    <div>
+                      <div className="relative">
+                        <Mail className={iconClass} />
+                        <input
+                          type="email"
+                          placeholder="Email"
+                          className={inputClass(!!registerForm.formState.errors.email)}
+                          {...registerForm.register('email')}
+                        />
+                      </div>
+                      {registerForm.formState.errors.email && <p className="text-xs text-red-500 mt-1 pl-11">{registerForm.formState.errors.email.message}</p>}
                     </div>
 
-                    <div className="relative">
-                      <Phone className={iconClass} />
-                      <input
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        placeholder="Teléfono"
-                        className={inputClass}
-                      />
+                    <div>
+                      <div className="relative">
+                        <Phone className={iconClass} />
+                        <input
+                          type="tel"
+                          placeholder="Teléfono"
+                          className={inputClass(!!registerForm.formState.errors.phone)}
+                          {...registerForm.register('phone')}
+                        />
+                      </div>
+                      {registerForm.formState.errors.phone && <p className="text-xs text-red-500 mt-1 pl-11">{registerForm.formState.errors.phone.message}</p>}
                     </div>
 
                     {userType === 'manager' && (
-                      <div className="relative">
-                        <MapPin className={iconClass} />
-                        <input
-                          type="text"
-                          name="zone"
-                          value={formData.zone}
-                          onChange={handleInputChange}
-                          placeholder="Zona de trabajo"
-                          className={inputClass}
-                          required
-                        />
+                      <div>
+                        <div className="relative">
+                          <MapPin className={iconClass} />
+                          <input
+                            type="text"
+                            placeholder="Zona de trabajo"
+                            className={inputClass(!!registerForm.formState.errors.zone)}
+                            {...registerForm.register('zone')}
+                          />
+                        </div>
+                        {registerForm.formState.errors.zone && <p className="text-xs text-red-500 mt-1 pl-11">{registerForm.formState.errors.zone.message}</p>}
                       </div>
                     )}
 
-                    <div className="relative">
-                      <Lock className={iconClass} />
-                      <input
-                        type={showPassword ? 'text' : 'password'}
-                        name="password"
-                        value={formData.password}
-                        onChange={handleInputChange}
-                        placeholder="Contraseña (mín. 6 caracteres)"
-                        className={`${inputClass} pr-11`}
-                        minLength={6}
-                        required
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                      >
-                        {showPassword ? <EyeOff className="w-[18px] h-[18px]" /> : <Eye className="w-[18px] h-[18px]" />}
-                      </button>
+                    <div>
+                      <div className="relative">
+                        <Lock className={iconClass} />
+                        <input
+                          type={showPassword ? 'text' : 'password'}
+                          placeholder="Contraseña (mín. 6 caracteres)"
+                          className={`${inputClass(!!registerForm.formState.errors.password)} pr-11`}
+                          {...registerForm.register('password')}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        >
+                          {showPassword ? <EyeOff className="w-[18px] h-[18px]" /> : <Eye className="w-[18px] h-[18px]" />}
+                        </button>
+                      </div>
+                      {registerForm.formState.errors.password && <p className="text-xs text-red-500 mt-1 pl-11">{registerForm.formState.errors.password.message}</p>}
                     </div>
-
-                    {error && (
-                      <p className="text-red-600 text-xs text-center py-2 px-3 bg-red-50 rounded-lg">{error}</p>
-                    )}
 
                     <button
                       type="submit"

@@ -151,10 +151,6 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                             Pedir por WhatsApp
                         </m.button>
 
-                        <p className={`text-xs text-center mt-3 ${isDark ? 'text-[#7a7568]' : 'text-gray-400'}`}>
-                            Te responderemos a la brevedad
-                        </p>
-
                         {/* Back link */}
                         <Link
                             href="/"

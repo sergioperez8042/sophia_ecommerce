@@ -4,7 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import { StoreProvider } from "@/store";
 import { ThemeProvider } from "@/store/ThemeContext";
-import { ToastProvider } from "@/components/ui/toast";
+import { Toaster } from "sonner";
 import { usePathname } from "next/navigation";
 import Script from "next/script";
 import { Poppins, Cinzel } from "next/font/google";
@@ -110,12 +110,11 @@ export default function RootLayout({
         <LazyMotion features={domAnimation} strict>
           <MotionConfig reducedMotion="user">
             <StoreProvider>
-              <ToastProvider>
+                <Toaster position="top-right" richColors closeButton duration={4000} />
                 {!isAuthPage && !isLegalPage && <Header />}
                 <div className={`min-h-screen ${isAuthPage || isLegalPage ? '' : 'bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8]'}`}>
                   {children}
                 </div>
-              </ToastProvider>
             </StoreProvider>
           </MotionConfig>
         </LazyMotion>
