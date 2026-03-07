@@ -22,6 +22,7 @@
     "cloudinary": "^2.9.0",
     "clsx": "^2.1.1",
     "firebase": "^12.7.0",
+    "firebase-admin": "^13.7.0",
     "framer-motion": "^12.23.22",
     "jspdf": "^3.0.4",
     "jspdf-autotable": "^5.0.2",

@@ -66,6 +66,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
   updateUser: (data: Partial<User>) => Promise<void>;
   getManagers: () => Promise<User[]>;
+  getIdToken: () => Promise<string | null>;
 }
 
 export interface RegisterData {
@@ -372,6 +373,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  // Get Firebase ID token for API calls
+  const getIdToken = useCallback(async (): Promise<string | null> => {
+    if (!state.firebaseUser) return null;
+    try {
+      return await state.firebaseUser.getIdToken();
+    } catch {
+      return null;
+    }
+  }, [state.firebaseUser]);
+
   // Get all managers
   const getManagers = async (): Promise<User[]> => {
     if (!db) return [];
@@ -405,6 +416,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     logout,
     updateUser,
     getManagers,
+    getIdToken,
   };
 
   return (

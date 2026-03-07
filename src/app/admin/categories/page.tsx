@@ -238,7 +238,7 @@ function CategoryTreeItem({
 
 export default function AdminCategoriesPage() {
     const router = useRouter();
-    const { isAdmin, isLoaded, isAuthenticated } = useAuth();
+    const { isAdmin, isLoaded, isAuthenticated, getIdToken } = useAuth();
     const {
         categories,
         isLoading,
@@ -412,8 +412,10 @@ export default function AdminCategoriesPage() {
             uploadFormData.append('folder', 'categories');
             setUploadProgress(30);
 
+            const token = await getIdToken();
             const response = await fetch('/api/upload', {
                 method: 'POST',
+                headers: token ? { Authorization: `Bearer ${token}` } : {},
                 body: uploadFormData,
             });
 

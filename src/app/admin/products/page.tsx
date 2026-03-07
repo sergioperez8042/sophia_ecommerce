@@ -180,7 +180,7 @@ function ProductListItem({
 
 export default function AdminProductsPage() {
     const router = useRouter();
-    const { isAdmin, isLoaded, isAuthenticated } = useAuth();
+    const { isAdmin, isLoaded, isAuthenticated, getIdToken } = useAuth();
     const {
         products,
         isLoading,
@@ -369,8 +369,10 @@ export default function AdminProductsPage() {
             uploadFormData.append('folder', 'products');
             setUploadProgress(30);
 
+            const token = await getIdToken();
             const response = await fetch('/api/upload', {
                 method: 'POST',
+                headers: token ? { Authorization: `Bearer ${token}` } : {},
                 body: uploadFormData,
             });
 

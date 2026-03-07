@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v2 as cloudinary } from 'cloudinary';
-import { isAuthorized, unauthorizedResponse } from '@/lib/api-auth';
+import { verifyFirebaseAuth, unauthorizedResponse } from '@/lib/api-auth';
 
 export async function POST(request: NextRequest) {
   try {
-    // Admin-only: require authentication
-    if (!isAuthorized(request)) {
+    // Require Firebase authentication
+    const decodedToken = await verifyFirebaseAuth(request);
+    if (!decodedToken) {
       return unauthorizedResponse();
     }
 

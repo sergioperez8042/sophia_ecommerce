@@ -6,7 +6,7 @@
  * Tests para la ruta API /api/upload
  *
  * Esta ruta recibe un archivo de imagen via FormData,
- * verifica autorizacion, valida tipo/tamano
+ * verifica autorizacion via Firebase token, valida tipo/tamano
  * y lo sube a Cloudinary.
  */
 
@@ -24,8 +24,9 @@ jest.mock('cloudinary', () => ({
 }));
 
 // Mock de api-auth
+const mockVerifyFirebaseAuth = jest.fn();
 jest.mock('@/lib/api-auth', () => ({
-  isAuthorized: jest.fn(),
+  verifyFirebaseAuth: (...args: unknown[]) => mockVerifyFirebaseAuth(...args),
   unauthorizedResponse: jest.fn(() => {
     const { NextResponse } = require('next/server');
     return NextResponse.json(
@@ -36,9 +37,7 @@ jest.mock('@/lib/api-auth', () => ({
 }));
 
 import { v2 as cloudinary } from 'cloudinary';
-import { isAuthorized } from '@/lib/api-auth';
 
-const mockIsAuthorized = isAuthorized as jest.MockedFunction<typeof isAuthorized>;
 const mockUpload = cloudinary.uploader.upload as jest.MockedFunction<typeof cloudinary.uploader.upload>;
 
 function crearArchivoImagen(
@@ -66,14 +65,14 @@ function crearRequestConArchivo(
   return new NextRequest('http://localhost/api/upload', {
     method: 'POST',
     body: formData,
-    headers: headers || { Authorization: 'Bearer test-admin-key' },
+    headers: headers || { Authorization: 'Bearer firebase-id-token' },
   });
 }
 
 describe('POST /api/upload', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockIsAuthorized.mockReturnValue(true);
+    mockVerifyFirebaseAuth.mockResolvedValue({ uid: 'test-uid', email: 'admin@test.com' });
     process.env.CLOUDINARY_CLOUD_NAME = 'test-cloud';
     process.env.CLOUDINARY_API_KEY = 'test-key';
     process.env.CLOUDINARY_API_SECRET = 'test-secret';
@@ -90,7 +89,7 @@ describe('POST /api/upload', () => {
   // ---------------------------------------------------
   describe('Autorizacion', () => {
     it('deberia devolver 401 si no esta autorizado', async () => {
-      mockIsAuthorized.mockReturnValue(false);
+      mockVerifyFirebaseAuth.mockResolvedValue(null);
 
       const res = await POST(crearRequestConArchivo(crearArchivoImagen()));
       const data = await res.json();
