@@ -27,16 +27,6 @@ export default function AuthPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push('/');
-    }
-  }, [isAuthenticated, router]);
-
-  if (isAuthenticated) {
-    return null;
-  }
-
   const loginForm = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: '', password: '' },
@@ -51,6 +41,16 @@ export default function AuthPage() {
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: { email: '' },
   });
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push('/');
+    }
+  }, [isAuthenticated, router]);
+
+  if (isAuthenticated) {
+    return null;
+  }
 
   const onLogin = async (data: LoginFormData) => {
     setIsLoading(true);
