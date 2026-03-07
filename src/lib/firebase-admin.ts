@@ -1,37 +1,50 @@
-import { initializeApp, getApps, cert, App } from 'firebase-admin/app';
-import { getAuth, Auth } from 'firebase-admin/auth';
+import { createRemoteJWKSSet, jwtVerify } from 'jose';
 
-let adminApp: App | null = null;
-let adminAuth: Auth | null = null;
+const GOOGLE_CERTS_URL = 'https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com';
+const ISSUER_PREFIX = 'https://securetoken.google.com/';
 
-function getAdminApp(): App | null {
-  if (adminApp) return adminApp;
+let jwks: ReturnType<typeof createRemoteJWKSSet> | null = null;
 
-  const projectId = process.env.FIREBASE_PROJECT_ID || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
-  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
-
-  if (!projectId || !clientEmail || !privateKey) {
-    return null;
+function getJWKS() {
+  if (!jwks) {
+    jwks = createRemoteJWKSSet(new URL(GOOGLE_CERTS_URL));
   }
-
-  if (getApps().length === 0) {
-    adminApp = initializeApp({
-      credential: cert({ projectId, clientEmail, privateKey }),
-    });
-  } else {
-    adminApp = getApps()[0];
-  }
-
-  return adminApp;
+  return jwks;
 }
 
-export function getAdminAuth(): Auth | null {
-  if (adminAuth) return adminAuth;
+export interface FirebaseTokenPayload {
+  uid: string;
+  email?: string;
+  email_verified?: boolean;
+  name?: string;
+  [key: string]: unknown;
+}
 
-  const app = getAdminApp();
-  if (!app) return null;
+/**
+ * Verify a Firebase ID token using Google's public keys.
+ * No service account needed — only the Firebase project ID.
+ */
+export async function verifyFirebaseToken(token: string): Promise<FirebaseTokenPayload | null> {
+  const projectId = process.env.FIREBASE_PROJECT_ID || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
+  if (!projectId) return null;
 
-  adminAuth = getAuth(app);
-  return adminAuth;
+  try {
+    const { payload } = await jwtVerify(token, getJWKS(), {
+      issuer: `${ISSUER_PREFIX}${projectId}`,
+      audience: projectId,
+    });
+
+    const sub = payload.sub;
+    if (!sub) return null;
+
+    return {
+      uid: sub,
+      email: payload.email as string | undefined,
+      email_verified: payload.email_verified as boolean | undefined,
+      name: payload.name as string | undefined,
+      ...payload,
+    };
+  } catch {
+    return null;
+  }
 }

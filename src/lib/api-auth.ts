@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAdminAuth } from './firebase-admin';
-import type { DecodedIdToken } from 'firebase-admin/auth';
+import { verifyFirebaseToken, FirebaseTokenPayload } from './firebase-admin';
 
 /**
  * Verify the request has a valid authorization header.
@@ -20,21 +19,14 @@ export function isAuthorized(request: NextRequest): boolean {
  * Verify the request using a Firebase ID token.
  * Returns the decoded token if valid, null otherwise.
  */
-export async function verifyFirebaseAuth(request: NextRequest): Promise<DecodedIdToken | null> {
+export async function verifyFirebaseAuth(request: NextRequest): Promise<FirebaseTokenPayload | null> {
   const authHeader = request.headers.get('authorization');
   if (!authHeader?.startsWith('Bearer ')) return null;
 
   const token = authHeader.slice(7);
   if (!token) return null;
 
-  const adminAuth = getAdminAuth();
-  if (!adminAuth) return null;
-
-  try {
-    return await adminAuth.verifyIdToken(token);
-  } catch {
-    return null;
-  }
+  return verifyFirebaseToken(token);
 }
 
 export function unauthorizedResponse() {
