@@ -1,13 +1,13 @@
-import { createRemoteJWKSSet, jwtVerify } from 'jose';
+import { createRemoteJWKSet, jwtVerify } from 'jose';
 
 const GOOGLE_CERTS_URL = 'https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com';
 const ISSUER_PREFIX = 'https://securetoken.google.com/';
 
-let jwks: ReturnType<typeof createRemoteJWKSSet> | null = null;
+let jwks: ReturnType<typeof createRemoteJWKSet> | null = null;
 
 function getJWKS() {
   if (!jwks) {
-    jwks = createRemoteJWKSSet(new URL(GOOGLE_CERTS_URL));
+    jwks = createRemoteJWKSet(new URL(GOOGLE_CERTS_URL));
   }
   return jwks;
 }
