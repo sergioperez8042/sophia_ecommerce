@@ -5,7 +5,7 @@ export const productSchema = z.object({
   name: z.string().min(1, 'El nombre del producto es requerido'),
   description: z.string().min(1, 'La descripción es requerida'),
   usage: z.string().min(1, 'El modo de uso es requerido'),
-  price: z.number({ invalid_type_error: 'El precio debe ser un número' }).positive('El precio debe ser mayor a 0'),
+  price: z.number({ error: 'El precio debe ser un número' }).positive('El precio debe ser mayor a 0'),
   category_id: z.string().min(1, 'Selecciona una categoría'),
   image: z.string().min(1, 'La imagen del producto es requerida'),
   weight: z.number().min(0),
