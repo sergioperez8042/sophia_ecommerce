@@ -162,12 +162,12 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
 
                         {/* Tags */}
                         {product.tags && product.tags.length > 0 && (
-                            <div className="flex flex-wrap gap-1.5 mb-5">
+                            <div className="flex flex-wrap gap-2 mb-5">
                                 {product.tags.map((tag) => (
                                     <span
                                         key={tag}
-                                        className={`text-[11px] uppercase tracking-[0.05em] px-2.5 py-1 rounded-full ${
-                                            isDark ? 'bg-[#505A4A]/20 text-[#b8b0a2]' : 'bg-[#505A4A]/8 text-[#505A4A]'
+                                        className={`text-[12px] px-3 py-1.5 rounded-lg ${
+                                            isDark ? 'bg-[#2a2d26] text-[#a09889]' : 'bg-[#F5F1E8] text-[#666]'
                                         }`}
                                     >
                                         {tag}
