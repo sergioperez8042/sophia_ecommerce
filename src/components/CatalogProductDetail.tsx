@@ -176,22 +176,9 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                             </div>
                         )}
 
-                        {/* Precio + Peso */}
-                        <div className={`flex items-baseline gap-4 mb-6 pb-6 border-b ${isDark ? 'border-[#3a3d36]' : 'border-[#E8E4DD]'}`}>
-                            <span className={`text-3xl font-bold ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>
-                                {formatPrice(product.price)}
-                            </span>
-                            {product.weight != null && product.weight > 0 && (
-                                <span className={`text-sm flex items-center gap-1.5 ${isDark ? 'text-[#8a8273]' : 'text-[#999]'}`}>
-                                    <Package className="w-3.5 h-3.5" />
-                                    {product.weight} {product.weight_unit || 'g'}
-                                </span>
-                            )}
-                        </div>
-
                         {/* Modo de uso */}
                         {product.usage && (
-                            <div className={`pb-6 mb-6 border-b ${isDark ? 'border-[#3a3d36]' : 'border-[#E8E4DD]'}`}>
+                            <div className="mb-4">
                                 <span className={`text-[12px] uppercase tracking-[0.12em] block mb-2 ${isDark ? 'text-[#8a8273]' : 'text-[#999]'}`}>
                                     Modo de uso
                                 </span>
@@ -203,7 +190,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
 
                         {/* Ingredientes */}
                         {product.ingredients && product.ingredients.length > 0 && (
-                            <div className={`pb-6 mb-6 border-b ${isDark ? 'border-[#3a3d36]' : 'border-[#E8E4DD]'}`}>
+                            <div className="mb-5">
                                 <span className={`text-[12px] uppercase tracking-[0.12em] flex items-center gap-1.5 mb-3 ${isDark ? 'text-[#8a8273]' : 'text-[#999]'}`}>
                                     <HandHeart className="w-3.5 h-3.5" />
                                     Ingredientes
@@ -222,6 +209,19 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                 </div>
                             </div>
                         )}
+
+                        {/* Precio + Peso */}
+                        <div className={`flex items-baseline gap-4 mb-6`}>
+                            <span className={`text-3xl font-bold ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>
+                                {formatPrice(product.price)}
+                            </span>
+                            {product.weight != null && product.weight > 0 && (
+                                <span className={`text-sm flex items-center gap-1.5 ${isDark ? 'text-[#8a8273]' : 'text-[#999]'}`}>
+                                    <Package className="w-3.5 h-3.5" />
+                                    {product.weight} {product.weight_unit || 'g'}
+                                </span>
+                            )}
+                        </div>
 
                         {/* WhatsApp CTA */}
                         <m.button
