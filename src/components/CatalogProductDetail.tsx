@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { ArrowLeft, MessageCircle, Sun, Moon, Star, Package, HandHeart } from "lucide-react";
+import { ArrowLeft, MessageCircle, Sun, Moon, Star, Package } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import ProductImage from "@/components/ui/product-image";
@@ -191,8 +191,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                         {/* Ingredientes */}
                         {product.ingredients && product.ingredients.length > 0 && (
                             <div className="mb-5">
-                                <span className={`text-[12px] uppercase tracking-[0.12em] flex items-center gap-1.5 mb-3 ${isDark ? 'text-[#8a8273]' : 'text-[#999]'}`}>
-                                    <HandHeart className="w-3.5 h-3.5" />
+                                <span className={`text-[12px] uppercase tracking-[0.12em] block mb-3 ${isDark ? 'text-[#8a8273]' : 'text-[#999]'}`}>
                                     Ingredientes
                                 </span>
                                 <div className="flex flex-wrap gap-2">
