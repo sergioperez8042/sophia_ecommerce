@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { ArrowLeft, MessageCircle, Sun, Moon, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, MessageCircle, Sun, Moon, Star, Package, HandHeart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import ProductImage from "@/components/ui/product-image";
@@ -21,6 +21,11 @@ interface Product {
     reviews_count: number;
     featured: boolean;
     active: boolean;
+    tags: string[];
+    ingredients: string[];
+    usage?: string;
+    weight?: number;
+    weight_unit?: string;
 }
 
 interface CatalogProductDetailProps {
@@ -130,20 +135,98 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                             {product.name}
                         </h1>
 
-                        <p className={`text-sm sm:text-base leading-relaxed mb-6 ${isDark ? 'text-[#8a8278]' : 'text-gray-600'}`}>
+                        {/* Rating */}
+                        {product.rating > 0 && (
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="flex items-center gap-0.5">
+                                    {[...Array(5)].map((_, i) => (
+                                        <Star
+                                            key={`star-${i}`}
+                                            className={`h-4 w-4 ${
+                                                i < Math.floor(product.rating)
+                                                    ? 'text-[#C9A96E] fill-[#C9A96E]'
+                                                    : isDark ? 'text-gray-700 fill-gray-700' : 'text-gray-200 fill-gray-200'
+                                            }`}
+                                        />
+                                    ))}
+                                </div>
+                                <span className={`text-[13px] ${isDark ? 'text-[#8a8273]' : 'text-[#999]'}`}>
+                                    {product.rating} · {product.reviews_count} reseñas
+                                </span>
+                            </div>
+                        )}
+
+                        <p className={`text-sm sm:text-base leading-relaxed mb-5 ${isDark ? 'text-[#8a8278]' : 'text-gray-600'}`}>
                             {product.description}
                         </p>
 
-                        <div className="mb-8">
+                        {/* Tags */}
+                        {product.tags && product.tags.length > 0 && (
+                            <div className="flex flex-wrap gap-1.5 mb-5">
+                                {product.tags.map((tag) => (
+                                    <span
+                                        key={tag}
+                                        className={`text-[11px] uppercase tracking-[0.05em] px-2.5 py-1 rounded-full ${
+                                            isDark ? 'bg-[#505A4A]/20 text-[#b8b0a2]' : 'bg-[#505A4A]/8 text-[#505A4A]'
+                                        }`}
+                                    >
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Precio + Peso */}
+                        <div className={`flex items-baseline gap-4 mb-6 pb-6 border-b ${isDark ? 'border-[#3a3d36]' : 'border-[#E8E4DD]'}`}>
                             <span className={`text-3xl font-bold ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>
                                 {formatPrice(product.price)}
                             </span>
+                            {product.weight != null && product.weight > 0 && (
+                                <span className={`text-sm flex items-center gap-1.5 ${isDark ? 'text-[#8a8273]' : 'text-[#999]'}`}>
+                                    <Package className="w-3.5 h-3.5" />
+                                    {product.weight} {product.weight_unit || 'g'}
+                                </span>
+                            )}
                         </div>
+
+                        {/* Modo de uso */}
+                        {product.usage && (
+                            <div className={`pb-6 mb-6 border-b ${isDark ? 'border-[#3a3d36]' : 'border-[#E8E4DD]'}`}>
+                                <span className={`text-[12px] uppercase tracking-[0.12em] block mb-2 ${isDark ? 'text-[#8a8273]' : 'text-[#999]'}`}>
+                                    Modo de uso
+                                </span>
+                                <p className={`text-[14px] leading-relaxed ${isDark ? 'text-[#a09889]' : 'text-[#666]'}`}>
+                                    {product.usage}
+                                </p>
+                            </div>
+                        )}
+
+                        {/* Ingredientes */}
+                        {product.ingredients && product.ingredients.length > 0 && (
+                            <div className={`pb-6 mb-6 border-b ${isDark ? 'border-[#3a3d36]' : 'border-[#E8E4DD]'}`}>
+                                <span className={`text-[12px] uppercase tracking-[0.12em] flex items-center gap-1.5 mb-3 ${isDark ? 'text-[#8a8273]' : 'text-[#999]'}`}>
+                                    <HandHeart className="w-3.5 h-3.5" />
+                                    Ingredientes
+                                </span>
+                                <div className="flex flex-wrap gap-2">
+                                    {product.ingredients.map((ingredient) => (
+                                        <span
+                                            key={ingredient}
+                                            className={`text-[12px] px-3 py-1.5 rounded-lg ${
+                                                isDark ? 'bg-[#2a2d26] text-[#a09889]' : 'bg-[#F5F1E8] text-[#666]'
+                                            }`}
+                                        >
+                                            {ingredient}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
                         {/* WhatsApp CTA */}
                         <m.button
                             onClick={handleWhatsAppOrder}
-                            className="w-full bg-[#505A4A] text-white py-4 rounded-xl text-base font-medium flex items-center justify-center gap-3 hover:bg-[#414A3C] transition-colors shadow-md"
+                            className="w-full bg-[#505A4A] text-white py-4 rounded-xl text-base font-medium flex items-center justify-center gap-3 hover:bg-[#414A3C] transition-colors shadow-md mb-6"
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                         >
@@ -154,7 +237,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                         {/* Back link */}
                         <Link
                             href="/"
-                            className={`inline-flex items-center gap-2 mt-8 text-sm font-medium transition-colors ${isDark ? 'text-[#C4B590] hover:text-[#e8e4dc]' : 'text-[#505A4A] hover:text-gray-900'}`}
+                            className={`inline-flex items-center gap-2 text-sm font-medium transition-colors ${isDark ? 'text-[#C4B590] hover:text-[#e8e4dc]' : 'text-[#505A4A] hover:text-gray-900'}`}
                         >
                             <ArrowLeft className="w-4 h-4" />
                             Volver al catálogo

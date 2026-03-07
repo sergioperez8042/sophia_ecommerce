@@ -12,6 +12,11 @@ interface Product {
   reviews_count: number;
   featured: boolean;
   active: boolean;
+  tags: string[];
+  ingredients: string[];
+  usage?: string;
+  weight?: number;
+  weight_unit?: string;
 }
 
 interface Category {
