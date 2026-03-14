@@ -314,6 +314,11 @@ function VisualEditor({ content, onChange, getIdToken, bgColor, onBgColorChange 
   const [currentBgColor, setCurrentBgColor] = useState('transparent');
   const [emailBgColor, setEmailBgColor] = useState(bgColor || 'transparent');
 
+  // Sync emailBgColor when parent resets it (e.g. after send)
+  useEffect(() => {
+    setEmailBgColor(bgColor || 'transparent');
+  }, [bgColor]);
+
   // Update active states based on current selection
   const updateActiveStates = () => {
     try {
@@ -338,11 +343,16 @@ function VisualEditor({ content, onChange, getIdToken, bgColor, onBgColorChange 
     }
   };
 
-  // Listen for selection changes to update toolbar state
+  // Listen for selection changes to update toolbar state and auto-save selection
   useEffect(() => {
     const handler = () => {
       if (editorRef.current?.contains(document.activeElement) || editorRef.current === document.activeElement) {
         updateActiveStates();
+        // Auto-save selection so color pickers always have a valid range
+        const sel = window.getSelection();
+        if (sel && sel.rangeCount > 0 && editorRef.current?.contains(sel.anchorNode)) {
+          savedSelectionRef.current = sel.getRangeAt(0).cloneRange();
+        }
       }
     };
     document.addEventListener('selectionchange', handler);
@@ -385,7 +395,7 @@ function VisualEditor({ content, onChange, getIdToken, bgColor, onBgColorChange 
   const execCmd = (command: string, value?: string) => {
     document.execCommand(command, false, value);
     editorRef.current?.focus();
-    handleInput();
+    requestAnimationFrame(() => handleInput());
   };
 
   const insertHeading = (level: 1 | 2) => {
@@ -395,8 +405,8 @@ function VisualEditor({ content, onChange, getIdToken, bgColor, onBgColorChange 
   const insertLink = () => {
     saveSelection();
     const url = prompt('URL del enlace:');
+    restoreSelection();
     if (url) {
-      restoreSelection();
       execCmd('createLink', url);
     }
   };
@@ -896,6 +906,11 @@ export default function NewsletterAdminPage() {
     setIsSending(true);
     try {
       const token = await getIdToken();
+      if (!token) {
+        toast.error('Sesion expirada. Vuelve a iniciar sesion.');
+        setIsSending(false);
+        return;
+      }
       const finalContent = emailBgColor && emailBgColor !== 'transparent'
         ? `<div style="background-color: ${emailBgColor}; padding: 20px;">${content}</div>`
         : content;
