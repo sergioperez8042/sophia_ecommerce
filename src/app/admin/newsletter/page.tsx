@@ -26,9 +26,12 @@ import {
   X,
   Bold,
   Italic,
+  Underline,
+  Strikethrough,
   Heading1,
   Heading2,
   List,
+  ListOrdered,
   Link2,
   Image,
   Eye,
@@ -39,6 +42,16 @@ import {
   ChevronDown,
   Check,
   UserCheck,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  AlignJustify,
+  Minus,
+  Undo2,
+  Redo2,
+  RemoveFormatting,
+  Palette,
+  Highlighter,
 } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -255,13 +268,98 @@ function saveTemplates(templates: NewsletterTemplate[]) {
 }
 
 // ==================== VISUAL EDITOR ====================
+const FONT_SIZES = [
+  { label: '10', value: '1' },
+  { label: '12', value: '2' },
+  { label: '14', value: '3' },
+  { label: '18', value: '4' },
+  { label: '24', value: '5' },
+  { label: '32', value: '6' },
+  { label: '48', value: '7' },
+];
+
+const PRESET_COLORS = [
+  '#000000', '#333333', '#666666', '#999999', '#ffffff',
+  '#C4B590', '#1a1d19', '#2a2d25', '#d4cdc0', '#a09880',
+  '#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#3498db',
+  '#9b59b6', '#1abc9c', '#e91e63', '#795548', '#607d8b',
+];
+
 function VisualEditor({ content, onChange, getIdToken }: { content: string; onChange: (html: string) => void; getIdToken?: () => Promise<string | null> }) {
   const editorRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const isInternalChange = useRef(false);
   const [uploading, setUploading] = useState(false);
 
-  // Sync content → editor (only when content changes externally)
+  // Active state tracking
+  const [activeStates, setActiveStates] = useState({
+    bold: false,
+    italic: false,
+    underline: false,
+    strikeThrough: false,
+    insertUnorderedList: false,
+    insertOrderedList: false,
+    justifyLeft: false,
+    justifyCenter: false,
+    justifyRight: false,
+    justifyFull: false,
+  });
+  const [showTextColor, setShowTextColor] = useState(false);
+  const [showBgColor, setShowBgColor] = useState(false);
+  const [showFontSize, setShowFontSize] = useState(false);
+  const [currentTextColor, setCurrentTextColor] = useState('#000000');
+  const [currentBgColor, setCurrentBgColor] = useState('transparent');
+
+  // Update active states based on current selection
+  const updateActiveStates = () => {
+    try {
+      setActiveStates({
+        bold: document.queryCommandState('bold'),
+        italic: document.queryCommandState('italic'),
+        underline: document.queryCommandState('underline'),
+        strikeThrough: document.queryCommandState('strikeThrough'),
+        insertUnorderedList: document.queryCommandState('insertUnorderedList'),
+        insertOrderedList: document.queryCommandState('insertOrderedList'),
+        justifyLeft: document.queryCommandState('justifyLeft'),
+        justifyCenter: document.queryCommandState('justifyCenter'),
+        justifyRight: document.queryCommandState('justifyRight'),
+        justifyFull: document.queryCommandState('justifyFull'),
+      });
+      const fgColor = document.queryCommandValue('foreColor');
+      const bgColor = document.queryCommandValue('hiliteColor') || document.queryCommandValue('backColor');
+      if (fgColor) setCurrentTextColor(fgColor);
+      if (bgColor && bgColor !== 'rgba(0, 0, 0, 0)') setCurrentBgColor(bgColor);
+    } catch {
+      // queryCommandState can throw in some browsers
+    }
+  };
+
+  // Listen for selection changes to update toolbar state
+  useEffect(() => {
+    const handler = () => {
+      if (editorRef.current?.contains(document.activeElement) || editorRef.current === document.activeElement) {
+        updateActiveStates();
+      }
+    };
+    document.addEventListener('selectionchange', handler);
+    return () => document.removeEventListener('selectionchange', handler);
+  }, []);
+
+  // Close color pickers on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest('[data-color-picker]')) {
+        setShowTextColor(false);
+        setShowBgColor(false);
+        setShowFontSize(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  // Sync content -> editor (only when content changes externally)
   useEffect(() => {
     if (editorRef.current && !isInternalChange.current) {
       if (editorRef.current.innerHTML !== content) {
@@ -276,6 +374,7 @@ function VisualEditor({ content, onChange, getIdToken }: { content: string; onCh
       isInternalChange.current = true;
       onChange(editorRef.current.innerHTML);
     }
+    updateActiveStates();
   };
 
   const execCmd = (command: string, value?: string) => {
@@ -305,9 +404,8 @@ function VisualEditor({ content, onChange, getIdToken }: { content: string; onCh
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file type and size
     if (!file.type.startsWith('image/')) {
-      alert('Solo se permiten imágenes');
+      alert('Solo se permiten imagenes');
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
@@ -337,38 +435,201 @@ function VisualEditor({ content, onChange, getIdToken }: { content: string; onCh
       alert('Error al subir la imagen');
     } finally {
       setUploading(false);
-      // Reset input so same file can be re-selected
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 
-  const toolbarBtnClass = "p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 transition-colors";
+  const btnBase = "p-1.5 rounded transition-colors";
+  const btnInactive = "hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400";
+  const btnActive = "bg-[#505A4A] text-white dark:bg-[#C4B590] dark:text-gray-900";
+  const toolbarBtn = (active: boolean) => `${btnBase} ${active ? btnActive : btnInactive}`;
+  const divider = <div className="w-px h-5 bg-gray-200 dark:bg-gray-700 mx-1" />;
 
   return (
     <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden focus-within:border-[#505A4A]">
-      {/* Toolbar */}
+      {/* Toolbar Row 1: Text formatting */}
       <div className="flex items-center gap-0.5 px-2 py-1.5 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex-wrap">
-        <button type="button" onClick={() => insertHeading(1)} className={toolbarBtnClass} title="Título">
+        {/* Undo / Redo */}
+        <button type="button" onClick={() => execCmd('undo')} className={`${btnBase} ${btnInactive}`} title="Deshacer">
+          <Undo2 className="w-4 h-4" />
+        </button>
+        <button type="button" onClick={() => execCmd('redo')} className={`${btnBase} ${btnInactive}`} title="Rehacer">
+          <Redo2 className="w-4 h-4" />
+        </button>
+        {divider}
+
+        {/* Headings */}
+        <button type="button" onClick={() => insertHeading(1)} className={`${btnBase} ${btnInactive}`} title="Titulo">
           <Heading1 className="w-4 h-4" />
         </button>
-        <button type="button" onClick={() => insertHeading(2)} className={toolbarBtnClass} title="Subtítulo">
+        <button type="button" onClick={() => insertHeading(2)} className={`${btnBase} ${btnInactive}`} title="Subtitulo">
           <Heading2 className="w-4 h-4" />
         </button>
-        <div className="w-px h-5 bg-gray-200 dark:bg-gray-700 mx-1" />
-        <button type="button" onClick={() => execCmd('bold')} className={toolbarBtnClass} title="Negrita">
+        <button type="button" onClick={() => execCmd('formatBlock', 'p')} className={`${btnBase} ${btnInactive}`} title="Parrafo">
+          <Type className="w-4 h-4" />
+        </button>
+        {divider}
+
+        {/* Text style */}
+        <button type="button" onClick={() => execCmd('bold')} className={toolbarBtn(activeStates.bold)} title="Negrita">
           <Bold className="w-4 h-4" />
         </button>
-        <button type="button" onClick={() => execCmd('italic')} className={toolbarBtnClass} title="Cursiva">
+        <button type="button" onClick={() => execCmd('italic')} className={toolbarBtn(activeStates.italic)} title="Cursiva">
           <Italic className="w-4 h-4" />
         </button>
-        <div className="w-px h-5 bg-gray-200 dark:bg-gray-700 mx-1" />
-        <button type="button" onClick={() => execCmd('insertUnorderedList')} className={toolbarBtnClass} title="Lista">
+        <button type="button" onClick={() => execCmd('underline')} className={toolbarBtn(activeStates.underline)} title="Subrayado">
+          <Underline className="w-4 h-4" />
+        </button>
+        <button type="button" onClick={() => execCmd('strikeThrough')} className={toolbarBtn(activeStates.strikeThrough)} title="Tachado">
+          <Strikethrough className="w-4 h-4" />
+        </button>
+        {divider}
+
+        {/* Font size */}
+        <div className="relative" data-color-picker>
+          <button
+            type="button"
+            onClick={() => { setShowFontSize(!showFontSize); setShowTextColor(false); setShowBgColor(false); }}
+            className={`${btnBase} ${btnInactive} flex items-center gap-0.5 text-xs font-medium min-w-[40px] justify-center`}
+            title="Tamano de fuente"
+          >
+            <span>Aa</span>
+            <ChevronDown className="w-3 h-3" />
+          </button>
+          {showFontSize && (
+            <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 py-1 min-w-[80px]">
+              {FONT_SIZES.map((fs) => (
+                <button
+                  key={fs.value}
+                  type="button"
+                  onClick={() => { execCmd('fontSize', fs.value); setShowFontSize(false); }}
+                  className="w-full text-left px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  {fs.label}px
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        {divider}
+
+        {/* Text color */}
+        <div className="relative" data-color-picker>
+          <button
+            type="button"
+            onClick={() => { setShowTextColor(!showTextColor); setShowBgColor(false); setShowFontSize(false); }}
+            className={`${btnBase} ${btnInactive} flex flex-col items-center`}
+            title="Color de texto"
+          >
+            <Palette className="w-4 h-4" />
+            <div className="w-4 h-0.5 rounded-full mt-0.5" style={{ backgroundColor: currentTextColor }} />
+          </button>
+          {showTextColor && (
+            <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 p-2 w-[180px]" data-color-picker>
+              <div className="grid grid-cols-5 gap-1 mb-2">
+                {PRESET_COLORS.map((color) => (
+                  <button
+                    key={color}
+                    type="button"
+                    onClick={() => { execCmd('foreColor', color); setCurrentTextColor(color); setShowTextColor(false); }}
+                    className="w-7 h-7 rounded border border-gray-300 dark:border-gray-600 hover:scale-110 transition-transform"
+                    style={{ backgroundColor: color }}
+                    title={color}
+                  />
+                ))}
+              </div>
+              <label className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                <span>Otro:</span>
+                <input
+                  type="color"
+                  value={currentTextColor}
+                  onChange={(e) => { execCmd('foreColor', e.target.value); setCurrentTextColor(e.target.value); }}
+                  className="w-6 h-6 rounded cursor-pointer border-0 p-0"
+                />
+              </label>
+            </div>
+          )}
+        </div>
+
+        {/* Background color */}
+        <div className="relative" data-color-picker>
+          <button
+            type="button"
+            onClick={() => { setShowBgColor(!showBgColor); setShowTextColor(false); setShowFontSize(false); }}
+            className={`${btnBase} ${btnInactive} flex flex-col items-center`}
+            title="Color de fondo"
+          >
+            <Highlighter className="w-4 h-4" />
+            <div className="w-4 h-0.5 rounded-full mt-0.5" style={{ backgroundColor: currentBgColor === 'transparent' ? '#f1c40f' : currentBgColor }} />
+          </button>
+          {showBgColor && (
+            <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 p-2 w-[180px]" data-color-picker>
+              <div className="grid grid-cols-5 gap-1 mb-2">
+                {PRESET_COLORS.map((color) => (
+                  <button
+                    key={color}
+                    type="button"
+                    onClick={() => { execCmd('hiliteColor', color); setCurrentBgColor(color); setShowBgColor(false); }}
+                    className="w-7 h-7 rounded border border-gray-300 dark:border-gray-600 hover:scale-110 transition-transform"
+                    style={{ backgroundColor: color }}
+                    title={color}
+                  />
+                ))}
+              </div>
+              <div className="flex items-center justify-between">
+                <label className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                  <span>Otro:</span>
+                  <input
+                    type="color"
+                    value={currentBgColor === 'transparent' ? '#ffffff' : currentBgColor}
+                    onChange={(e) => { execCmd('hiliteColor', e.target.value); setCurrentBgColor(e.target.value); }}
+                    className="w-6 h-6 rounded cursor-pointer border-0 p-0"
+                  />
+                </label>
+                <button
+                  type="button"
+                  onClick={() => { execCmd('hiliteColor', 'transparent'); setCurrentBgColor('transparent'); setShowBgColor(false); }}
+                  className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                >
+                  Quitar
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Toolbar Row 2: Structure & media */}
+      <div className="flex items-center gap-0.5 px-2 py-1.5 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex-wrap">
+        {/* Alignment */}
+        <button type="button" onClick={() => execCmd('justifyLeft')} className={toolbarBtn(activeStates.justifyLeft)} title="Alinear izquierda">
+          <AlignLeft className="w-4 h-4" />
+        </button>
+        <button type="button" onClick={() => execCmd('justifyCenter')} className={toolbarBtn(activeStates.justifyCenter)} title="Centrar">
+          <AlignCenter className="w-4 h-4" />
+        </button>
+        <button type="button" onClick={() => execCmd('justifyRight')} className={toolbarBtn(activeStates.justifyRight)} title="Alinear derecha">
+          <AlignRight className="w-4 h-4" />
+        </button>
+        <button type="button" onClick={() => execCmd('justifyFull')} className={toolbarBtn(activeStates.justifyFull)} title="Justificar">
+          <AlignJustify className="w-4 h-4" />
+        </button>
+        {divider}
+
+        {/* Lists */}
+        <button type="button" onClick={() => execCmd('insertUnorderedList')} className={toolbarBtn(activeStates.insertUnorderedList)} title="Lista">
           <List className="w-4 h-4" />
         </button>
-        <button type="button" onClick={insertLink} className={toolbarBtnClass} title="Enlace">
+        <button type="button" onClick={() => execCmd('insertOrderedList')} className={toolbarBtn(activeStates.insertOrderedList)} title="Lista numerada">
+          <ListOrdered className="w-4 h-4" />
+        </button>
+        {divider}
+
+        {/* Media & links */}
+        <button type="button" onClick={insertLink} className={`${btnBase} ${btnInactive}`} title="Enlace">
           <Link2 className="w-4 h-4" />
         </button>
-        <button type="button" onClick={insertImage} className={toolbarBtnClass} title="Imagen" disabled={uploading}>
+        <button type="button" onClick={insertImage} className={`${btnBase} ${btnInactive}`} title="Imagen" disabled={uploading}>
           {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Image className="w-4 h-4" />}
         </button>
         <input
@@ -378,9 +639,14 @@ function VisualEditor({ content, onChange, getIdToken }: { content: string; onCh
           onChange={handleImageUpload}
           className="hidden"
         />
-        <div className="w-px h-5 bg-gray-200 dark:bg-gray-700 mx-1" />
-        <button type="button" onClick={() => execCmd('formatBlock', 'p')} className={toolbarBtnClass} title="Párrafo">
-          <Type className="w-4 h-4" />
+        <button type="button" onClick={() => execCmd('insertHorizontalRule')} className={`${btnBase} ${btnInactive}`} title="Linea horizontal">
+          <Minus className="w-4 h-4" />
+        </button>
+        {divider}
+
+        {/* Clear formatting */}
+        <button type="button" onClick={() => execCmd('removeFormat')} className={`${btnBase} ${btnInactive}`} title="Limpiar formato">
+          <RemoveFormatting className="w-4 h-4" />
         </button>
       </div>
 
@@ -389,7 +655,9 @@ function VisualEditor({ content, onChange, getIdToken }: { content: string; onCh
         ref={editorRef}
         contentEditable
         onInput={handleInput}
-        className="min-h-[280px] px-4 py-3 text-sm text-gray-800 dark:text-gray-100 dark:bg-gray-900 focus:outline-none prose prose-sm dark:prose-invert max-w-none [&:empty]:before:content-['Escribe_tu_newsletter_aquí...'] [&:empty]:before:text-gray-400 [&:empty]:before:dark:text-gray-500"
+        onKeyUp={updateActiveStates}
+        onMouseUp={updateActiveStates}
+        className="min-h-[280px] px-4 py-3 text-sm text-gray-800 dark:text-gray-100 dark:bg-gray-900 focus:outline-none prose prose-sm dark:prose-invert max-w-none [&:empty]:before:content-['Escribe_tu_newsletter_aqui...'] [&:empty]:before:text-gray-400 [&:empty]:before:dark:text-gray-500"
         suppressContentEditableWarning
       />
     </div>
