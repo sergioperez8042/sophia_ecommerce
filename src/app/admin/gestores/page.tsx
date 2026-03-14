@@ -182,6 +182,27 @@ export default function GestoresAdminPage() {
   const handleSave = async () => {
     if (!name || !whatsapp || !province || selectedMunicipalities.length === 0) return;
     const editingGestor = editingId ? gestores.find(g => g.id === editingId) : null;
+
+    // Check for duplicates (exclude current gestor when editing)
+    const duplicateName = gestores.find(g => g.name.trim().toLowerCase() === name.trim().toLowerCase() && g.id !== editingId);
+    if (duplicateName) {
+      setError(`Ya existe un gestor con el nombre "${duplicateName.name}".`);
+      return;
+    }
+    const cleanWhatsapp = whatsapp.replace(/[^0-9]/g, '');
+    const duplicatePhone = gestores.find(g => g.whatsapp === cleanWhatsapp && g.id !== editingId);
+    if (duplicatePhone) {
+      setError(`Ya existe un gestor con ese número de WhatsApp (${duplicatePhone.name}).`);
+      return;
+    }
+    if (gestorEmail) {
+      const duplicateEmail = gestores.find(g => g.email?.toLowerCase() === gestorEmail.trim().toLowerCase() && g.id !== editingId);
+      if (duplicateEmail) {
+        setError(`Ya existe un gestor con ese email (${duplicateEmail.name}).`);
+        return;
+      }
+    }
+
     const needsAccount = createAccount && !editingGestor?.userId;
     if (needsAccount && (!gestorEmail || !gestorPassword)) {
       setError('Email y contraseña son requeridos para crear la cuenta del gestor.');
