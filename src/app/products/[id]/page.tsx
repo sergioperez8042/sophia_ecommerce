@@ -61,7 +61,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     if (isLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-[#FEFCF7] dark:bg-[#1a1d19]">
-                <Loader2 className="h-8 w-8 animate-spin text-[#505A4A]/40" />
+                <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#505A4A] border-t-transparent" />
             </div>
         );
     }

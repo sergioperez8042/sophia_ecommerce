@@ -35,7 +35,7 @@ export default function WishlistPage() {
     if (!isLoaded || productsLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <Loader2 className="w-12 h-12 animate-spin text-[#505A4A]" />
+                <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#505A4A] border-t-transparent" />
             </div>
         );
     }

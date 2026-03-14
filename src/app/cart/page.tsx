@@ -207,7 +207,7 @@ export default function CartPage() {
     if (!isLoaded) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-[#FEFCF7]">
-                <div className="animate-spin rounded-full h-6 w-6 border border-[#505A4A] border-t-transparent" />
+                <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#505A4A] border-t-transparent" />
             </div>
         );
     }

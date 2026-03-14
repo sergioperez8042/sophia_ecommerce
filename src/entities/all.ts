@@ -64,5 +64,45 @@ export interface IGestor {
   permissions?: GestorPermission[]; // permisos del gestor
 }
 
+// ==================== PEDIDOS ====================
+
+export const ORDER_STATUSES = {
+  pending: 'Pendiente',
+  confirmed: 'Confirmado',
+  in_transit: 'En camino',
+  delivered: 'Entregado',
+  cancelled: 'Cancelado',
+} as const;
+
+export type OrderStatus = keyof typeof ORDER_STATUSES;
+
+export interface IOrderItem {
+  productId: string;
+  name: string;
+  price: number;
+  quantity: number;
+  image: string;
+}
+
+export interface IOrder {
+  id: string;
+  orderNumber: string; // e.g. "SPH-20260314-001"
+  items: IOrderItem[];
+  subtotal: number;
+  status: OrderStatus;
+  // Customer location
+  province: string;
+  municipality: string;
+  customerName?: string;
+  customerPhone?: string;
+  notes?: string;
+  // Gestor assignment
+  gestorId?: string;
+  gestorName?: string;
+  // Timestamps
+  createdAt: string;
+  updatedAt?: string;
+}
+
 // Exportar tipos para compatibilidad
 export type { IProduct as ProductType, ICategory as CategoryType };

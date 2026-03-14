@@ -6,9 +6,10 @@ import { m, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/store/CartContext';
 import { useLocation } from '@/store/LocationContext';
 import { useTheme } from '@/store/ThemeContext';
-import { GestorService } from '@/lib/firestore-services';
-import { IGestor } from '@/entities/all';
+import { GestorService, OrderService } from '@/lib/firestore-services';
+import { IGestor, IOrderItem } from '@/entities/all';
 import ProductImage from '@/components/ui/product-image';
+import { toast } from 'sonner';
 
 const WHATSAPP_GENERAL = "34642633982";
 
@@ -25,6 +26,10 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const [gestorLoading, setGestorLoading] = useState(false);
   const [noGestorMessage, setNoGestorMessage] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [customerName, setCustomerName] = useState('');
+  const [customerPhone, setCustomerPhone] = useState('');
+  const [orderNotes, setOrderNotes] = useState('');
 
   // Find gestor when location changes
   useEffect(() => {
@@ -93,14 +98,27 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     doc.setLineWidth(0.3);
     doc.line(margin, y, pw - margin, y);
 
-    // -- Location --
+    // -- Customer & Location --
     y += 12;
-    if (location) {
-      doc.setFontSize(9);
-      doc.setTextColor(120, 120, 120);
-      doc.text(`Entrega: ${location.municipality}, ${location.province}`, margin, y);
-      y += 10;
+    doc.setFontSize(9);
+    doc.setTextColor(120, 120, 120);
+    if (customerName.trim()) {
+      doc.text(`Cliente: ${customerName.trim()}`, margin, y);
+      y += 6;
     }
+    if (customerPhone.trim()) {
+      doc.text(`Telefono: ${customerPhone.trim()}`, margin, y);
+      y += 6;
+    }
+    if (location) {
+      doc.text(`Entrega: ${location.municipality}, ${location.province}`, margin, y);
+      y += 6;
+    }
+    if (orderNotes.trim()) {
+      doc.text(`Notas: ${orderNotes.trim()}`, margin, y);
+      y += 6;
+    }
+    y += 4;
 
     // -- Items header --
     y += 2;
@@ -161,6 +179,36 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     doc.setFont('helvetica', 'bold');
     doc.text(formatPrice(subtotal), pw - margin, y, { align: 'right' });
 
+    // -- Gestor info section --
+    if (gestor) {
+      y += 20;
+      doc.setDrawColor(196, 181, 144);
+      doc.setLineWidth(0.3);
+      doc.line(margin, y, pw - margin, y);
+      y += 10;
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(160, 152, 137);
+      doc.text('TU GESTOR DE ZONA', margin, y);
+      y += 8;
+
+      doc.setFontSize(11);
+      doc.setTextColor(80, 90, 74);
+      doc.setFont('helvetica', 'bold');
+      doc.text(gestor.name, margin, y);
+      y += 7;
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(120, 120, 120);
+      doc.text(`WhatsApp: +${gestor.whatsapp}`, margin, y);
+      y += 6;
+      doc.text(`Zona: ${gestor.municipalities.join(', ')}`, margin, y);
+      y += 6;
+      doc.text(`Provincia: ${gestor.province}`, margin, y);
+    }
+
     // -- Footer --
     const footerY = doc.internal.pageSize.getHeight() - 15;
     doc.setDrawColor(230, 226, 219);
@@ -169,61 +217,96 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(7);
     doc.setTextColor(180, 175, 165);
-    doc.text('Sophia Cosmetica Botanica', pw / 2, footerY, { align: 'center' });
+    doc.text('Sophia Cosmetica Botanica  |  www.sophia-cosmetic.vercel.app', pw / 2, footerY, { align: 'center' });
 
     return doc.output('blob');
   };
 
+  // Download PDF and open the correct WhatsApp chat
+  const sendOrderPDF = async (pdfBlob: Blob, whatsappNumber: string) => {
+    const fileName = `Pedido_Sophia_${new Date().toISOString().slice(0, 10)}.pdf`;
+
+    // 1. Download the PDF to the device
+    const url = URL.createObjectURL(pdfBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+    // 2. Show toast with instruction
+    toast.success('PDF descargado. Adjuntalo en el chat de WhatsApp.', { duration: 5000 });
+
+    // 3. Open WhatsApp directly to the gestor's chat (no text, just the right contact)
+    setTimeout(() => {
+      window.location.href = `https://wa.me/${whatsappNumber}`;
+    }, 600);
+  };
+
+  // Save order to Firestore
+  const saveOrder = async (): Promise<void> => {
+    const orderItems: IOrderItem[] = items.map((item) => ({
+      productId: item.product.id,
+      name: item.product.name,
+      price: item.product.price,
+      quantity: item.quantity,
+      image: item.product.image,
+    }));
+
+    try {
+      const order = await OrderService.create({
+        items: orderItems,
+        subtotal,
+        province: location?.province || 'Sin provincia',
+        municipality: location?.municipality || 'Sin municipio',
+        gestorId: gestor?.id,
+        gestorName: gestor?.name,
+        customerName: customerName.trim(),
+        customerPhone: customerPhone.trim(),
+        notes: orderNotes.trim(),
+      });
+      console.log('Order saved:', order.orderNumber);
+    } catch (err) {
+      console.error('Error saving order:', err);
+      toast.error('No se pudo guardar el pedido en el sistema');
+    }
+  };
+
   const handleWhatsAppOrder = async () => {
+    if (!showCheckout) {
+      setShowCheckout(true);
+      return;
+    }
+
+    if (!customerName.trim()) {
+      toast.error('Escribe tu nombre para continuar');
+      return;
+    }
+
     setIsSending(true);
     try {
-      // Generate the PDF
+      // Save order to database
+      await saveOrder();
+
       const pdfBlob = await generateOrderPDF();
-
-      // Build the WhatsApp message
-      let msg = 'Hola! Te envio mi pedido:\n\n';
-      items.forEach((item) => {
-        msg += `- ${item.product.name} x${item.quantity} ($${(item.product.price * item.quantity).toFixed(2)})\n`;
-      });
-      msg += `\nTotal: ${formatPrice(subtotal)}`;
-      if (location) {
-        msg += `\nUbicacion: ${location.municipality}, ${location.province}`;
-      }
-      msg += '\n\nPDF del pedido adjunto abajo.';
-
       const whatsappNumber = gestor ? gestor.whatsapp : WHATSAPP_GENERAL;
 
       if (gestor) {
-        // Download PDF and open WhatsApp
-        const url = URL.createObjectURL(pdfBlob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `Pedido_Sophia_${new Date().toISOString().slice(0, 10)}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-
-        // Open WhatsApp with the gestor
-        window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+        await sendOrderPDF(pdfBlob, whatsappNumber);
         clearCart();
+        setShowCheckout(false);
+        setCustomerName('');
+        setCustomerPhone('');
+        setOrderNotes('');
         onClose();
       } else if (location?.municipality) {
-        // No gestor for this municipality
         setNoGestorMessage(true);
       } else {
-        // No location, use general
-        const url = URL.createObjectURL(pdfBlob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `Pedido_Sophia_${new Date().toISOString().slice(0, 10)}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-
-        window.open(`https://wa.me/${WHATSAPP_GENERAL}?text=${encodeURIComponent(msg)}`, '_blank');
+        await sendOrderPDF(pdfBlob, WHATSAPP_GENERAL);
         clearCart();
+        setShowCheckout(false);
         onClose();
       }
     } catch (err) {
@@ -236,29 +319,15 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const handleFallbackWhatsApp = async () => {
     setIsSending(true);
     try {
+      await saveOrder();
       const pdfBlob = await generateOrderPDF();
-      const url = URL.createObjectURL(pdfBlob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `Pedido_Sophia_${new Date().toISOString().slice(0, 10)}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
-      let msg = 'Hola! Te envio mi pedido:\n\n';
-      items.forEach((item) => {
-        msg += `- ${item.product.name} x${item.quantity} ($${(item.product.price * item.quantity).toFixed(2)})\n`;
-      });
-      msg += `\nTotal: ${formatPrice(subtotal)}`;
-      if (location) {
-        msg += `\nUbicacion: ${location.municipality}, ${location.province}`;
-      }
-
-      window.open(`https://wa.me/${WHATSAPP_GENERAL}?text=${encodeURIComponent(msg)}`, '_blank');
+      await sendOrderPDF(pdfBlob, WHATSAPP_GENERAL);
       setNoGestorMessage(false);
       clearCart();
+      setShowCheckout(false);
       onClose();
+    } catch (err) {
+      console.error('Error:', err);
     } finally {
       setIsSending(false);
     }
@@ -291,9 +360,10 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
           {/* Drawer */}
           <m.div
-            className={`fixed top-0 right-0 h-full w-full max-w-md z-50 flex flex-col shadow-2xl ${
+            className={`fixed inset-y-0 right-0 w-full max-w-md z-50 flex flex-col shadow-2xl ${
               isDark ? 'bg-[#1a1d19]' : 'bg-[#FEFCF7]'
             }`}
+            style={{ height: '100dvh' }}
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
@@ -456,7 +526,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
             {/* Footer */}
             {items.length > 0 && (
-              <div className={`px-5 py-4 border-t ${
+              <div className={`px-5 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] border-t ${
                 isDark ? 'border-[#C4B590]/15' : 'border-[#505A4A]/10'
               }`}>
                 {/* Location info */}
@@ -477,7 +547,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 )}
 
                 {/* Total */}
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-3">
                   <span className={`text-sm font-medium ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>
                     Total
                   </span>
@@ -485,6 +555,50 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     {formatPrice(subtotal)}
                   </span>
                 </div>
+
+                {/* Checkout form - appears when user clicks the button */}
+                {showCheckout && (
+                  <div className={`mb-3 space-y-2 p-3 rounded-xl border ${
+                    isDark ? 'bg-[#22261f] border-[#C4B590]/15' : 'bg-[#F5F1E8]/50 border-[#505A4A]/10'
+                  }`}>
+                    <p className={`text-xs font-medium mb-2 ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>
+                      Datos para tu pedido
+                    </p>
+                    <input
+                      type="text"
+                      value={customerName}
+                      onChange={(e) => setCustomerName(e.target.value)}
+                      placeholder="Tu nombre *"
+                      className={`w-full px-3 py-2 rounded-lg text-sm border ${
+                        isDark
+                          ? 'bg-[#1a1d19] border-[#C4B590]/15 text-[#e8e4dc] placeholder-[#7a7568]'
+                          : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
+                      }`}
+                    />
+                    <input
+                      type="tel"
+                      value={customerPhone}
+                      onChange={(e) => setCustomerPhone(e.target.value)}
+                      placeholder="Tu telefono (opcional)"
+                      className={`w-full px-3 py-2 rounded-lg text-sm border ${
+                        isDark
+                          ? 'bg-[#1a1d19] border-[#C4B590]/15 text-[#e8e4dc] placeholder-[#7a7568]'
+                          : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
+                      }`}
+                    />
+                    <input
+                      type="text"
+                      value={orderNotes}
+                      onChange={(e) => setOrderNotes(e.target.value)}
+                      placeholder="Notas (opcional)"
+                      className={`w-full px-3 py-2 rounded-lg text-sm border ${
+                        isDark
+                          ? 'bg-[#1a1d19] border-[#C4B590]/15 text-[#e8e4dc] placeholder-[#7a7568]'
+                          : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
+                      }`}
+                    />
+                  </div>
+                )}
 
                 {/* WhatsApp order button with PDF */}
                 <button
@@ -500,12 +614,23 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                       <MessageCircle className="w-4 h-4" />
                     </>
                   )}
-                  {isSending ? 'Generando pedido...' : 'Enviar pedido por WhatsApp'}
+                  {isSending ? 'Enviando pedido...' : showCheckout ? 'Confirmar y enviar por WhatsApp' : 'Realizar pedido'}
                 </button>
 
-                <p className={`text-[10px] text-center mt-2 ${isDark ? 'text-[#7a7568]' : 'text-[#999]'}`}>
-                  Se descargara un PDF con tu pedido
-                </p>
+                {showCheckout && (
+                  <button
+                    onClick={() => setShowCheckout(false)}
+                    className={`w-full text-center text-xs mt-2 py-1 ${isDark ? 'text-[#7a7568]' : 'text-[#999]'}`}
+                  >
+                    Volver al carrito
+                  </button>
+                )}
+
+                {!showCheckout && (
+                  <p className={`text-[10px] text-center mt-2 ${isDark ? 'text-[#7a7568]' : 'text-[#999]'}`}>
+                    Se generara un PDF y se enviara al gestor de tu zona
+                  </p>
+                )}
               </div>
             )}
           </m.div>

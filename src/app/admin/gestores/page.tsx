@@ -297,13 +297,23 @@ export default function GestoresAdminPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Eliminar este gestor?')) return;
+  const handleDelete = async (gestorToDelete: IGestor) => {
+    if (!confirm(`Eliminar el gestor "${gestorToDelete.name}"? Esto tambien eliminara su cuenta de acceso.`)) return;
     try {
-      await GestorService.delete(id);
+      // If gestor has an Auth account, delete it too
+      if (gestorToDelete.userId) {
+        const token = await getIdToken();
+        if (token) {
+          await GestorAccountService.deleteAccount(gestorToDelete.id, gestorToDelete.userId, token);
+        }
+      }
+      // Delete the gestor doc
+      await GestorService.delete(gestorToDelete.id);
+      toast.success(`Gestor "${gestorToDelete.name}" eliminado`);
       await loadGestores();
-    } catch {
-      // Error
+    } catch (err) {
+      console.error('Error deleting gestor:', err);
+      toast.error('Error al eliminar el gestor');
     }
   };
 
@@ -341,7 +351,7 @@ export default function GestoresAdminPage() {
   if (!isLoaded || !isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-6 h-6 animate-spin text-[#505A4A]" />
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#505A4A] border-t-transparent" />
       </div>
     );
   }
@@ -514,10 +524,24 @@ export default function GestoresAdminPage() {
                 const editingGestor = editingId ? gestores.find(g => g.id === editingId) : null;
                 const hasAccount = editingGestor?.userId;
                 if (hasAccount) return (
-                  <div className="sm:col-span-2">
+                  <div className="sm:col-span-2 space-y-2">
                     <div className="flex items-center gap-2 text-xs text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-3 py-2 rounded-lg">
                       <Check className="w-4 h-4" />
                       <span>Este gestor ya tiene cuenta: <strong className="font-mono">{editingGestor.email}</strong></span>
+                    </div>
+                    {/* Gestor portal URL */}
+                    <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2">
+                      <ArrowLeft className="w-4 h-4 text-gray-400 rotate-180 flex-shrink-0" />
+                      <span className="text-[11px] text-gray-600 dark:text-gray-300 flex-1 font-mono truncate">
+                        {typeof window !== 'undefined' ? `${window.location.origin}/auth` : 'sophia-cosmetic.vercel.app/auth'}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleCopy(typeof window !== 'undefined' ? `${window.location.origin}/auth` : 'https://sophia-cosmetic.vercel.app/auth', 'gestor-url')}
+                        className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded flex-shrink-0"
+                      >
+                        {copiedField === 'gestor-url' ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5 text-gray-400" />}
+                      </button>
                     </div>
                   </div>
                 );
@@ -821,7 +845,7 @@ export default function GestoresAdminPage() {
                           {gestor.active ? 'Desactivar' : 'Activar'}
                         </button>
                         <button
-                          onClick={() => handleDelete(gestor.id)}
+                          onClick={() => handleDelete(gestor)}
                           className="p-1.5 rounded-lg text-gray-300 dark:text-gray-600 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
                         >
                           <Trash2 className="w-4 h-4" />

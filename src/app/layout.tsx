@@ -37,6 +37,7 @@ export default function RootLayout({
   const isPublicCatalog = pathname === '/' || pathname?.startsWith('/catalogo');
   const isAuthPage = pathname === '/auth';
   const isLegalPage = pathname === '/terms' || pathname === '/privacy';
+  const isGestorPage = pathname === '/gestor' || pathname?.startsWith('/gestor/');
 
   // Si es la página principal o catálogo, renderizar sin header (vista cliente)
   if (isPublicCatalog) {
@@ -116,8 +117,8 @@ export default function RootLayout({
           <MotionConfig reducedMotion="user">
             <StoreProvider>
                 <Toaster position="top-right" richColors closeButton duration={4000} />
-                {!isAuthPage && !isLegalPage && <Header />}
-                <div className={`min-h-screen ${isAuthPage || isLegalPage ? '' : 'bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8] dark:from-[#1a1d19] dark:to-[#1a1d19]'}`}>
+                {!isAuthPage && !isLegalPage && !isGestorPage && <Header />}
+                <div className={`min-h-screen ${isAuthPage || isLegalPage || isGestorPage ? '' : 'bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8] dark:from-[#1a1d19] dark:to-[#1a1d19]'}`}>
                   {children}
                 </div>
             </StoreProvider>

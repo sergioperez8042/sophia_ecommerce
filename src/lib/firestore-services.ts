@@ -15,10 +15,10 @@ import {
   Timestamp,
   Firestore,
 } from 'firebase/firestore';
-import { createUserWithEmailAndPassword, updateProfile, Auth, getAuth } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, deleteUser, Auth, getAuth } from 'firebase/auth';
 import { initializeApp, getApps, deleteApp } from 'firebase/app';
 import { db, auth } from './firebase';
-import { IProduct, ICategory, IGestor } from '@/entities/all';
+import { IProduct, ICategory, IGestor, IOrder, IOrderItem, OrderStatus } from '@/entities/all';
 import { User, UserRole } from '@/store/AuthContext';
 
 // Collection names
@@ -28,6 +28,7 @@ const USERS_COLLECTION = 'users';
 const SUBSCRIBERS_COLLECTION = 'subscribers';
 const NEWSLETTERS_COLLECTION = 'newsletters';
 const GESTORES_COLLECTION = 'gestores';
+const ORDERS_COLLECTION = 'orders';
 
 // Helper to check if Firebase is available (client-side only)
 const isFirebaseAvailable = (): boolean => {
@@ -781,6 +782,130 @@ export const GestorService = {
   },
 };
 
+// ==================== ORDERS ====================
+
+export const OrderService = {
+  // Generate order number: SPH-YYYYMMDD-NNN
+  async generateOrderNumber(): Promise<string> {
+    const firestore = getDb();
+    const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+    const prefix = `SPH-${today}-`;
+
+    // Count today's orders to get next number
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    const q = query(
+      collection(firestore, ORDERS_COLLECTION),
+      where('createdAt', '>=', todayStart.toISOString()),
+      orderBy('createdAt', 'desc')
+    );
+    const snapshot = await getDocs(q);
+    const nextNum = String(snapshot.size + 1).padStart(3, '0');
+    return `${prefix}${nextNum}`;
+  },
+
+  async create(data: {
+    items: IOrderItem[];
+    subtotal: number;
+    province: string;
+    municipality: string;
+    gestorId?: string;
+    gestorName?: string;
+    customerName?: string;
+    customerPhone?: string;
+    notes?: string;
+  }): Promise<IOrder> {
+    const firestore = getDb();
+    const orderNumber = await this.generateOrderNumber();
+    const now = new Date().toISOString();
+
+    const orderData = {
+      orderNumber,
+      items: data.items,
+      subtotal: data.subtotal,
+      status: 'pending' as OrderStatus,
+      province: data.province,
+      municipality: data.municipality,
+      gestorId: data.gestorId || '',
+      gestorName: data.gestorName || '',
+      customerName: data.customerName || '',
+      customerPhone: data.customerPhone || '',
+      notes: data.notes || '',
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    const docRef = await addDoc(collection(firestore, ORDERS_COLLECTION), orderData);
+    return { id: docRef.id, ...orderData };
+  },
+
+  async getById(id: string): Promise<IOrder | null> {
+    const firestore = getDb();
+    const docRef = doc(firestore, ORDERS_COLLECTION, id);
+    const snapshot = await getDoc(docRef);
+    if (!snapshot.exists()) return null;
+    return { id: snapshot.id, ...snapshot.data() } as IOrder;
+  },
+
+  // Get orders for a specific gestor
+  async getByGestorId(gestorId: string): Promise<IOrder[]> {
+    const firestore = getDb();
+    // Simple where query — sort client-side to avoid needing composite index
+    const q = query(
+      collection(firestore, ORDERS_COLLECTION),
+      where('gestorId', '==', gestorId)
+    );
+    const snapshot = await getDocs(q);
+    const orders = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as IOrder);
+    return orders.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  },
+
+  // Get all orders (for admin)
+  async getAll(): Promise<IOrder[]> {
+    const firestore = getDb();
+    const q = query(
+      collection(firestore, ORDERS_COLLECTION),
+      orderBy('createdAt', 'desc')
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as IOrder);
+  },
+
+  // Update order status
+  async updateStatus(id: string, status: OrderStatus): Promise<void> {
+    const firestore = getDb();
+    await updateDoc(doc(firestore, ORDERS_COLLECTION, id), {
+      status,
+      updatedAt: new Date().toISOString(),
+    });
+  },
+
+  // Update order
+  async update(id: string, data: Partial<IOrder>): Promise<void> {
+    const firestore = getDb();
+    await updateDoc(doc(firestore, ORDERS_COLLECTION, id), {
+      ...data,
+      updatedAt: new Date().toISOString(),
+    });
+  },
+
+  // Delete order
+  async delete(id: string): Promise<void> {
+    const firestore = getDb();
+    await deleteDoc(doc(firestore, ORDERS_COLLECTION, id));
+  },
+
+  // Count orders by status for a gestor
+  async countByStatus(gestorId: string): Promise<Record<OrderStatus, number>> {
+    const orders = await this.getByGestorId(gestorId);
+    const counts: Record<OrderStatus, number> = {
+      pending: 0, confirmed: 0, in_transit: 0, delivered: 0, cancelled: 0,
+    };
+    orders.forEach((o) => { counts[o.status]++; });
+    return counts;
+  },
+};
+
 // ==================== GESTOR ACCOUNT (Create Auth user without logging out admin) ====================
 
 export const GestorAccountService = {
@@ -810,21 +935,35 @@ export const GestorAccountService = {
       secondaryApp = initializeApp(firebaseConfig, secondaryAppName);
       const secondaryAuth = getAuth(secondaryApp);
 
-      // Create the user in Firebase Auth via the secondary app
-      const userCredential = await createUserWithEmailAndPassword(
-        secondaryAuth,
-        data.email,
-        data.password
-      );
-      const uid = userCredential.user.uid;
+      let uid: string;
 
-      // Update display name
-      await updateProfile(userCredential.user, { displayName: data.name });
+      try {
+        // Try to create a new user
+        const userCredential = await createUserWithEmailAndPassword(
+          secondaryAuth,
+          data.email,
+          data.password
+        );
+        uid = userCredential.user.uid;
+        await updateProfile(userCredential.user, { displayName: data.name });
+        await secondaryAuth.signOut();
+      } catch (createErr) {
+        const err = createErr as { code?: string };
+        if (err.code === 'auth/email-already-in-use') {
+          // Email already exists — sign in to get the UID and relink
+          const existingCred = await signInWithEmailAndPassword(
+            secondaryAuth,
+            data.email,
+            data.password
+          );
+          uid = existingCred.user.uid;
+          await secondaryAuth.signOut();
+        } else {
+          throw createErr;
+        }
+      }
 
-      // Sign out from the secondary app immediately
-      await secondaryAuth.signOut();
-
-      // Create the users doc in Firestore with role: 'manager'
+      // Create/update the users doc in Firestore with role: 'manager'
       await setDoc(doc(firestore, USERS_COLLECTION, uid), {
         name: data.name.trim(),
         email: data.email.trim().toLowerCase(),
@@ -850,5 +989,40 @@ export const GestorAccountService = {
         }
       }
     }
+  },
+
+  /**
+   * Deletes a gestor's associated Firestore user doc and calls the server
+   * API to delete the Firebase Auth account (requires Admin SDK on server).
+   */
+  async deleteAccount(gestorId: string, userId: string, adminToken: string): Promise<void> {
+    const firestore = getDb();
+
+    // Delete the user doc from Firestore
+    try {
+      await deleteDoc(doc(firestore, USERS_COLLECTION, userId));
+    } catch {
+      // User doc may not exist
+    }
+
+    // Clear userId/email from the gestor doc
+    try {
+      await updateDoc(doc(firestore, GESTORES_COLLECTION, gestorId), {
+        userId: '',
+        email: '',
+      });
+    } catch {
+      // Gestor may already be deleted
+    }
+
+    // Call server API to delete Firebase Auth user
+    await fetch('/api/gestores/delete-auth', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${adminToken}`,
+      },
+      body: JSON.stringify({ userId }),
+    });
   },
 };

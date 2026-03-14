@@ -17,8 +17,8 @@ export default function GestorLayout({ children }: { children: React.ReactNode }
 
   if (!isLoaded) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50/50">
-        <Loader2 className="w-6 h-6 animate-spin text-[#505A4A]" />
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#505A4A] border-t-transparent" />
       </div>
     );
   }

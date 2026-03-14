@@ -7,6 +7,14 @@
         { "fieldPath": "active", "order": "ASCENDING" },
         { "fieldPath": "subscribedAt", "order": "DESCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "orders",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "gestorId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

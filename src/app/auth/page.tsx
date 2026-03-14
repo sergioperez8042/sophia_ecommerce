@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { m, AnimatePresence } from 'framer-motion';
-import { Eye, EyeOff, User, Mail, Phone, Lock, MapPin, Briefcase, ShoppingBag, ArrowLeft } from 'lucide-react';
+import { Eye, EyeOff, User, Mail, Phone, Lock, MapPin, Briefcase, ShoppingBag, ArrowLeft, LogOut, LayoutDashboard } from 'lucide-react';
 import { useAuth, RegisterData } from '@/store';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -19,7 +19,7 @@ type RegisterInput = z.input<typeof registerSchema>;
 
 export default function AuthPage() {
   const router = useRouter();
-  const { login, register, resetPassword, isAuthenticated, user } = useAuth();
+  const { login, register, resetPassword, logout, isAuthenticated, user } = useAuth();
 
   const [mode, setMode] = useState<AuthMode>('login');
   const [userType, setUserType] = useState<UserType | null>(null);
@@ -42,20 +42,65 @@ export default function AuthPage() {
     defaultValues: { email: '' },
   });
 
-  useEffect(() => {
-    if (isAuthenticated && user) {
-      if (user.role === 'admin') {
-        router.push('/admin');
-      } else if (user.role === 'manager') {
-        router.push('/gestor');
-      } else {
-        router.push('/');
-      }
-    }
-  }, [isAuthenticated, user, router]);
+  const getDashboardPath = () => {
+    if (!user) return '/';
+    if (user.role === 'admin') return '/admin';
+    if (user.role === 'manager') return '/gestor';
+    return '/';
+  };
 
-  if (isAuthenticated) {
-    return null;
+  const getRoleName = () => {
+    if (!user) return '';
+    if (user.role === 'admin') return 'Administrador';
+    if (user.role === 'manager') return 'Gestor';
+    return 'Cliente';
+  };
+
+  if (isAuthenticated && user) {
+    return (
+      <div className="min-h-screen bg-[#FEFCF7] flex flex-col items-center justify-center px-4 py-12">
+        <m.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="w-full max-w-sm"
+        >
+          <div className="flex justify-center mb-10">
+            <BrandLogo size="lg" showText linkTo="/" />
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-sm border border-[#e8e5df]/60 p-7 text-center">
+            <div className="w-14 h-14 bg-[#505A4A]/8 rounded-full flex items-center justify-center mx-auto mb-4">
+              <User className="w-7 h-7 text-[#505A4A]" />
+            </div>
+            <h2 className="text-lg font-semibold text-gray-800 mb-1">Ya tienes sesión activa</h2>
+            <p className="text-sm text-gray-500 mb-1">
+              Conectado como <span className="font-medium text-gray-700">{user.name}</span>
+            </p>
+            <p className="text-xs text-[#505A4A]/70 mb-6">
+              {getRoleName()} &middot; {user.email}
+            </p>
+
+            <div className="space-y-3">
+              <button
+                onClick={() => router.push(getDashboardPath())}
+                className="w-full h-12 bg-[#505A4A] hover:bg-[#434d3e] text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+              >
+                <LayoutDashboard className="w-[18px] h-[18px]" />
+                Ir al panel
+              </button>
+              <button
+                onClick={async () => { await logout(); }}
+                className="w-full h-12 border border-[#e8e5df] hover:border-[#505A4A]/40 text-gray-600 hover:text-gray-800 text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+              >
+                <LogOut className="w-[18px] h-[18px]" />
+                Cerrar sesión
+              </button>
+            </div>
+          </div>
+        </m.div>
+      </div>
+    );
   }
 
   const onLogin = async (data: LoginFormData) => {
