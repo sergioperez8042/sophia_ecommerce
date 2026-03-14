@@ -62,12 +62,191 @@ interface NewsletterTemplate {
 
 const TEMPLATES_KEY = 'sophia_newsletter_templates';
 
+const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
+  {
+    id: 'default-bienvenida',
+    name: 'Bienvenida',
+    subject: 'Bienvenida a Sophia Cosmetica Botanica',
+    content: `<div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #1a1d19; color: #e8e0d0; padding: 40px;">
+  <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #C4B590; padding-bottom: 20px;">
+    <h1 style="color: #C4B590; font-size: 28px; margin: 0;">Sophia</h1>
+    <p style="color: #C4B590; font-size: 13px; margin: 5px 0 0; letter-spacing: 2px;">COSMETICA BOTANICA</p>
+  </div>
+  <h2 style="color: #C4B590; font-size: 22px; text-align: center;">Bienvenida a nuestra comunidad</h2>
+  <p style="line-height: 1.8; color: #d4cdc0; font-size: 15px;">
+    Gracias por unirte a Sophia. Ahora formas parte de una comunidad que valora la belleza natural y el cuidado consciente de la piel.
+  </p>
+  <p style="line-height: 1.8; color: #d4cdc0; font-size: 15px;">
+    En cada newsletter recibiras:
+  </p>
+  <ul style="color: #d4cdc0; font-size: 15px; line-height: 2;">
+    <li>Tips de cuidado natural para tu piel</li>
+    <li>Novedades y lanzamientos exclusivos</li>
+    <li>Ofertas especiales solo para suscriptoras</li>
+  </ul>
+  <div style="background: #2a2d25; border: 1px solid #C4B590; border-radius: 12px; padding: 25px; text-align: center; margin: 30px 0;">
+    <p style="margin: 0 0 8px; color: #C4B590; font-size: 14px;">Tu codigo de descuento de bienvenida:</p>
+    <p style="margin: 0; font-size: 32px; font-weight: bold; color: #C4B590; letter-spacing: 4px;">BIENVENIDA10</p>
+    <p style="margin: 10px 0 0; color: #a09880; font-size: 13px;">10% de descuento en tu primer pedido</p>
+  </div>
+  <div style="text-align: center; margin-top: 30px;">
+    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C4B590; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Explorar productos</a>
+  </div>
+  <p style="color: #a09880; font-size: 12px; text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
+    Sophia Cosmetica Botanica
+  </p>
+</div>`,
+    createdAt: '2025-01-01T00:00:00.000Z',
+  },
+  {
+    id: 'default-novedades',
+    name: 'Novedades de temporada',
+    subject: 'Novedades de temporada - Sophia',
+    content: `<div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #1a1d19; color: #e8e0d0; padding: 40px;">
+  <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #C4B590; padding-bottom: 20px;">
+    <h1 style="color: #C4B590; font-size: 28px; margin: 0;">Sophia</h1>
+    <p style="color: #C4B590; font-size: 13px; margin: 5px 0 0; letter-spacing: 2px;">COSMETICA BOTANICA</p>
+  </div>
+  <h2 style="color: #C4B590; font-size: 22px; text-align: center;">Novedades de temporada</h2>
+  <p style="line-height: 1.8; color: #d4cdc0; font-size: 15px;">
+    Descubre los nuevos productos que hemos preparado para ti esta temporada. Formulaciones naturales inspiradas en la botanica para el cuidado de tu piel.
+  </p>
+  <div style="background: #2a2d25; border-radius: 12px; padding: 25px; margin: 25px 0;">
+    <h3 style="color: #C4B590; font-size: 18px; margin: 0 0 15px;">Producto destacado</h3>
+    <p style="color: #d4cdc0; font-size: 15px; line-height: 1.7; margin: 0;">
+      [Nombre del producto] - [Descripcion breve del producto y sus beneficios principales para la piel]
+    </p>
+    <p style="color: #C4B590; font-size: 18px; font-weight: bold; margin: 15px 0 0;">$XX.XX</p>
+  </div>
+  <div style="background: #2a2d25; border-radius: 12px; padding: 25px; margin: 25px 0;">
+    <h3 style="color: #C4B590; font-size: 18px; margin: 0 0 15px;">Tambien te puede interesar</h3>
+    <p style="color: #d4cdc0; font-size: 15px; line-height: 1.7; margin: 0;">
+      [Nombre del producto] - [Descripcion breve]
+    </p>
+    <p style="color: #C4B590; font-size: 18px; font-weight: bold; margin: 15px 0 0;">$XX.XX</p>
+  </div>
+  <div style="text-align: center; margin-top: 30px;">
+    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C4B590; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Ver todos los productos</a>
+  </div>
+  <p style="color: #a09880; font-size: 12px; text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
+    Sophia Cosmetica Botanica
+  </p>
+</div>`,
+    createdAt: '2025-01-01T00:00:01.000Z',
+  },
+  {
+    id: 'default-promocion',
+    name: 'Promocion especial',
+    subject: 'Oferta exclusiva para ti - Sophia',
+    content: `<div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #1a1d19; color: #e8e0d0; padding: 40px;">
+  <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #C4B590; padding-bottom: 20px;">
+    <h1 style="color: #C4B590; font-size: 28px; margin: 0;">Sophia</h1>
+    <p style="color: #C4B590; font-size: 13px; margin: 5px 0 0; letter-spacing: 2px;">COSMETICA BOTANICA</p>
+  </div>
+  <div style="text-align: center; margin: 30px 0;">
+    <p style="color: #C4B590; font-size: 14px; letter-spacing: 3px; margin: 0;">OFERTA EXCLUSIVA</p>
+    <h2 style="color: #C4B590; font-size: 36px; margin: 10px 0;">XX% DESCUENTO</h2>
+    <p style="color: #d4cdc0; font-size: 16px; margin: 0;">En toda nuestra linea de [categoria]</p>
+  </div>
+  <p style="line-height: 1.8; color: #d4cdc0; font-size: 15px; text-align: center;">
+    Solo por tiempo limitado. Aprovecha esta oportunidad para probar nuestros productos mas vendidos con un descuento especial.
+  </p>
+  <div style="background: #2a2d25; border: 2px solid #C4B590; border-radius: 12px; padding: 25px; text-align: center; margin: 30px 0;">
+    <p style="margin: 0 0 8px; color: #C4B590; font-size: 14px;">Usa el codigo:</p>
+    <p style="margin: 0; font-size: 32px; font-weight: bold; color: #C4B590; letter-spacing: 4px;">CODIGOXX</p>
+    <p style="margin: 10px 0 0; color: #a09880; font-size: 13px;">Valido hasta [fecha]</p>
+  </div>
+  <div style="text-align: center; margin-top: 30px;">
+    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C4B590; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Comprar ahora</a>
+  </div>
+  <p style="color: #a09880; font-size: 12px; text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
+    Sophia Cosmetica Botanica
+  </p>
+</div>`,
+    createdAt: '2025-01-01T00:00:02.000Z',
+  },
+  {
+    id: 'default-tips',
+    name: 'Tips de cuidado',
+    subject: 'Consejos para el cuidado de tu piel - Sophia',
+    content: `<div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #1a1d19; color: #e8e0d0; padding: 40px;">
+  <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #C4B590; padding-bottom: 20px;">
+    <h1 style="color: #C4B590; font-size: 28px; margin: 0;">Sophia</h1>
+    <p style="color: #C4B590; font-size: 13px; margin: 5px 0 0; letter-spacing: 2px;">COSMETICA BOTANICA</p>
+  </div>
+  <h2 style="color: #C4B590; font-size: 22px; text-align: center;">Consejos de cuidado natural</h2>
+  <p style="line-height: 1.8; color: #d4cdc0; font-size: 15px;">
+    Tu piel merece lo mejor. Aqui te compartimos algunos consejos para mantenerla radiante con ingredientes naturales.
+  </p>
+  <div style="background: #2a2d25; border-left: 3px solid #C4B590; padding: 20px 25px; margin: 25px 0; border-radius: 0 12px 12px 0;">
+    <h3 style="color: #C4B590; font-size: 16px; margin: 0 0 10px;">1. [Titulo del consejo]</h3>
+    <p style="color: #d4cdc0; font-size: 14px; line-height: 1.7; margin: 0;">
+      [Descripcion del consejo con detalles practicos sobre como aplicarlo en la rutina diaria]
+    </p>
+  </div>
+  <div style="background: #2a2d25; border-left: 3px solid #C4B590; padding: 20px 25px; margin: 25px 0; border-radius: 0 12px 12px 0;">
+    <h3 style="color: #C4B590; font-size: 16px; margin: 0 0 10px;">2. [Titulo del consejo]</h3>
+    <p style="color: #d4cdc0; font-size: 14px; line-height: 1.7; margin: 0;">
+      [Descripcion del consejo con detalles practicos sobre como aplicarlo en la rutina diaria]
+    </p>
+  </div>
+  <div style="background: #2a2d25; border-left: 3px solid #C4B590; padding: 20px 25px; margin: 25px 0; border-radius: 0 12px 12px 0;">
+    <h3 style="color: #C4B590; font-size: 16px; margin: 0 0 10px;">3. [Titulo del consejo]</h3>
+    <p style="color: #d4cdc0; font-size: 14px; line-height: 1.7; margin: 0;">
+      [Descripcion del consejo con detalles practicos sobre como aplicarlo en la rutina diaria]
+    </p>
+  </div>
+  <div style="text-align: center; margin-top: 30px;">
+    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C4B590; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Descubrir productos</a>
+  </div>
+  <p style="color: #a09880; font-size: 12px; text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
+    Sophia Cosmetica Botanica
+  </p>
+</div>`,
+    createdAt: '2025-01-01T00:00:03.000Z',
+  },
+  {
+    id: 'default-restock',
+    name: 'Producto de vuelta',
+    subject: 'De vuelta en stock - Sophia',
+    content: `<div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #1a1d19; color: #e8e0d0; padding: 40px;">
+  <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #C4B590; padding-bottom: 20px;">
+    <h1 style="color: #C4B590; font-size: 28px; margin: 0;">Sophia</h1>
+    <p style="color: #C4B590; font-size: 13px; margin: 5px 0 0; letter-spacing: 2px;">COSMETICA BOTANICA</p>
+  </div>
+  <h2 style="color: #C4B590; font-size: 22px; text-align: center;">De vuelta en stock</h2>
+  <p style="line-height: 1.8; color: #d4cdc0; font-size: 15px; text-align: center;">
+    El producto que tanto esperabas ya esta disponible otra vez. No dejes pasar esta oportunidad, las unidades son limitadas.
+  </p>
+  <div style="background: #2a2d25; border: 1px solid #C4B590; border-radius: 12px; padding: 30px; text-align: center; margin: 30px 0;">
+    <p style="color: #a09880; font-size: 13px; margin: 0 0 5px;">DISPONIBLE AHORA</p>
+    <h3 style="color: #C4B590; font-size: 22px; margin: 0 0 10px;">[Nombre del producto]</h3>
+    <p style="color: #d4cdc0; font-size: 14px; line-height: 1.7; margin: 0 0 15px;">
+      [Descripcion del producto y por que es tan popular entre nuestras clientas]
+    </p>
+    <p style="color: #C4B590; font-size: 22px; font-weight: bold; margin: 0;">$XX.XX</p>
+  </div>
+  <div style="text-align: center; margin-top: 30px;">
+    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C4B590; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Comprar antes de que se agote</a>
+  </div>
+  <p style="color: #a09880; font-size: 12px; text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
+    Sophia Cosmetica Botanica
+  </p>
+</div>`,
+    createdAt: '2025-01-01T00:00:04.000Z',
+  },
+];
+
 function loadTemplates(): NewsletterTemplate[] {
   try {
     const raw = localStorage.getItem(TEMPLATES_KEY);
-    return raw ? JSON.parse(raw) : [];
+    if (raw) {
+      const saved = JSON.parse(raw) as NewsletterTemplate[];
+      return saved.length > 0 ? saved : DEFAULT_TEMPLATES;
+    }
+    return DEFAULT_TEMPLATES;
   } catch {
-    return [];
+    return DEFAULT_TEMPLATES;
   }
 }
 
