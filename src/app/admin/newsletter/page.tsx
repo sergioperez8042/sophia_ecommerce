@@ -389,14 +389,14 @@ function VisualEditor({ content, onChange, getIdToken, bgColor, onBgColorChange 
   };
 
   const insertHeading = (level: 1 | 2) => {
-    document.execCommand('formatBlock', false, `h${level}`);
-    editorRef.current?.focus();
-    handleInput();
+    execCmd('formatBlock', `h${level}`);
   };
 
   const insertLink = () => {
+    saveSelection();
     const url = prompt('URL del enlace:');
     if (url) {
+      restoreSelection();
       execCmd('createLink', url);
     }
   };
@@ -485,7 +485,7 @@ function VisualEditor({ content, onChange, getIdToken, bgColor, onBgColorChange 
   return (
     <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden focus-within:border-[#505A4A]">
       {/* Toolbar Row 1: Text formatting */}
-      <div className="flex items-center gap-0.5 px-2 py-1.5 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex-wrap">
+      <div className="flex items-center gap-0.5 px-2 py-1.5 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex-wrap" onMouseDown={(e) => { if ((e.target as HTMLElement).tagName !== 'INPUT') e.preventDefault(); }}>
         {/* Undo / Redo */}
         <button type="button" onClick={() => execCmd('undo')} className={`${btnBase} ${btnInactive}`} title="Deshacer">
           <Undo2 className="w-4 h-4" />
@@ -637,7 +637,7 @@ function VisualEditor({ content, onChange, getIdToken, bgColor, onBgColorChange 
       </div>
 
       {/* Toolbar Row 2: Structure & media */}
-      <div className="flex items-center gap-0.5 px-2 py-1.5 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex-wrap">
+      <div className="flex items-center gap-0.5 px-2 py-1.5 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex-wrap" onMouseDown={(e) => { if ((e.target as HTMLElement).tagName !== 'INPUT') e.preventDefault(); }}>
         {/* Email background color */}
         <div className="relative" data-color-picker>
           <button
