@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { subject, content, testEmail } = body;
+    const { subject, content, testEmail, recipients: selectedRecipients } = body;
 
     if (!subject || !content) {
       return NextResponse.json(
@@ -35,6 +35,9 @@ export async function POST(request: NextRequest) {
     if (testEmail) {
       // Test mode - send only to specified email
       recipients = [testEmail];
+    } else if (Array.isArray(selectedRecipients) && selectedRecipients.length > 0) {
+      // Specific recipients selected by admin
+      recipients = selectedRecipients;
     } else {
       // Get all active subscribers
       const subscribersRef = collection(db, SUBSCRIBERS_COLLECTION);
@@ -60,7 +63,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Error al enviar con Resend' }, { status: 500 });
     }
 
-    // Save newsletter record (only for non-test sends)
+    // Save newsletter record (for non-test sends)
     if (!testEmail) {
       const newslettersRef = collection(db, NEWSLETTERS_COLLECTION);
       await addDoc(newslettersRef, {

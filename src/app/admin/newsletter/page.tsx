@@ -34,6 +34,11 @@ import {
   Eye,
   Code,
   Type,
+  Save,
+  FileText,
+  ChevronDown,
+  Check,
+  UserCheck,
 } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -45,6 +50,30 @@ const SOURCE_STYLES: Record<string, { classes: string; label: string }> = {
   footer: { classes: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300', label: 'Footer' },
   admin: { classes: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300', label: 'Manual' },
 };
+
+// ==================== TEMPLATES ====================
+interface NewsletterTemplate {
+  id: string;
+  name: string;
+  subject: string;
+  content: string;
+  createdAt: string;
+}
+
+const TEMPLATES_KEY = 'sophia_newsletter_templates';
+
+function loadTemplates(): NewsletterTemplate[] {
+  try {
+    const raw = localStorage.getItem(TEMPLATES_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveTemplates(templates: NewsletterTemplate[]) {
+  localStorage.setItem(TEMPLATES_KEY, JSON.stringify(templates));
+}
 
 // ==================== VISUAL EDITOR ====================
 function VisualEditor({ content, onChange, getIdToken }: { content: string; onChange: (html: string) => void; getIdToken?: () => Promise<string | null> }) {
@@ -210,6 +239,18 @@ export default function NewsletterAdminPage() {
   const [showConfirmSend, setShowConfirmSend] = useState(false);
   const [editorMode, setEditorMode] = useState<'visual' | 'html' | 'preview'>('visual');
 
+  // Template state
+  const [templates, setTemplates] = useState<NewsletterTemplate[]>([]);
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
+  const [showTemplateDropdown, setShowTemplateDropdown] = useState(false);
+  const [newTemplateName, setNewTemplateName] = useState('');
+  const [showSaveTemplate, setShowSaveTemplate] = useState(false);
+
+  // Subscriber selection state
+  const [recipientMode, setRecipientMode] = useState<'all' | 'select'>('all');
+  const [selectedEmails, setSelectedEmails] = useState<Set<string>>(new Set());
+  const [recipientSearch, setRecipientSearch] = useState('');
+
   // History state
   const [history, setHistory] = useState<NewsletterRecord[]>([]);
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
@@ -245,6 +286,11 @@ export default function NewsletterAdminPage() {
       setIsLoadingHistory(false);
     }
   };
+
+  // Load templates from localStorage on mount
+  useEffect(() => {
+    setTemplates(loadTemplates());
+  }, []);
 
   useEffect(() => {
     // Wait for user to be authenticated before querying Firestore
@@ -307,53 +353,30 @@ export default function NewsletterAdminPage() {
     }
   };
 
-  const handleSendTest = async () => {
-    if (!subject.trim() || !content.trim()) {
-      toast.error('Completa el asunto y contenido');
-      return;
-    }
-    setIsSending(true);
-    try {
-      const token = await getIdToken();
-      const res = await fetch('/api/newsletter/send', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ subject, content, testEmail: user?.email }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        toast.success(data.message || 'Email de prueba enviado');
-      } else {
-        toast.error(data.error || 'Error al enviar prueba');
-      }
-    } catch {
-      toast.error('Error al enviar');
-    } finally {
-      setIsSending(false);
-    }
-  };
-
   const handleSendAll = async () => {
     setShowConfirmSend(false);
     setIsSending(true);
     try {
       const token = await getIdToken();
+      const payload: { subject: string; content: string; recipients?: string[] } = { subject, content };
+      if (recipientMode === 'select') {
+        payload.recipients = Array.from(selectedEmails);
+      }
       const res = await fetch('/api/newsletter/send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ subject, content }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (res.ok) {
         toast.success(data.message || 'Newsletter enviada');
         setSubject('');
         setContent('');
+        setRecipientMode('all');
+        setSelectedEmails(new Set());
       } else {
         toast.error(data.error || 'Error al enviar');
       }
@@ -363,6 +386,82 @@ export default function NewsletterAdminPage() {
       setIsSending(false);
     }
   };
+
+  // Template handlers
+  const handleSaveTemplate = () => {
+    if (!newTemplateName.trim()) {
+      toast.error('Escribe un nombre para la plantilla');
+      return;
+    }
+    if (!subject.trim() && !content.trim()) {
+      toast.error('Escribe asunto o contenido antes de guardar');
+      return;
+    }
+    const newTemplate: NewsletterTemplate = {
+      id: Date.now().toString(),
+      name: newTemplateName.trim(),
+      subject,
+      content,
+      createdAt: new Date().toISOString(),
+    };
+    const updated = [...templates, newTemplate];
+    saveTemplates(updated);
+    setTemplates(updated);
+    setNewTemplateName('');
+    setShowSaveTemplate(false);
+    toast.success('Plantilla guardada');
+  };
+
+  const handleLoadTemplate = (template: NewsletterTemplate) => {
+    setSubject(template.subject);
+    setContent(template.content);
+    setSelectedTemplateId(template.id);
+    setShowTemplateDropdown(false);
+    toast.success(`Plantilla "${template.name}" cargada`);
+  };
+
+  const handleDeleteTemplate = (id: string) => {
+    const updated = templates.filter((t) => t.id !== id);
+    saveTemplates(updated);
+    setTemplates(updated);
+    if (selectedTemplateId === id) setSelectedTemplateId('');
+    toast.success('Plantilla eliminada');
+  };
+
+  // Subscriber selection helpers
+  const activeSubscribers = subscribers.filter((s) => s.active);
+  const filteredActiveSubscribers = activeSubscribers.filter(
+    (s) =>
+      s.email.toLowerCase().includes(recipientSearch.toLowerCase()) ||
+      (s.name && s.name.toLowerCase().includes(recipientSearch.toLowerCase()))
+  );
+
+  const handleToggleEmail = (email: string) => {
+    setSelectedEmails((prev) => {
+      const next = new Set(prev);
+      if (next.has(email)) next.delete(email);
+      else next.add(email);
+      return next;
+    });
+  };
+
+  const handleSelectAllVisible = () => {
+    setSelectedEmails((prev) => {
+      const next = new Set(prev);
+      filteredActiveSubscribers.forEach((s) => next.add(s.email));
+      return next;
+    });
+  };
+
+  const handleDeselectAllVisible = () => {
+    setSelectedEmails((prev) => {
+      const next = new Set(prev);
+      filteredActiveSubscribers.forEach((s) => next.delete(s.email));
+      return next;
+    });
+  };
+
+  const sendRecipientCount = recipientMode === 'all' ? activeCount : selectedEmails.size;
 
   const filteredSubscribers = subscribers.filter(
     (s) =>
@@ -596,6 +695,95 @@ export default function NewsletterAdminPage() {
           {/* ========== SEND TAB ========== */}
           {activeTab === 'send' && (
             <div className="space-y-4">
+              {/* Templates section */}
+              <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide flex items-center gap-1.5">
+                    <FileText className="w-3.5 h-3.5" />
+                    Plantillas
+                  </h4>
+                  <button
+                    onClick={() => setShowSaveTemplate(!showSaveTemplate)}
+                    className="flex items-center gap-1.5 text-xs text-[#505A4A] hover:text-[#414A3C] dark:text-[#8B9A7B] dark:hover:text-[#A0B090] font-medium transition-colors"
+                  >
+                    <Save className="w-3.5 h-3.5" />
+                    Guardar como plantilla
+                  </button>
+                </div>
+
+                {/* Save template form */}
+                {showSaveTemplate && (
+                  <div className="flex gap-2 mb-3">
+                    <input
+                      type="text"
+                      value={newTemplateName}
+                      onChange={(e) => setNewTemplateName(e.target.value)}
+                      placeholder="Nombre de la plantilla..."
+                      className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#505A4A] text-gray-900 dark:text-gray-100 dark:bg-gray-800 dark:border-gray-700 placeholder-gray-400 dark:placeholder-gray-500"
+                      onKeyDown={(e) => e.key === 'Enter' && handleSaveTemplate()}
+                    />
+                    <button
+                      onClick={handleSaveTemplate}
+                      className="flex items-center gap-1.5 bg-[#505A4A] hover:bg-[#414A3C] text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                    >
+                      <Save className="w-3.5 h-3.5" />
+                      Guardar
+                    </button>
+                    <button
+                      onClick={() => { setShowSaveTemplate(false); setNewTemplateName(''); }}
+                      className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
+
+                {/* Template selector dropdown */}
+                <div className="relative">
+                  <button
+                    onClick={() => setShowTemplateDropdown(!showTemplateDropdown)}
+                    className="w-full flex items-center justify-between px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-gray-100 dark:bg-gray-800 hover:border-[#505A4A] transition-colors"
+                  >
+                    <span className={templates.length === 0 ? 'text-gray-400 dark:text-gray-500' : ''}>
+                      {selectedTemplateId
+                        ? templates.find((t) => t.id === selectedTemplateId)?.name || 'Seleccionar plantilla...'
+                        : templates.length === 0
+                        ? 'No hay plantillas guardadas'
+                        : 'Seleccionar plantilla...'}
+                    </span>
+                    <ChevronDown className={`w-4 h-4 text-gray-400 dark:text-gray-500 transition-transform ${showTemplateDropdown ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {showTemplateDropdown && templates.length > 0 && (
+                    <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                      {templates.map((tpl) => (
+                        <div
+                          key={tpl.id}
+                          className="flex items-center justify-between px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 group"
+                        >
+                          <button
+                            onClick={() => handleLoadTemplate(tpl)}
+                            className="flex-1 text-left text-sm text-gray-900 dark:text-gray-100 truncate"
+                          >
+                            <span className="font-medium">{tpl.name}</span>
+                            {tpl.subject && (
+                              <span className="text-xs text-gray-400 dark:text-gray-500 ml-2">— {tpl.subject}</span>
+                            )}
+                          </button>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleDeleteTemplate(tpl.id); }}
+                            className="p-1 text-gray-300 dark:text-gray-600 hover:text-red-500 dark:hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all"
+                            title="Eliminar plantilla"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                   <Send className="w-4 h-4 text-gray-500 dark:text-gray-400" />
@@ -609,7 +797,7 @@ export default function NewsletterAdminPage() {
                       type="text"
                       value={subject}
                       onChange={(e) => setSubject(e.target.value)}
-                      placeholder="Ej: Novedades de primavera 🌿"
+                      placeholder="Ej: Novedades de primavera"
                       className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#505A4A] text-gray-900 dark:text-gray-100 dark:bg-gray-800 dark:border-gray-700 placeholder-gray-400 dark:placeholder-gray-500"
                     />
                   </div>
@@ -682,27 +870,137 @@ export default function NewsletterAdminPage() {
                     )}
                   </div>
 
+                  {/* Subscriber selection */}
+                  <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                    <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3 flex items-center gap-1.5">
+                      <UserCheck className="w-3.5 h-3.5" />
+                      Destinatarios
+                    </h4>
+
+                    <div className="space-y-3">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="recipientMode"
+                          checked={recipientMode === 'all'}
+                          onChange={() => setRecipientMode('all')}
+                          className="w-4 h-4 text-[#505A4A] border-gray-300 dark:border-gray-600 focus:ring-[#505A4A]"
+                        />
+                        <span className="text-sm text-gray-700 dark:text-gray-300">
+                          Todos los activos (<span className="font-semibold text-[#505A4A]">{activeCount}</span>)
+                        </span>
+                      </label>
+
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="recipientMode"
+                          checked={recipientMode === 'select'}
+                          onChange={() => setRecipientMode('select')}
+                          className="w-4 h-4 text-[#505A4A] border-gray-300 dark:border-gray-600 focus:ring-[#505A4A]"
+                        />
+                        <span className="text-sm text-gray-700 dark:text-gray-300">
+                          Seleccionar destinatarios
+                          {recipientMode === 'select' && selectedEmails.size > 0 && (
+                            <span className="ml-1.5 text-xs bg-[#505A4A] text-white px-1.5 py-0.5 rounded-full">{selectedEmails.size}</span>
+                          )}
+                        </span>
+                      </label>
+
+                      {recipientMode === 'select' && (
+                        <div className="ml-6 space-y-2">
+                          {/* Search + select all/none */}
+                          <div className="flex flex-col sm:flex-row gap-2">
+                            <div className="relative flex-1">
+                              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />
+                              <input
+                                type="text"
+                                placeholder="Buscar suscriptor..."
+                                value={recipientSearch}
+                                onChange={(e) => setRecipientSearch(e.target.value)}
+                                className="w-full pl-9 pr-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#505A4A] text-gray-900 dark:text-gray-100 dark:bg-gray-800 dark:border-gray-700 placeholder-gray-400 dark:placeholder-gray-500"
+                              />
+                            </div>
+                            <div className="flex gap-1">
+                              <button
+                                onClick={handleSelectAllVisible}
+                                className="text-xs text-[#505A4A] dark:text-[#8B9A7B] hover:bg-gray-100 dark:hover:bg-gray-700 px-2.5 py-2 rounded-lg transition-colors whitespace-nowrap"
+                              >
+                                Seleccionar todos
+                              </button>
+                              <button
+                                onClick={handleDeselectAllVisible}
+                                className="text-xs text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 px-2.5 py-2 rounded-lg transition-colors whitespace-nowrap"
+                              >
+                                Deseleccionar todos
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Subscriber checklist */}
+                          <div className="max-h-48 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg divide-y divide-gray-100 dark:divide-gray-700">
+                            {isLoadingSubs ? (
+                              <div className="flex items-center justify-center py-6">
+                                <Loader2 className="w-4 h-4 animate-spin text-gray-400 dark:text-gray-500" />
+                                <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">Cargando...</span>
+                              </div>
+                            ) : filteredActiveSubscribers.length === 0 ? (
+                              <div className="text-center py-6">
+                                <p className="text-xs text-gray-400 dark:text-gray-500">No se encontraron suscriptores</p>
+                              </div>
+                            ) : (
+                              filteredActiveSubscribers.map((sub) => (
+                                <label
+                                  key={sub.id}
+                                  className="flex items-center gap-3 px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
+                                >
+                                  <div className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 transition-colors ${
+                                    selectedEmails.has(sub.email)
+                                      ? 'bg-[#505A4A] border-[#505A4A]'
+                                      : 'border-gray-300 dark:border-gray-600'
+                                  }`}>
+                                    {selectedEmails.has(sub.email) && <Check className="w-3 h-3 text-white" />}
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-sm text-gray-900 dark:text-gray-100 truncate">{sub.email}</p>
+                                    {sub.name && <p className="text-xs text-gray-400 dark:text-gray-500 truncate">{sub.name}</p>}
+                                  </div>
+                                  <input
+                                    type="checkbox"
+                                    checked={selectedEmails.has(sub.email)}
+                                    onChange={() => handleToggleEmail(sub.email)}
+                                    className="sr-only"
+                                  />
+                                </label>
+                              ))
+                            )}
+                          </div>
+
+                          {selectedEmails.size > 0 && (
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                              <span className="font-semibold text-[#505A4A]">{selectedEmails.size}</span> suscriptor{selectedEmails.size !== 1 ? 'es' : ''} seleccionado{selectedEmails.size !== 1 ? 's' : ''}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Se enviará a <span className="font-semibold text-[#505A4A]">{activeCount}</span> suscriptores activos
+                      Se enviará a{' '}
+                      <span className="font-semibold text-[#505A4A]">{sendRecipientCount}</span>{' '}
+                      {recipientMode === 'all' ? 'suscriptores activos' : `suscriptor${sendRecipientCount !== 1 ? 'es' : ''} seleccionado${sendRecipientCount !== 1 ? 's' : ''}`}
                     </p>
 
                     <div className="flex gap-2">
                       <button
-                        onClick={handleSendTest}
-                        disabled={isSending || !subject.trim() || !content.trim()}
-                        className="flex items-center gap-2 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
-                      >
-                        {isSending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
-                        Enviar prueba
-                      </button>
-                      <button
                         onClick={() => setShowConfirmSend(true)}
-                        disabled={isSending || !subject.trim() || !content.trim() || activeCount === 0}
+                        disabled={isSending || !subject.trim() || !content.trim() || sendRecipientCount === 0}
                         className="flex items-center gap-2 bg-[#505A4A] hover:bg-[#414A3C] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
                       >
-                        <Send className="w-4 h-4" />
-                        Enviar a todos
+                        {isSending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                        Enviar newsletter
                       </button>
                     </div>
                   </div>
@@ -713,7 +1011,10 @@ export default function NewsletterAdminPage() {
               {showConfirmSend && (
                 <div className="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 rounded-xl p-4 flex items-center justify-between">
                   <p className="text-sm text-amber-800 dark:text-amber-200">
-                    ¿Enviar newsletter a <strong>{activeCount} suscriptores</strong>? Esta acción no se puede deshacer.
+                    {recipientMode === 'select'
+                      ? <>¿Enviar newsletter a <strong>{selectedEmails.size} suscriptor{selectedEmails.size !== 1 ? 'es' : ''} seleccionado{selectedEmails.size !== 1 ? 's' : ''}</strong>? Esta acción no se puede deshacer.</>
+                      : <>¿Enviar newsletter a <strong>todos los {activeCount} suscriptores activos</strong>? Esta acción no se puede deshacer.</>
+                    }
                   </p>
                   <div className="flex gap-2 ml-4">
                     <button
