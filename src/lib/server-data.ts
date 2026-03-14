@@ -1,6 +1,10 @@
 import { collection, getDocs, doc, getDoc, query, where } from 'firebase/firestore';
 import { db } from './firebase';
 
+export interface CatalogConfig {
+  group_by_category: boolean;
+}
+
 interface Product {
   id: string;
   name: string;
@@ -17,12 +21,14 @@ interface Product {
   usage?: string;
   weight?: number;
   weight_unit?: string;
+  out_of_stock?: boolean;
 }
 
 interface Category {
   id: string;
   name: string;
   icon: string;
+  image: string;
 }
 
 export async function getActiveProducts(): Promise<Product[]> {
@@ -67,5 +73,20 @@ export async function getCategories(): Promise<Category[]> {
     })) as Category[];
   } catch {
     return [];
+  }
+}
+
+export async function getCatalogConfig(): Promise<CatalogConfig> {
+  if (!db) return { group_by_category: false };
+
+  try {
+    const docRef = doc(db, 'config', 'catalog');
+    const snapshot = await getDoc(docRef);
+    if (snapshot.exists()) {
+      return { group_by_category: false, ...snapshot.data() } as CatalogConfig;
+    }
+    return { group_by_category: false };
+  } catch {
+    return { group_by_category: false };
   }
 }

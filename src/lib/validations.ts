@@ -14,6 +14,7 @@ export const productSchema = z.object({
   ingredients: z.array(z.string()),
   active: z.boolean(),
   featured: z.boolean(),
+  out_of_stock: z.boolean(),
   rating: z.number(),
   reviews_count: z.number(),
 });

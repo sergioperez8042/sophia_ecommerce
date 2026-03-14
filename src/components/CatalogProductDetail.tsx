@@ -26,6 +26,7 @@ interface Product {
     usage?: string;
     weight?: number;
     weight_unit?: string;
+    out_of_stock?: boolean;
 }
 
 interface CatalogProductDetailProps {
@@ -114,11 +115,16 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                             <ProductImage
                                 src={images[selectedImage]}
                                 alt={product.name}
-                                className="object-cover"
+                                className={`object-cover ${product.out_of_stock ? 'opacity-70 grayscale-[20%]' : ''}`}
                             />
                         ) : (
                             <div className={`w-full h-full flex items-center justify-center ${isDark ? 'bg-[#22261f]' : 'bg-[#F0EDE6]'}`}>
                                 <span className={`text-sm ${isDark ? 'text-[#7a7568]' : 'text-[#999]'}`}>Sin imagen</span>
+                            </div>
+                        )}
+                        {product.out_of_stock && (
+                            <div className="absolute top-3 left-3 bg-red-500/90 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                                Agotado
                             </div>
                         )}
                     </div>
@@ -223,15 +229,21 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                         </div>
 
                         {/* WhatsApp CTA */}
-                        <m.button
-                            onClick={handleWhatsAppOrder}
-                            className="w-full bg-[#505A4A] text-white py-4 rounded-xl text-base font-medium flex items-center justify-center gap-3 hover:bg-[#414A3C] transition-colors shadow-md mb-6"
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                        >
-                            <MessageCircle className="w-5 h-5" />
-                            Pedir por WhatsApp
-                        </m.button>
+                        {product.out_of_stock ? (
+                            <div className="w-full bg-gray-300 text-gray-500 py-4 rounded-xl text-base font-medium flex items-center justify-center gap-3 cursor-not-allowed mb-6">
+                                Producto agotado
+                            </div>
+                        ) : (
+                            <m.button
+                                onClick={handleWhatsAppOrder}
+                                className="w-full bg-[#505A4A] text-white py-4 rounded-xl text-base font-medium flex items-center justify-center gap-3 hover:bg-[#414A3C] transition-colors shadow-md mb-6"
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                            >
+                                <MessageCircle className="w-5 h-5" />
+                                Pedir por WhatsApp
+                            </m.button>
+                        )}
 
                         {/* Back link */}
                         <Link

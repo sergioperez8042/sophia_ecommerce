@@ -24,6 +24,8 @@ import { User, UserRole } from '@/store/AuthContext';
 const PRODUCTS_COLLECTION = 'products';
 const CATEGORIES_COLLECTION = 'categories';
 const USERS_COLLECTION = 'users';
+const SUBSCRIBERS_COLLECTION = 'subscribers';
+const NEWSLETTERS_COLLECTION = 'newsletters';
 
 // Helper to check if Firebase is available (client-side only)
 const isFirebaseAvailable = (): boolean => {
@@ -188,6 +190,7 @@ export const ProductService = {
         active: product.active,
         created_date: product.created_date,
         featured: product.featured,
+        out_of_stock: product.out_of_stock || false,
       });
     }
   },
@@ -460,5 +463,212 @@ export const UserService = {
     );
     const snapshot = await getDocs(q);
     return snapshot.size;
+  },
+};
+
+// ==================== CONFIG ====================
+
+const CONFIG_COLLECTION = 'config';
+
+export interface CatalogConfig {
+  group_by_category: boolean;
+}
+
+const DEFAULT_CATALOG_CONFIG: CatalogConfig = {
+  group_by_category: false,
+};
+
+export const ConfigService = {
+  async getCatalogConfig(): Promise<CatalogConfig> {
+    const firestore = getDb();
+    const docRef = doc(firestore, CONFIG_COLLECTION, 'catalog');
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      return { ...DEFAULT_CATALOG_CONFIG, ...docSnap.data() } as CatalogConfig;
+    }
+    return DEFAULT_CATALOG_CONFIG;
+  },
+
+  async setCatalogConfig(data: Partial<CatalogConfig>): Promise<void> {
+    const firestore = getDb();
+    const docRef = doc(firestore, CONFIG_COLLECTION, 'catalog');
+    await setDoc(docRef, data, { merge: true });
+  },
+};
+
+// ==================== SUBSCRIBERS (CRM) ====================
+
+export interface Subscriber {
+  id: string;
+  email: string;
+  name?: string;
+  active: boolean;
+  source: 'popup' | 'footer' | 'admin';
+  subscribedAt: string;
+  unsubscribedAt?: string;
+}
+
+export interface SubscriberStats {
+  total: number;
+  active: number;
+  inactive: number;
+  bySource: { popup: number; footer: number; admin: number };
+}
+
+export const SubscriberService = {
+  async getAll(): Promise<Subscriber[]> {
+    const firestore = getDb();
+    const q = query(
+      collection(firestore, SUBSCRIBERS_COLLECTION),
+      orderBy('subscribedAt', 'desc')
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((d) => {
+      const data = d.data();
+      return {
+        id: d.id,
+        email: data.email,
+        name: data.name || '',
+        active: data.active ?? true,
+        source: data.source || 'admin',
+        subscribedAt: data.subscribedAt?.toDate?.()?.toISOString?.() || data.subscribedAt || '',
+        unsubscribedAt: data.unsubscribedAt?.toDate?.()?.toISOString?.() || data.unsubscribedAt || undefined,
+      } as Subscriber;
+    });
+  },
+
+  async getActive(): Promise<Subscriber[]> {
+    const firestore = getDb();
+    const q = query(
+      collection(firestore, SUBSCRIBERS_COLLECTION),
+      where('active', '==', true)
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((d) => {
+      const data = d.data();
+      return {
+        id: d.id,
+        email: data.email,
+        name: data.name || '',
+        active: true,
+        source: data.source || 'admin',
+        subscribedAt: data.subscribedAt?.toDate?.()?.toISOString?.() || data.subscribedAt || '',
+      } as Subscriber;
+    });
+  },
+
+  async add(email: string, source: 'popup' | 'footer' | 'admin', name?: string): Promise<Subscriber> {
+    const firestore = getDb();
+    const docRef = await addDoc(collection(firestore, SUBSCRIBERS_COLLECTION), {
+      email: email.trim().toLowerCase(),
+      name: name?.trim() || '',
+      active: true,
+      source,
+      subscribedAt: Timestamp.now(),
+    });
+    return {
+      id: docRef.id,
+      email: email.trim().toLowerCase(),
+      name: name?.trim() || '',
+      active: true,
+      source,
+      subscribedAt: new Date().toISOString(),
+    };
+  },
+
+  async exists(email: string): Promise<boolean> {
+    const firestore = getDb();
+    const q = query(
+      collection(firestore, SUBSCRIBERS_COLLECTION),
+      where('email', '==', email.trim().toLowerCase())
+    );
+    const snapshot = await getDocs(q);
+    return !snapshot.empty;
+  },
+
+  async deactivate(id: string): Promise<void> {
+    const firestore = getDb();
+    const docRef = doc(firestore, SUBSCRIBERS_COLLECTION, id);
+    await updateDoc(docRef, {
+      active: false,
+      unsubscribedAt: Timestamp.now(),
+    });
+  },
+
+  async activate(id: string): Promise<void> {
+    const firestore = getDb();
+    const docRef = doc(firestore, SUBSCRIBERS_COLLECTION, id);
+    await updateDoc(docRef, { active: true });
+  },
+
+  async delete(id: string): Promise<void> {
+    const firestore = getDb();
+    const docRef = doc(firestore, SUBSCRIBERS_COLLECTION, id);
+    await deleteDoc(docRef);
+  },
+
+  async getStats(): Promise<SubscriberStats> {
+    const all = await this.getAll();
+    const active = all.filter((s) => s.active).length;
+    const bySource = { popup: 0, footer: 0, admin: 0 };
+    all.forEach((s) => {
+      if (s.source in bySource) bySource[s.source as keyof typeof bySource]++;
+    });
+    return {
+      total: all.length,
+      active,
+      inactive: all.length - active,
+      bySource,
+    };
+  },
+};
+
+// ==================== NEWSLETTER HISTORY ====================
+
+export interface NewsletterRecord {
+  id: string;
+  subject: string;
+  content: string;
+  recipientCount: number;
+  success: boolean;
+  sentAt: string;
+}
+
+export const NewsletterHistoryService = {
+  async getAll(): Promise<NewsletterRecord[]> {
+    const firestore = getDb();
+    const q = query(
+      collection(firestore, NEWSLETTERS_COLLECTION),
+      orderBy('sentAt', 'desc')
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((d) => {
+      const data = d.data();
+      return {
+        id: d.id,
+        subject: data.subject,
+        content: data.content,
+        recipientCount: data.recipientCount,
+        success: data.success,
+        sentAt: data.sentAt?.toDate?.()?.toISOString?.() || data.sentAt || '',
+      } as NewsletterRecord;
+    });
+  },
+
+  async record(
+    subject: string,
+    content: string,
+    recipientCount: number,
+    success: boolean
+  ): Promise<void> {
+    const firestore = getDb();
+    await addDoc(collection(firestore, NEWSLETTERS_COLLECTION), {
+      subject,
+      content,
+      recipientCount,
+      success,
+      sentAt: Timestamp.now(),
+    });
   },
 };

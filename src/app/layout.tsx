@@ -102,6 +102,7 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning={true}>
       <head>
+        <Script id="fouc-prevention-admin" strategy="beforeInteractive">{FOUC_SCRIPT}</Script>
         <title>Sophia Cosmética Botánica | Panel de Administración</title>
         <meta name="robots" content="noindex, nofollow" />
         <meta name="description" content="Panel de administración de Sophia Cosmética Botánica" />
@@ -112,7 +113,7 @@ export default function RootLayout({
             <StoreProvider>
                 <Toaster position="top-right" richColors closeButton duration={4000} />
                 {!isAuthPage && !isLegalPage && <Header />}
-                <div className={`min-h-screen ${isAuthPage || isLegalPage ? '' : 'bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8]'}`}>
+                <div className={`min-h-screen ${isAuthPage || isLegalPage ? '' : 'bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8] dark:from-[#1a1d19] dark:to-[#1a1d19]'}`}>
                   {children}
                 </div>
             </StoreProvider>

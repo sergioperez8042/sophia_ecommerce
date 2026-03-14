@@ -8,6 +8,7 @@ import { PricingProvider } from './PricingContext';
 import { ProductProvider } from './ProductContext';
 import { CategoryProvider } from './CategoryContext';
 import { ThemeProvider } from './ThemeContext';
+import { CatalogConfigProvider } from './CatalogConfigContext';
 
 export { useCart } from './CartContext';
 export { useWishlist } from './WishlistContext';
@@ -16,6 +17,7 @@ export { usePricing } from './PricingContext';
 export { useProducts } from './ProductContext';
 export { useCategories } from './CategoryContext';
 export { useTheme } from './ThemeContext';
+export { useCatalogConfig } from './CatalogConfigContext';
 export type { User, RegisterData } from './AuthContext';
 
 interface StoreProviderProps {
@@ -29,11 +31,13 @@ export function StoreProvider({ children }: StoreProviderProps) {
         <PricingProvider>
           <ProductProvider>
             <CategoryProvider>
-              <CartProvider>
-                <WishlistProvider>
-                  {children}
-                </WishlistProvider>
-              </CartProvider>
+              <CatalogConfigProvider>
+                <CartProvider>
+                  <WishlistProvider>
+                    {children}
+                  </WishlistProvider>
+                </CartProvider>
+              </CatalogConfigProvider>
             </CategoryProvider>
           </ProductProvider>
         </PricingProvider>

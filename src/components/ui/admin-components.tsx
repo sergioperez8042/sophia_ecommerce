@@ -65,7 +65,7 @@ export function PageHeader({
                 {backHref && (
                     <a
                         href={backHref}
-                        className="flex items-center gap-2 text-gray-600 hover:text-[#505A4A] transition-colors mb-2"
+                        className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-[#505A4A] transition-colors mb-2"
                     >
                         <svg
                             className="w-5 h-5"
@@ -83,9 +83,9 @@ export function PageHeader({
                         {backLabel}
                     </a>
                 )}
-                <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{title}</h1>
                 {description && (
-                    <p className="text-gray-600 mt-1">{description}</p>
+                    <p className="text-gray-600 dark:text-gray-400 mt-1">{description}</p>
                 )}
             </div>
             {actions}

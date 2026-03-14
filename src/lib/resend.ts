@@ -14,6 +14,8 @@ function getResend(): Resend {
   return resendInstance;
 }
 
+const SENDER = 'Sophia Cosmética Botánica <onboarding@resend.dev>';
+
 interface SendNewsletterParams {
   to: string[];
   subject: string;
@@ -35,7 +37,7 @@ export async function sendNewsletter({ to, subject, content }: SendNewsletterPar
       const batch = to.slice(i, i + batchSize);
       
       const { data, error } = await resend.emails.send({
-        from: 'Sophia Natural <onboarding@resend.dev>',
+        from: SENDER,
         to: batch,
         subject: subject,
         html: content,
@@ -50,6 +52,35 @@ export async function sendNewsletter({ to, subject, content }: SendNewsletterPar
 
     return { success: true, results };
   } catch (error) {
+    return { success: false, error };
+  }
+}
+
+/**
+ * Send a transactional email (welcome, confirmation, etc.)
+ */
+export async function sendTransactionalEmail(
+  to: string,
+  subject: string,
+  htmlContent: string
+) {
+  try {
+    const resend = getResend();
+    const { data, error } = await resend.emails.send({
+      from: SENDER,
+      to: [to],
+      subject,
+      html: htmlContent,
+    });
+
+    if (error) {
+      console.error('Resend transactional email error:', error);
+      return { success: false, error };
+    }
+
+    return { success: true, data };
+  } catch (error) {
+    console.error('Error sending transactional email:', error);
     return { success: false, error };
   }
 }

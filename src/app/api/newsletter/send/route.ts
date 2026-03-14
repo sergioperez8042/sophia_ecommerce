@@ -1,42 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { collection, query, where, getDocs, addDoc, Timestamp, QueryDocumentSnapshot, DocumentData } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { sendNewsletter } from '@/lib/resend';
+import { isAuthorized, verifyFirebaseAuth, unauthorizedResponse } from '@/lib/api-auth';
 
 const SUBSCRIBERS_COLLECTION = 'subscribers';
 const NEWSLETTERS_COLLECTION = 'newsletters';
 
-interface NewsletterRecord {
-  id: string;
-  subject?: string;
-  content?: string;
-  previewText?: string;
-  recipientCount?: number;
-  success?: boolean;
-  sentAt: string | null;
-}
-
-// Simple auth check - in production use proper auth
-const isAuthorized = (request: NextRequest): boolean => {
-  const authHeader = request.headers.get('authorization');
-  const apiKey = process.env.NEWSLETTER_API_KEY;
-  
-  if (!apiKey) return false;
-  return authHeader === `Bearer ${apiKey}`;
-};
-
 export async function POST(request: NextRequest) {
   try {
-    // Check authorization
+    // Verify admin auth: API key OR valid Firebase token
     if (!isAuthorized(request)) {
-      return NextResponse.json(
-        { error: 'No autorizado' },
-        { status: 401 }
-      );
+      const firebaseUser = await verifyFirebaseAuth(request);
+      if (!firebaseUser) {
+        return unauthorizedResponse();
+      }
     }
 
     const body = await request.json();
-    const { subject, content, previewText } = body;
+    const { subject, content, testEmail } = body;
 
     if (!subject || !content) {
       return NextResponse.json(
@@ -46,63 +27,67 @@ export async function POST(request: NextRequest) {
     }
 
     if (!db) {
-      return NextResponse.json(
-        { error: 'Firebase not initialized' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Firebase not initialized' }, { status: 500 });
     }
 
-    // Get all active subscribers
-    const subscribersRef = collection(db, SUBSCRIBERS_COLLECTION);
-    const q = query(subscribersRef, where('active', '==', true));
-    const snapshot = await getDocs(q);
+    let recipients: string[];
 
-    const subscribers = snapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => doc.data().email as string);
-
-    if (subscribers.length === 0) {
-      return NextResponse.json(
-        { error: 'No hay suscriptores activos' },
-        { status: 400 }
+    if (testEmail) {
+      // Test mode - send only to specified email
+      recipients = [testEmail];
+    } else {
+      // Get all active subscribers
+      const subscribersRef = collection(db, SUBSCRIBERS_COLLECTION);
+      const q = query(subscribersRef, where('active', '==', true));
+      const snapshot = await getDocs(q);
+      recipients = snapshot.docs.map(
+        (doc: QueryDocumentSnapshot<DocumentData>) => doc.data().email as string
       );
+
+      if (recipients.length === 0) {
+        return NextResponse.json({ error: 'No hay suscriptores activos' }, { status: 400 });
+      }
     }
 
-    // Send newsletter using Resend
-    const result = await sendNewsletter({
-      to: subscribers,
-      subject,
-      content,
-      previewText,
-    });
+    // Send via Resend
+    let sendResult = { success: false, totalSent: 0 };
+    try {
+      const { sendNewsletter } = await import('@/lib/resend');
+      const result = await sendNewsletter({ to: recipients, subject, content });
+      sendResult = { success: result.success, totalSent: recipients.length };
+    } catch (emailError) {
+      console.error('Newsletter send error:', emailError);
+      return NextResponse.json({ error: 'Error al enviar con Resend' }, { status: 500 });
+    }
 
-    // Save newsletter record to Firestore
-    const newslettersRef = collection(db, NEWSLETTERS_COLLECTION);
-    await addDoc(newslettersRef, {
-      subject,
-      content,
-      previewText: previewText || '',
-      sentAt: Timestamp.now(),
-      recipientCount: subscribers.length,
-      success: result.success,
-    });
+    // Save newsletter record (only for non-test sends)
+    if (!testEmail) {
+      const newslettersRef = collection(db, NEWSLETTERS_COLLECTION);
+      await addDoc(newslettersRef, {
+        subject,
+        content,
+        sentAt: Timestamp.now(),
+        recipientCount: recipients.length,
+        success: sendResult.success,
+      });
+    }
 
-    if (result.success) {
+    if (sendResult.success) {
       return NextResponse.json({
         success: true,
-        message: `Newsletter enviada a ${subscribers.length} suscriptores`,
-        recipientCount: subscribers.length,
+        message: testEmail
+          ? `Email de prueba enviado a ${testEmail}`
+          : `Newsletter enviada a ${recipients.length} suscriptores`,
+        recipientCount: recipients.length,
       });
     } else {
       return NextResponse.json(
-        { error: result.error || 'Error al enviar newsletter' },
+        { error: 'Error al enviar newsletter', sent: sendResult.totalSent },
         { status: 500 }
       );
     }
-
   } catch {
-    return NextResponse.json(
-      { error: 'Error al enviar la newsletter' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Error al enviar la newsletter' }, { status: 500 });
   }
 }
 
@@ -110,49 +95,38 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     if (!isAuthorized(request)) {
-      return NextResponse.json(
-        { error: 'No autorizado' },
-        { status: 401 }
-      );
+      const firebaseUser = await verifyFirebaseAuth(request);
+      if (!firebaseUser) {
+        return unauthorizedResponse();
+      }
     }
 
     if (!db) {
-      return NextResponse.json(
-        { error: 'Firebase not initialized' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Firebase not initialized' }, { status: 500 });
     }
 
     const newslettersRef = collection(db, NEWSLETTERS_COLLECTION);
     const snapshot = await getDocs(newslettersRef);
 
-    const newsletters: NewsletterRecord[] = snapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
+    const newsletters = snapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
       const data = doc.data();
       const sentAtField = data.sentAt as { toDate?: () => Date } | undefined;
       return {
         id: doc.id,
-        subject: data.subject as string | undefined,
-        content: data.content as string | undefined,
-        previewText: data.previewText as string | undefined,
-        recipientCount: data.recipientCount as number | undefined,
-        success: data.success as boolean | undefined,
+        subject: data.subject,
+        content: data.content,
+        recipientCount: data.recipientCount,
+        success: data.success,
         sentAt: sentAtField?.toDate?.()?.toISOString() || null,
       };
     });
 
-    // Sort by date descending
-    newsletters.sort((a, b) => 
-      new Date(b.sentAt || 0).getTime() - new Date(a.sentAt || 0).getTime()
+    newsletters.sort(
+      (a, b) => new Date(b.sentAt || 0).getTime() - new Date(a.sentAt || 0).getTime()
     );
 
-    return NextResponse.json({
-      total: newsletters.length,
-      newsletters,
-    });
+    return NextResponse.json({ total: newsletters.length, newsletters });
   } catch {
-    return NextResponse.json(
-      { error: 'Error al obtener newsletters' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Error al obtener newsletters' }, { status: 500 });
   }
 }

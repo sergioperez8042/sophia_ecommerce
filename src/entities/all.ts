@@ -16,6 +16,7 @@ export interface IProduct {
   usage?: string;
   weight?: number;
   weight_unit?: string;
+  out_of_stock?: boolean;
 }
 
 export interface ICategory {
