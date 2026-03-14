@@ -28,6 +28,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const [isSending, setIsSending] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
   const [customerName, setCustomerName] = useState('');
+  const [customerEmail, setCustomerEmail] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [orderNotes, setOrderNotes] = useState('');
 
@@ -264,6 +265,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
         gestorId: gestor?.id,
         gestorName: gestor?.name,
         customerName: customerName.trim(),
+        customerEmail: customerEmail.trim().toLowerCase(),
         customerPhone: customerPhone.trim(),
         notes: orderNotes.trim(),
       });
@@ -298,6 +300,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
         clearCart();
         setShowCheckout(false);
         setCustomerName('');
+        setCustomerEmail('');
         setCustomerPhone('');
         setOrderNotes('');
         onClose();
@@ -569,6 +572,17 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                       value={customerName}
                       onChange={(e) => setCustomerName(e.target.value)}
                       placeholder="Tu nombre *"
+                      className={`w-full px-3 py-2 rounded-lg text-sm border ${
+                        isDark
+                          ? 'bg-[#1a1d19] border-[#C4B590]/15 text-[#e8e4dc] placeholder-[#7a7568]'
+                          : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
+                      }`}
+                    />
+                    <input
+                      type="email"
+                      value={customerEmail}
+                      onChange={(e) => setCustomerEmail(e.target.value)}
+                      placeholder="Tu email (para seguimiento)"
                       className={`w-full px-3 py-2 rounded-lg text-sm border ${
                         isDark
                           ? 'bg-[#1a1d19] border-[#C4B590]/15 text-[#e8e4dc] placeholder-[#7a7568]'

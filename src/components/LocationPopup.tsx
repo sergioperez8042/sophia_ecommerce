@@ -6,9 +6,11 @@ import { m, AnimatePresence } from 'framer-motion';
 import { MapPin, ChevronDown, Search } from 'lucide-react';
 import { CUBA_PROVINCES } from '@/data/cuba-locations';
 import { useLocation } from '@/store/LocationContext';
+import { useTheme } from '@/store/ThemeContext';
 
 export default function LocationPopup() {
   const { hasLocation, setLocation } = useLocation();
+  const { isDark } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedProvince, setSelectedProvince] = useState('');
   const [selectedMunicipality, setSelectedMunicipality] = useState('');
@@ -20,15 +22,11 @@ export default function LocationPopup() {
   const municipalityRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Don't show if already has location
     if (hasLocation) return;
-
-    // Show immediately - mandatory, no dismiss option
     const timer = setTimeout(() => setIsOpen(true), 500);
     return () => clearTimeout(timer);
   }, [hasLocation]);
 
-  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (provinceRef.current && !provinceRef.current.contains(e.target as Node)) {
@@ -45,9 +43,7 @@ export default function LocationPopup() {
   const filteredProvinces = useMemo(() => {
     if (!provinceSearch) return CUBA_PROVINCES;
     const term = provinceSearch.toLowerCase();
-    return CUBA_PROVINCES.filter((p) =>
-      p.name.toLowerCase().includes(term)
-    );
+    return CUBA_PROVINCES.filter((p) => p.name.toLowerCase().includes(term));
   }, [provinceSearch]);
 
   const municipalities = useMemo(() => {
@@ -83,8 +79,30 @@ export default function LocationPopup() {
     }
   };
 
+  // Theme-aware colors
+  const bg = isDark ? 'bg-[#1a1d19]' : 'bg-white';
+  const border = isDark ? 'border-[#C4B590]/20' : 'border-[#505A4A]/15';
+  const accent = isDark ? 'text-[#C4B590]' : 'text-[#505A4A]';
+  const accentBg = isDark ? 'bg-[#C4B590]/10' : 'bg-[#505A4A]/10';
+  const textPrimary = isDark ? 'text-[#e8e0d0]' : 'text-gray-900';
+  const textSecondary = isDark ? 'text-[#d4cdc0]/80' : 'text-gray-500';
+  const labelColor = isDark ? 'text-[#C4B590]/60' : 'text-[#505A4A]/60';
+  const inputBg = isDark ? 'bg-white/5' : 'bg-gray-50';
+  const inputBorder = isDark ? 'border-[#C4B590]/20' : 'border-gray-200';
+  const inputText = isDark ? 'text-[#e8e0d0]' : 'text-gray-900';
+  const inputPlaceholder = isDark ? 'placeholder-[#C4B590]/30' : 'placeholder-gray-400';
+  const inputFocus = isDark ? 'focus:border-[#C4B590]/50' : 'focus:border-[#505A4A]/40';
+  const iconColor = isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/40';
+  const dropdownBg = isDark ? 'bg-[#22261f]' : 'bg-white';
+  const dropdownBorder = isDark ? 'border-[#C4B590]/20' : 'border-gray-200';
+  const optionHover = isDark ? 'hover:bg-[#C4B590]/10' : 'hover:bg-[#505A4A]/5';
+  const optionText = isDark ? 'text-[#d4cdc0]' : 'text-gray-700';
+  const optionActive = isDark ? 'text-[#C4B590] bg-[#C4B590]/5' : 'text-[#505A4A] bg-[#505A4A]/5';
+  const emptyText = isDark ? 'text-[#C4B590]/50' : 'text-gray-400';
+  const btnBg = isDark ? 'bg-[#C4B590] hover:bg-[#b5a680] text-[#1a1d19]' : 'bg-[#505A4A] hover:bg-[#414A3C] text-white';
+
   return (
-    <Dialog.Root open={isOpen} onOpenChange={() => {/* mandatory - cannot close without selecting */}}>
+    <Dialog.Root open={isOpen} onOpenChange={() => {}}>
       <AnimatePresence>
         {isOpen && (
           <Dialog.Portal forceMount>
@@ -104,27 +122,27 @@ export default function LocationPopup() {
                 exit={{ opacity: 0, scale: 0.95, y: 10 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="bg-[#1a1d19] border border-[#C4B590]/20 rounded-2xl p-6 sm:p-8 relative shadow-2xl">
+                <div className={`${bg} border ${border} rounded-2xl p-6 sm:p-8 relative shadow-2xl`}>
                   {/* Icon */}
-                  <div className="w-12 h-12 rounded-xl bg-[#C4B590]/10 flex items-center justify-center mb-4">
-                    <MapPin className="w-6 h-6 text-[#C4B590]" />
+                  <div className={`w-12 h-12 rounded-xl ${accentBg} flex items-center justify-center mb-4`}>
+                    <MapPin className={`w-6 h-6 ${accent}`} />
                   </div>
 
-                  <Dialog.Title className="text-xl font-semibold text-[#C4B590] mb-2">
+                  <Dialog.Title className={`text-xl font-semibold ${accent} mb-2`}>
                     Selecciona tu ubicacion
                   </Dialog.Title>
-                  <Dialog.Description className="text-sm text-[#d4cdc0]/80 mb-6 leading-relaxed">
+                  <Dialog.Description className={`text-sm ${textSecondary} mb-6 leading-relaxed`}>
                     Para ofrecerte el mejor servicio de entrega, necesitamos saber donde te encuentras.
                   </Dialog.Description>
 
                   {/* Province selector */}
                   <div className="space-y-4">
                     <div ref={provinceRef} className="relative">
-                      <label className="text-xs text-[#C4B590]/60 uppercase tracking-wider mb-1.5 block">
+                      <label className={`text-xs ${labelColor} uppercase tracking-wider mb-1.5 block`}>
                         Provincia
                       </label>
                       <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C4B590]/40" />
+                        <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${iconColor}`} />
                         <input
                           type="text"
                           value={provinceSearch}
@@ -139,14 +157,14 @@ export default function LocationPopup() {
                           }}
                           onFocus={() => setShowProvinceDropdown(true)}
                           placeholder="Buscar provincia..."
-                          className="w-full pl-10 pr-10 py-3 bg-white/5 border border-[#C4B590]/20 rounded-xl text-[#e8e0d0] placeholder-[#C4B590]/30 text-sm focus:outline-none focus:border-[#C4B590]/50"
+                          className={`w-full pl-10 pr-10 py-3 ${inputBg} border ${inputBorder} rounded-xl ${inputText} ${inputPlaceholder} text-sm focus:outline-none ${inputFocus}`}
                         />
-                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C4B590]/40" />
+                        <ChevronDown className={`absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 ${iconColor}`} />
                       </div>
                       {showProvinceDropdown && (
-                        <div className="absolute z-10 w-full mt-1 bg-[#22261f] border border-[#C4B590]/20 rounded-xl max-h-48 overflow-y-auto shadow-xl">
+                        <div className={`absolute z-10 w-full mt-1 ${dropdownBg} border ${dropdownBorder} rounded-xl max-h-48 overflow-y-auto shadow-xl`}>
                           {filteredProvinces.length === 0 ? (
-                            <div className="px-4 py-3 text-sm text-[#C4B590]/50">
+                            <div className={`px-4 py-3 text-sm ${emptyText}`}>
                               No se encontraron provincias
                             </div>
                           ) : (
@@ -154,10 +172,8 @@ export default function LocationPopup() {
                               <button
                                 key={p.name}
                                 onClick={() => handleSelectProvince(p.name)}
-                                className={`w-full text-left px-4 py-2.5 text-sm hover:bg-[#C4B590]/10 transition-colors ${
-                                  selectedProvince === p.name
-                                    ? 'text-[#C4B590] bg-[#C4B590]/5'
-                                    : 'text-[#d4cdc0]'
+                                className={`w-full text-left px-4 py-2.5 text-sm ${optionHover} transition-colors ${
+                                  selectedProvince === p.name ? optionActive : optionText
                                 }`}
                               >
                                 {p.name}
@@ -170,11 +186,11 @@ export default function LocationPopup() {
 
                     {/* Municipality selector */}
                     <div ref={municipalityRef} className="relative">
-                      <label className="text-xs text-[#C4B590]/60 uppercase tracking-wider mb-1.5 block">
+                      <label className={`text-xs ${labelColor} uppercase tracking-wider mb-1.5 block`}>
                         Municipio
                       </label>
                       <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C4B590]/40" />
+                        <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${iconColor}`} />
                         <input
                           type="text"
                           value={municipalitySearch}
@@ -190,14 +206,14 @@ export default function LocationPopup() {
                           }}
                           placeholder={selectedProvince ? 'Buscar municipio...' : 'Selecciona primero una provincia'}
                           disabled={!selectedProvince}
-                          className="w-full pl-10 pr-10 py-3 bg-white/5 border border-[#C4B590]/20 rounded-xl text-[#e8e0d0] placeholder-[#C4B590]/30 text-sm focus:outline-none focus:border-[#C4B590]/50 disabled:opacity-40 disabled:cursor-not-allowed"
+                          className={`w-full pl-10 pr-10 py-3 ${inputBg} border ${inputBorder} rounded-xl ${inputText} ${inputPlaceholder} text-sm focus:outline-none ${inputFocus} disabled:opacity-40 disabled:cursor-not-allowed`}
                         />
-                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C4B590]/40" />
+                        <ChevronDown className={`absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 ${iconColor}`} />
                       </div>
                       {showMunicipalityDropdown && selectedProvince && (
-                        <div className="absolute z-10 w-full mt-1 bg-[#22261f] border border-[#C4B590]/20 rounded-xl max-h-48 overflow-y-auto shadow-xl">
+                        <div className={`absolute z-10 w-full mt-1 ${dropdownBg} border ${dropdownBorder} rounded-xl max-h-48 overflow-y-auto shadow-xl`}>
                           {filteredMunicipalities.length === 0 ? (
-                            <div className="px-4 py-3 text-sm text-[#C4B590]/50">
+                            <div className={`px-4 py-3 text-sm ${emptyText}`}>
                               No se encontraron municipios
                             </div>
                           ) : (
@@ -205,10 +221,8 @@ export default function LocationPopup() {
                               <button
                                 key={m}
                                 onClick={() => handleSelectMunicipality(m)}
-                                className={`w-full text-left px-4 py-2.5 text-sm hover:bg-[#C4B590]/10 transition-colors ${
-                                  selectedMunicipality === m
-                                    ? 'text-[#C4B590] bg-[#C4B590]/5'
-                                    : 'text-[#d4cdc0]'
+                                className={`w-full text-left px-4 py-2.5 text-sm ${optionHover} transition-colors ${
+                                  selectedMunicipality === m ? optionActive : optionText
                                 }`}
                               >
                                 {m}
@@ -224,11 +238,10 @@ export default function LocationPopup() {
                   <button
                     onClick={handleConfirm}
                     disabled={!selectedProvince || !selectedMunicipality}
-                    className="w-full mt-6 bg-[#C4B590] hover:bg-[#b5a680] text-[#1a1d19] py-3 rounded-xl text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                    className={`w-full mt-6 ${btnBg} py-3 rounded-xl text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed`}
                   >
                     Confirmar ubicacion
                   </button>
-
                 </div>
               </m.div>
             </Dialog.Content>

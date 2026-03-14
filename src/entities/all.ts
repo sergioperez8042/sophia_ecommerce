@@ -94,6 +94,7 @@ export interface IOrder {
   province: string;
   municipality: string;
   customerName?: string;
+  customerEmail?: string;
   customerPhone?: string;
   notes?: string;
   // Gestor assignment

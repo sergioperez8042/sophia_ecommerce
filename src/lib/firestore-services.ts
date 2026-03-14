@@ -812,6 +812,7 @@ export const OrderService = {
     gestorId?: string;
     gestorName?: string;
     customerName?: string;
+    customerEmail?: string;
     customerPhone?: string;
     notes?: string;
   }): Promise<IOrder> {
@@ -829,6 +830,7 @@ export const OrderService = {
       gestorId: data.gestorId || '',
       gestorName: data.gestorName || '',
       customerName: data.customerName || '',
+      customerEmail: data.customerEmail || '',
       customerPhone: data.customerPhone || '',
       notes: data.notes || '',
       createdAt: now,

@@ -20,8 +20,10 @@ import {
   ChevronDown,
   RefreshCw,
   User,
-  FileText,
   Settings,
+  DollarSign,
+  TrendingUp,
+  Mail,
 } from 'lucide-react';
 import Image from 'next/image';
 import { m, AnimatePresence } from 'framer-motion';
@@ -31,10 +33,10 @@ import { auth } from '@/lib/firebase';
 import Link from 'next/link';
 
 const STATUS_CONFIG: Record<OrderStatus, { icon: typeof Package; color: string; bg: string }> = {
-  pending: { icon: Clock, color: 'text-amber-600', bg: 'bg-amber-50' },
-  confirmed: { icon: CheckCircle2, color: 'text-blue-600', bg: 'bg-blue-50' },
-  in_transit: { icon: Truck, color: 'text-purple-600', bg: 'bg-purple-50' },
-  delivered: { icon: Package, color: 'text-green-600', bg: 'bg-green-50' },
+  pending: { icon: Clock, color: 'text-[#505A4A]', bg: 'bg-[#505A4A]/10' },
+  confirmed: { icon: CheckCircle2, color: 'text-[#505A4A]', bg: 'bg-[#505A4A]/10' },
+  in_transit: { icon: Truck, color: 'text-[#505A4A]', bg: 'bg-[#505A4A]/10' },
+  delivered: { icon: Package, color: 'text-[#505A4A]', bg: 'bg-[#505A4A]/10' },
   cancelled: { icon: XCircle, color: 'text-red-600', bg: 'bg-red-50' },
 };
 
@@ -100,10 +102,36 @@ export default function GestorDashboard() {
   const handleStatusChange = async (orderId: string, newStatus: OrderStatus) => {
     try {
       await OrderService.updateStatus(orderId, newStatus);
+
+      // Find the order to get customer info for email
+      const order = orders.find((o) => o.id === orderId);
+
       setOrders((prev) =>
         prev.map((o) => (o.id === orderId ? { ...o, status: newStatus, updatedAt: new Date().toISOString() } : o))
       );
       toast.success(`Pedido actualizado a "${ORDER_STATUSES[newStatus]}"`);
+
+      // Send status email to customer (fire and forget)
+      if (order?.customerEmail) {
+        fetch('/api/order-status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            customerEmail: order.customerEmail,
+            customerName: order.customerName || 'Cliente',
+            orderNumber: order.orderNumber,
+            newStatus,
+            items: order.items,
+            subtotal: order.subtotal,
+          }),
+        })
+          .then((res) => {
+            if (res.ok) toast.success('Email de estado enviado al cliente', { duration: 2000 });
+          })
+          .catch(() => {
+            // Silent — email is best-effort
+          });
+      }
     } catch {
       toast.error('Error al actualizar el pedido');
     }
@@ -154,15 +182,41 @@ export default function GestorDashboard() {
   const displayName = gestor?.name || user?.name || 'Gestor';
   const filteredOrders = statusFilter === 'all' ? orders : orders.filter((o) => o.status === statusFilter);
 
-  // Stats
+  // --- Financial Stats ---
+  const activeOrders = orders.filter((o) => o.status !== 'cancelled');
   const pendingCount = orders.filter((o) => o.status === 'pending').length;
+  const inTransitCount = orders.filter((o) => o.status === 'in_transit').length;
+
+  // Total ventas (all non-cancelled orders)
+  const totalSales = activeOrders.reduce((sum, o) => sum + o.subtotal, 0);
+
+  // Cobrado (delivered = money already collected from customers)
+  const collectedTotal = orders
+    .filter((o) => o.status === 'delivered')
+    .reduce((sum, o) => sum + o.subtotal, 0);
+
+  // Por cobrar (pending + confirmed + in_transit = money still to collect)
+  const pendingTotal = orders
+    .filter((o) => ['pending', 'confirmed', 'in_transit'].includes(o.status))
+    .reduce((sum, o) => sum + o.subtotal, 0);
+
+  // Today's orders
   const todayOrders = orders.filter((o) => {
     const today = new Date().toISOString().slice(0, 10);
     return o.createdAt.slice(0, 10) === today;
-  }).length;
-  const deliveredTotal = orders
-    .filter((o) => o.status === 'delivered')
-    .reduce((sum, o) => sum + o.subtotal, 0);
+  });
+  const todayCount = todayOrders.length;
+  const todaySales = todayOrders.filter((o) => o.status !== 'cancelled').reduce((sum, o) => sum + o.subtotal, 0);
+
+  // This month
+  const thisMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
+  const monthOrders = activeOrders.filter((o) => o.createdAt.slice(0, 7) === thisMonth);
+  const monthSales = monthOrders.reduce((sum, o) => sum + o.subtotal, 0);
+
+  // Total products sold
+  const totalProductsSold = activeOrders.reduce((sum, o) => sum + o.items.reduce((s, i) => s + i.quantity, 0), 0);
+
+  const formatCurrency = (n: number) => `$${n.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 
   const formatDate = (dateStr: string) => {
     const d = new Date(dateStr);
@@ -175,7 +229,6 @@ export default function GestorDashboard() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-[#1a1d19]/95 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 shadow-sm dark:shadow-none">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 sm:h-16">
-            {/* Left: Logo — same as Header.tsx */}
             <Link href="/gestor" className="flex items-center gap-2">
               <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#505A4A]/15 flex-shrink-0">
                 <Image
@@ -193,7 +246,6 @@ export default function GestorDashboard() {
               </div>
             </Link>
 
-            {/* Right: Badge + Logout */}
             <div className="flex items-center gap-2">
               <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-[#505A4A]/10 text-[#505A4A] dark:bg-[#505A4A]/20 dark:text-gray-300 uppercase tracking-wide">
                 Gestor
@@ -211,7 +263,7 @@ export default function GestorDashboard() {
       </header>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-20 pb-8">
-        {/* Page title — admin style */}
+        {/* Page title */}
         <div className="mb-6">
           <div className="flex items-center gap-3">
             {gestor?.photoUrl ? (
@@ -235,26 +287,81 @@ export default function GestorDashboard() {
           </div>
         </div>
 
-        {/* Stats — admin card style */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          {[
-            { label: 'Pedidos Hoy', value: String(todayOrders), icon: Package },
-            { label: 'Pendientes', value: String(pendingCount), icon: Clock },
-            { label: 'Total Pedidos', value: String(orders.length), icon: FileText },
-            { label: 'Entregados', value: `$${deliveredTotal.toFixed(0)}`, icon: CheckCircle2 },
-          ].map((stat) => (
-            <div key={stat.label} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{stat.label}</p>
-                  <p className="text-2xl font-semibold text-gray-900 dark:text-white mt-2">{stat.value}</p>
-                </div>
-                <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
-                  <stat.icon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                </div>
+        {/* Financial Stats — Row 1: Money */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Ventas del Mes</p>
+                <p className="text-2xl font-semibold text-gray-900 dark:text-white mt-2">{formatCurrency(monthSales)}</p>
+                <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">{monthOrders.length} pedidos</p>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-[#505A4A]/10 flex items-center justify-center">
+                <TrendingUp className="w-5 h-5 text-[#505A4A]" />
               </div>
             </div>
-          ))}
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Por Cobrar</p>
+                <p className="text-2xl font-semibold text-gray-900 dark:text-white mt-2">{formatCurrency(pendingTotal)}</p>
+                <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">{pendingCount + inTransitCount} en proceso</p>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-[#505A4A]/10 flex items-center justify-center">
+                <Clock className="w-5 h-5 text-[#505A4A]" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Cobrado</p>
+                <p className="text-2xl font-semibold text-gray-900 dark:text-white mt-2">{formatCurrency(collectedTotal)}</p>
+                <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">{orders.filter((o) => o.status === 'delivered').length} entregados</p>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-[#505A4A]/10 flex items-center justify-center">
+                <DollarSign className="w-5 h-5 text-[#505A4A]" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Hoy</p>
+                <p className="text-2xl font-semibold text-gray-900 dark:text-white mt-2">{formatCurrency(todaySales)}</p>
+                <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">{todayCount} pedido{todayCount !== 1 ? 's' : ''}</p>
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-[#505A4A]/10 flex items-center justify-center">
+                <Package className="w-5 h-5 text-[#505A4A]" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick stats row 2 — summary bar */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 mb-6">
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div className="flex items-center gap-6 text-xs text-gray-500 dark:text-gray-400">
+              <span>
+                <span className="font-semibold text-gray-900 dark:text-white text-sm">{activeOrders.length}</span> pedidos totales
+              </span>
+              <span>
+                <span className="font-semibold text-gray-900 dark:text-white text-sm">{totalProductsSold}</span> productos vendidos
+              </span>
+              <span>
+                Venta total: <span className="font-semibold text-gray-900 dark:text-white text-sm">{formatCurrency(totalSales)}</span>
+              </span>
+            </div>
+            {pendingCount > 0 && (
+              <span className="text-[10px] px-2.5 py-1 rounded-full bg-[#505A4A]/10 text-[#505A4A] dark:bg-[#505A4A]/20 dark:text-gray-300 font-medium">
+                {pendingCount} pendiente{pendingCount > 1 ? 's' : ''}
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Orders Card */}
@@ -264,11 +371,6 @@ export default function GestorDashboard() {
             <h2 className="text-base font-semibold text-gray-900 dark:text-white flex items-center gap-2">
               <Package className="w-4.5 h-4.5 text-[#505A4A] dark:text-gray-400" />
               Pedidos
-              {pendingCount > 0 && (
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 font-medium">
-                  {pendingCount} pendiente{pendingCount > 1 ? 's' : ''}
-                </span>
-              )}
             </h2>
             <button
               onClick={loadOrders}
@@ -383,6 +485,12 @@ export default function GestorDashboard() {
                                   {order.customerPhone}
                                 </p>
                               )}
+                              {order.customerEmail && (
+                                <p className="flex items-center gap-1.5">
+                                  <Mail className="w-3 h-3" />
+                                  {order.customerEmail}
+                                </p>
+                              )}
                               <p className="flex items-center gap-1.5">
                                 <MapPin className="w-3 h-3" />
                                 {order.municipality}, {order.province}
@@ -448,7 +556,7 @@ export default function GestorDashboard() {
           </div>
         </div>
 
-        {/* Settings Card — same admin card style */}
+        {/* Settings Card */}
         <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
           <button
             onClick={() => setShowPasswordSection(!showPasswordSection)}

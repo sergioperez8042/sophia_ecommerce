@@ -54,6 +54,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const { isDark, toggleTheme } = useTheme();
     const { totalItems } = useCart();
+    const { totalItems: wishlistCount } = useWishlist();
     const [isCartOpen, setIsCartOpen] = useState(false);
 
     // When groupByCategory is active, track if user drilled into a category
@@ -180,6 +181,22 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                             >
                                 {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
                             </m.button>
+
+                            {/* Wishlist button */}
+                            <Link href="/wishlist">
+                                <m.div
+                                    className={`relative p-2 rounded-xl transition-colors ${isDark ? 'bg-[#C4B590]/15 text-[#C4B590] hover:bg-[#C4B590]/25' : 'bg-[#505A4A]/10 text-[#505A4A] hover:bg-[#505A4A]/20'}`}
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                >
+                                    <Heart className="w-4 h-4" />
+                                    {wishlistCount > 0 && (
+                                        <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-[#C4B590] text-[#1a1d19] text-[10px] font-bold rounded-full flex items-center justify-center">
+                                            {wishlistCount > 9 ? '9+' : wishlistCount}
+                                        </span>
+                                    )}
+                                </m.div>
+                            </Link>
 
                             {/* Cart button */}
                             <m.button

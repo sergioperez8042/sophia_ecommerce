@@ -95,17 +95,19 @@ export default function AdminPage() {
             </div>
           </Link>
 
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 opacity-50">
+          <Link href="/admin/estadisticas" className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 hover:border-[#505A4A]/30 transition-colors group">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Estadísticas</p>
-                <p className="text-sm text-gray-400 dark:text-gray-500 mt-2">Próximamente</p>
+                <p className="text-sm font-medium text-[#505A4A] mt-2 flex items-center gap-1 group-hover:gap-2 transition-all">
+                  Ver datos <ArrowRight className="w-3.5 h-3.5" />
+                </p>
               </div>
               <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
-                <BarChart3 className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                <BarChart3 className="w-5 h-5 text-gray-600 dark:text-gray-400" />
               </div>
             </div>
-          </div>
+          </Link>
         </div>
 
         {/* Quick Actions */}
