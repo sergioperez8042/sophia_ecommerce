@@ -286,7 +286,7 @@ const PRESET_COLORS = [
   '#9b59b6', '#1abc9c', '#e91e63', '#795548', '#607d8b',
 ];
 
-function VisualEditor({ content, onChange, getIdToken }: { content: string; onChange: (html: string) => void; getIdToken?: () => Promise<string | null> }) {
+function VisualEditor({ content, onChange, getIdToken, bgColor, onBgColorChange }: { content: string; onChange: (html: string) => void; getIdToken?: () => Promise<string | null>; bgColor?: string; onBgColorChange?: (color: string) => void }) {
   const editorRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const isInternalChange = useRef(false);
@@ -311,7 +311,7 @@ function VisualEditor({ content, onChange, getIdToken }: { content: string; onCh
   const [showEmailBg, setShowEmailBg] = useState(false);
   const [currentTextColor, setCurrentTextColor] = useState('#000000');
   const [currentBgColor, setCurrentBgColor] = useState('transparent');
-  const [emailBgColor, setEmailBgColor] = useState('transparent');
+  const [emailBgColor, setEmailBgColor] = useState(bgColor || 'transparent');
 
   // Update active states based on current selection
   const updateActiveStates = () => {
@@ -451,31 +451,11 @@ function VisualEditor({ content, onChange, getIdToken }: { content: string; onCh
   };
 
   const setEmailBackground = (color: string) => {
-    if (!editorRef.current) return;
-    const firstChild = editorRef.current.firstElementChild as HTMLElement | null;
-    if (firstChild && firstChild.tagName === 'DIV' && firstChild.style.fontFamily) {
-      // Template-style content: modify the root wrapper div
-      firstChild.style.backgroundColor = color === 'transparent' ? '' : color;
-    } else {
-      // Plain content: wrap everything in a styled div or modify editor bg
-      const wrapper = editorRef.current.querySelector('[data-email-bg]') as HTMLElement | null;
-      if (wrapper) {
-        wrapper.style.backgroundColor = color === 'transparent' ? '' : color;
-      } else {
-        // Wrap all content in a background div
-        const div = document.createElement('div');
-        div.setAttribute('data-email-bg', '1');
-        div.style.backgroundColor = color;
-        div.style.padding = '20px';
-        div.style.borderRadius = '8px';
-        while (editorRef.current.firstChild) {
-          div.appendChild(editorRef.current.firstChild);
-        }
-        editorRef.current.appendChild(div);
-      }
-    }
     setEmailBgColor(color);
-    handleInput();
+    if (editorRef.current) {
+      editorRef.current.style.backgroundColor = color === 'transparent' ? '' : color;
+    }
+    onBgColorChange?.(color);
   };
 
   const btnBase = "p-1.5 rounded transition-colors";
@@ -746,7 +726,8 @@ function VisualEditor({ content, onChange, getIdToken }: { content: string; onCh
         onInput={handleInput}
         onKeyUp={updateActiveStates}
         onMouseUp={updateActiveStates}
-        className="min-h-[280px] px-4 py-3 text-sm text-gray-800 dark:text-gray-100 dark:bg-gray-900 focus:outline-none prose prose-sm dark:prose-invert max-w-none [&:empty]:before:content-['Escribe_tu_newsletter_aqui...'] [&:empty]:before:text-gray-400 [&:empty]:before:dark:text-gray-500"
+        className="min-h-[280px] px-4 py-3 text-sm text-gray-800 dark:text-gray-100 focus:outline-none prose prose-sm dark:prose-invert max-w-none [&:empty]:before:content-['Escribe_tu_newsletter_aqui...'] [&:empty]:before:text-gray-400 [&:empty]:before:dark:text-gray-500"
+        style={emailBgColor && emailBgColor !== 'transparent' ? { backgroundColor: emailBgColor } : undefined}
         suppressContentEditableWarning
       />
     </div>
@@ -781,6 +762,9 @@ export default function NewsletterAdminPage() {
   const [showTemplateDropdown, setShowTemplateDropdown] = useState(false);
   const [newTemplateName, setNewTemplateName] = useState('');
   const [showSaveTemplate, setShowSaveTemplate] = useState(false);
+
+  // Email background color (independent of content)
+  const [emailBgColor, setEmailBgColor] = useState('transparent');
 
   // Subscriber selection state
   const [recipientMode, setRecipientMode] = useState<'all' | 'select'>('all');
@@ -894,7 +878,10 @@ export default function NewsletterAdminPage() {
     setIsSending(true);
     try {
       const token = await getIdToken();
-      const payload: { subject: string; content: string; recipients?: string[] } = { subject, content };
+      const finalContent = emailBgColor && emailBgColor !== 'transparent'
+        ? `<div style="background-color: ${emailBgColor}; padding: 20px;">${content}</div>`
+        : content;
+      const payload: { subject: string; content: string; recipients?: string[] } = { subject, content: finalContent };
       if (recipientMode === 'select') {
         payload.recipients = Array.from(selectedEmails);
       }
@@ -911,6 +898,7 @@ export default function NewsletterAdminPage() {
         toast.success(data.message || 'Newsletter enviada');
         setSubject('');
         setContent('');
+        setEmailBgColor('transparent');
         setRecipientMode('all');
         setSelectedEmails(new Set());
         loadHistory();
@@ -1378,7 +1366,7 @@ export default function NewsletterAdminPage() {
 
                     {/* Visual editor with toolbar */}
                     {editorMode === 'visual' && (
-                      <VisualEditor content={content} onChange={setContent} getIdToken={getIdToken} />
+                      <VisualEditor content={content} onChange={setContent} getIdToken={getIdToken} bgColor={emailBgColor} onBgColorChange={setEmailBgColor} />
                     )}
 
                     {/* Raw HTML editor */}
@@ -1398,6 +1386,7 @@ export default function NewsletterAdminPage() {
                         {content ? (
                           <div
                             className="prose prose-sm dark:prose-invert max-w-none"
+                            style={emailBgColor && emailBgColor !== 'transparent' ? { backgroundColor: emailBgColor, padding: '20px', borderRadius: '8px' } : undefined}
                             dangerouslySetInnerHTML={{ __html: content }}
                           />
                         ) : (
