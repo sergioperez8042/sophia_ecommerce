@@ -556,6 +556,7 @@ export default function NewsletterAdminPage() {
         setContent('');
         setRecipientMode('all');
         setSelectedEmails(new Set());
+        loadHistory();
       } else {
         toast.error(data.error || 'Error al enviar');
       }
