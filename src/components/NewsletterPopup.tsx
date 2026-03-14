@@ -88,6 +88,10 @@ export default function NewsletterPopup() {
       if (res.ok) {
         setIsSuccess(true);
         localStorage.setItem(STORAGE_KEYS.subscribed, 'true');
+        // If already subscribed, auto-close after a moment
+        if (data.alreadySubscribed) {
+          setTimeout(() => setIsOpen(false), 2500);
+        }
       } else {
         setError(data.error || 'Error al suscribirte');
       }

@@ -305,8 +305,8 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                     </div>
 
                     {/* Categorías */}
-                    <div className="w-full md:w-auto overflow-x-auto scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
-                        <div className="flex items-center gap-2 w-max md:w-auto">
+                    <div className="w-full">
+                        <div className="flex items-center gap-2 flex-wrap">
                             <button
                                 onClick={() => { setSelectedCategory("all"); setVisibleCount(5); setBrowsingCategory(null); }}
                                 className={`px-4 py-2 rounded-full text-sm whitespace-nowrap transition-all ${selectedCategory === "all"
