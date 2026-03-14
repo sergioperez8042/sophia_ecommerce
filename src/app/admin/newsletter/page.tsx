@@ -290,6 +290,7 @@ function VisualEditor({ content, onChange, getIdToken, bgColor, onBgColorChange 
   const editorRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const isInternalChange = useRef(false);
+  const savedSelectionRef = useRef<Range | null>(null);
   const [uploading, setUploading] = useState(false);
 
   // Active state tracking
@@ -443,6 +444,23 @@ function VisualEditor({ content, onChange, getIdToken, bgColor, onBgColorChange 
     }
   };
 
+  const saveSelection = () => {
+    const sel = window.getSelection();
+    if (sel && sel.rangeCount > 0) {
+      savedSelectionRef.current = sel.getRangeAt(0).cloneRange();
+    }
+  };
+
+  const restoreSelection = () => {
+    const range = savedSelectionRef.current;
+    if (range) {
+      editorRef.current?.focus();
+      const sel = window.getSelection();
+      sel?.removeAllRanges();
+      sel?.addRange(range);
+    }
+  };
+
   const closeAllDropdowns = () => {
     setShowTextColor(false);
     setShowBgColor(false);
@@ -508,7 +526,7 @@ function VisualEditor({ content, onChange, getIdToken, bgColor, onBgColorChange 
         <div className="relative" data-color-picker>
           <button
             type="button"
-            onClick={() => { const next = !showFontSize; closeAllDropdowns(); setShowFontSize(next); }}
+            onClick={() => { saveSelection(); const next = !showFontSize; closeAllDropdowns(); setShowFontSize(next); }}
             className={`${btnBase} ${btnInactive} flex items-center gap-0.5 text-xs font-medium min-w-[40px] justify-center`}
             title="Tamano de fuente"
           >
@@ -521,7 +539,7 @@ function VisualEditor({ content, onChange, getIdToken, bgColor, onBgColorChange 
                 <button
                   key={fs.value}
                   type="button"
-                  onClick={() => { execCmd('fontSize', fs.value); setShowFontSize(false); }}
+                  onClick={() => { restoreSelection(); execCmd('fontSize', fs.value); setShowFontSize(false); }}
                   className="w-full text-left px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
                   {fs.label}px
@@ -536,7 +554,7 @@ function VisualEditor({ content, onChange, getIdToken, bgColor, onBgColorChange 
         <div className="relative" data-color-picker>
           <button
             type="button"
-            onClick={() => { const next = !showTextColor; closeAllDropdowns(); setShowTextColor(next); }}
+            onClick={() => { saveSelection(); const next = !showTextColor; closeAllDropdowns(); setShowTextColor(next); }}
             className={`${btnBase} ${btnInactive} flex flex-col items-center`}
             title="Color de texto"
           >
@@ -550,7 +568,7 @@ function VisualEditor({ content, onChange, getIdToken, bgColor, onBgColorChange 
                   <button
                     key={color}
                     type="button"
-                    onClick={() => { execCmd('foreColor', color); setCurrentTextColor(color); setShowTextColor(false); }}
+                    onClick={() => { restoreSelection(); execCmd('foreColor', color); setCurrentTextColor(color); setShowTextColor(false); }}
                     className="w-7 h-7 rounded border border-gray-300 dark:border-gray-600 hover:scale-110 transition-transform"
                     style={{ backgroundColor: color }}
                     title={color}
@@ -562,7 +580,7 @@ function VisualEditor({ content, onChange, getIdToken, bgColor, onBgColorChange 
                 <input
                   type="color"
                   value={currentTextColor}
-                  onChange={(e) => { execCmd('foreColor', e.target.value); setCurrentTextColor(e.target.value); }}
+                  onChange={(e) => { restoreSelection(); execCmd('foreColor', e.target.value); setCurrentTextColor(e.target.value); }}
                   className="w-6 h-6 rounded cursor-pointer border-0 p-0"
                 />
               </label>
@@ -574,7 +592,7 @@ function VisualEditor({ content, onChange, getIdToken, bgColor, onBgColorChange 
         <div className="relative" data-color-picker>
           <button
             type="button"
-            onClick={() => { const next = !showBgColor; closeAllDropdowns(); setShowBgColor(next); }}
+            onClick={() => { saveSelection(); const next = !showBgColor; closeAllDropdowns(); setShowBgColor(next); }}
             className={`${btnBase} ${btnInactive} flex flex-col items-center`}
             title="Resaltar texto"
           >
@@ -588,7 +606,7 @@ function VisualEditor({ content, onChange, getIdToken, bgColor, onBgColorChange 
                   <button
                     key={color}
                     type="button"
-                    onClick={() => { execCmd('hiliteColor', color); setCurrentBgColor(color); setShowBgColor(false); }}
+                    onClick={() => { restoreSelection(); execCmd('hiliteColor', color); setCurrentBgColor(color); setShowBgColor(false); }}
                     className="w-7 h-7 rounded border border-gray-300 dark:border-gray-600 hover:scale-110 transition-transform"
                     style={{ backgroundColor: color }}
                     title={color}
@@ -601,13 +619,13 @@ function VisualEditor({ content, onChange, getIdToken, bgColor, onBgColorChange 
                   <input
                     type="color"
                     value={currentBgColor === 'transparent' ? '#ffffff' : currentBgColor}
-                    onChange={(e) => { execCmd('hiliteColor', e.target.value); setCurrentBgColor(e.target.value); }}
+                    onChange={(e) => { restoreSelection(); execCmd('hiliteColor', e.target.value); setCurrentBgColor(e.target.value); }}
                     className="w-6 h-6 rounded cursor-pointer border-0 p-0"
                   />
                 </label>
                 <button
                   type="button"
-                  onClick={() => { execCmd('hiliteColor', 'transparent'); setCurrentBgColor('transparent'); setShowBgColor(false); }}
+                  onClick={() => { restoreSelection(); execCmd('hiliteColor', 'transparent'); setCurrentBgColor('transparent'); setShowBgColor(false); }}
                   className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                 >
                   Quitar
