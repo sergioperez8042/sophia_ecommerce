@@ -52,6 +52,7 @@ import {
   RemoveFormatting,
   Palette,
   Highlighter,
+  PaintBucket,
 } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -307,8 +308,10 @@ function VisualEditor({ content, onChange, getIdToken }: { content: string; onCh
   const [showTextColor, setShowTextColor] = useState(false);
   const [showBgColor, setShowBgColor] = useState(false);
   const [showFontSize, setShowFontSize] = useState(false);
+  const [showEmailBg, setShowEmailBg] = useState(false);
   const [currentTextColor, setCurrentTextColor] = useState('#000000');
   const [currentBgColor, setCurrentBgColor] = useState('transparent');
+  const [emailBgColor, setEmailBgColor] = useState('transparent');
 
   // Update active states based on current selection
   const updateActiveStates = () => {
@@ -353,6 +356,7 @@ function VisualEditor({ content, onChange, getIdToken }: { content: string; onCh
         setShowTextColor(false);
         setShowBgColor(false);
         setShowFontSize(false);
+        setShowEmailBg(false);
       }
     };
     document.addEventListener('mousedown', handler);
@@ -439,6 +443,41 @@ function VisualEditor({ content, onChange, getIdToken }: { content: string; onCh
     }
   };
 
+  const closeAllDropdowns = () => {
+    setShowTextColor(false);
+    setShowBgColor(false);
+    setShowFontSize(false);
+    setShowEmailBg(false);
+  };
+
+  const setEmailBackground = (color: string) => {
+    if (!editorRef.current) return;
+    const firstChild = editorRef.current.firstElementChild as HTMLElement | null;
+    if (firstChild && firstChild.tagName === 'DIV' && firstChild.style.fontFamily) {
+      // Template-style content: modify the root wrapper div
+      firstChild.style.backgroundColor = color === 'transparent' ? '' : color;
+    } else {
+      // Plain content: wrap everything in a styled div or modify editor bg
+      const wrapper = editorRef.current.querySelector('[data-email-bg]') as HTMLElement | null;
+      if (wrapper) {
+        wrapper.style.backgroundColor = color === 'transparent' ? '' : color;
+      } else {
+        // Wrap all content in a background div
+        const div = document.createElement('div');
+        div.setAttribute('data-email-bg', '1');
+        div.style.backgroundColor = color;
+        div.style.padding = '20px';
+        div.style.borderRadius = '8px';
+        while (editorRef.current.firstChild) {
+          div.appendChild(editorRef.current.firstChild);
+        }
+        editorRef.current.appendChild(div);
+      }
+    }
+    setEmailBgColor(color);
+    handleInput();
+  };
+
   const btnBase = "p-1.5 rounded transition-colors";
   const btnInactive = "hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400";
   const btnActive = "bg-[#505A4A] text-white dark:bg-[#C4B590] dark:text-gray-900";
@@ -489,7 +528,7 @@ function VisualEditor({ content, onChange, getIdToken }: { content: string; onCh
         <div className="relative" data-color-picker>
           <button
             type="button"
-            onClick={() => { setShowFontSize(!showFontSize); setShowTextColor(false); setShowBgColor(false); }}
+            onClick={() => { const next = !showFontSize; closeAllDropdowns(); setShowFontSize(next); }}
             className={`${btnBase} ${btnInactive} flex items-center gap-0.5 text-xs font-medium min-w-[40px] justify-center`}
             title="Tamano de fuente"
           >
@@ -517,7 +556,7 @@ function VisualEditor({ content, onChange, getIdToken }: { content: string; onCh
         <div className="relative" data-color-picker>
           <button
             type="button"
-            onClick={() => { setShowTextColor(!showTextColor); setShowBgColor(false); setShowFontSize(false); }}
+            onClick={() => { const next = !showTextColor; closeAllDropdowns(); setShowTextColor(next); }}
             className={`${btnBase} ${btnInactive} flex flex-col items-center`}
             title="Color de texto"
           >
@@ -551,13 +590,13 @@ function VisualEditor({ content, onChange, getIdToken }: { content: string; onCh
           )}
         </div>
 
-        {/* Background color */}
+        {/* Highlight text */}
         <div className="relative" data-color-picker>
           <button
             type="button"
-            onClick={() => { setShowBgColor(!showBgColor); setShowTextColor(false); setShowFontSize(false); }}
+            onClick={() => { const next = !showBgColor; closeAllDropdowns(); setShowBgColor(next); }}
             className={`${btnBase} ${btnInactive} flex flex-col items-center`}
-            title="Color de fondo"
+            title="Resaltar texto"
           >
             <Highlighter className="w-4 h-4" />
             <div className="w-4 h-0.5 rounded-full mt-0.5" style={{ backgroundColor: currentBgColor === 'transparent' ? '#f1c40f' : currentBgColor }} />
@@ -601,6 +640,56 @@ function VisualEditor({ content, onChange, getIdToken }: { content: string; onCh
 
       {/* Toolbar Row 2: Structure & media */}
       <div className="flex items-center gap-0.5 px-2 py-1.5 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex-wrap">
+        {/* Email background color */}
+        <div className="relative" data-color-picker>
+          <button
+            type="button"
+            onClick={() => { const next = !showEmailBg; closeAllDropdowns(); setShowEmailBg(next); }}
+            className={`${btnBase} ${btnInactive} flex items-center gap-1 text-xs`}
+            title="Fondo del email"
+          >
+            <PaintBucket className="w-4 h-4" />
+            <span className="hidden sm:inline">Fondo</span>
+            <div className="w-3 h-3 rounded border border-gray-300 dark:border-gray-600" style={{ backgroundColor: emailBgColor === 'transparent' ? '#ffffff' : emailBgColor }} />
+          </button>
+          {showEmailBg && (
+            <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 p-2 w-[200px]" data-color-picker>
+              <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">Fondo completo del email</p>
+              <div className="grid grid-cols-5 gap-1 mb-2">
+                {PRESET_COLORS.map((color) => (
+                  <button
+                    key={color}
+                    type="button"
+                    onClick={() => { setEmailBackground(color); setShowEmailBg(false); }}
+                    className="w-7 h-7 rounded border border-gray-300 dark:border-gray-600 hover:scale-110 transition-transform"
+                    style={{ backgroundColor: color }}
+                    title={color}
+                  />
+                ))}
+              </div>
+              <div className="flex items-center justify-between">
+                <label className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                  <span>Otro:</span>
+                  <input
+                    type="color"
+                    value={emailBgColor === 'transparent' ? '#ffffff' : emailBgColor}
+                    onChange={(e) => { setEmailBackground(e.target.value); }}
+                    className="w-6 h-6 rounded cursor-pointer border-0 p-0"
+                  />
+                </label>
+                <button
+                  type="button"
+                  onClick={() => { setEmailBackground('transparent'); setShowEmailBg(false); }}
+                  className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                >
+                  Quitar
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+        {divider}
+
         {/* Alignment */}
         <button type="button" onClick={() => execCmd('justifyLeft')} className={toolbarBtn(activeStates.justifyLeft)} title="Alinear izquierda">
           <AlignLeft className="w-4 h-4" />
