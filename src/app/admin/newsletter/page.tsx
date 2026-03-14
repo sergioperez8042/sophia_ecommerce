@@ -47,9 +47,11 @@ const SOURCE_STYLES: Record<string, { classes: string; label: string }> = {
 };
 
 // ==================== VISUAL EDITOR ====================
-function VisualEditor({ content, onChange }: { content: string; onChange: (html: string) => void }) {
+function VisualEditor({ content, onChange, getIdToken }: { content: string; onChange: (html: string) => void; getIdToken?: () => Promise<string | null> }) {
   const editorRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const isInternalChange = useRef(false);
+  const [uploading, setUploading] = useState(false);
 
   // Sync content → editor (only when content changes externally)
   useEffect(() => {
@@ -88,9 +90,47 @@ function VisualEditor({ content, onChange }: { content: string; onChange: (html:
   };
 
   const insertImage = () => {
-    const url = prompt('URL de la imagen:');
-    if (url) {
-      execCmd('insertImage', url);
+    fileInputRef.current?.click();
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type and size
+    if (!file.type.startsWith('image/')) {
+      alert('Solo se permiten imágenes');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      alert('La imagen no puede superar 5MB');
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const token = getIdToken ? await getIdToken() : null;
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (res.ok && data.url) {
+        execCmd('insertImage', data.url);
+      } else {
+        alert(data.error || 'Error al subir imagen');
+      }
+    } catch {
+      alert('Error al subir la imagen');
+    } finally {
+      setUploading(false);
+      // Reset input so same file can be re-selected
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 
@@ -120,9 +160,16 @@ function VisualEditor({ content, onChange }: { content: string; onChange: (html:
         <button type="button" onClick={insertLink} className={toolbarBtnClass} title="Enlace">
           <Link2 className="w-4 h-4" />
         </button>
-        <button type="button" onClick={insertImage} className={toolbarBtnClass} title="Imagen">
-          <Image className="w-4 h-4" />
+        <button type="button" onClick={insertImage} className={toolbarBtnClass} title="Imagen" disabled={uploading}>
+          {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Image className="w-4 h-4" />}
         </button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          className="hidden"
+        />
         <div className="w-px h-5 bg-gray-200 dark:bg-gray-700 mx-1" />
         <button type="button" onClick={() => execCmd('formatBlock', 'p')} className={toolbarBtnClass} title="Párrafo">
           <Type className="w-4 h-4" />
@@ -606,7 +653,7 @@ export default function NewsletterAdminPage() {
 
                     {/* Visual editor with toolbar */}
                     {editorMode === 'visual' && (
-                      <VisualEditor content={content} onChange={setContent} />
+                      <VisualEditor content={content} onChange={setContent} getIdToken={getIdToken} />
                     )}
 
                     {/* Raw HTML editor */}
