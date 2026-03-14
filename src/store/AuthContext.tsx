@@ -34,6 +34,7 @@ export interface User {
   // Solo para gestores
   managerCode?: string;
   zone?: string;
+  gestorId?: string;
   // Para clientes
   address?: string;
   city?: string;

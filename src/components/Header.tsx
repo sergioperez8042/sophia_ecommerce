@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Leaf, Heart, ShoppingBag, Menu, X, Home, Package, Grid3X3, Users, Phone, Sun, Moon } from "lucide-react";
+import { Leaf, Heart, ShoppingBag, Menu, X, Home, Package, Grid3X3, Users, Phone, LogOut, ExternalLink, LayoutDashboard, Newspaper, UserCog } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCart, useWishlist, useTheme } from "@/store";
-import UserMenu from "@/components/UserMenu";
+import { useCart, useWishlist, useAuth } from "@/store";
 
 const navItems = [
     { name: "Inicio", href: "/", icon: Home },
@@ -22,7 +21,7 @@ export default function Header() {
 
     const { totalItems: cartCount } = useCart();
     const { totalItems: wishlistCount } = useWishlist();
-    const { isDark, toggleTheme } = useTheme();
+    const { logout, isAuthenticated, user } = useAuth();
 
     // Close menu on route change
     useEffect(() => {
@@ -102,26 +101,27 @@ export default function Header() {
 
                         {/* Right: Actions */}
                         <div className="flex items-center gap-1 sm:gap-1.5">
-                            {/* Mobile: compact user icon */}
-                            <div className="md:hidden">
-                                <UserMenu compact />
-                            </div>
-                            {/* Desktop: full user menu */}
-                            <div className="hidden md:block">
-                                <UserMenu />
-                            </div>
-
-                            <button
-                                onClick={toggleTheme}
-                                className="flex items-center justify-center h-9 w-9 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                                aria-label={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+                            {/* View catalog */}
+                            <Link
+                                href="/"
+                                className="hidden sm:flex items-center gap-1.5 h-9 px-3 rounded-lg text-xs font-medium text-[#505A4A] hover:bg-[#505A4A]/5 transition-colors"
+                                target="_blank"
                             >
-                                {isDark ? (
-                                    <Sun className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                                ) : (
-                                    <Moon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                                )}
-                            </button>
+                                <ExternalLink className="w-3.5 h-3.5" />
+                                Ver Catálogo
+                            </Link>
+
+                            {/* Logout */}
+                            {isAuthenticated && (
+                                <button
+                                    onClick={logout}
+                                    className="flex items-center justify-center h-9 w-9 rounded-lg hover:bg-red-50 dark:hover:bg-red-500/10 text-gray-500 hover:text-red-500 transition-colors"
+                                    aria-label="Cerrar sesión"
+                                    title="Cerrar sesión"
+                                >
+                                    <LogOut className="w-4.5 h-4.5" />
+                                </button>
+                            )}
 
                             <Link
                                 href="/cart"
@@ -207,28 +207,38 @@ export default function Header() {
                             })}
                         </div>
 
-                        {/* Bottom section: User + Dark mode + Footer */}
+                        {/* Bottom section: Admin links + Logout */}
                         <div className="absolute bottom-0 left-0 right-0">
-                            {/* User section */}
-                            <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-800">
-                                <UserMenu />
-                            </div>
+                            {/* Quick admin links */}
+                            {isAuthenticated && user?.role === 'admin' && (
+                                <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-800 space-y-1">
+                                    <Link href="/admin" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:text-[#505A4A] hover:bg-[#505A4A]/5 transition-all text-sm font-medium" onClick={() => setIsMenuOpen(false)}>
+                                        <LayoutDashboard className="w-5 h-5" />
+                                        Panel Admin
+                                    </Link>
+                                    <Link href="/admin/gestores" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:text-[#505A4A] hover:bg-[#505A4A]/5 transition-all text-sm font-medium" onClick={() => setIsMenuOpen(false)}>
+                                        <UserCog className="w-5 h-5" />
+                                        Gestores
+                                    </Link>
+                                    <Link href="/admin/newsletter" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:text-[#505A4A] hover:bg-[#505A4A]/5 transition-all text-sm font-medium" onClick={() => setIsMenuOpen(false)}>
+                                        <Newspaper className="w-5 h-5" />
+                                        Newsletter
+                                    </Link>
+                                </div>
+                            )}
 
-                            {/* Dark mode toggle */}
-                            <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-800">
-                                <button
-                                    onClick={toggleTheme}
-                                    className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:text-[#505A4A] dark:hover:text-[#C4B590] hover:bg-[#505A4A]/5 dark:hover:bg-gray-800/50 transition-all"
-                                >
-                                    {isDark ? (
-                                        <Sun className="w-5 h-5" />
-                                    ) : (
-                                        <Moon className="w-5 h-5" />
-                                    )}
-                                    <span className="text-sm font-medium">
-                                        {isDark ? 'Modo Claro' : 'Modo Oscuro'}
-                                    </span>
-                                </button>
+                            {/* View catalog + Logout */}
+                            <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-800 space-y-1">
+                                <Link href="/" target="_blank" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:text-[#505A4A] hover:bg-[#505A4A]/5 transition-all text-sm font-medium" onClick={() => setIsMenuOpen(false)}>
+                                    <ExternalLink className="w-5 h-5" />
+                                    Ver Catálogo
+                                </Link>
+                                {isAuthenticated && (
+                                    <button onClick={() => { logout(); setIsMenuOpen(false); }} className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all text-sm font-medium">
+                                        <LogOut className="w-5 h-5" />
+                                        Cerrar Sesión
+                                    </button>
+                                )}
                             </div>
 
                             {/* Footer brand */}

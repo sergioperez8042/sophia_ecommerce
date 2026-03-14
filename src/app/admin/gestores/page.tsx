@@ -2,8 +2,8 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@/store';
-import { GestorService } from '@/lib/firestore-services';
-import { IGestor } from '@/entities/all';
+import { GestorService, GestorAccountService } from '@/lib/firestore-services';
+import { IGestor, GESTOR_PERMISSIONS, GestorPermission, DEFAULT_GESTOR_PERMISSIONS } from '@/entities/all';
 import { CUBA_PROVINCES } from '@/data/cuba-locations';
 import {
   Users,
@@ -20,10 +20,18 @@ import {
   AlertCircle,
   Camera,
   Pencil,
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  Copy,
+  Check,
+  Shield,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { toast } from 'sonner';
 
 export default function GestoresAdminPage() {
   const router = useRouter();
@@ -46,6 +54,17 @@ export default function GestoresAdminPage() {
   const [photoPreview, setPhotoPreview] = useState('');
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+
+  // Account credentials
+  const [gestorEmail, setGestorEmail] = useState('');
+  const [gestorPassword, setGestorPassword] = useState('');
+  const [showGestorPassword, setShowGestorPassword] = useState(false);
+  const [createAccount, setCreateAccount] = useState(true);
+  const [createdCredentials, setCreatedCredentials] = useState<{ email: string; password: string } | null>(null);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  // Permissions
+  const [permissions, setPermissions] = useState<GestorPermission[]>([...DEFAULT_GESTOR_PERMISSIONS]);
 
   useEffect(() => {
     if (isLoaded && (!isAuthenticated || !isAdmin)) {
@@ -79,6 +98,12 @@ export default function GestoresAdminPage() {
     setPhotoPreview('');
     setEditingId(null);
     setShowForm(false);
+    setGestorEmail('');
+    setGestorPassword('');
+    setShowGestorPassword(false);
+    setCreateAccount(true);
+    setCreatedCredentials(null);
+    setPermissions([...DEFAULT_GESTOR_PERMISSIONS]);
   };
 
   const handleEdit = (gestor: IGestor) => {
@@ -90,6 +115,10 @@ export default function GestoresAdminPage() {
     setSelectedMunicipalities([...gestor.municipalities]);
     setPhotoFile(null);
     setPhotoPreview(gestor.photoUrl || '');
+    setGestorEmail(gestor.email || '');
+    setGestorPassword('');
+    setCreateAccount(!gestor.userId); // Show account fields if no account yet
+    setPermissions(gestor.permissions ? [...gestor.permissions] : [...DEFAULT_GESTOR_PERMISSIONS]);
     setShowForm(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -122,10 +151,53 @@ export default function GestoresAdminPage() {
     }
   };
 
+  const handleCopy = async (text: string, field: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      // Fallback for non-HTTPS contexts
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    }
+    setCopiedField(field);
+    toast.success('Copiado');
+    setTimeout(() => setCopiedField(null), 2000);
+  };
+
+  const generatePassword = () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+    let pwd = '';
+    for (let i = 0; i < 10; i++) pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+    setGestorPassword(pwd);
+  };
+
+  const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+
   const handleSave = async () => {
     if (!name || !whatsapp || !province || selectedMunicipalities.length === 0) return;
+    const editingGestor = editingId ? gestores.find(g => g.id === editingId) : null;
+    const needsAccount = createAccount && !editingGestor?.userId;
+    if (needsAccount && (!gestorEmail || !gestorPassword)) {
+      setError('Email y contraseña son requeridos para crear la cuenta del gestor.');
+      return;
+    }
+    if (needsAccount && gestorEmail && !isValidEmail(gestorEmail)) {
+      setError('El email no es válido. Verifica que tenga formato correcto (ej: nombre@email.com)');
+      return;
+    }
+    if (needsAccount && gestorPassword.length < 6) {
+      setError('La contraseña debe tener al menos 6 caracteres.');
+      return;
+    }
     setSaving(true);
     setError('');
+    let accountCreated = false;
     try {
       let photoUrl: string | undefined;
       if (photoFile) {
@@ -138,16 +210,63 @@ export default function GestoresAdminPage() {
         province,
         municipalities: selectedMunicipalities,
         active: true,
+        permissions,
         ...(photoUrl ? { photoUrl } : {}),
+        ...(gestorEmail ? { email: gestorEmail.trim().toLowerCase() } : {}),
       };
 
       if (editingId) {
         await GestorService.update(editingId, gestorData);
+        // If editing and needs account, create it now
+        if (needsAccount && gestorEmail && gestorPassword) {
+          try {
+            await GestorAccountService.createAccount({
+              email: gestorEmail.trim(),
+              password: gestorPassword,
+              name,
+              gestorId: editingId,
+            });
+            setCreatedCredentials({ email: gestorEmail.trim(), password: gestorPassword });
+            accountCreated = true;
+            toast.success('Gestor actualizado y cuenta creada');
+          } catch (err) {
+            const errorMsg = err instanceof Error ? err.message : 'Error al crear la cuenta';
+            setError(`Gestor actualizado pero error al crear cuenta: ${errorMsg}`);
+            toast.error('Error al crear la cuenta del gestor');
+          }
+        } else {
+          toast.success('Gestor actualizado correctamente');
+        }
       } else {
-        await GestorService.create(gestorData);
+        // Create the gestor doc first
+        const newGestor = await GestorService.create(gestorData);
+
+        // If account creation is enabled, create the Firebase Auth account
+        if (createAccount && gestorEmail && gestorPassword) {
+          try {
+            await GestorAccountService.createAccount({
+              email: gestorEmail.trim(),
+              password: gestorPassword,
+              name,
+              gestorId: newGestor.id,
+            });
+            setCreatedCredentials({ email: gestorEmail.trim(), password: gestorPassword });
+            accountCreated = true;
+            toast.success('Gestor y cuenta creados correctamente');
+          } catch (err) {
+            const errorMsg = err instanceof Error ? err.message : 'Error al crear la cuenta';
+            setError(`Gestor creado pero error al crear cuenta: ${errorMsg}`);
+            toast.error('Error al crear la cuenta del gestor');
+          }
+        } else {
+          toast.success('Gestor creado correctamente');
+        }
       }
 
-      resetForm();
+      // Don't reset form if we just showed credentials
+      if (!accountCreated) {
+        resetForm();
+      }
       await loadGestores();
     } catch (err) {
       console.error('Error saving gestor:', err);
@@ -293,6 +412,61 @@ export default function GestoresAdminPage() {
               </div>
             </div>
 
+            {/* Credentials success banner */}
+            {createdCredentials && (
+              <div className="mb-5 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4">
+                <p className="text-sm font-medium text-green-800 dark:text-green-300 mb-3">
+                  Cuenta creada. Comparte estos datos con el gestor:
+                </p>
+                <div className="space-y-2">
+                  {/* Login URL */}
+                  <div className="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-lg px-3 py-2">
+                    <ArrowLeft className="w-4 h-4 text-gray-400 rotate-180" />
+                    <span className="text-sm text-gray-700 dark:text-gray-300 flex-1 font-mono text-[11px] sm:text-sm truncate">
+                      {typeof window !== 'undefined' ? `${window.location.origin}/auth` : 'sophia-cosmetic.vercel.app/auth'}
+                    </span>
+                    <button onClick={() => handleCopy(typeof window !== 'undefined' ? `${window.location.origin}/auth` : 'https://sophia-cosmetic.vercel.app/auth', 'url')} className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded flex-shrink-0">
+                      {copiedField === 'url' ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4 text-gray-400" />}
+                    </button>
+                  </div>
+                  {/* Email */}
+                  <div className="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-lg px-3 py-2">
+                    <Mail className="w-4 h-4 text-gray-400" />
+                    <span className="text-sm text-gray-700 dark:text-gray-300 flex-1 font-mono">{createdCredentials.email}</span>
+                    <button onClick={() => handleCopy(createdCredentials.email, 'email')} className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded flex-shrink-0">
+                      {copiedField === 'email' ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4 text-gray-400" />}
+                    </button>
+                  </div>
+                  {/* Password */}
+                  <div className="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-lg px-3 py-2">
+                    <Lock className="w-4 h-4 text-gray-400" />
+                    <span className="text-sm text-gray-700 dark:text-gray-300 flex-1 font-mono">{createdCredentials.password}</span>
+                    <button onClick={() => handleCopy(createdCredentials.password, 'password')} className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded flex-shrink-0">
+                      {copiedField === 'password' ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4 text-gray-400" />}
+                    </button>
+                  </div>
+                </div>
+                {/* Copy all button */}
+                <button
+                  onClick={() => {
+                    const loginUrl = typeof window !== 'undefined' ? `${window.location.origin}/auth` : 'https://sophia-cosmetic.vercel.app/auth';
+                    const allText = `Portal Sophia - Acceso Gestor\n\nURL: ${loginUrl}\nEmail: ${createdCredentials.email}\nContraseña: ${createdCredentials.password}\n\nInicia sesión y cambia tu contraseña.`;
+                    handleCopy(allText, 'all');
+                  }}
+                  className="mt-3 flex items-center gap-1.5 text-xs font-medium text-green-700 dark:text-green-400 hover:underline"
+                >
+                  {copiedField === 'all' ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copiedField === 'all' ? 'Copiado todo' : 'Copiar todo para enviar por WhatsApp'}
+                </button>
+                <button
+                  onClick={resetForm}
+                  className="mt-2 text-xs text-gray-500 dark:text-gray-400 hover:underline block"
+                >
+                  Cerrar y continuar
+                </button>
+              </div>
+            )}
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 block">Nombre</label>
@@ -314,6 +488,140 @@ export default function GestoresAdminPage() {
                   className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 />
               </div>
+              {/* Account fields - show for new gestores OR editing gestores without account */}
+              {(() => {
+                const editingGestor = editingId ? gestores.find(g => g.id === editingId) : null;
+                const hasAccount = editingGestor?.userId;
+                if (hasAccount) return (
+                  <div className="sm:col-span-2">
+                    <div className="flex items-center gap-2 text-xs text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-3 py-2 rounded-lg">
+                      <Check className="w-4 h-4" />
+                      <span>Este gestor ya tiene cuenta: <strong className="font-mono">{editingGestor.email}</strong></span>
+                    </div>
+                  </div>
+                );
+                return (
+                  <>
+                    <div className="sm:col-span-2">
+                      <label className="flex items-center gap-2 cursor-pointer mb-3">
+                        <input
+                          type="checkbox"
+                          checked={createAccount}
+                          onChange={(e) => setCreateAccount(e.target.checked)}
+                          className="rounded border-gray-300 text-[#505A4A] focus:ring-[#505A4A]"
+                        />
+                        <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                          {editingId ? 'Crear cuenta de acceso para este gestor' : 'Crear cuenta de acceso al portal de gestor'}
+                        </span>
+                      </label>
+                    </div>
+                    {createAccount && (
+                      <>
+                        <div>
+                          <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 block">Email de acceso</label>
+                          <div className="relative">
+                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                            <input
+                              type="email"
+                              value={gestorEmail}
+                              onChange={(e) => setGestorEmail(e.target.value)}
+                              placeholder="gestor@email.com"
+                              className="w-full pl-10 pr-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 flex items-center justify-between">
+                            <span>Contraseña</span>
+                            <button
+                              type="button"
+                              onClick={generatePassword}
+                              className="text-[#505A4A] hover:underline normal-case tracking-normal"
+                            >
+                              Generar
+                            </button>
+                          </label>
+                          <div className="relative">
+                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                            <input
+                              type={showGestorPassword ? 'text' : 'password'}
+                              value={gestorPassword}
+                              onChange={(e) => setGestorPassword(e.target.value)}
+                              placeholder="Mín. 6 caracteres"
+                              className="w-full pl-10 pr-10 py-2.5 border border-gray-200 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowGestorPassword(!showGestorPassword)}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                            >
+                              {showGestorPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                            </button>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </>
+                );
+              })()}
+
+              {/* Permissions */}
+              <div className="sm:col-span-2">
+                <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5 block">
+                  <Shield className="w-3.5 h-3.5" />
+                  Permisos
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                  {(Object.entries(GESTOR_PERMISSIONS) as [GestorPermission, string][]).map(([key, label]) => (
+                    <label
+                      key={key}
+                      className={`flex items-center gap-2 px-3 py-2.5 rounded-lg border cursor-pointer transition-colors ${
+                        permissions.includes(key)
+                          ? 'border-[#505A4A]/30 bg-[#505A4A]/5 dark:border-[#C4B590]/30 dark:bg-[#C4B590]/5'
+                          : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={permissions.includes(key)}
+                        onChange={() => {
+                          setPermissions(prev =>
+                            prev.includes(key)
+                              ? prev.filter(p => p !== key)
+                              : [...prev, key]
+                          );
+                        }}
+                        className="rounded border-gray-300 text-[#505A4A] focus:ring-[#505A4A]"
+                      />
+                      <span className={`text-xs font-medium ${
+                        permissions.includes(key)
+                          ? 'text-[#505A4A] dark:text-[#C4B590]'
+                          : 'text-gray-600 dark:text-gray-400'
+                      }`}>
+                        {label}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+                <div className="flex gap-2 mt-2">
+                  <button
+                    type="button"
+                    onClick={() => setPermissions(Object.keys(GESTOR_PERMISSIONS) as GestorPermission[])}
+                    className="text-[10px] text-[#505A4A] dark:text-[#C4B590] hover:underline"
+                  >
+                    Seleccionar todos
+                  </button>
+                  <span className="text-gray-300 dark:text-gray-600">|</span>
+                  <button
+                    type="button"
+                    onClick={() => setPermissions([])}
+                    className="text-[10px] text-gray-500 dark:text-gray-400 hover:underline"
+                  >
+                    Quitar todos
+                  </button>
+                </div>
+              </div>
+
               <div className="relative">
                 <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 block">Provincia</label>
                 <div className="relative">
@@ -500,7 +808,7 @@ export default function GestoresAdminPage() {
                       </div>
                     </div>
 
-                    {/* Row 2: Phone + Province */}
+                    {/* Row 2: Phone + Province + Email */}
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 dark:text-gray-400 mb-3 pl-12">
                       <span className="flex items-center gap-1.5">
                         <Phone className="w-3.5 h-3.5" />
@@ -510,6 +818,21 @@ export default function GestoresAdminPage() {
                         <MapPin className="w-3.5 h-3.5" />
                         {gestor.province}
                       </span>
+                      {gestor.email && (
+                        <span className="flex items-center gap-1.5">
+                          <Mail className="w-3.5 h-3.5" />
+                          {gestor.email}
+                        </span>
+                      )}
+                      {gestor.userId ? (
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-medium">
+                          Con cuenta
+                        </span>
+                      ) : (
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 font-medium">
+                          Sin cuenta
+                        </span>
+                      )}
                     </div>
 
                     {/* Row 3: Municipalities */}
@@ -523,6 +846,21 @@ export default function GestoresAdminPage() {
                         </span>
                       ))}
                     </div>
+
+                    {/* Row 4: Permissions */}
+                    {gestor.permissions && gestor.permissions.length > 0 && (
+                      <div className="flex flex-wrap gap-1 pl-12 mt-2">
+                        <Shield className="w-3 h-3 text-gray-400 dark:text-gray-500 mt-0.5 mr-0.5" />
+                        {gestor.permissions.map((p) => (
+                          <span
+                            key={p}
+                            className="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
+                          >
+                            {GESTOR_PERMISSIONS[p] || p}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

@@ -19,7 +19,7 @@ type RegisterInput = z.input<typeof registerSchema>;
 
 export default function AuthPage() {
   const router = useRouter();
-  const { login, register, resetPassword, isAuthenticated } = useAuth();
+  const { login, register, resetPassword, isAuthenticated, user } = useAuth();
 
   const [mode, setMode] = useState<AuthMode>('login');
   const [userType, setUserType] = useState<UserType | null>(null);
@@ -43,10 +43,16 @@ export default function AuthPage() {
   });
 
   useEffect(() => {
-    if (isAuthenticated) {
-      router.push('/');
+    if (isAuthenticated && user) {
+      if (user.role === 'admin') {
+        router.push('/admin');
+      } else if (user.role === 'manager') {
+        router.push('/gestor');
+      } else {
+        router.push('/');
+      }
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, user, router]);
 
   if (isAuthenticated) {
     return null;
@@ -56,7 +62,7 @@ export default function AuthPage() {
     setIsLoading(true);
     const result = await login(data.email, data.password);
     if (result.success) {
-      router.push('/');
+      // Redirect will happen via the useEffect when user state updates
     } else {
       toast.error(result.error || 'Error al iniciar sesión');
     }
@@ -80,7 +86,7 @@ export default function AuthPage() {
     };
     const result = await register(registerData);
     if (result.success) {
-      router.push('/');
+      // Redirect will happen via the useEffect when user state updates
     } else {
       toast.error(result.error || 'Error al registrarse');
     }

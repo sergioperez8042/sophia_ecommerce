@@ -30,6 +30,25 @@ export interface ICategory {
   parent_id?: string;
 }
 
+// Permisos disponibles para gestores
+export const GESTOR_PERMISSIONS = {
+  'orders.view': 'Ver pedidos',
+  'orders.manage': 'Gestionar pedidos',
+  'catalog.prices': 'Ver precios de gestor',
+  'orders.create': 'Crear pedidos',
+  'stats.view': 'Ver estadísticas',
+  'clients.view': 'Ver clientes de su zona',
+} as const;
+
+export type GestorPermission = keyof typeof GESTOR_PERMISSIONS;
+
+// Permisos por defecto al crear un gestor
+export const DEFAULT_GESTOR_PERMISSIONS: GestorPermission[] = [
+  'orders.view',
+  'catalog.prices',
+  'orders.create',
+];
+
 // Gestor de zona (delivery/ventas por WhatsApp en municipios específicos)
 export interface IGestor {
   id: string;
@@ -40,6 +59,9 @@ export interface IGestor {
   active: boolean;
   photoUrl?: string; // foto del gestor (Cloudinary)
   createdAt?: string;
+  email?: string;        // login email
+  userId?: string;       // Firebase Auth UID link
+  permissions?: GestorPermission[]; // permisos del gestor
 }
 
 // Exportar tipos para compatibilidad

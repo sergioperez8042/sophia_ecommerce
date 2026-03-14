@@ -15,7 +15,8 @@ import {
   Timestamp,
   Firestore,
 } from 'firebase/firestore';
-import { createUserWithEmailAndPassword, updateProfile, Auth } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile, Auth, getAuth } from 'firebase/auth';
+import { initializeApp, getApps, deleteApp } from 'firebase/app';
 import { db, auth } from './firebase';
 import { IProduct, ICategory, IGestor } from '@/entities/all';
 import { User, UserRole } from '@/store/AuthContext';
@@ -730,6 +731,32 @@ export const GestorService = {
     await deleteDoc(docRef);
   },
 
+  // Find gestor by email
+  async getByEmail(email: string): Promise<IGestor | null> {
+    const firestore = getDb();
+    const q = query(
+      collection(firestore, GESTORES_COLLECTION),
+      where('email', '==', email.toLowerCase().trim())
+    );
+    const snapshot = await getDocs(q);
+    if (snapshot.empty) return null;
+    const d = snapshot.docs[0];
+    return { id: d.id, ...d.data() } as IGestor;
+  },
+
+  // Find gestor by userId
+  async getByUserId(userId: string): Promise<IGestor | null> {
+    const firestore = getDb();
+    const q = query(
+      collection(firestore, GESTORES_COLLECTION),
+      where('userId', '==', userId)
+    );
+    const snapshot = await getDocs(q);
+    if (snapshot.empty) return null;
+    const d = snapshot.docs[0];
+    return { id: d.id, ...d.data() } as IGestor;
+  },
+
   // Find gestor by municipality - returns the first active gestor covering that municipality
   async findByMunicipality(municipality: string): Promise<IGestor | null> {
     const gestores = await this.getActive();
@@ -751,5 +778,77 @@ export const GestorService = {
       count++;
     }
     return count;
+  },
+};
+
+// ==================== GESTOR ACCOUNT (Create Auth user without logging out admin) ====================
+
+export const GestorAccountService = {
+  /**
+   * Creates a Firebase Auth account for a gestor using a secondary Firebase app instance.
+   * This prevents the admin from being logged out when creating a new user.
+   * Also creates the `users` doc with role: 'manager' and links gestorId.
+   */
+  async createAccount(data: {
+    email: string;
+    password: string;
+    name: string;
+    gestorId: string;
+  }): Promise<{ userId: string }> {
+    const firestore = getDb();
+
+    // Create a secondary Firebase app to avoid logging out the admin
+    const secondaryAppName = `gestor-creator-${Date.now()}`;
+    const firebaseConfig = {
+      apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+      authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    };
+
+    let secondaryApp;
+    try {
+      secondaryApp = initializeApp(firebaseConfig, secondaryAppName);
+      const secondaryAuth = getAuth(secondaryApp);
+
+      // Create the user in Firebase Auth via the secondary app
+      const userCredential = await createUserWithEmailAndPassword(
+        secondaryAuth,
+        data.email,
+        data.password
+      );
+      const uid = userCredential.user.uid;
+
+      // Update display name
+      await updateProfile(userCredential.user, { displayName: data.name });
+
+      // Sign out from the secondary app immediately
+      await secondaryAuth.signOut();
+
+      // Create the users doc in Firestore with role: 'manager'
+      await setDoc(doc(firestore, USERS_COLLECTION, uid), {
+        name: data.name.trim(),
+        email: data.email.trim().toLowerCase(),
+        role: 'manager' as UserRole,
+        gestorId: data.gestorId,
+        createdAt: Timestamp.now(),
+      });
+
+      // Update the gestor doc with the userId and email
+      await updateDoc(doc(firestore, GESTORES_COLLECTION, data.gestorId), {
+        userId: uid,
+        email: data.email.trim().toLowerCase(),
+      });
+
+      return { userId: uid };
+    } finally {
+      // Clean up the secondary app
+      if (secondaryApp) {
+        try {
+          await deleteApp(secondaryApp);
+        } catch {
+          // Ignore cleanup errors
+        }
+      }
+    }
   },
 };

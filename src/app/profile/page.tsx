@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth, usePricing } from '@/store';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -12,15 +12,52 @@ import {
   MapPin,
   Award,
   Percent,
-  Edit
+  Edit,
+  Save,
+  X,
+  Loader2,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { user, isAuthenticated, isLoaded, isAdmin, isManager, isClient } = useAuth();
+  const { user, isAuthenticated, isLoaded, isAdmin, isManager, isClient, updateUser } = useAuth();
   const { isManagerPricing } = usePricing();
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState('');
+  const [editPhone, setEditPhone] = useState('');
+  const [savingProfile, setSavingProfile] = useState(false);
+
+  const startEditing = () => {
+    if (!user) return;
+    setEditName(user.name);
+    setEditPhone(user.phone || '');
+    setIsEditing(true);
+  };
+
+  const cancelEditing = () => {
+    setIsEditing(false);
+  };
+
+  const saveProfile = async () => {
+    if (!editName.trim()) {
+      toast.error('El nombre no puede estar vacío');
+      return;
+    }
+    setSavingProfile(true);
+    try {
+      await updateUser({ name: editName.trim(), phone: editPhone.trim() });
+      toast.success('Perfil actualizado');
+      setIsEditing(false);
+    } catch {
+      toast.error('Error al guardar');
+    } finally {
+      setSavingProfile(false);
+    }
+  };
 
   useEffect(() => {
     if (isLoaded && !isAuthenticated) {
@@ -102,13 +139,46 @@ export default function ProfilePage() {
               <User className="w-5 h-5 text-[#505A4A]" />
               Información de Contacto
             </CardTitle>
-            <Button variant="ghost" size="sm" className="text-[#505A4A] hover:text-[#414A3C] hover:bg-[#505A4A]/5">
-              <Edit className="w-4 h-4 mr-2" />
-              Editar
-            </Button>
+            {!isEditing ? (
+              <Button variant="ghost" size="sm" className="text-[#505A4A] hover:text-[#414A3C] hover:bg-[#505A4A]/5" onClick={startEditing}>
+                <Edit className="w-4 h-4 mr-2" />
+                Editar
+              </Button>
+            ) : (
+              <div className="flex gap-2">
+                <Button variant="ghost" size="sm" className="text-gray-500 hover:text-gray-700" onClick={cancelEditing} disabled={savingProfile}>
+                  <X className="w-4 h-4 mr-1" />
+                  Cancelar
+                </Button>
+                <Button size="sm" className="bg-[#505A4A] hover:bg-[#414A3C] text-white" onClick={saveProfile} disabled={savingProfile}>
+                  {savingProfile ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Save className="w-4 h-4 mr-1" />}
+                  Guardar
+                </Button>
+              </div>
+            )}
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Name - editable */}
+              <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-100 hover:shadow-sm transition-shadow">
+                <div className="p-2 bg-white rounded-full text-[#505A4A] shadow-sm">
+                  <User className="w-5 h-5" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm text-gray-500 mb-1">Nombre</p>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      className="w-full px-2 py-1 border border-gray-300 rounded text-sm font-semibold text-gray-900 focus:outline-none focus:border-[#505A4A]"
+                    />
+                  ) : (
+                    <p className="font-semibold text-gray-900">{user.name}</p>
+                  )}
+                </div>
+              </div>
+              {/* Email - read only */}
               <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-100 hover:shadow-sm transition-shadow">
                 <div className="p-2 bg-white rounded-full text-[#505A4A] shadow-sm">
                   <Mail className="w-5 h-5" />
@@ -118,13 +188,24 @@ export default function ProfilePage() {
                   <p className="font-semibold text-gray-900">{user.email}</p>
                 </div>
               </div>
+              {/* Phone - editable */}
               <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-100 hover:shadow-sm transition-shadow">
                 <div className="p-2 bg-white rounded-full text-[#505A4A] shadow-sm">
                   <Phone className="w-5 h-5" />
                 </div>
-                <div>
+                <div className="flex-1">
                   <p className="text-sm text-gray-500 mb-1">Teléfono</p>
-                  <p className="font-semibold text-gray-900">{user.phone || 'No especificado'}</p>
+                  {isEditing ? (
+                    <input
+                      type="tel"
+                      value={editPhone}
+                      onChange={(e) => setEditPhone(e.target.value)}
+                      placeholder="+53 5 1234567"
+                      className="w-full px-2 py-1 border border-gray-300 rounded text-sm font-semibold text-gray-900 focus:outline-none focus:border-[#505A4A]"
+                    />
+                  ) : (
+                    <p className="font-semibold text-gray-900">{user.phone || 'No especificado'}</p>
+                  )}
                 </div>
               </div>
               {isManager && (
