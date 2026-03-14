@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from 'react';
-import { ArrowLeft, MessageCircle, Sun, Moon, Star, Package } from "lucide-react";
+import { ArrowLeft, Sun, Moon, Star, Package, Plus, ShoppingBag, Check } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import ProductImage from "@/components/ui/product-image";
 import { m } from 'framer-motion';
 import { useTheme } from '@/store/ThemeContext';
-
-const WHATSAPP_NUMBER = "34642633982";
+import { useCart, CartProduct } from '@/store/CartContext';
+import CartDrawer from '@/components/CartDrawer';
 
 interface Product {
     id: string;
@@ -36,25 +36,34 @@ interface CatalogProductDetailProps {
 
 export default function CatalogProductDetail({ product, categoryName }: CatalogProductDetailProps) {
     const { isDark, toggleTheme } = useTheme();
-    const [selectedImage, setSelectedImage] = useState(0);
+    const { addItem, totalItems } = useCart();
+    const [selectedImage] = useState(0);
+    const [addedToCart, setAddedToCart] = useState(false);
+    const [isCartOpen, setIsCartOpen] = useState(false);
 
     const images = product.image ? [product.image] : [];
 
     const formatPrice = (price: number) => `$${price.toFixed(2)}`;
 
-    const handleWhatsAppOrder = () => {
-        const message = encodeURIComponent(
-            `Hola! Me interesa el producto:\n\n` +
-            `*${product.name}*\n` +
-            `Precio: ${formatPrice(product.price)}\n\n` +
-            `Me gustaría hacer un pedido.`
-        );
-        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
+    const handleAddToCart = () => {
+        const cartProduct: CartProduct = {
+            id: product.id,
+            name: product.name,
+            description: product.description,
+            price: product.price,
+            image: product.image,
+        };
+        addItem(cartProduct);
+        setAddedToCart(true);
+        setTimeout(() => {
+            setAddedToCart(false);
+            setIsCartOpen(true);
+        }, 800);
     };
 
     return (
         <div className={`min-h-screen transition-colors duration-300 ${isDark ? 'bg-[#1a1d19]' : 'bg-[#FEFCF7]'}`}>
-            {/* Header — same as catalog */}
+            {/* Header */}
             <m.header
                 className={`sticky top-0 z-40 backdrop-blur-xl border-b transition-colors duration-300 ${isDark ? 'bg-[#1a1d19]/95 border-[#C4B590]/15' : 'bg-white/80 border-[#505A4A]/10'}`}
                 initial={{ y: -100 }}
@@ -67,7 +76,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                             <Link
                                 href="/"
                                 className={`flex items-center justify-center h-9 w-9 rounded-lg transition-colors ${isDark ? 'hover:bg-[#C4B590]/15' : 'hover:bg-gray-100'}`}
-                                aria-label="Volver al catálogo"
+                                aria-label="Volver al catalogo"
                             >
                                 <ArrowLeft className={`w-5 h-5 ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`} />
                             </Link>
@@ -75,7 +84,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                 <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#505A4A]/15">
                                     <Image
                                         src="/images/sophia_logo_nuevo.jpeg"
-                                        alt="Sophia Cosmética Botánica"
+                                        alt="Sophia Cosmetica Botanica"
                                         fill
                                         sizes="48px"
                                         className="object-cover"
@@ -95,6 +104,22 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                 aria-label={isDark ? 'Modo claro' : 'Modo oscuro'}
                             >
                                 {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                            </m.button>
+
+                            {/* Cart button */}
+                            <m.button
+                                onClick={() => setIsCartOpen(true)}
+                                className={`relative p-2 rounded-xl transition-colors ${isDark ? 'bg-[#C4B590]/15 text-[#C4B590] hover:bg-[#C4B590]/25' : 'bg-[#505A4A]/10 text-[#505A4A] hover:bg-[#505A4A]/20'}`}
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                aria-label="Carrito"
+                            >
+                                <ShoppingBag className="w-4 h-4" />
+                                {totalItems > 0 && (
+                                    <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-[#C4B590] text-[#1a1d19] text-[10px] font-bold rounded-full flex items-center justify-center">
+                                        {totalItems}
+                                    </span>
+                                )}
                             </m.button>
                         </div>
                     </div>
@@ -157,7 +182,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                     ))}
                                 </div>
                                 <span className={`text-[13px] ${isDark ? 'text-[#8a8273]' : 'text-[#999]'}`}>
-                                    {product.rating} · {product.reviews_count} reseñas
+                                    {product.rating}
                                 </span>
                             </div>
                         )}
@@ -216,7 +241,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                         )}
 
                         {/* Precio + Peso */}
-                        <div className={`flex items-baseline gap-4 mb-6`}>
+                        <div className="flex items-baseline gap-4 mb-6">
                             <span className={`text-3xl font-bold ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>
                                 {formatPrice(product.price)}
                             </span>
@@ -228,20 +253,33 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                             )}
                         </div>
 
-                        {/* WhatsApp CTA */}
+                        {/* Add to Cart CTA */}
                         {product.out_of_stock ? (
                             <div className="w-full bg-gray-300 text-gray-500 py-4 rounded-xl text-base font-medium flex items-center justify-center gap-3 cursor-not-allowed mb-6">
                                 Producto agotado
                             </div>
                         ) : (
                             <m.button
-                                onClick={handleWhatsAppOrder}
-                                className="w-full bg-[#505A4A] text-white py-4 rounded-xl text-base font-medium flex items-center justify-center gap-3 hover:bg-[#414A3C] transition-colors shadow-md mb-6"
+                                onClick={handleAddToCart}
+                                className={`w-full py-4 rounded-xl text-base font-medium flex items-center justify-center gap-3 transition-all shadow-md mb-6 ${
+                                    addedToCart
+                                        ? 'bg-[#C4B590] text-[#1a1d19]'
+                                        : 'bg-[#505A4A] text-white hover:bg-[#414A3C]'
+                                }`}
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                             >
-                                <MessageCircle className="w-5 h-5" />
-                                Pedir por WhatsApp
+                                {addedToCart ? (
+                                    <>
+                                        <Check className="w-5 h-5" />
+                                        Agregado al carrito
+                                    </>
+                                ) : (
+                                    <>
+                                        <Plus className="w-5 h-5" />
+                                        Agregar al carrito
+                                    </>
+                                )}
                             </m.button>
                         )}
 
@@ -251,11 +289,14 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                             className={`inline-flex items-center gap-2 text-sm font-medium transition-colors ${isDark ? 'text-[#C4B590] hover:text-[#e8e4dc]' : 'text-[#505A4A] hover:text-gray-900'}`}
                         >
                             <ArrowLeft className="w-4 h-4" />
-                            Volver al catálogo
+                            Volver al catalogo
                         </Link>
                     </div>
                 </m.div>
             </div>
+
+            {/* Cart Drawer */}
+            <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
         </div>
     );
 }

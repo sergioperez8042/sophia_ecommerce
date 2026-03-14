@@ -17,7 +17,7 @@ import {
 } from 'firebase/firestore';
 import { createUserWithEmailAndPassword, updateProfile, Auth } from 'firebase/auth';
 import { db, auth } from './firebase';
-import { IProduct, ICategory } from '@/entities/all';
+import { IProduct, ICategory, IGestor } from '@/entities/all';
 import { User, UserRole } from '@/store/AuthContext';
 
 // Collection names
@@ -26,6 +26,7 @@ const CATEGORIES_COLLECTION = 'categories';
 const USERS_COLLECTION = 'users';
 const SUBSCRIBERS_COLLECTION = 'subscribers';
 const NEWSLETTERS_COLLECTION = 'newsletters';
+const GESTORES_COLLECTION = 'gestores';
 
 // Helper to check if Firebase is available (client-side only)
 const isFirebaseAvailable = (): boolean => {
@@ -670,5 +671,85 @@ export const NewsletterHistoryService = {
       success,
       sentAt: Timestamp.now(),
     });
+  },
+};
+
+// ==================== GESTORES (Zone Managers) ====================
+
+export const GestorService = {
+  async getAll(): Promise<IGestor[]> {
+    const firestore = getDb();
+    const snapshot = await getDocs(collection(firestore, GESTORES_COLLECTION));
+    return snapshot.docs.map((d) => ({
+      id: d.id,
+      ...d.data(),
+    })) as IGestor[];
+  },
+
+  async getActive(): Promise<IGestor[]> {
+    const firestore = getDb();
+    const q = query(
+      collection(firestore, GESTORES_COLLECTION),
+      where('active', '==', true)
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((d) => ({
+      id: d.id,
+      ...d.data(),
+    })) as IGestor[];
+  },
+
+  async getById(id: string): Promise<IGestor | null> {
+    const firestore = getDb();
+    const docRef = doc(firestore, GESTORES_COLLECTION, id);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return { id: docSnap.id, ...docSnap.data() } as IGestor;
+    }
+    return null;
+  },
+
+  async create(gestor: Omit<IGestor, 'id'>): Promise<IGestor> {
+    const firestore = getDb();
+    const docRef = await addDoc(collection(firestore, GESTORES_COLLECTION), {
+      ...gestor,
+      createdAt: Timestamp.now(),
+    });
+    return { id: docRef.id, ...gestor };
+  },
+
+  async update(id: string, data: Partial<IGestor>): Promise<void> {
+    const firestore = getDb();
+    const docRef = doc(firestore, GESTORES_COLLECTION, id);
+    await updateDoc(docRef, data as DocumentData);
+  },
+
+  async delete(id: string): Promise<void> {
+    const firestore = getDb();
+    const docRef = doc(firestore, GESTORES_COLLECTION, id);
+    await deleteDoc(docRef);
+  },
+
+  // Find gestor by municipality - returns the first active gestor covering that municipality
+  async findByMunicipality(municipality: string): Promise<IGestor | null> {
+    const gestores = await this.getActive();
+    const normalizedMuni = municipality.toLowerCase().trim();
+    return gestores.find((g) =>
+      g.municipalities.some((m) => m.toLowerCase().trim() === normalizedMuni)
+    ) || null;
+  },
+
+  // Seed initial gestores
+  async seed(gestores: Omit<IGestor, 'id'>[]): Promise<number> {
+    const firestore = getDb();
+    let count = 0;
+    for (const gestor of gestores) {
+      await addDoc(collection(firestore, GESTORES_COLLECTION), {
+        ...gestor,
+        createdAt: Timestamp.now(),
+      });
+      count++;
+    }
+    return count;
   },
 };

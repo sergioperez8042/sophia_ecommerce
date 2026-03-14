@@ -44,6 +44,8 @@ export default function RootLayout({
       <html lang="es" suppressHydrationWarning={true}>
         <head>
           <Script id="fouc-prevention" strategy="beforeInteractive">{FOUC_SCRIPT}</Script>
+          <link rel="icon" href="/images/logo-sophia-green.jpeg" type="image/jpeg" />
+          <link rel="apple-touch-icon" href="/images/logo-sophia-green.jpeg" />
           <title>Sophia Cosmética Botánica | Productos Naturales Artesanales</title>
           <meta name="description" content="Sophia Cosmética Botánica: productos de belleza natural elaborados artesanalmente con ingredientes orgánicos. Cremas, aceites y tratamientos para piel y cabello. Envíos a toda España." />
           <meta name="keywords" content="cosmética natural, cosmética botánica, productos artesanales, belleza natural, cremas naturales, aceites esenciales, skincare orgánico, Sophia cosmética, cuidado piel natural, cosmética vegana España" />
@@ -89,9 +91,9 @@ export default function RootLayout({
         <body className={`${poppins.variable} ${cinzel.variable} antialiased`} style={{ fontFamily: 'var(--font-poppins), sans-serif' }} suppressHydrationWarning={true}>
           <LazyMotion features={domAnimation} strict>
             <MotionConfig reducedMotion="user">
-              <ThemeProvider>
-                {children}
-              </ThemeProvider>
+              <StoreProvider>
+                  {children}
+              </StoreProvider>
             </MotionConfig>
           </LazyMotion>
         </body>
@@ -103,6 +105,8 @@ export default function RootLayout({
     <html lang="es" suppressHydrationWarning={true}>
       <head>
         <Script id="fouc-prevention-admin" strategy="beforeInteractive">{FOUC_SCRIPT}</Script>
+        <link rel="icon" href="/images/logo-sophia-green.jpeg" type="image/jpeg" />
+        <link rel="apple-touch-icon" href="/images/logo-sophia-green.jpeg" />
         <title>Sophia Cosmética Botánica | Panel de Administración</title>
         <meta name="robots" content="noindex, nofollow" />
         <meta name="description" content="Panel de administración de Sophia Cosmética Botánica" />

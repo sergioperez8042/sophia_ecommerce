@@ -30,5 +30,17 @@ export interface ICategory {
   parent_id?: string;
 }
 
+// Gestor de zona (delivery/ventas por WhatsApp en municipios específicos)
+export interface IGestor {
+  id: string;
+  name: string;
+  whatsapp: string; // numero sin +, ej: "5352010900"
+  province: string;
+  municipalities: string[]; // municipios que cubre
+  active: boolean;
+  photoUrl?: string; // foto del gestor (Cloudinary)
+  createdAt?: string;
+}
+
 // Exportar tipos para compatibilidad
 export type { IProduct as ProductType, ICategory as CategoryType };
