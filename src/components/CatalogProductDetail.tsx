@@ -155,7 +155,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                             <Link
                                 href="/"
                                 className={`flex items-center justify-center h-9 w-9 rounded-lg transition-colors ${isDark ? 'hover:bg-[#C4B590]/15' : 'hover:bg-gray-100'}`}
-                                aria-label="Volver al catalogo"
+                                aria-label="Volver al catálogo"
                             >
                                 <ArrowLeft className={`w-5 h-5 ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`} />
                             </Link>
@@ -368,11 +368,11 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
 
                         {/* Back link */}
                         <Link
-                            href="/"
+                            href="/catalog"
                             className={`inline-flex items-center gap-2 text-sm font-medium transition-colors ${isDark ? 'text-[#C4B590] hover:text-[#e8e4dc]' : 'text-[#505A4A] hover:text-gray-900'}`}
                         >
                             <ArrowLeft className="w-4 h-4" />
-                            Volver al catalogo
+                            Volver al catálogo
                         </Link>
                     </div>
                 </m.div>
