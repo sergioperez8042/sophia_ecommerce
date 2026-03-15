@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { ArrowLeft, Sun, Moon, Star, Package, Plus, ShoppingBag, Check, CheckCircle2, User, Loader2 } from "lucide-react";
-import Image from "next/image";
+import { ArrowLeft, Star, Package, Plus, ShoppingBag, Check, CheckCircle2, User, Loader2 } from "lucide-react";
 import Link from "next/link";
 import ProductImage from "@/components/ui/product-image";
 import { m, AnimatePresence } from 'framer-motion';
@@ -11,7 +10,7 @@ import { useCart, CartProduct } from '@/store/CartContext';
 import { useAuth } from '@/store/AuthContext';
 import { ReviewService } from '@/lib/firestore-services';
 import { IReview } from '@/entities/all';
-import CartDrawer from '@/components/CartDrawer';
+import CatalogHeader from '@/components/CatalogHeader';
 import { toast } from 'sonner';
 
 interface Product {
@@ -39,12 +38,11 @@ interface CatalogProductDetailProps {
 }
 
 export default function CatalogProductDetail({ product, categoryName }: CatalogProductDetailProps) {
-    const { isDark, toggleTheme } = useTheme();
-    const { addItem, totalItems } = useCart();
+    const { isDark } = useTheme();
+    const { addItem } = useCart();
     const { user, isAuthenticated } = useAuth();
     const [selectedImage] = useState(0);
     const [addedToCart, setAddedToCart] = useState(false);
-    const [isCartOpen, setIsCartOpen] = useState(false);
 
     // Reviews state
     const [reviews, setReviews] = useState<IReview[]>([]);
@@ -136,74 +134,13 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
         setAddedToCart(true);
         setTimeout(() => {
             setAddedToCart(false);
-            setIsCartOpen(true);
         }, 800);
     };
 
     return (
         <div className={`min-h-screen transition-colors duration-300 ${isDark ? 'bg-[#1a1d19]' : 'bg-[#FEFCF7]'}`}>
             {/* Header */}
-            <m.header
-                className={`sticky top-0 z-40 backdrop-blur-xl border-b transition-colors duration-300 ${isDark ? 'bg-[#1a1d19]/95 border-[#C4B590]/15' : 'bg-white/80 border-[#505A4A]/10'}`}
-                initial={{ y: -100 }}
-                animate={{ y: 0 }}
-                transition={{ type: "spring", stiffness: 100 }}
-            >
-                <div className="max-w-7xl mx-auto px-4 sm:px-6">
-                    <div className="flex items-center justify-between h-16 sm:h-20">
-                        <div className="flex items-center gap-3">
-                            <Link
-                                href="/"
-                                className={`flex items-center justify-center h-9 w-9 rounded-lg transition-colors ${isDark ? 'hover:bg-[#C4B590]/15' : 'hover:bg-gray-100'}`}
-                                aria-label="Volver al catálogo"
-                            >
-                                <ArrowLeft className={`w-5 h-5 ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`} />
-                            </Link>
-                            <Link href="/" className="flex items-center gap-3">
-                                <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#505A4A]/15">
-                                    <Image
-                                        src="/images/sophia_logo_nuevo.jpeg"
-                                        alt="Sophia Cosmetica Botanica"
-                                        fill
-                                        sizes="48px"
-                                        className="object-cover"
-                                        priority
-                                    />
-                                </div>
-                                <span className={`text-base sm:text-lg font-semibold tracking-tight leading-tight ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>Sophia</span>
-                            </Link>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                            <m.button
-                                onClick={toggleTheme}
-                                className={`p-2 rounded-xl transition-colors ${isDark ? 'bg-[#C4B590]/15 text-[#C4B590] hover:bg-[#C4B590]/25' : 'bg-[#505A4A]/10 text-[#505A4A] hover:bg-[#505A4A]/20'}`}
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
-                                aria-label={isDark ? 'Modo claro' : 'Modo oscuro'}
-                            >
-                                {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-                            </m.button>
-
-                            {/* Cart button */}
-                            <m.button
-                                onClick={() => setIsCartOpen(true)}
-                                className={`relative p-2 rounded-xl transition-colors ${isDark ? 'bg-[#C4B590]/15 text-[#C4B590] hover:bg-[#C4B590]/25' : 'bg-[#505A4A]/10 text-[#505A4A] hover:bg-[#505A4A]/20'}`}
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
-                                aria-label="Carrito"
-                            >
-                                <ShoppingBag className="w-4 h-4" />
-                                {totalItems > 0 && (
-                                    <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-[#C4B590] text-[#1a1d19] text-[10px] font-bold rounded-full flex items-center justify-center">
-                                        {totalItems}
-                                    </span>
-                                )}
-                            </m.button>
-                        </div>
-                    </div>
-                </div>
-            </m.header>
+            <CatalogHeader showBackButton />
 
             {/* Product Detail */}
             <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
@@ -594,8 +531,6 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                 </AnimatePresence>
             </div>
 
-            {/* Cart Drawer */}
-            <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
         </div>
     );
 }
