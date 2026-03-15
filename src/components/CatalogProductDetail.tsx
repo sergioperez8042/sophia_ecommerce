@@ -116,6 +116,12 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
         setTimeout(() => reviewsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
     };
 
+    // Dynamic rating from loaded reviews (falls back to product prop)
+    const dynamicRating = reviews.length > 0
+        ? Math.round((reviews.reduce((s, r) => s + r.rating, 0) / reviews.length) * 10) / 10
+        : product.rating;
+    const dynamicReviewCount = reviews.length > 0 ? reviews.length : product.reviews_count;
+
     const formatPrice = (price: number) => `$${price.toFixed(2)}`;
 
     const handleAddToCart = () => {
@@ -249,7 +255,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                     <Star
                                         key={`star-${i}`}
                                         className={`h-4 w-4 ${
-                                            i < Math.floor(product.rating)
+                                            i < Math.floor(dynamicRating)
                                                 ? 'text-[#C9A96E] fill-[#C9A96E]'
                                                 : isDark ? 'text-gray-700 fill-gray-700' : 'text-gray-200 fill-gray-200'
                                         }`}
@@ -257,8 +263,8 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                 ))}
                             </div>
                             <span className={`text-[13px] transition-colors ${isDark ? 'text-[#8a8273] group-hover:text-[#C4B590]' : 'text-[#999] group-hover:text-[#505A4A]'}`}>
-                                {product.reviews_count > 0
-                                    ? `${product.rating} · ${product.reviews_count} reseñas`
+                                {dynamicReviewCount > 0
+                                    ? `${dynamicRating} · ${dynamicReviewCount} reseña${dynamicReviewCount > 1 ? 's' : ''}`
                                     : 'Sé el primero en opinar'
                                 }
                             </span>
