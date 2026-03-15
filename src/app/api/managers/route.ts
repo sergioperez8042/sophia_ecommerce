@@ -7,7 +7,7 @@ import { NextResponse } from 'next/server';
 export async function GET() {
   return NextResponse.json({
     message: 'Gestores API - Use client-side GestorService for CRUD operations',
-    seedEndpoint: 'POST /api/gestores with { seed: true } to create initial gestores',
+    seedEndpoint: 'POST /api/managers with { seed: true } to create initial managers',
   });
 }
 

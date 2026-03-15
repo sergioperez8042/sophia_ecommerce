@@ -34,10 +34,10 @@ export default function RootLayout({
   const pathname = usePathname();
 
   // Rutas que usan el layout limpio (sin header)
-  const isPublicCatalog = pathname === '/' || pathname?.startsWith('/catalogo');
+  const isPublicCatalog = pathname === '/' || pathname?.startsWith('/catalog');
   const isAuthPage = pathname === '/auth';
   const isLegalPage = pathname === '/terms' || pathname === '/privacy';
-  const isGestorPage = pathname === '/gestor' || pathname?.startsWith('/gestor/');
+  const isGestorPage = pathname === '/manager' || pathname?.startsWith('/manager/');
 
   // Si es la página principal o catálogo, renderizar sin header (vista cliente)
   if (isPublicCatalog) {
@@ -93,6 +93,7 @@ export default function RootLayout({
           <LazyMotion features={domAnimation} strict>
             <MotionConfig reducedMotion="user">
               <StoreProvider>
+                  <Toaster position="top-right" richColors closeButton duration={4000} />
                   {children}
               </StoreProvider>
             </MotionConfig>

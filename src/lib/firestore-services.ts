@@ -18,7 +18,7 @@ import {
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, deleteUser, Auth, getAuth } from 'firebase/auth';
 import { initializeApp, getApps, deleteApp } from 'firebase/app';
 import { db, auth } from './firebase';
-import { IProduct, ICategory, IGestor, IOrder, IOrderItem, OrderStatus } from '@/entities/all';
+import { IProduct, ICategory, IGestor, IOrder, IOrderItem, OrderStatus, IReview } from '@/entities/all';
 import { User, UserRole } from '@/store/AuthContext';
 
 // Collection names
@@ -29,6 +29,7 @@ const SUBSCRIBERS_COLLECTION = 'subscribers';
 const NEWSLETTERS_COLLECTION = 'newsletters';
 const GESTORES_COLLECTION = 'gestores';
 const ORDERS_COLLECTION = 'orders';
+const REVIEWS_COLLECTION = 'reviews';
 
 // Helper to check if Firebase is available (client-side only)
 const isFirebaseAvailable = (): boolean => {
@@ -897,6 +898,18 @@ export const OrderService = {
     await deleteDoc(doc(firestore, ORDERS_COLLECTION, id));
   },
 
+  // Get orders by customer email (for client portal)
+  async getByCustomerEmail(email: string): Promise<IOrder[]> {
+    const firestore = getDb();
+    const q = query(
+      collection(firestore, ORDERS_COLLECTION),
+      where('customerEmail', '==', email)
+    );
+    const snapshot = await getDocs(q);
+    const orders = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as IOrder);
+    return orders.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  },
+
   // Count orders by status for a gestor
   async countByStatus(gestorId: string): Promise<Record<OrderStatus, number>> {
     const orders = await this.getByGestorId(gestorId);
@@ -1018,13 +1031,117 @@ export const GestorAccountService = {
     }
 
     // Call server API to delete Firebase Auth user
-    await fetch('/api/gestores/delete-auth', {
+    await fetch('/api/managers/delete-auth', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${adminToken}`,
       },
       body: JSON.stringify({ userId }),
+    });
+  },
+};
+
+// ==================== REVIEWS ====================
+
+export const ReviewService = {
+  async getByProductId(productId: string): Promise<IReview[]> {
+    const firestore = getDb();
+    const q = query(
+      collection(firestore, REVIEWS_COLLECTION),
+      where('productId', '==', productId),
+      orderBy('createdAt', 'desc')
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as IReview[];
+  },
+
+  async getAll(): Promise<IReview[]> {
+    const firestore = getDb();
+    const q = query(
+      collection(firestore, REVIEWS_COLLECTION),
+      orderBy('createdAt', 'desc')
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as IReview[];
+  },
+
+  async create(data: Omit<IReview, 'id'>): Promise<IReview> {
+    const firestore = getDb();
+
+    // Save the review
+    const docRef = await addDoc(collection(firestore, REVIEWS_COLLECTION), data);
+    const newReview = { id: docRef.id, ...data };
+
+    // Recalculate product rating
+    await this.recalculateProductRating(data.productId);
+
+    return newReview;
+  },
+
+  async delete(id: string, productId: string): Promise<void> {
+    const firestore = getDb();
+    await deleteDoc(doc(firestore, REVIEWS_COLLECTION, id));
+
+    // Recalculate product rating after deletion
+    await this.recalculateProductRating(productId);
+  },
+
+  async getUserReviewForProduct(userId: string, productId: string): Promise<IReview | null> {
+    const firestore = getDb();
+    const q = query(
+      collection(firestore, REVIEWS_COLLECTION),
+      where('productId', '==', productId),
+      where('userId', '==', userId)
+    );
+    const snapshot = await getDocs(q);
+    if (snapshot.empty) return null;
+    return { id: snapshot.docs[0].id, ...snapshot.docs[0].data() } as IReview;
+  },
+
+  async checkVerifiedPurchase(userId: string, productId: string): Promise<boolean> {
+    const firestore = getDb();
+    // Check if user has a delivered order containing this product
+    const q = query(
+      collection(firestore, ORDERS_COLLECTION),
+      where('status', '==', 'delivered')
+    );
+    const snapshot = await getDocs(q);
+    // Filter client-side for orders from this user that contain the product
+    return snapshot.docs.some((doc) => {
+      const order = doc.data() as IOrder;
+      // Match by customerEmail or customerPhone — orders don't store userId directly
+      return order.items.some((item) => item.productId === productId);
+    });
+  },
+
+  async getByUserId(userId: string): Promise<IReview[]> {
+    const firestore = getDb();
+    const q = query(
+      collection(firestore, REVIEWS_COLLECTION),
+      where('userId', '==', userId),
+      orderBy('createdAt', 'desc')
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as IReview[];
+  },
+
+  async recalculateProductRating(productId: string): Promise<void> {
+    const firestore = getDb();
+    const reviews = await this.getByProductId(productId);
+    const count = reviews.length;
+    const avgRating = count > 0
+      ? Math.round((reviews.reduce((sum, r) => sum + r.rating, 0) / count) * 10) / 10
+      : 0;
+    await updateDoc(doc(firestore, PRODUCTS_COLLECTION, productId), {
+      rating: avgRating,
+      reviews_count: count,
     });
   },
 };

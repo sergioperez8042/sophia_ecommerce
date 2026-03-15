@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
-import { Star, Search, Leaf, Phone, Mail, Instagram, MessageCircle, Rabbit, Droplets, ShieldCheck, Hand, Sun, Moon, LayoutGrid, List, ArrowLeft, ShoppingBag, Plus, Heart } from "lucide-react";
+import { Star, Search, Leaf, Phone, Mail, Instagram, MessageCircle, Rabbit, Droplets, ShieldCheck, Hand, Sun, Moon, LayoutGrid, List, ArrowLeft, ShoppingBag, Plus, Heart, LogOut, User, Package } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import ProductImage from "@/components/ui/product-image";
@@ -10,6 +10,7 @@ import { useTheme } from '@/store/ThemeContext';
 import { useCart } from '@/store/CartContext';
 import { CartProduct } from '@/store/CartContext';
 import { useWishlist } from '@/store/WishlistContext';
+import { useAuth } from '@/store';
 import BrandLogo from '@/components/BrandLogo';
 import NewsletterPopup from '@/components/NewsletterPopup';
 import NewsletterFooter from '@/components/NewsletterFooter';
@@ -55,7 +56,10 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
     const { isDark, toggleTheme } = useTheme();
     const { totalItems } = useCart();
     const { totalItems: wishlistCount } = useWishlist();
+    const { user, isAuthenticated, logout } = useAuth();
     const [isCartOpen, setIsCartOpen] = useState(false);
+    const [isAvatarMenuOpen, setIsAvatarMenuOpen] = useState(false);
+    const avatarMenuRef = useRef<HTMLDivElement | null>(null);
 
     // When groupByCategory is active, track if user drilled into a category
     const [browsingCategory, setBrowsingCategory] = useState<string | null>(null);
@@ -142,6 +146,25 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
         return () => observer.disconnect();
     }, [hasMore, visibleCount]);
 
+    // Close avatar menu on click outside
+    useEffect(() => {
+        if (!isAvatarMenuOpen) return;
+        const handleClick = (e: MouseEvent) => {
+            if (avatarMenuRef.current && !avatarMenuRef.current.contains(e.target as Node)) {
+                setIsAvatarMenuOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClick);
+        return () => document.removeEventListener('mousedown', handleClick);
+    }, [isAvatarMenuOpen]);
+
+    const userInitials = user?.name
+        ?.split(' ')
+        .map(w => w[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2) || '';
+
     return (
         <div className={`min-h-screen transition-colors duration-300 ${isDark ? 'bg-[#1a1d19]' : 'bg-[#FEFCF7]'}`}>
             {/* Header */}
@@ -214,17 +237,74 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                                 )}
                             </m.button>
 
-                            <m.a
-                                href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hola! Me gustaria hacer un pedido`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="hidden sm:flex items-center gap-2 bg-[#505A4A] text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-[#414A3C] transition-colors shadow-sm"
-                                whileHover={{ scale: 1.03 }}
-                                whileTap={{ scale: 0.97 }}
-                            >
-                                <MessageCircle className="w-4 h-4" />
-                                Pedir por WhatsApp
-                            </m.a>
+                            {isAuthenticated && user ? (
+                                <div ref={avatarMenuRef} className="relative">
+                                    <m.button
+                                        onClick={() => setIsAvatarMenuOpen(!isAvatarMenuOpen)}
+                                        className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-semibold transition-colors ${isDark ? 'bg-[#C4B590]/20 text-[#C4B590] hover:bg-[#C4B590]/30' : 'bg-[#505A4A] text-white hover:bg-[#414A3C]'}`}
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                    >
+                                        {userInitials}
+                                    </m.button>
+
+                                    <AnimatePresence>
+                                        {isAvatarMenuOpen && (
+                                            <m.div
+                                                initial={{ opacity: 0, scale: 0.95, y: -5 }}
+                                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                                exit={{ opacity: 0, scale: 0.95, y: -5 }}
+                                                transition={{ duration: 0.15 }}
+                                                className={`absolute right-0 mt-2 w-56 rounded-xl shadow-lg border overflow-hidden z-50 ${isDark ? 'bg-[#232820] border-[#C4B590]/15' : 'bg-white border-[#505A4A]/10'}`}
+                                            >
+                                                <div className={`px-4 py-3 border-b ${isDark ? 'border-[#C4B590]/10' : 'border-[#505A4A]/5'}`}>
+                                                    <p className={`text-sm font-medium truncate ${isDark ? 'text-white' : 'text-[#333]'}`}>{user.name}</p>
+                                                    <p className={`text-xs truncate mt-0.5 ${isDark ? 'text-[#C4B590]/50' : 'text-[#505A4A]/50'}`}>{user.email}</p>
+                                                </div>
+                                                <div className="py-1">
+                                                    <Link
+                                                        href="/account"
+                                                        onClick={() => setIsAvatarMenuOpen(false)}
+                                                        className={`flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${isDark ? 'text-[#e8e4dc] hover:bg-[#C4B590]/10' : 'text-[#333] hover:bg-[#505A4A]/5'}`}
+                                                    >
+                                                        <Package className="w-4 h-4" />
+                                                        Mis pedidos
+                                                    </Link>
+                                                    <Link
+                                                        href="/account"
+                                                        onClick={() => setIsAvatarMenuOpen(false)}
+                                                        className={`flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${isDark ? 'text-[#e8e4dc] hover:bg-[#C4B590]/10' : 'text-[#333] hover:bg-[#505A4A]/5'}`}
+                                                    >
+                                                        <User className="w-4 h-4" />
+                                                        Mi perfil
+                                                    </Link>
+                                                </div>
+                                                <div className={`border-t py-1 ${isDark ? 'border-[#C4B590]/10' : 'border-[#505A4A]/5'}`}>
+                                                    <button
+                                                        onClick={async () => { setIsAvatarMenuOpen(false); await logout(); }}
+                                                        className={`flex items-center gap-3 w-full px-4 py-2.5 text-sm transition-colors ${isDark ? 'text-red-400 hover:bg-red-900/20' : 'text-red-600 hover:bg-red-50'}`}
+                                                    >
+                                                        <LogOut className="w-4 h-4" />
+                                                        Cerrar sesión
+                                                    </button>
+                                                </div>
+                                            </m.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            ) : (
+                                <m.a
+                                    href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hola! Me gustaria hacer un pedido`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="hidden sm:flex items-center gap-2 bg-[#505A4A] text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-[#414A3C] transition-colors shadow-sm"
+                                    whileHover={{ scale: 1.03 }}
+                                    whileTap={{ scale: 0.97 }}
+                                >
+                                    <MessageCircle className="w-4 h-4" />
+                                    Pedir por WhatsApp
+                                </m.a>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -696,7 +776,7 @@ function ProductCard({
                 onHoverEnd={() => setIsHovered(false)}
             >
                 <div className="relative aspect-square overflow-hidden">
-                    <Link href={`/catalogo/${product.id}`} className="block w-full h-full">
+                    <Link href={`/catalog/${product.id}`} className="block w-full h-full">
                         <ProductImage
                             src={product.image}
                             alt={product.name}
@@ -726,9 +806,26 @@ function ProductCard({
                 </div>
                 <div className="p-2.5 sm:p-3">
                     {categoryName && <span className={`text-[10px] font-medium ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>{categoryName}</span>}
-                    <Link href={`/catalogo/${product.id}`}>
+                    <Link href={`/catalog/${product.id}`}>
                         <h3 className={`font-semibold text-sm mt-0.5 line-clamp-1 ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>{product.name}</h3>
                     </Link>
+                    {product.rating > 0 && (
+                        <div className="flex items-center gap-1 mt-0.5">
+                            <div className="flex items-center">
+                                {[...Array(5)].map((_, i) => (
+                                    <Star
+                                        key={`card-${product.id}-${i}`}
+                                        className={`h-2.5 w-2.5 ${
+                                            i < Math.round(product.rating)
+                                                ? 'text-[#C9A96E] fill-[#C9A96E]'
+                                                : isDark ? 'text-gray-700 fill-gray-700' : 'text-gray-200 fill-gray-200'
+                                        }`}
+                                    />
+                                ))}
+                            </div>
+                            <span className={`text-[10px] ${isDark ? 'text-[#8a8273]' : 'text-[#999]'}`}>({product.reviews_count})</span>
+                        </div>
+                    )}
                     <div className="flex items-center justify-between mt-2">
                         <span className={`text-base font-bold ${product.out_of_stock ? (isDark ? 'text-[#7a7568]' : 'text-gray-400') : isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>{formatPrice(product.price)}</span>
                         {product.out_of_stock ? (
@@ -770,7 +867,7 @@ function ProductCard({
             onHoverEnd={() => setIsHovered(false)}
         >
             <div className="relative w-32 sm:w-40 h-32 sm:h-40 flex-shrink-0 overflow-hidden">
-                <Link href={`/catalogo/${product.id}`} className="block w-full h-full">
+                <Link href={`/catalog/${product.id}`} className="block w-full h-full">
                     <ProductImage
                         src={product.image}
                         alt={product.name}
@@ -799,9 +896,26 @@ function ProductCard({
                 </button>
             </div>
             <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between">
-                <Link href={`/catalogo/${product.id}`}>
+                <Link href={`/catalog/${product.id}`}>
                     {categoryName && <span className={`text-[10px] sm:text-xs font-medium ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>{categoryName}</span>}
                     <h3 className={`font-semibold mt-1 ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>{product.name}</h3>
+                    {product.rating > 0 && (
+                        <div className="flex items-center gap-1 mt-0.5">
+                            <div className="flex items-center">
+                                {[...Array(5)].map((_, i) => (
+                                    <Star
+                                        key={`list-${product.id}-${i}`}
+                                        className={`h-3 w-3 ${
+                                            i < Math.round(product.rating)
+                                                ? 'text-[#C9A96E] fill-[#C9A96E]'
+                                                : isDark ? 'text-gray-700 fill-gray-700' : 'text-gray-200 fill-gray-200'
+                                        }`}
+                                    />
+                                ))}
+                            </div>
+                            <span className={`text-[10px] ${isDark ? 'text-[#8a8273]' : 'text-[#999]'}`}>({product.reviews_count})</span>
+                        </div>
+                    )}
                     <p className={`text-sm mt-1 line-clamp-2 ${isDark ? 'text-[#8a8278]' : 'text-gray-600'}`}>{product.description}</p>
                 </Link>
                 <div className="flex items-center justify-between mt-3">

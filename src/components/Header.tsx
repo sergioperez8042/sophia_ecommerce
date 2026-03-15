@@ -216,7 +216,7 @@ export default function Header() {
                                         <LayoutDashboard className="w-5 h-5" />
                                         Panel Admin
                                     </Link>
-                                    <Link href="/admin/gestores" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:text-[#505A4A] hover:bg-[#505A4A]/5 transition-all text-sm font-medium" onClick={() => setIsMenuOpen(false)}>
+                                    <Link href="/admin/managers" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:text-[#505A4A] hover:bg-[#505A4A]/5 transition-all text-sm font-medium" onClick={() => setIsMenuOpen(false)}>
                                         <UserCog className="w-5 h-5" />
                                         Gestores
                                     </Link>

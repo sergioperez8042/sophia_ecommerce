@@ -11,6 +11,7 @@ import {
   Settings,
   BarChart3,
   ArrowRight,
+  MessageSquare,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -40,6 +41,7 @@ export default function AdminPage() {
   const quickActions = [
     { label: 'Categorías', desc: 'Organizar productos', href: '/admin/categories', icon: Layers },
     { label: 'Newsletter', desc: 'Suscriptores y envíos', href: '/admin/newsletter', icon: Mail },
+    { label: 'Reseñas', desc: 'Moderar opiniones', href: '/admin/reviews', icon: MessageSquare },
   ];
 
   return (
@@ -53,7 +55,7 @@ export default function AdminPage() {
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-          <Link href="/admin/gestores" className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 hover:border-[#505A4A]/30 transition-colors group">
+          <Link href="/admin/managers" className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 hover:border-[#505A4A]/30 transition-colors group">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Gestores</p>
@@ -95,7 +97,7 @@ export default function AdminPage() {
             </div>
           </Link>
 
-          <Link href="/admin/estadisticas" className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 hover:border-[#505A4A]/30 transition-colors group">
+          <Link href="/admin/statistics" className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 hover:border-[#505A4A]/30 transition-colors group">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Estadísticas</p>

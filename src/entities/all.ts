@@ -105,5 +105,18 @@ export interface IOrder {
   updatedAt?: string;
 }
 
+// ==================== RESEÑAS ====================
+
+export interface IReview {
+  id: string;
+  productId: string;
+  userId: string;
+  userName: string;
+  rating: number;        // 1-5
+  comment: string;
+  createdAt: string;
+  verified?: boolean;    // true si el usuario compró el producto
+}
+
 // Exportar tipos para compatibilidad
 export type { IProduct as ProductType, ICategory as CategoryType };

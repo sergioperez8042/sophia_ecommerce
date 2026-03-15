@@ -45,7 +45,7 @@ export default function AuthPage() {
   const getDashboardPath = () => {
     if (!user) return '/';
     if (user.role === 'admin') return '/admin';
-    if (user.role === 'manager') return '/gestor';
+    if (user.role === 'manager') return '/manager';
     return '/';
   };
 
