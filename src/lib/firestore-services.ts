@@ -1049,14 +1049,15 @@ export const ReviewService = {
     const firestore = getDb();
     const q = query(
       collection(firestore, REVIEWS_COLLECTION),
-      where('productId', '==', productId),
-      orderBy('createdAt', 'desc')
+      where('productId', '==', productId)
     );
     const snapshot = await getDocs(q);
-    return snapshot.docs.map((doc) => ({
+    const reviews = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     })) as IReview[];
+    // Sort client-side to avoid requiring a composite index
+    return reviews.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   },
 
   async getAll(): Promise<IReview[]> {
@@ -1125,19 +1126,24 @@ export const ReviewService = {
     const firestore = getDb();
     const q = query(
       collection(firestore, REVIEWS_COLLECTION),
-      where('userId', '==', userId),
-      orderBy('createdAt', 'desc')
+      where('userId', '==', userId)
     );
     const snapshot = await getDocs(q);
-    return snapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as IReview[];
+    const reviews = snapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as IReview[];
+    return reviews.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   },
 
   async recalculateProductRating(productId: string): Promise<void> {
     const firestore = getDb();
-    const reviews = await this.getByProductId(productId);
-    const count = reviews.length;
+    // Use a simple query without orderBy to avoid requiring a composite index
+    const q = query(
+      collection(firestore, REVIEWS_COLLECTION),
+      where('productId', '==', productId)
+    );
+    const snapshot = await getDocs(q);
+    const count = snapshot.size;
     const avgRating = count > 0
-      ? Math.round((reviews.reduce((sum, r) => sum + r.rating, 0) / count) * 10) / 10
+      ? Math.round((snapshot.docs.reduce((sum, d) => sum + (d.data().rating || 0), 0) / count) * 10) / 10
       : 0;
     await updateDoc(doc(firestore, PRODUCTS_COLLECTION, productId), {
       rating: avgRating,
