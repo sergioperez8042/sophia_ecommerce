@@ -1,16 +1,16 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Products - anyone can read, only authenticated users can write
+    // Products - TEMPORARILY OPEN FOR MIGRATION
     match /products/{productId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if true;
     }
 
-    // Categories - anyone can read, only authenticated users can write
+    // Categories - TEMPORARILY OPEN FOR MIGRATION
     match /categories/{categoryId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if true;
     }
 
     // Config - anyone can read and write catalog configuration

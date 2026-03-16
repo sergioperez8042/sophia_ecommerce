@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Leaf, Heart, ShoppingBag, Menu, X, Home, Package, Grid3X3, Users, Phone, LogOut, ExternalLink, LayoutDashboard, Newspaper, UserCog } from "lucide-react";
+import { Leaf, Heart, ShoppingBag, Menu, X, Home, Package, Grid3X3, Users, Phone, LogOut, LayoutDashboard, Newspaper, UserCog, Sun, Moon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCart, useWishlist, useAuth } from "@/store";
+import { useCart, useWishlist, useAuth, useTheme } from "@/store";
 
 const navItems = [
     { name: "Inicio", href: "/", icon: Home },
@@ -22,6 +22,7 @@ export default function Header() {
     const { totalItems: cartCount } = useCart();
     const { totalItems: wishlistCount } = useWishlist();
     const { logout, isAuthenticated, user } = useAuth();
+    const { isDark, toggleTheme } = useTheme();
 
     // Close menu on route change
     useEffect(() => {
@@ -101,15 +102,15 @@ export default function Header() {
 
                         {/* Right: Actions */}
                         <div className="flex items-center gap-1 sm:gap-1.5">
-                            {/* View catalog */}
-                            <Link
-                                href="/"
-                                className="hidden sm:flex items-center gap-1.5 h-9 px-3 rounded-lg text-xs font-medium text-[#505A4A] hover:bg-[#505A4A]/5 transition-colors"
-                                target="_blank"
+                            {/* Theme toggle */}
+                            <button
+                                onClick={toggleTheme}
+                                className="flex items-center justify-center h-9 w-9 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 transition-colors"
+                                aria-label={isDark ? "Modo claro" : "Modo oscuro"}
+                                title={isDark ? "Modo claro" : "Modo oscuro"}
                             >
-                                <ExternalLink className="w-3.5 h-3.5" />
-                                Ver Catálogo
-                            </Link>
+                                {isDark ? <Sun className="w-4.5 h-4.5" /> : <Moon className="w-4.5 h-4.5" />}
+                            </button>
 
                             {/* Logout */}
                             {isAuthenticated && (
@@ -227,12 +228,8 @@ export default function Header() {
                                 </div>
                             )}
 
-                            {/* View catalog + Logout */}
+                            {/* Logout */}
                             <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-800 space-y-1">
-                                <Link href="/" target="_blank" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:text-[#505A4A] hover:bg-[#505A4A]/5 transition-all text-sm font-medium" onClick={() => setIsMenuOpen(false)}>
-                                    <ExternalLink className="w-5 h-5" />
-                                    Ver Catálogo
-                                </Link>
                                 {isAuthenticated && (
                                     <button onClick={() => { logout(); setIsMenuOpen(false); }} className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all text-sm font-medium">
                                         <LogOut className="w-5 h-5" />
