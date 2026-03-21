@@ -454,9 +454,9 @@ export default function GestoresAdminPage() {
                   <div className="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-lg px-3 py-2">
                     <ArrowLeft className="w-4 h-4 text-gray-400 rotate-180" />
                     <span className="text-sm text-gray-700 dark:text-gray-300 flex-1 font-mono text-[11px] sm:text-sm truncate">
-                      {typeof window !== 'undefined' ? `${window.location.origin}/auth` : 'sophia-cosmetic.vercel.app/auth'}
+                      {typeof window !== 'undefined' ? `${window.location.origin}/auth` : 'sophia-product.vercel.app/auth'}
                     </span>
-                    <button onClick={() => handleCopy(typeof window !== 'undefined' ? `${window.location.origin}/auth` : 'https://sophia-cosmetic.vercel.app/auth', 'url')} className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded flex-shrink-0">
+                    <button onClick={() => handleCopy(typeof window !== 'undefined' ? `${window.location.origin}/auth` : 'https://sophia-product.vercel.app/auth', 'url')} className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded flex-shrink-0">
                       {copiedField === 'url' ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4 text-gray-400" />}
                     </button>
                   </div>
@@ -480,7 +480,7 @@ export default function GestoresAdminPage() {
                 {/* Copy all button */}
                 <button
                   onClick={() => {
-                    const loginUrl = typeof window !== 'undefined' ? `${window.location.origin}/auth` : 'https://sophia-cosmetic.vercel.app/auth';
+                    const loginUrl = typeof window !== 'undefined' ? `${window.location.origin}/auth` : 'https://sophia-product.vercel.app/auth';
                     const allText = `Portal Sophia - Acceso Gestor\n\nURL: ${loginUrl}\nEmail: ${createdCredentials.email}\nContraseña: ${createdCredentials.password}\n\nInicia sesión y cambia tu contraseña.`;
                     handleCopy(allText, 'all');
                   }}
@@ -533,11 +533,11 @@ export default function GestoresAdminPage() {
                     <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2">
                       <ArrowLeft className="w-4 h-4 text-gray-400 rotate-180 flex-shrink-0" />
                       <span className="text-[11px] text-gray-600 dark:text-gray-300 flex-1 font-mono truncate">
-                        {typeof window !== 'undefined' ? `${window.location.origin}/auth` : 'sophia-cosmetic.vercel.app/auth'}
+                        {typeof window !== 'undefined' ? `${window.location.origin}/auth` : 'sophia-product.vercel.app/auth'}
                       </span>
                       <button
                         type="button"
-                        onClick={() => handleCopy(typeof window !== 'undefined' ? `${window.location.origin}/auth` : 'https://sophia-cosmetic.vercel.app/auth', 'gestor-url')}
+                        onClick={() => handleCopy(typeof window !== 'undefined' ? `${window.location.origin}/auth` : 'https://sophia-product.vercel.app/auth', 'gestor-url')}
                         className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded flex-shrink-0"
                       >
                         {copiedField === 'gestor-url' ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5 text-gray-400" />}

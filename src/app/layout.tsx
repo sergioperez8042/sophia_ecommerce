@@ -52,7 +52,7 @@ export default function RootLayout({
           <meta name="keywords" content="cosmética natural, cosmética botánica, productos artesanales, belleza natural, cremas naturales, aceites esenciales, skincare orgánico, Sophia cosmética, cuidado piel natural, cosmética vegana España" />
           <meta name="author" content="Sophia" />
           <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
-          <link rel="canonical" href="https://sophia-cosmetic.vercel.app" />
+          <link rel="canonical" href="https://sophia-product.vercel.app" />
 
           {/* Open Graph */}
           <meta property="og:type" content="website" />
@@ -60,8 +60,8 @@ export default function RootLayout({
           <meta property="og:site_name" content="Sophia" />
           <meta property="og:title" content="Sophia | Belleza Natural Artesanal" />
           <meta property="og:description" content="Descubre nuestra colección de productos de cosmética natural elaborados artesanalmente con ingredientes orgánicos de la más alta calidad." />
-          <meta property="og:url" content="https://sophia-cosmetic.vercel.app" />
-          <meta property="og:image" content="https://sophia-cosmetic.vercel.app/images/sophia_logo_nuevo.jpeg" />
+          <meta property="og:url" content="https://sophia-product.vercel.app" />
+          <meta property="og:image" content="https://sophia-product.vercel.app/images/sophia_logo_nuevo.jpeg" />
           <meta property="og:image:width" content="1200" />
           <meta property="og:image:height" content="630" />
 
@@ -69,7 +69,7 @@ export default function RootLayout({
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:title" content="Sophia | Belleza Natural Artesanal" />
           <meta name="twitter:description" content="Productos de cosmética natural elaborados artesanalmente con ingredientes orgánicos." />
-          <meta name="twitter:image" content="https://sophia-cosmetic.vercel.app/images/sophia_logo_nuevo.jpeg" />
+          <meta name="twitter:image" content="https://sophia-product.vercel.app/images/sophia_logo_nuevo.jpeg" />
 
           {/* Structured Data - Store */}
           <Script id="structured-data-store" type="application/ld+json">{JSON.stringify({
@@ -77,9 +77,9 @@ export default function RootLayout({
             "@type": "Store",
             "name": "Sophia",
             "description": "Tienda de cosmética natural y botánica artesanal con ingredientes orgánicos",
-            "url": "https://sophia-cosmetic.vercel.app",
-            "logo": "https://sophia-cosmetic.vercel.app/images/sophia_logo_nuevo.jpeg",
-            "image": "https://sophia-cosmetic.vercel.app/images/sophia_logo_nuevo.jpeg",
+            "url": "https://sophia-product.vercel.app",
+            "logo": "https://sophia-product.vercel.app/images/sophia_logo_nuevo.jpeg",
+            "image": "https://sophia-product.vercel.app/images/sophia_logo_nuevo.jpeg",
             "telephone": "+34642633982",
             "email": "chavesophia1994@gmail.com",
             "foundingDate": "2022",
