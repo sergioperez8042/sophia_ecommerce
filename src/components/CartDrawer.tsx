@@ -108,7 +108,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
       y += 6;
     }
     if (customerPhone.trim()) {
-      doc.text(`Telefono: ${customerPhone.trim()}`, margin, y);
+      doc.text(`Teléfono: ${customerPhone.trim()}`, margin, y);
       y += 6;
     }
     if (location) {
@@ -593,7 +593,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                       type="tel"
                       value={customerPhone}
                       onChange={(e) => setCustomerPhone(e.target.value)}
-                      placeholder="Tu telefono (opcional)"
+                      placeholder="Tu teléfono (opcional)"
                       className={`w-full px-3 py-2 rounded-lg text-sm border ${
                         isDark
                           ? 'bg-[#1a1d19] border-[#C4B590]/15 text-[#e8e4dc] placeholder-[#7a7568]'

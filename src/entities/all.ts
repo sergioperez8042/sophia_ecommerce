@@ -53,7 +53,7 @@ export const DEFAULT_GESTOR_PERMISSIONS: GestorPermission[] = [
 export interface IGestor {
   id: string;
   name: string;
-  whatsapp: string; // numero sin +, ej: "5352010900"
+  whatsapp: string; // número sin +, ej: "5352010900"
   province: string;
   municipalities: string[]; // municipios que cubre
   active: boolean;

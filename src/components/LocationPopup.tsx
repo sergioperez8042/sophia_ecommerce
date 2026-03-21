@@ -129,7 +129,7 @@ export default function LocationPopup() {
                   </div>
 
                   <Dialog.Title className={`text-xl font-semibold ${accent} mb-2`}>
-                    Selecciona tu ubicacion
+                    Selecciona tu ubicación
                   </Dialog.Title>
                   <Dialog.Description className={`text-sm ${textSecondary} mb-6 leading-relaxed`}>
                     Para ofrecerte el mejor servicio de entrega, necesitamos saber donde te encuentras.
@@ -240,7 +240,7 @@ export default function LocationPopup() {
                     disabled={!selectedProvince || !selectedMunicipality}
                     className={`w-full mt-6 ${btnBg} py-3 rounded-xl text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed`}
                   >
-                    Confirmar ubicacion
+                    Confirmar ubicación
                   </button>
                 </div>
               </m.div>

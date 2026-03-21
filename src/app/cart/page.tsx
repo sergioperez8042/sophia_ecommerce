@@ -256,7 +256,7 @@ export default function CartPage() {
                         Tu Carrito
                     </h1>
                     <p className="text-[14px] text-[#999] font-light mb-12">
-                        {totalItems} {totalItems === 1 ? 'articulo' : 'articulos'}
+                        {totalItems} {totalItems === 1 ? 'artículo' : 'artículos'}
                     </p>
 
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">

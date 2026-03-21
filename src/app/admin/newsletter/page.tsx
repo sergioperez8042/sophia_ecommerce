@@ -123,7 +123,7 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
   </div>
   <h2 style="color: #C4B590; font-size: 22px; text-align: center;">Novedades de temporada</h2>
   <p style="line-height: 1.8; color: #d4cdc0; font-size: 15px;">
-    Descubre los nuevos productos que hemos preparado para ti esta temporada. Formulaciones naturales inspiradas en la botanica para el cuidado de tu piel.
+    Descubre los nuevos productos que hemos preparado para ti esta temporada. Formulaciones naturales inspiradas en la botánica para el cuidado de tu piel.
   </p>
   <div style="background: #2a2d25; border-radius: 12px; padding: 25px; margin: 25px 0;">
     <h3 style="color: #C4B590; font-size: 18px; margin: 0 0 15px;">Producto destacado</h3>

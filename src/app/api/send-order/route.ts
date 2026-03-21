@@ -123,11 +123,11 @@ export async function POST(request: NextRequest) {
                             <h3 style="color: #333; margin-top: 0;">Cliente</h3>
                             <p><strong>Nombre:</strong> ${customerName}</p>
                             <p><strong>Email:</strong> ${safeEmail}</p>
-                            <p><strong>Telefono:</strong> ${safePhone}</p>
+                            <p><strong>Teléfono:</strong> ${safePhone}</p>
                         </div>
 
                         <div style="background-color: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                            <h3 style="color: #333; margin-top: 0;">Direccion de Envio</h3>
+                            <h3 style="color: #333; margin-top: 0;">Dirección de Envío</h3>
                             <p>${shippingAddress.replace(/\n/g, '<br>')}</p>
                         </div>
 
@@ -162,7 +162,7 @@ export async function POST(request: NextRequest) {
         const customerMailOptions = {
             from: `"Sophia" <${emailUser}>`,
             to: shippingInfo.email,
-            subject: `Confirmacion de Pedido ${safeOrderNumber} - Sophia`,
+            subject: `Confirmación de Pedido ${safeOrderNumber} - Sophia`,
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                     <div style="background-color: #505A4A; padding: 30px; text-align: center;">
@@ -178,7 +178,7 @@ export async function POST(request: NextRequest) {
                         </p>
 
                         <div style="background-color: white; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
-                            <p style="color: #666; margin: 0;">Numero de pedido</p>
+                            <p style="color: #666; margin: 0;">Número de pedido</p>
                             <h2 style="color: #505A4A; margin: 10px 0;">${safeOrderNumber}</h2>
                         </div>
 
@@ -198,7 +198,7 @@ export async function POST(request: NextRequest) {
                     </div>
 
                     <div style="background-color: #505A4A; color: white; padding: 20px; text-align: center; font-size: 12px;">
-                        <p style="margin: 5px 0;">www.sophia-cosmetica.com</p>
+                        <p style="margin: 5px 0;">sophia.com</p>
                         <p style="margin: 10px 0 0;">&copy; 2022 Sophia</p>
                     </div>
                 </div>

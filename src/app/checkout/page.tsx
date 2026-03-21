@@ -290,7 +290,7 @@ export default function CheckoutPage() {
         doc.setFontSize(9);
         doc.setFont('helvetica', 'normal');
         doc.text('Gracias por tu compra en Sophia', 105, pageHeight - 15, { align: 'center' });
-        doc.text('www.sophia-cosmetica.com | info@sophia-cosmetica.com', 105, pageHeight - 8, { align: 'center' });
+        doc.text('sophia.com', 105, pageHeight - 8, { align: 'center' });
 
         // Sello decorativo
         doc.setDrawColor(255, 255, 255);
