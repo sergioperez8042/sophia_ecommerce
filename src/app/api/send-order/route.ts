@@ -160,14 +160,14 @@ export async function POST(request: NextRequest) {
 
         // Email de confirmación al cliente
         const customerMailOptions = {
-            from: `"Sophia Cosmetica" <${emailUser}>`,
+            from: `"Sophia" <${emailUser}>`,
             to: shippingInfo.email,
             subject: `Confirmacion de Pedido ${safeOrderNumber} - Sophia`,
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                     <div style="background-color: #505A4A; padding: 30px; text-align: center;">
                         <h1 style="color: white; margin: 0; font-size: 28px;">SOPHIA</h1>
-                        <p style="color: #E8F5E9; margin: 5px 0;">Cosmetica Botanica</p>
+                        <p style="color: #E8F5E9; margin: 5px 0;">Productos Naturales</p>
                     </div>
 
                     <div style="padding: 30px; background-color: #f9f9f9;">
@@ -199,7 +199,7 @@ export async function POST(request: NextRequest) {
 
                     <div style="background-color: #505A4A; color: white; padding: 20px; text-align: center; font-size: 12px;">
                         <p style="margin: 5px 0;">www.sophia-cosmetica.com</p>
-                        <p style="margin: 10px 0 0;">&copy; 2022 Sophia - Cosmetica Botanica</p>
+                        <p style="margin: 10px 0 0;">&copy; 2022 Sophia</p>
                     </div>
                 </div>
             `,

@@ -81,7 +81,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
     doc.setFontSize(9);
     doc.setTextColor(160, 152, 137); // muted
-    doc.text('Cosmetica Botanica', margin, y + 8);
+    doc.text('Sophia', margin, y + 8);
 
     // -- Date on the right --
     doc.setFontSize(9);
@@ -218,7 +218,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(7);
     doc.setTextColor(180, 175, 165);
-    doc.text('Sophia Cosmetica Botanica  |  www.sophia-cosmetic.vercel.app', pw / 2, footerY, { align: 'center' });
+    doc.text('Sophia', pw / 2, footerY, { align: 'center' });
 
     return doc.output('blob');
   };

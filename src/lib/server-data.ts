@@ -29,6 +29,7 @@ interface Category {
   name: string;
   icon: string;
   image: string;
+  sort_order?: number;
 }
 
 export async function getActiveProducts(): Promise<Product[]> {
@@ -67,10 +68,10 @@ export async function getCategories(): Promise<Category[]> {
 
   try {
     const snapshot = await getDocs(collection(db, 'categories'));
-    return snapshot.docs.map(doc => ({
+    return (snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
-    })) as Category[];
+    })) as Category[]).sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
   } catch {
     return [];
   }

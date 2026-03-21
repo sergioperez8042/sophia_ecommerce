@@ -47,18 +47,18 @@ export default function RootLayout({
           <Script id="fouc-prevention" strategy="beforeInteractive">{FOUC_SCRIPT}</Script>
           <link rel="icon" href="/images/logo-sophia-green.jpeg" type="image/jpeg" />
           <link rel="apple-touch-icon" href="/images/logo-sophia-green.jpeg" />
-          <title>Sophia Cosmética Botánica | Productos Naturales Artesanales</title>
-          <meta name="description" content="Sophia Cosmética Botánica: productos de belleza natural elaborados artesanalmente con ingredientes orgánicos. Cremas, aceites y tratamientos para piel y cabello. Envíos a toda España." />
+          <title>Sophia | Productos Naturales Artesanales</title>
+          <meta name="description" content="Sophia: productos de belleza natural elaborados artesanalmente con ingredientes orgánicos. Cremas, aceites y tratamientos para piel y cabello. Envíos a toda España." />
           <meta name="keywords" content="cosmética natural, cosmética botánica, productos artesanales, belleza natural, cremas naturales, aceites esenciales, skincare orgánico, Sophia cosmética, cuidado piel natural, cosmética vegana España" />
-          <meta name="author" content="Sophia Cosmética Botánica" />
+          <meta name="author" content="Sophia" />
           <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
           <link rel="canonical" href="https://sophia-cosmetic.vercel.app" />
 
           {/* Open Graph */}
           <meta property="og:type" content="website" />
           <meta property="og:locale" content="es_ES" />
-          <meta property="og:site_name" content="Sophia Cosmética Botánica" />
-          <meta property="og:title" content="Sophia Cosmética Botánica | Belleza Natural Artesanal" />
+          <meta property="og:site_name" content="Sophia" />
+          <meta property="og:title" content="Sophia | Belleza Natural Artesanal" />
           <meta property="og:description" content="Descubre nuestra colección de productos de cosmética natural elaborados artesanalmente con ingredientes orgánicos de la más alta calidad." />
           <meta property="og:url" content="https://sophia-cosmetic.vercel.app" />
           <meta property="og:image" content="https://sophia-cosmetic.vercel.app/images/sophia_logo_nuevo.jpeg" />
@@ -67,7 +67,7 @@ export default function RootLayout({
 
           {/* Twitter Card */}
           <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content="Sophia Cosmética Botánica | Belleza Natural Artesanal" />
+          <meta name="twitter:title" content="Sophia | Belleza Natural Artesanal" />
           <meta name="twitter:description" content="Productos de cosmética natural elaborados artesanalmente con ingredientes orgánicos." />
           <meta name="twitter:image" content="https://sophia-cosmetic.vercel.app/images/sophia_logo_nuevo.jpeg" />
 
@@ -75,7 +75,7 @@ export default function RootLayout({
           <Script id="structured-data-store" type="application/ld+json">{JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Store",
-            "name": "Sophia Cosmética Botánica",
+            "name": "Sophia",
             "description": "Tienda de cosmética natural y botánica artesanal con ingredientes orgánicos",
             "url": "https://sophia-cosmetic.vercel.app",
             "logo": "https://sophia-cosmetic.vercel.app/images/sophia_logo_nuevo.jpeg",
@@ -109,9 +109,9 @@ export default function RootLayout({
         <Script id="fouc-prevention-admin" strategy="beforeInteractive">{FOUC_SCRIPT}</Script>
         <link rel="icon" href="/images/logo-sophia-green.jpeg" type="image/jpeg" />
         <link rel="apple-touch-icon" href="/images/logo-sophia-green.jpeg" />
-        <title>Sophia Cosmética Botánica | Panel de Administración</title>
+        <title>Sophia | Panel de Administración</title>
         <meta name="robots" content="noindex, nofollow" />
-        <meta name="description" content="Panel de administración de Sophia Cosmética Botánica" />
+        <meta name="description" content="Panel de administración de Sophia" />
       </head>
       <body className={`${poppins.variable} ${cinzel.variable} antialiased`} style={{ fontFamily: 'var(--font-poppins), sans-serif' }} suppressHydrationWarning={true}>
         <LazyMotion features={domAnimation} strict>

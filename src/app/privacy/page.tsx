@@ -19,7 +19,7 @@ export default function PrivacyPage() {
 
           <section>
             <h2 className="text-base font-semibold text-gray-800 mb-2">1. Responsable del Tratamiento</h2>
-            <p>El responsable del tratamiento de tus datos personales es Sophia Cosmética Botánica. Puedes contactarnos en chavesophia1994@gmail.com para cualquier consulta relacionada con la privacidad.</p>
+            <p>El responsable del tratamiento de tus datos personales es Sophia. Puedes contactarnos en chavesophia1994@gmail.com para cualquier consulta relacionada con la privacidad.</p>
           </section>
 
           <section>

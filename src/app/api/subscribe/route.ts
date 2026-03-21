@@ -54,12 +54,12 @@ export async function POST(request: NextRequest) {
 
       await sendTransactionalEmail(
         trimmedEmail,
-        '¡Bienvenida a Sophia Cosmética Botánica! 🌿',
+        '¡Bienvenida a Sophia! 🌿',
         `
         <div style="font-family: 'Georgia', serif; max-width: 600px; margin: 0 auto; background: #1a1d19; color: #e8e0d0; padding: 40px;">
           <div style="text-align: center; margin-bottom: 30px;">
             <h1 style="color: #C4B590; font-size: 24px; margin: 0;">Sophia</h1>
-            <p style="color: #C4B590; font-size: 14px; margin: 5px 0 0;">Cosmética Botánica</p>
+            <p style="color: #C4B590; font-size: 14px; margin: 5px 0 0;">Productos Naturales</p>
           </div>
           <h2 style="color: #C4B590; font-size: 20px;">¡Gracias por suscribirte!</h2>
           <p style="line-height: 1.6; color: #d4cdc0;">
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
             <p style="margin: 8px 0 0; color: #a09880; font-size: 13px;">10% de descuento en tu primer pedido</p>
           </div>
           <p style="color: #a09880; font-size: 12px; text-align: center; margin-top: 30px;">
-            © ${new Date().getFullYear()} Sophia Cosmética Botánica
+            © ${new Date().getFullYear()} Sophia
           </p>
         </div>
         `

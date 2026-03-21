@@ -71,10 +71,7 @@ export default function Header() {
                                         className="object-cover"
                                     />
                                 </div>
-                                <div className="flex flex-col">
-                                    <span className="text-sm sm:text-base font-semibold text-[#505A4A] leading-tight">Sophia</span>
-                                    <span className="text-[10px] sm:text-xs text-[#505A4A]/60 leading-tight">Cosmética Botánica</span>
-                                </div>
+                                <span className="text-sm sm:text-base font-semibold text-[#505A4A] leading-tight">Sophia</span>
                             </Link>
 
                         </div>
@@ -178,10 +175,7 @@ export default function Header() {
                                         className="object-cover"
                                     />
                                 </div>
-                                <div className="flex flex-col">
-                                    <span className="text-base font-semibold text-[#505A4A] dark:text-[#C4B590] leading-tight">Sophia</span>
-                                    <span className="text-xs text-[#505A4A]/60 dark:text-[#C4B590]/60 leading-tight">Cosmética Botánica</span>
-                                </div>
+                                <span className="text-base font-semibold text-[#505A4A] dark:text-[#C4B590] leading-tight">Sophia</span>
                             </Link>
                         </div>
 
@@ -242,7 +236,7 @@ export default function Header() {
                             <div className="px-5 py-4 border-t border-gray-100 dark:border-gray-800">
                                 <div className="flex items-center justify-center gap-2 text-xs text-gray-400 dark:text-gray-500">
                                     <Leaf className="w-3.5 h-3.5 text-[#505A4A]/50" />
-                                    <span>Cosmética Botánica Artesanal</span>
+                                    <span>Sophia</span>
                                 </div>
                             </div>
                         </div>

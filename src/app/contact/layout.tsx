@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contacto | Sophia Cosmética Botánica",
+  title: "Contacto | Sophia",
   description:
     "Ponte en contacto con nosotros. Estamos aquí para ayudarte.",
 };

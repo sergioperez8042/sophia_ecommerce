@@ -76,7 +76,7 @@ export default function CartPage() {
 
         doc.setFontSize(9);
         doc.setTextColor(160, 152, 137);
-        doc.text('Cosmetica Botanica', margin, y + 8);
+        doc.text('Sophia', margin, y + 8);
 
         // Date
         doc.setFontSize(9);
@@ -170,7 +170,7 @@ export default function CartPage() {
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(7);
         doc.setTextColor(180, 175, 165);
-        doc.text('Sophia Cosmetica Botanica', pw / 2, footerY, { align: 'center' });
+        doc.text('Sophia', pw / 2, footerY, { align: 'center' });
 
         return doc.output('blob');
     };

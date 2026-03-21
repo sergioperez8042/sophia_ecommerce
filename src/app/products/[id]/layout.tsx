@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Producto | Sophia",
-  description: "Detalle del producto - Sophia Cosmética Botánica",
+  description: "Detalle del producto - Sophia",
 };
 
 export default function ProductDetailLayout({

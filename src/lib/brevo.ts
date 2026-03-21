@@ -16,7 +16,7 @@ function getBrevo(): BrevoClient {
 
 const getSender = () => ({
   email: process.env.BREVO_SENDER_EMAIL || 'chavesophia1994@gmail.com',
-  name: process.env.BREVO_SENDER_NAME || 'Sophia Cosmética Botánica',
+  name: process.env.BREVO_SENDER_NAME || 'Sophia',
 });
 
 /**

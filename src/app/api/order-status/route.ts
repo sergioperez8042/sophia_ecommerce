@@ -82,7 +82,7 @@ function buildStatusEmailHtml(data: {
   <tr>
     <td style="background-color:${accentColor};padding:32px 40px;text-align:center;">
       <h1 style="color:#ffffff;margin:0;font-size:24px;font-weight:600;letter-spacing:2px;">SOPHIA</h1>
-      <p style="color:rgba(255,255,255,0.7);margin:4px 0 0;font-size:11px;letter-spacing:3px;text-transform:uppercase;">Cosmética Botánica</p>
+      <p style="color:rgba(255,255,255,0.7);margin:4px 0 0;font-size:11px;letter-spacing:3px;text-transform:uppercase;">Productos Naturales</p>
     </td>
   </tr>
 
@@ -144,7 +144,7 @@ function buildStatusEmailHtml(data: {
     <td style="background-color:#fafafa;padding:24px 40px;text-align:center;border-top:1px solid #f0f0f0;">
       <p style="color:#999;margin:0 0 4px;font-size:12px;">¿Tienes alguna pregunta?</p>
       <p style="color:#666;margin:0;font-size:12px;">Contáctanos por WhatsApp o responde a este email</p>
-      <p style="color:#ccc;margin:16px 0 0;font-size:11px;">&copy; ${new Date().getFullYear()} Sophia — Cosmética Botánica</p>
+      <p style="color:#ccc;margin:16px 0 0;font-size:11px;">&copy; ${new Date().getFullYear()} Sophia</p>
     </td>
   </tr>
 

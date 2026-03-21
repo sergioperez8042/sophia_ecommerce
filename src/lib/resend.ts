@@ -14,7 +14,7 @@ function getResend(): Resend {
   return resendInstance;
 }
 
-const SENDER = 'Sophia Cosmética Botánica <onboarding@resend.dev>';
+const SENDER = 'Sophia <onboarding@resend.dev>';
 
 interface SendNewsletterParams {
   to: string[];

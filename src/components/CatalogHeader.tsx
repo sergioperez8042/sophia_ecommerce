@@ -61,7 +61,7 @@ export default function CatalogHeader({ showBackButton = false }: CatalogHeaderP
                                 <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#505A4A]/15">
                                     <Image
                                         src="/images/sophia_logo_nuevo.jpeg"
-                                        alt="Sophia Cosmetica Botanica"
+                                        alt="Sophia"
                                         fill
                                         sizes="56px"
                                         className="object-cover"

@@ -34,7 +34,7 @@ export default function BrandLogo({ size = 'md', showText = true, linkTo, animat
       >
         <Image
           src="/images/sophia_logo_nuevo.jpeg"
-          alt="Sophia Cosmética Botánica"
+          alt="Sophia"
           fill
           sizes="80px"
           className="object-cover"
@@ -51,14 +51,7 @@ export default function BrandLogo({ size = 'md', showText = true, linkTo, animat
           >
             Sophia
           </m.h1>
-          <m.p
-            className={`${textSizeMap[size].subtitle} text-[#505A4A]/60 tracking-[0.2em] uppercase mt-0.5`}
-            initial={animated ? { opacity: 0 } : false}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            Cosmética Botánica
-          </m.p>
+          {/* Subtitle removed — brand is just "Sophia" */}
         </div>
       )}
     </div>

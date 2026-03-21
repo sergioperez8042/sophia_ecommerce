@@ -730,9 +730,9 @@ export default function AdminProductsPage() {
                         </div>
                     </div>
 
-                    {/* Select All + Bulk Actions Bar */}
+                    {/* Select All + Bulk Actions + Pagination Bar */}
                     {filteredProducts.length > 0 && (
-                        <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center justify-between mb-3 sticky top-16 z-20 -mx-4 px-4 py-2 bg-gray-50/90 dark:bg-gray-900/90 backdrop-blur-sm border-b border-gray-200/60 dark:border-gray-700/60">
                             <button
                                 onClick={toggleSelectAll}
                                 className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
@@ -750,7 +750,7 @@ export default function AdminProductsPage() {
                                 }
                             </button>
 
-                            {selectedIds.size > 0 && (
+                            {selectedIds.size > 0 ? (
                                 <div className="flex items-center gap-2">
                                     <button
                                         onClick={handleBulkActivate}
@@ -776,18 +776,11 @@ export default function AdminProductsPage() {
                                         <X className="w-4 h-4" />
                                     </button>
                                 </div>
-                            )}
-                        </div>
-                    )}
-
-                    {/* ─── STICKY PAGINATION BAR ─── */}
-                    {filteredProducts.length > 0 && displayMode !== 'grouped' && totalPages > 1 && (
-                        <div className="sticky top-16 z-20 -mx-4 px-4 py-2 mb-2 bg-gray-50/90 dark:bg-gray-900/90 backdrop-blur-sm border-b border-gray-200/60 dark:border-gray-700/60">
-                            <div className="flex items-center justify-between">
-                                <p className="text-xs text-gray-500 dark:text-gray-400">
-                                    {(safeCurrentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(safeCurrentPage * ITEMS_PER_PAGE, filteredProducts.length)} de {filteredProducts.length}
-                                </p>
-                                <div className="flex items-center gap-1">
+                            ) : displayMode !== 'grouped' && totalPages > 1 ? (
+                                <div className="flex items-center gap-2">
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 hidden sm:block">
+                                        {(safeCurrentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(safeCurrentPage * ITEMS_PER_PAGE, filteredProducts.length)} de {filteredProducts.length}
+                                    </p>
                                     <button
                                         onClick={() => { setCurrentPage(p => Math.max(1, p - 1)); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                                         disabled={safeCurrentPage <= 1}
@@ -806,7 +799,7 @@ export default function AdminProductsPage() {
                                         <ChevronRight className="w-3.5 h-3.5" />
                                     </button>
                                 </div>
-                            </div>
+                            ) : null}
                         </div>
                     )}
 

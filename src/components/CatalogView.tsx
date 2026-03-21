@@ -178,7 +178,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                             >
                                 <Leaf className="w-3.5 h-3.5 text-white" />
                             </m.div>
-                            <span className="text-xs sm:text-sm text-white font-medium">Cosmetica Botanica</span>
+                            <span className="text-xs sm:text-sm text-white font-medium">Sophia</span>
                         </m.div>
 
                         <m.p
@@ -471,7 +471,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                         </div>
                         <div className="text-left">
                             <p className="text-white text-sm font-semibold leading-tight">Sophia</p>
-                            <p className="text-white/50 text-[10px] leading-tight">Cosmetica Botanica</p>
+                            <p className="text-white/50 text-[10px] leading-tight">Sophia</p>
                         </div>
                     </div>
 
@@ -514,7 +514,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                     {/* Copyright */}
                     <div className="border-t border-white/10 pt-5">
                         <p className="text-white/40 text-[11px]">
-                            2022 - {new Date().getFullYear()} Sophia Cosmetica Botanica
+                            2022 - {new Date().getFullYear()} Sophia
                         </p>
                     </div>
                 </div>

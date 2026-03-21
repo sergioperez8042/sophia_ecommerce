@@ -80,7 +80,7 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
   {
     id: 'default-bienvenida',
     name: 'Bienvenida',
-    subject: 'Bienvenida a Sophia Cosmetica Botanica',
+    subject: 'Bienvenida a Sophia',
     content: `<div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #1a1d19; color: #e8e0d0; padding: 40px;">
   <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #C4B590; padding-bottom: 20px;">
     <h1 style="color: #C4B590; font-size: 28px; margin: 0;">Sophia</h1>
@@ -107,7 +107,7 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
     <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C4B590; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Explorar productos</a>
   </div>
   <p style="color: #a09880; font-size: 12px; text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
-    Sophia Cosmetica Botanica
+    Sophia
   </p>
 </div>`,
     createdAt: '2025-01-01T00:00:00.000Z',
@@ -143,7 +143,7 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
     <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C4B590; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Ver todos los productos</a>
   </div>
   <p style="color: #a09880; font-size: 12px; text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
-    Sophia Cosmetica Botanica
+    Sophia
   </p>
 </div>`,
     createdAt: '2025-01-01T00:00:01.000Z',
@@ -174,7 +174,7 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
     <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C4B590; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Comprar ahora</a>
   </div>
   <p style="color: #a09880; font-size: 12px; text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
-    Sophia Cosmetica Botanica
+    Sophia
   </p>
 </div>`,
     createdAt: '2025-01-01T00:00:02.000Z',
@@ -214,7 +214,7 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
     <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C4B590; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Descubrir productos</a>
   </div>
   <p style="color: #a09880; font-size: 12px; text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
-    Sophia Cosmetica Botanica
+    Sophia
   </p>
 </div>`,
     createdAt: '2025-01-01T00:00:03.000Z',
@@ -244,7 +244,7 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
     <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C4B590; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Comprar antes de que se agote</a>
   </div>
   <p style="color: #a09880; font-size: 12px; text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
-    Sophia Cosmetica Botanica
+    Sophia
   </p>
 </div>`,
     createdAt: '2025-01-01T00:00:04.000Z',

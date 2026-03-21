@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Productos | Sophia Cosmética Botánica",
+  title: "Productos | Sophia",
   description:
     "Explora nuestra colección de productos naturales para el cuidado de la piel y el cabello.",
 };

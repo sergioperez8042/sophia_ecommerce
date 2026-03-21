@@ -124,7 +124,7 @@ export default function CheckoutPage() {
         // Subtítulo
         doc.setFontSize(10);
         doc.setFont('helvetica', 'normal');
-        doc.text('Cosmética Botánica', 20, 36);
+        doc.text('Sophia', 20, 36);
 
         // Número de pedido en header
         doc.setFontSize(12);

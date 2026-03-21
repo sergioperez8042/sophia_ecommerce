@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Iniciar Sesión | Sophia",
   description:
-    "Accede a tu cuenta o regístrate en Sophia Cosmética Botánica.",
+    "Accede a tu cuenta o regístrate en Sophia.",
 };
 
 export default function AuthLayout({

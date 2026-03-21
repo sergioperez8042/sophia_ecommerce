@@ -240,10 +240,7 @@ export default function GestorDashboard() {
                   className="object-cover"
                 />
               </div>
-              <div className="flex flex-col">
-                <span className="text-sm sm:text-base font-semibold text-[#505A4A] leading-tight">Sophia</span>
-                <span className="text-[10px] sm:text-xs text-[#505A4A]/60 leading-tight">Cosmética Botánica</span>
-              </div>
+              <span className="text-sm sm:text-base font-semibold text-[#505A4A] leading-tight">Sophia</span>
             </Link>
 
             <div className="flex items-center gap-2">
