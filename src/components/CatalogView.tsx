@@ -199,7 +199,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                     <div className="flex items-center justify-center gap-4 sm:gap-10">
                         {[
                             { icon: Rabbit, label: "Cruelty Free" },
-                            { icon: Droplets, label: "100% Organico" },
+                            { icon: Droplets, label: "100% Orgánico" },
                             { icon: ShieldCheck, label: "Sin Parabenos" },
                             { icon: Hand, label: "Hecho a Mano" },
                         ].map((badge, i) => (

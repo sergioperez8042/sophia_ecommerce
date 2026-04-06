@@ -118,13 +118,13 @@ function slugify(text) {
 
 const CATEGORY_TREE = [
   { name: 'LIMPIEZA', sort_order: 1, children: ['Jabones', 'Agua micelar', 'Desmaquillante'] },
-  { name: 'EXFOLIACION', sort_order: 2, children: ['Exfoliantes corporales', 'Mascarillas exfoliantes'] },
-  { name: 'TONIFICACION', sort_order: 3, children: ['Tonicos faciales'] },
-  { name: 'HIDRATACION', sort_order: 4, children: ['Cremas', 'Balsamos', 'Cremas Solidas'] },
-  { name: 'TRATAMIENTOS', sort_order: 5, children: ['Serums faciales', 'Tratamiento de unas', 'Contorno de Ojos', 'Mascarillas'] },
-  { name: 'ACEITES NATURALES', sort_order: 6, children: ['Aceite multiproposito', 'Aceite para masaje'] },
-  { name: 'CUIDADO CAPILAR', sort_order: 7, children: ['Champu', 'Acondicionador', 'Serum Capilar', 'Mascarilla Capilar', 'Tratamiento Capilar'] },
-  { name: 'BIENESTAR', sort_order: 8, children: ['Velas aromaticas', 'Inciensos'] },
+  { name: 'EXFOLIACIÓN', sort_order: 2, children: ['Exfoliantes corporales', 'Mascarillas exfoliantes'] },
+  { name: 'TONIFICACIÓN', sort_order: 3, children: ['Tónicos faciales'] },
+  { name: 'HIDRATACIÓN', sort_order: 4, children: ['Cremas', 'Bálsamos', 'Cremas Sólidas'] },
+  { name: 'TRATAMIENTOS', sort_order: 5, children: ['Sérums faciales', 'Tratamiento de uñas', 'Contorno de Ojos', 'Mascarillas'] },
+  { name: 'ACEITES NATURALES', sort_order: 6, children: ['Aceite multipropósito', 'Aceite para masaje'] },
+  { name: 'CUIDADO CAPILAR', sort_order: 7, children: ['Champú', 'Acondicionador', 'Sérum Capilar', 'Mascarilla Capilar', 'Tratamiento Capilar'] },
+  { name: 'BIENESTAR', sort_order: 8, children: ['Velas aromáticas', 'Inciensos'] },
 ];
 
 // ── PRODUCT → SUBCATEGORY MAPPING ──

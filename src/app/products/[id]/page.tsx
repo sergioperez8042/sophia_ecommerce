@@ -235,15 +235,15 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
                         {/* Info del producto */}
                         <div className="lg:py-4">
+                            <h1 className="text-[28px] sm:text-[34px] font-light text-[#333] dark:text-[#e8e4dc] tracking-[-0.02em] leading-tight mb-2">
+                                {product.name}
+                            </h1>
+
                             {category && (
-                                <span className="text-[11px] uppercase tracking-[0.15em] text-[#999] dark:text-[#8a8273] block mb-3">
+                                <span className="text-[11px] uppercase tracking-[0.15em] text-[#999] dark:text-[#8a8273] block mb-4">
                                     {category.name}
                                 </span>
                             )}
-
-                            <h1 className="text-[28px] sm:text-[34px] font-light text-[#333] dark:text-[#e8e4dc] tracking-[-0.02em] leading-tight mb-4">
-                                {product.name}
-                            </h1>
 
                             <p className="text-[15px] text-[#777] dark:text-[#a09889] font-light leading-relaxed mb-6">
                                 {product.description}
