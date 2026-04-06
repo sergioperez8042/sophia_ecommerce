@@ -83,6 +83,7 @@ describe('ProductService - Campos usage, weight y weight_unit', () => {
         usage: 'Aplicar 3 gotas sobre el rostro limpio por la noche',
         weight: 30,
         weight_unit: 'ml',
+        created_date: new Date().toISOString(),
       };
 
       mockAddDoc.mockResolvedValue({ id: 'new-prod-1' });
@@ -113,6 +114,7 @@ describe('ProductService - Campos usage, weight y weight_unit', () => {
         ingredients: [],
         active: true,
         featured: false,
+        created_date: new Date().toISOString(),
       };
 
       mockAddDoc.mockResolvedValue({ id: 'new-prod-2' });

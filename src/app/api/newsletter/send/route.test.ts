@@ -60,7 +60,7 @@ function crearRequest(
     options.body = JSON.stringify(body);
   }
 
-  return new NextRequest('http://localhost/api/newsletter/send', options);
+  return new NextRequest('http://localhost/api/newsletter/send', options as never);
 }
 
 function crearRequestSinAuth(
@@ -71,7 +71,7 @@ function crearRequestSinAuth(
   if (body) {
     options.body = JSON.stringify(body);
   }
-  return new NextRequest('http://localhost/api/newsletter/send', options);
+  return new NextRequest('http://localhost/api/newsletter/send', options as never);
 }
 
 // =====================================================
