@@ -5,11 +5,11 @@
 /**
  * Tests para la ruta API /api/newsletter/send
  *
- * POST: Envia newsletter a suscriptores activos de Firebase (requiere NEWSLETTER_API_KEY)
- * GET: Lista newsletters enviados desde Firebase (requiere NEWSLETTER_API_KEY)
+ * POST: Envia newsletter a suscriptores activos de Firebase (require NEWSLETTER_API_KEY)
+ * GET: Lista newsletters enviados desde Firebase (require NEWSLETTER_API_KEY)
  *
  * Usa su propia autorizacion local (authHeader === Bearer NEWSLETTER_API_KEY).
- * Los suscriptores se obtienen de Firestore y el envio se hace via lib/resend.
+ * Los suscriptores se obtienen de Firestore y el envio se have via lib/resend.
  */
 
 import { NextRequest } from 'next/server';
@@ -154,7 +154,7 @@ describe('POST /api/newsletter/send', () => {
       expect(data.message).toBe('Newsletter enviada a 2 suscriptores');
     });
 
-    it('deberia llamar a sendNewsletter con los parametros correctos', async () => {
+    it('deberia llamar a sendNewsletter con los parameters correctos', async () => {
       mockGetDocs.mockResolvedValueOnce({
         docs: [{ data: () => ({ email: 'test@example.com' }) }],
       });
