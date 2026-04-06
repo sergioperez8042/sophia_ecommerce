@@ -12,8 +12,7 @@
  * Los suscriptores se guardan en un archivo JSON local.
  */
 
-import { NextRequest } from 'next/server';
-import { POST, DELETE } from './route';
+import { GET } from './route';
 
 // Mock de fs/promises
 jest.mock('fs/promises', () => ({
