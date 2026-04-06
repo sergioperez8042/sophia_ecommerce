@@ -273,7 +273,7 @@ describe('POST /api/newsletter/send', () => {
   // Error de Firebase
   // ---------------------------------------------------
   describe('Error de Firebase', () => {
-    it('deberia devolver 500 si Firestore lanza una excepcion', async () => {
+    it('deberia devolver 500 si Firestore lanza una excepción', async () => {
       mockGetDocs.mockRejectedValueOnce(new Error('Firestore unavailable'));
 
       const res = await POST(
@@ -356,7 +356,7 @@ describe('GET /api/newsletter/send', () => {
       expect(data.newsletters[1].subject).toBe('Newsletter Enero');
     });
 
-    it('deberia devolver lista vacia si no hay newsletters', async () => {
+    it('deberia devolver lista vacía si no hay newsletters', async () => {
       mockGetDocs.mockResolvedValueOnce({ docs: [] });
 
       const res = await GET(crearRequest('GET'));
@@ -394,7 +394,7 @@ describe('GET /api/newsletter/send', () => {
   // Error de Firebase
   // ---------------------------------------------------
   describe('Error de Firebase', () => {
-    it('deberia devolver 500 si Firestore lanza una excepcion', async () => {
+    it('deberia devolver 500 si Firestore lanza una excepción', async () => {
       mockGetDocs.mockRejectedValueOnce(new Error('Firestore error'));
 
       const res = await GET(crearRequest('GET'));
