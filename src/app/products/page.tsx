@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
-import { Star, Heart, ShoppingBag, Filter, Grid3X3, List, SlidersHorizontal, X } from "lucide-react";
+import { Star, Heart, ShoppingBag, Filter, Grid3X3, List, SlidersHorizontal, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +11,7 @@ import { m } from "framer-motion";
 import Link from "next/link";
 import Breadcrumb from "@/components/ui/breadcrumb";
 import { useCart, useWishlist, useProducts, useCategories } from "@/store";
+import { ZONA_USO_OPTIONS, TIPO_PIEL_OPTIONS, BENEFICIOS_OPTIONS } from "@/lib/catalog-constants";
 
 interface DisplayProduct {
   id: string;
@@ -28,15 +29,22 @@ interface DisplayProduct {
   isBestseller: boolean;
   priceRange: string;
   brand?: string;
+  zona_uso: string[];
+  tipo_piel: string[];
+  beneficios: string[];
 }
 
 export default function ProductsPage() {
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
   const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([]);
+  const [selectedZonaUso, setSelectedZonaUso] = useState<string[]>([]);
+  const [selectedTipoPiel, setSelectedTipoPiel] = useState<string[]>([]);
+  const [selectedBeneficios, setSelectedBeneficios] = useState<string[]>([]);
+  const [expandedParents, setExpandedParents] = useState<Set<string>>(new Set());
   const [inStockOnly, setInStockOnly] = useState(false);
   const [sortBy, setSortBy] = useState("featured");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [showMobileFilters, setShowMobileFilters] = useState(false); // TODO: implement mobile filter panel
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [addingToCart, setAddingToCart] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
@@ -45,7 +53,7 @@ export default function ProductsPage() {
   const { addItem: addToCartStore } = useCart();
   const { toggleItem, isInWishlist } = useWishlist();
   const { products: allProducts, isLoading } = useProducts();
-  const { categories: categoriesData } = useCategories();
+  const { categories: categoriesData, activeRootCategories, getActiveChildren } = useCategories();
 
   // Map products to display format
   const displayProducts = useMemo(() => {
@@ -66,19 +74,13 @@ export default function ProductsPage() {
         inStock: product.active,
         isNew: new Date(product.created_date) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
         isBestseller: product.featured,
-        priceRange
+        priceRange,
+        zona_uso: product.zona_uso || [],
+        tipo_piel: product.tipo_piel || [],
+        beneficios: product.beneficios || [],
       };
     });
   }, [allProducts, categoriesData]);
-
-  // Dynamic categories from products
-  const categories = useMemo(() => {
-    const catCounts: Record<string, number> = {};
-    displayProducts.forEach(p => {
-      catCounts[p.category] = (catCounts[p.category] || 0) + 1;
-    });
-    return Object.entries(catCounts).map(([name, count]) => ({ name, count }));
-  }, [displayProducts]);
 
   const priceRanges = [
     { name: "$0 - $20", value: "0-20" },
@@ -86,22 +88,50 @@ export default function ProductsPage() {
     { name: "$50+", value: "50+" }
   ];
 
+  // Expand all category IDs (parent selection includes all children)
+  const expandedCategoryIds = useMemo(() => {
+    const ids = new Set<string>();
+    selectedCategoryIds.forEach(id => {
+      ids.add(id);
+      const children = getActiveChildren(id);
+      children.forEach(c => ids.add(c.id));
+    });
+    return ids;
+  }, [selectedCategoryIds, getActiveChildren]);
+
   const filteredProducts = useMemo(() => {
     let filtered = [...displayProducts];
 
-    if (selectedCategories.length > 0) {
-      filtered = filtered.filter(product => selectedCategories.includes(product.category));
+    if (expandedCategoryIds.size > 0) {
+      filtered = filtered.filter(product => expandedCategoryIds.has(product.category_id));
     }
 
     if (selectedPriceRanges.length > 0) {
       filtered = filtered.filter(product => selectedPriceRanges.includes(product.priceRange));
     }
 
+    if (selectedZonaUso.length > 0) {
+      filtered = filtered.filter(product =>
+        product.zona_uso.some(z => selectedZonaUso.includes(z))
+      );
+    }
+
+    if (selectedTipoPiel.length > 0) {
+      filtered = filtered.filter(product =>
+        product.tipo_piel.some(t => selectedTipoPiel.includes(t))
+      );
+    }
+
+    if (selectedBeneficios.length > 0) {
+      filtered = filtered.filter(product =>
+        product.beneficios.some(b => selectedBeneficios.includes(b))
+      );
+    }
+
     if (inStockOnly) {
       filtered = filtered.filter(product => product.inStock);
     }
 
-    // Ordenamiento
     switch (sortBy) {
       case "price-low":
         filtered.sort((a, b) => a.price - b.price);
@@ -123,15 +153,22 @@ export default function ProductsPage() {
     }
 
     return filtered;
-  }, [displayProducts, selectedCategories, selectedPriceRanges, inStockOnly, sortBy]);
+  }, [displayProducts, expandedCategoryIds, selectedPriceRanges, selectedZonaUso, selectedTipoPiel, selectedBeneficios, inStockOnly, sortBy]);
 
   const clearAllFilters = () => {
-    setSelectedCategories([]);
+    setSelectedCategoryIds([]);
     setSelectedPriceRanges([]);
+    setSelectedZonaUso([]);
+    setSelectedTipoPiel([]);
+    setSelectedBeneficios([]);
     setInStockOnly(false);
   };
 
-  const activeFiltersCount = selectedCategories.length + selectedPriceRanges.length + (inStockOnly ? 1 : 0);
+  const activeFiltersCount = selectedCategoryIds.length + selectedPriceRanges.length + selectedZonaUso.length + selectedTipoPiel.length + selectedBeneficios.length + (inStockOnly ? 1 : 0);
+
+  const toggleFilterValue = (value: string, selected: string[], setter: (v: string[]) => void) => {
+    setter(selected.includes(value) ? selected.filter(v => v !== value) : [...selected, value]);
+  };
 
   const addToCart = async (product: DisplayProduct, e: React.MouseEvent) => {
     e.preventDefault();
@@ -196,35 +233,111 @@ export default function ProductsPage() {
                   )}
                 </div>
 
-                {/* Filtro de Categorías */}
+                {/* Filtro de Categorías - Jerárquico */}
                 <div className="border-b border-gray-200 py-4">
                   <h3 className="font-semibold text-gray-900 mb-3">Categoría</h3>
-                  <div className="space-y-2">
-                    {categories.map(category => (
+                  <div className="space-y-1">
+                    {activeRootCategories.map(parent => {
+                      const children = getActiveChildren(parent.id);
+                      const isExpanded = expandedParents.has(parent.id);
+                      const parentProductCount = displayProducts.filter(p => {
+                        const childIds = children.map(c => c.id);
+                        return p.category_id === parent.id || childIds.includes(p.category_id);
+                      }).length;
+
+                      return (
+                        <div key={parent.id}>
+                          <div className="flex items-center">
+                            {children.length > 0 && (
+                              <button
+                                onClick={() => setExpandedParents(prev => {
+                                  const next = new Set(prev);
+                                  next.has(parent.id) ? next.delete(parent.id) : next.add(parent.id);
+                                  return next;
+                                })}
+                                className="p-1 mr-0.5 text-gray-400 hover:text-gray-600"
+                              >
+                                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? '' : '-rotate-90'}`} />
+                              </button>
+                            )}
+                            <button
+                              onClick={() => toggleFilterValue(parent.id, selectedCategoryIds, setSelectedCategoryIds)}
+                              className={`flex-1 flex items-center justify-between text-left p-1.5 rounded-lg transition-colors hover:bg-[#505A4A]/10 ${selectedCategoryIds.includes(parent.id) ? 'bg-[#505A4A]/10 text-[#505A4A] font-medium' : 'text-gray-700'}`}
+                            >
+                              <span className="text-sm">{parent.name}</span>
+                              <span className="text-xs text-gray-500">({parentProductCount})</span>
+                            </button>
+                          </div>
+                          {isExpanded && children.length > 0 && (
+                            <div className="ml-6 space-y-0.5 mt-0.5">
+                              {children.map(child => {
+                                const count = displayProducts.filter(p => p.category_id === child.id).length;
+                                return (
+                                  <button
+                                    key={child.id}
+                                    onClick={() => toggleFilterValue(child.id, selectedCategoryIds, setSelectedCategoryIds)}
+                                    className={`w-full flex items-center justify-between text-left p-1.5 rounded-lg transition-colors hover:bg-[#505A4A]/10 ${selectedCategoryIds.includes(child.id) ? 'bg-[#505A4A]/10 text-[#505A4A] font-medium' : 'text-gray-600'}`}
+                                  >
+                                    <span className="text-sm">{child.name}</span>
+                                    <span className="text-xs text-gray-500">({count})</span>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Filtro Zona de Uso */}
+                <div className="border-b border-gray-200 py-4">
+                  <h3 className="font-semibold text-gray-900 mb-3">Zona de Uso</h3>
+                  <div className="space-y-1.5">
+                    {ZONA_USO_OPTIONS.map(option => (
                       <button
-                        key={category.name}
-                        onClick={() => {
-                          if (selectedCategories.includes(category.name)) {
-                            setSelectedCategories(selectedCategories.filter(c => c !== category.name));
-                          } else {
-                            setSelectedCategories([...selectedCategories, category.name]);
-                          }
-                        }}
-                        className={`w-full flex items-center justify-between text-left p-2 rounded-lg transition-colors hover:bg-[#505A4A]/10 ${selectedCategories.includes(category.name)
-                          ? 'bg-[#505A4A]/10 text-[#505A4A] font-medium'
-                          : 'text-gray-700 hover:text-[#505A4A]'
-                          }`}
+                        key={option}
+                        onClick={() => toggleFilterValue(option, selectedZonaUso, setSelectedZonaUso)}
+                        className={`w-full text-left p-2 rounded-lg text-sm transition-colors hover:bg-[#505A4A]/10 ${selectedZonaUso.includes(option) ? 'bg-[#505A4A]/10 text-[#505A4A] font-medium' : 'text-gray-700'}`}
                       >
-                        <span className="text-sm flex-1">
-                          {category.name}
-                        </span>
-                        <span className="text-xs text-gray-500">({category.count})</span>
+                        {option}
                       </button>
                     ))}
                   </div>
                 </div>
 
+                {/* Filtro Tipo de Piel */}
+                <div className="border-b border-gray-200 py-4">
+                  <h3 className="font-semibold text-gray-900 mb-3">Tipo de Piel</h3>
+                  <div className="space-y-1.5">
+                    {TIPO_PIEL_OPTIONS.map(option => (
+                      <button
+                        key={option}
+                        onClick={() => toggleFilterValue(option, selectedTipoPiel, setSelectedTipoPiel)}
+                        className={`w-full text-left p-2 rounded-lg text-sm transition-colors hover:bg-[#505A4A]/10 ${selectedTipoPiel.includes(option) ? 'bg-[#505A4A]/10 text-[#505A4A] font-medium' : 'text-gray-700'}`}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
+                {/* Filtro Beneficios */}
+                <div className="border-b border-gray-200 py-4">
+                  <h3 className="font-semibold text-gray-900 mb-3">Beneficios</h3>
+                  <div className="space-y-1.5">
+                    {BENEFICIOS_OPTIONS.map(option => (
+                      <button
+                        key={option}
+                        onClick={() => toggleFilterValue(option, selectedBeneficios, setSelectedBeneficios)}
+                        className={`w-full text-left p-2 rounded-lg text-sm transition-colors hover:bg-[#505A4A]/10 ${selectedBeneficios.includes(option) ? 'bg-[#505A4A]/10 text-[#505A4A] font-medium' : 'text-gray-700'}`}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
                 {/* Filtro de Precio */}
                 <div className="border-b border-gray-200 py-4">
@@ -339,32 +452,39 @@ export default function ProductsPage() {
                 {/* Filtros activos */}
                 {activeFiltersCount > 0 && (
                   <div className="mt-4 flex flex-wrap justify-center sm:justify-start gap-2">
-                    {selectedCategories.map(category => (
-                      <Badge key={category} variant="secondary" className="bg-[#505A4A]/10 text-[#505A4A] flex items-center gap-1">
-                        {category}
-                        <X
-                          className="h-3 w-3 cursor-pointer hover:text-red-500"
-                          onClick={() => setSelectedCategories(prev => prev.filter(c => c !== category))}
-                        />
+                    {selectedCategoryIds.map(catId => {
+                      const cat = categoriesData.find(c => c.id === catId);
+                      return (
+                        <Badge key={catId} variant="secondary" className="bg-[#505A4A]/10 text-[#505A4A] flex items-center gap-1">
+                          {cat?.name || catId}
+                          <X className="h-3 w-3 cursor-pointer hover:text-red-500" onClick={() => setSelectedCategoryIds(prev => prev.filter(c => c !== catId))} />
+                        </Badge>
+                      );
+                    })}
+                    {selectedZonaUso.map(z => (
+                      <Badge key={z} variant="secondary" className="bg-[#505A4A]/10 text-[#505A4A] flex items-center gap-1">
+                        {z} <X className="h-3 w-3 cursor-pointer hover:text-red-500" onClick={() => setSelectedZonaUso(prev => prev.filter(v => v !== z))} />
                       </Badge>
                     ))}
-
+                    {selectedTipoPiel.map(t => (
+                      <Badge key={t} variant="secondary" className="bg-[#505A4A]/10 text-[#505A4A] flex items-center gap-1">
+                        {t} <X className="h-3 w-3 cursor-pointer hover:text-red-500" onClick={() => setSelectedTipoPiel(prev => prev.filter(v => v !== t))} />
+                      </Badge>
+                    ))}
+                    {selectedBeneficios.map(b => (
+                      <Badge key={b} variant="secondary" className="bg-[#505A4A]/10 text-[#505A4A] flex items-center gap-1">
+                        {b} <X className="h-3 w-3 cursor-pointer hover:text-red-500" onClick={() => setSelectedBeneficios(prev => prev.filter(v => v !== b))} />
+                      </Badge>
+                    ))}
                     {selectedPriceRanges.map(range => (
                       <Badge key={range} variant="secondary" className="bg-[#505A4A]/10 text-[#505A4A] flex items-center gap-1">
                         {priceRanges.find(r => r.value === range)?.name}
-                        <X
-                          className="h-3 w-3 cursor-pointer hover:text-red-500"
-                          onClick={() => setSelectedPriceRanges(prev => prev.filter(r => r !== range))}
-                        />
+                        <X className="h-3 w-3 cursor-pointer hover:text-red-500" onClick={() => setSelectedPriceRanges(prev => prev.filter(r => r !== range))} />
                       </Badge>
                     ))}
                     {inStockOnly && (
                       <Badge variant="secondary" className="bg-[#505A4A]/10 text-[#505A4A] flex items-center gap-1">
-                        En stock
-                        <X
-                          className="h-3 w-3 cursor-pointer hover:text-red-500"
-                          onClick={() => setInStockOnly(false)}
-                        />
+                        En stock <X className="h-3 w-3 cursor-pointer hover:text-red-500" onClick={() => setInStockOnly(false)} />
                       </Badge>
                     )}
                   </div>

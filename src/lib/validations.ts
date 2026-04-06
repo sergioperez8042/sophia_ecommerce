@@ -17,6 +17,10 @@ export const productSchema = z.object({
   out_of_stock: z.boolean(),
   rating: z.number(),
   reviews_count: z.number(),
+  zona_uso: z.array(z.string()),
+  tipo_piel: z.array(z.string()),
+  tipo_cabello: z.array(z.string()),
+  beneficios: z.array(z.string()),
 });
 
 export type ProductFormData = z.infer<typeof productSchema>;

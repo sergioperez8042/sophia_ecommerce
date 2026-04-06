@@ -35,11 +35,19 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ProductImage from '@/components/ui/product-image';
+import CheckboxGroup from '@/components/ui/checkbox-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { productSchema, type ProductFormData } from '@/lib/validations';
 import { toast } from 'sonner';
+import {
+    ZONA_USO_OPTIONS,
+    TIPO_PIEL_OPTIONS,
+    TIPO_CABELLO_OPTIONS,
+    BENEFICIOS_OPTIONS,
+    CUIDADO_CAPILAR_SLUG,
+} from '@/lib/catalog-constants';
 
 type ViewMode = 'list' | 'create' | 'edit';
 type DisplayMode = 'list' | 'grid' | 'grouped';
@@ -60,6 +68,10 @@ const emptyProduct: Omit<IProduct, 'id' | 'created_date'> = {
     out_of_stock: false,
     weight: 0,
     weight_unit: 'g',
+    zona_uso: [],
+    tipo_piel: [],
+    tipo_cabello: [],
+    beneficios: [],
 };
 
 function ProductListItem({
@@ -353,7 +365,6 @@ export default function AdminProductsPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const ITEMS_PER_PAGE = 5;
     const [editingProduct, setEditingProduct] = useState<IProduct | null>(null);
-    const [tagsInput, setTagsInput] = useState('');
     const [ingredientsInput, setIngredientsInput] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -381,6 +392,10 @@ export default function AdminProductsPage() {
             out_of_stock: false,
             weight: 0,
             weight_unit: 'g',
+            zona_uso: [],
+            tipo_piel: [],
+            tipo_cabello: [],
+            beneficios: [],
         },
     });
 
@@ -391,6 +406,19 @@ export default function AdminProductsPage() {
     const formPrice = watch('price');
     const formWeight = watch('weight');
     const formOutOfStock = watch('out_of_stock');
+    const watchedCategoryId = watch('category_id');
+
+    const isCapilarCategory = (() => {
+        if (!watchedCategoryId) return false;
+        const path = getCategoryPath(watchedCategoryId);
+        return path.some(c => c.name.toUpperCase().includes(CUIDADO_CAPILAR_SLUG));
+    })();
+
+    useEffect(() => {
+        if (!isCapilarCategory) {
+            setValue('tipo_cabello', []);
+        }
+    }, [isCapilarCategory, setValue]);
 
     useEffect(() => {
         if (isLoaded && (!isAuthenticated || !isAdmin)) {
@@ -441,8 +469,8 @@ export default function AdminProductsPage() {
             name: '', description: '', usage: '', price: 0, category_id: '',
             image: '', rating: 0, reviews_count: 0, tags: [], ingredients: [],
             active: true, featured: false, out_of_stock: false, weight: 0, weight_unit: 'g',
+            zona_uso: [], tipo_piel: [], tipo_cabello: [], beneficios: [],
         });
-        setTagsInput('');
         setIngredientsInput('');
         setEditingProduct(null);
         setUploadError(null);
@@ -467,8 +495,11 @@ export default function AdminProductsPage() {
             out_of_stock: product.out_of_stock || false,
             weight: product.weight || 0,
             weight_unit: product.weight_unit || 'g',
+            zona_uso: product.zona_uso || [],
+            tipo_piel: product.tipo_piel || [],
+            tipo_cabello: product.tipo_cabello || [],
+            beneficios: product.beneficios || [],
         });
-        setTagsInput(product.tags.join(', '));
         setIngredientsInput(product.ingredients.join(', '));
         setUploadError(null);
         setViewMode('edit');
@@ -495,7 +526,7 @@ export default function AdminProductsPage() {
         try {
             const productData = {
                 ...data,
-                tags: tagsInput.split(',').map((t) => t.trim()).filter((t) => t),
+                tags: data.beneficios,
                 ingredients: ingredientsInput.split(',').map((i) => i.trim()).filter((i) => i),
             };
 
@@ -524,7 +555,6 @@ export default function AdminProductsPage() {
         setViewMode('list');
         reset();
         setEditingProduct(null);
-        setTagsInput('');
         setIngredientsInput('');
         setUploadError(null);
     };
@@ -628,13 +658,13 @@ export default function AdminProductsPage() {
 
     // Build hierarchical category options for selectors
     const buildCategoryOptions = () => {
-        const options: { id: string; label: string; depth: number }[] = [];
+        const options: { id: string; label: string; depth: number; isParent: boolean }[] = [];
         const addCategory = (cat: { id: string; name: string; parent_id?: string }, depth: number) => {
-            const prefix = depth > 0 ? '  '.repeat(depth) + '↳ ' : '';
-            options.push({ id: cat.id, label: `${prefix}${cat.name}`, depth });
             const children = categories
                 .filter(c => c.parent_id === cat.id)
                 .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+            const prefix = depth > 0 ? '  '.repeat(depth) + '↳ ' : '';
+            options.push({ id: cat.id, label: `${prefix}${cat.name}`, depth, isParent: children.length > 0 });
             children.forEach(child => addCategory(child, depth + 1));
         };
         categories
@@ -1142,7 +1172,7 @@ export default function AdminProductsPage() {
                                         </SelectTrigger>
                                         <SelectContent>
                                             {categoryOptions.map((opt) => (
-                                                <SelectItem key={opt.id} value={opt.id}>{opt.label}</SelectItem>
+                                                <SelectItem key={opt.id} value={opt.id} disabled={opt.isParent} className={opt.isParent ? 'font-semibold text-gray-900 dark:text-white opacity-100' : ''}>{opt.label}</SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
@@ -1152,43 +1182,79 @@ export default function AdminProductsPage() {
                         </div>
                     </div>
 
-                    {/* Tags & Ingredients */}
+                    {/* Clasificación y Beneficios */}
                     <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-5 space-y-4">
                         <h2 className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
                             <Tag className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                            Etiquetas e Ingredientes
+                            Clasificación y Beneficios
                         </h2>
 
-                        <div>
-                            <label htmlFor="product-tags" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Etiquetas (separadas por coma)</label>
-                            <input
-                                id="product-tags"
-                                type="text"
-                                value={tagsInput}
-                                onChange={(e) => setTagsInput(e.target.value)}
-                                placeholder="natural, hidratante, orgánico"
-                                className="w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white dark:focus:bg-gray-700 transition-all"
-                            />
-                            {tagsInput && (
-                                <div className="flex flex-wrap gap-1.5 mt-2">
-                                    {tagsInput.split(',').map((t) => t.trim()).filter((t) => t).map((tag) => (
-                                        <span key={tag} className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs px-2 py-1 rounded-lg">{tag}</span>
-                                    ))}
-                                </div>
+                        <Controller
+                            name="beneficios"
+                            control={control}
+                            render={({ field }) => (
+                                <CheckboxGroup
+                                    label="Beneficio Principal"
+                                    options={BENEFICIOS_OPTIONS}
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                />
                             )}
-                        </div>
+                        />
 
-                        <div>
-                            <label htmlFor="product-ingredients" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Ingredientes (separados por coma)</label>
-                            <textarea
-                                id="product-ingredients"
-                                value={ingredientsInput}
-                                onChange={(e) => setIngredientsInput(e.target.value)}
-                                placeholder="aloe vera, aceite de jojoba, manteca de karité"
-                                rows={2}
-                                className="w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white dark:focus:bg-gray-700 transition-all resize-none"
+                        <Controller
+                            name="zona_uso"
+                            control={control}
+                            render={({ field }) => (
+                                <CheckboxGroup
+                                    label="Zona de Uso"
+                                    options={ZONA_USO_OPTIONS}
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                />
+                            )}
+                        />
+
+                        <Controller
+                            name="tipo_piel"
+                            control={control}
+                            render={({ field }) => (
+                                <CheckboxGroup
+                                    label="Tipo de Piel"
+                                    options={TIPO_PIEL_OPTIONS}
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                />
+                            )}
+                        />
+
+                        {isCapilarCategory && (
+                            <Controller
+                                name="tipo_cabello"
+                                control={control}
+                                render={({ field }) => (
+                                    <CheckboxGroup
+                                        label="Tipo de Cabello"
+                                        options={TIPO_CABELLO_OPTIONS}
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                    />
+                                )}
                             />
-                        </div>
+                        )}
+                    </div>
+
+                    {/* Ingredientes */}
+                    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-5">
+                        <label htmlFor="product-ingredients" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Ingredientes (separados por coma)</label>
+                        <textarea
+                            id="product-ingredients"
+                            value={ingredientsInput}
+                            onChange={(e) => setIngredientsInput(e.target.value)}
+                            placeholder="aloe vera, aceite de jojoba, manteca de karité"
+                            rows={2}
+                            className="w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white dark:focus:bg-gray-700 transition-all resize-none"
+                        />
                     </div>
 
                     {/* Status toggles */}

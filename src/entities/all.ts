@@ -17,6 +17,10 @@ export interface IProduct {
   weight?: number;
   weight_unit?: string;
   out_of_stock?: boolean;
+  zona_uso?: string[];
+  tipo_piel?: string[];
+  tipo_cabello?: string[];
+  beneficios?: string[];
 }
 
 export interface ICategory {
