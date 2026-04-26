@@ -10,6 +10,8 @@ import { CategoryProvider } from './CategoryContext';
 import { ThemeProvider } from './ThemeContext';
 import { CatalogConfigProvider } from './CatalogConfigContext';
 import { LocationProvider } from './LocationContext';
+import { LoadingProvider } from './LoadingContext';
+import LoadingBridge from './LoadingBridge';
 
 export { useCart } from './CartContext';
 export { useWishlist } from './WishlistContext';
@@ -20,6 +22,7 @@ export { useCategories } from './CategoryContext';
 export { useTheme } from './ThemeContext';
 export { useCatalogConfig } from './CatalogConfigContext';
 export { useLocation } from './LocationContext';
+export { useLoading } from './LoadingContext';
 export type { User, RegisterData } from './AuthContext';
 
 interface StoreProviderProps {
@@ -28,24 +31,27 @@ interface StoreProviderProps {
 
 export function StoreProvider({ children }: StoreProviderProps) {
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <PricingProvider>
-          <ProductProvider>
-            <CategoryProvider>
-              <CatalogConfigProvider>
-                <LocationProvider>
-                <CartProvider>
-                  <WishlistProvider>
-                    {children}
-                  </WishlistProvider>
-                </CartProvider>
-              </LocationProvider>
-              </CatalogConfigProvider>
-            </CategoryProvider>
-          </ProductProvider>
-        </PricingProvider>
-      </AuthProvider>
-    </ThemeProvider>
+    <LoadingProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <PricingProvider>
+            <ProductProvider>
+              <CategoryProvider>
+                <CatalogConfigProvider>
+                  <LocationProvider>
+                  <CartProvider>
+                    <WishlistProvider>
+                      <LoadingBridge />
+                      {children}
+                    </WishlistProvider>
+                  </CartProvider>
+                </LocationProvider>
+                </CatalogConfigProvider>
+              </CategoryProvider>
+            </ProductProvider>
+          </PricingProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </LoadingProvider>
   );
 }
