@@ -89,16 +89,18 @@ function CategoryTreeItem({
                         {hasChildren ? (
                             <button
                                 onClick={() => toggleExpand(category.id)}
-                                className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-gray-400 dark:text-gray-500"
+                                className="p-1.5 rounded-lg hover:bg-[#505A4A]/10 transition-colors text-[#505A4A] dark:text-[#b8b0a2] flex-shrink-0"
+                                aria-label={isExpanded ? 'Colapsar subcategorías' : 'Expandir subcategorías'}
+                                title={isExpanded ? 'Colapsar subcategorías' : 'Expandir subcategorías'}
                             >
                                 {isExpanded ? (
-                                    <ChevronDown className="w-4 h-4" />
+                                    <ChevronDown className="w-5 h-5" strokeWidth={2.5} />
                                 ) : (
-                                    <ChevronRight className="w-4 h-4" />
+                                    <ChevronRight className="w-5 h-5" strokeWidth={2.5} />
                                 )}
                             </button>
                         ) : (
-                            <div className="w-6" />
+                            <div className="w-7" />
                         )}
 
                         <div className="relative w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
@@ -277,6 +279,17 @@ export default function AdminCategoriesPage() {
             router.push('/auth');
         }
     }, [isLoaded, isAuthenticated, isAdmin, router]);
+
+    // Auto-expand all categories with children on first load
+    useEffect(() => {
+        if (categories.length > 0 && expandedIds.size === 0) {
+            const parentsWithChildren = new Set<string>();
+            for (const cat of categories) {
+                if (cat.parent_id) parentsWithChildren.add(cat.parent_id);
+            }
+            setExpandedIds(parentsWithChildren);
+        }
+    }, [categories, expandedIds.size]);
 
     const rootCategories = useMemo(() => {
         return categories

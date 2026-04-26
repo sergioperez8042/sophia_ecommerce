@@ -4,8 +4,9 @@
     {
       "name": "sophia-dev",
       "runtimeExecutable": "/bin/sh",
-      "runtimeArgs": ["-c", "export PATH=/opt/homebrew/bin:$PATH && npm run dev"],
-      "port": 3000
+      "runtimeArgs": ["-c", "export PATH=/opt/homebrew/bin:$PATH && npx next dev --turbopack -p $PORT"],
+      "port": 3000,
+      "autoPort": true
     }
   ]
 }
