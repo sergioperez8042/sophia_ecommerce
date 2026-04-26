@@ -144,15 +144,15 @@ function CategoryTreeItem({
                         </div>
 
                         {/* Stats + Actions */}
-                        <div className="flex items-center justify-between mt-2">
-                            <div className="flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500">
-                                <span>{category.product_count || 0} productos</span>
+                        <div className="flex items-center justify-between gap-2 mt-2">
+                            <div className="flex items-center gap-2 text-xs text-gray-400 dark:text-gray-500 min-w-0 flex-1">
+                                <span className="whitespace-nowrap">{category.product_count || 0} prod.</span>
                                 {hasChildren && (
-                                    <span>{childCategories.length} subcategorías</span>
+                                    <span className="whitespace-nowrap truncate">· {childCategories.length} subs.</span>
                                 )}
                             </div>
 
-                            <div className="flex items-center gap-0.5">
+                            <div className="flex items-center gap-0.5 flex-shrink-0">
                                 {deleteConfirm === category.id ? (
                                     <div className="flex items-center gap-1 bg-red-50 dark:bg-red-900/30 rounded-lg px-2 py-1">
                                         <span className="text-xs text-red-600 dark:text-red-400 mr-1">
@@ -718,7 +718,7 @@ export default function AdminCategoriesPage() {
                     <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                         {viewMode === 'create'
                             ? (formParentId ? 'Nueva Subcategoría' : 'Nueva Categoría')
-                            : 'Editar Categoría'
+                            : (formParentId ? 'Editar Subcategoría' : 'Editar Categoría')
                         }
                     </h1>
                     {viewMode === 'create' && formParentId && (
