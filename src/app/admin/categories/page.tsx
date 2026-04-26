@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { categorySchema, type CategoryFormData } from '@/lib/validations';
@@ -24,6 +24,7 @@ import {
     ChevronDown,
     FolderPlus,
     CornerDownRight,
+    Search,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -232,6 +233,123 @@ function CategoryTreeItem({
                             allCategories={allCategories}
                         />
                     ))}
+                </div>
+            )}
+        </div>
+    );
+}
+
+// ─── Parent Category Selector with Search ──────────────────────
+function ParentCategorySelector({
+    value,
+    onChange,
+    options,
+}: {
+    value: string;
+    onChange: (value: string) => void;
+    options: { id: string; label: string; depth: number }[];
+}) {
+    const [isOpen, setIsOpen] = useState(false);
+    const [search, setSearch] = useState('');
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    const searchInputRef = useRef<HTMLInputElement>(null);
+
+    const selectedLabel = !value
+        ? '— Ninguna (categoría principal) —'
+        : options.find(o => o.id === value)?.label?.replace(/^\s*↳\s*/, '') || '— Ninguna —';
+
+    const filtered = useMemo(() => {
+        const q = search.toLowerCase().trim();
+        if (!q) return options;
+        return options.filter(o => o.label.toLowerCase().includes(q));
+    }, [options, search]);
+
+    useEffect(() => {
+        if (isOpen && searchInputRef.current) searchInputRef.current.focus();
+    }, [isOpen]);
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+                setIsOpen(false);
+                setSearch('');
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    return (
+        <div ref={dropdownRef} className="relative w-full">
+            <button
+                type="button"
+                onClick={() => setIsOpen(!isOpen)}
+                className="w-full flex items-center justify-between gap-2 px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-gray-100 hover:border-gray-300 dark:hover:border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] transition-all"
+            >
+                <span className="truncate text-left">{selectedLabel}</span>
+                <ChevronDown className={`w-4 h-4 text-gray-400 flex-shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {isOpen && (
+                <div className="absolute z-50 mt-1.5 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden">
+                    <div className="p-2 border-b border-gray-100 dark:border-gray-700">
+                        <div className="relative">
+                            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+                            <input
+                                ref={searchInputRef}
+                                type="text"
+                                placeholder="Buscar categoría..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                className="w-full pl-8 pr-3 py-2 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-[#505A4A]/30 focus:border-[#505A4A] transition-all"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="max-h-64 overflow-y-auto py-1">
+                        <button
+                            type="button"
+                            onClick={() => { onChange(''); setIsOpen(false); setSearch(''); }}
+                            className={`w-full text-left px-3 py-2.5 text-sm transition-colors flex items-center gap-2 ${
+                                !value
+                                    ? 'bg-[#505A4A]/8 text-[#505A4A] dark:text-[#C4B590] font-medium'
+                                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'
+                            }`}
+                        >
+                            {!value && <Check className="w-3.5 h-3.5 flex-shrink-0" />}
+                            <span className={value ? 'ml-5.5' : ''}>— Ninguna (categoría principal) —</span>
+                        </button>
+
+                        {filtered.length === 0 ? (
+                            <div className="px-3 py-4 text-center text-sm text-gray-400 dark:text-gray-500">
+                                No se encontraron categorías
+                            </div>
+                        ) : (
+                            filtered.map((opt) => {
+                                const isActive = value === opt.id;
+                                const cleanLabel = opt.label.replace(/^\s*↳\s*/, '');
+                                const isParent = opt.depth === 0;
+                                return (
+                                    <button
+                                        key={opt.id}
+                                        type="button"
+                                        onClick={() => { onChange(opt.id); setIsOpen(false); setSearch(''); }}
+                                        className={`w-full text-left px-3 py-2.5 text-sm transition-colors flex items-center gap-2 ${
+                                            isActive
+                                                ? 'bg-[#505A4A]/8 text-[#505A4A] dark:text-[#C4B590] font-medium'
+                                                : isParent
+                                                    ? 'text-gray-900 dark:text-white font-semibold hover:bg-gray-50 dark:hover:bg-gray-700/50'
+                                                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'
+                                        }`}
+                                        style={{ paddingLeft: `${12 + opt.depth * 16}px` }}
+                                    >
+                                        {isActive && <Check className="w-3.5 h-3.5 flex-shrink-0" />}
+                                        <span className={!isActive ? 'ml-5.5' : ''}>{cleanLabel}</span>
+                                    </button>
+                                );
+                            })
+                        )}
+                    </div>
                 </div>
             )}
         </div>
@@ -568,6 +686,23 @@ export default function AdminCategoriesPage() {
     const parentBreadcrumb = formParentId ? getCategoryPath(formParentId) : [];
     const availableParents = getAvailableParents();
 
+    // Build hierarchical options: parents first, then their children indented
+    const parentOptions: { id: string; label: string; depth: number }[] = [];
+    const availableSet = new Set(availableParents.map(c => c.id));
+    const addToOptions = (cat: ICategory, depth: number) => {
+        if (!availableSet.has(cat.id)) return;
+        const prefix = depth > 0 ? '  '.repeat(depth) + '↳ ' : '';
+        parentOptions.push({ id: cat.id, label: `${prefix}${cat.name}`, depth });
+        const children = categories
+            .filter(c => c.parent_id === cat.id)
+            .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+        children.forEach(child => addToOptions(child, depth + 1));
+    };
+    categories
+        .filter(c => !c.parent_id)
+        .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
+        .forEach(cat => addToOptions(cat, 0));
+
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-20">
             <div className="max-w-2xl mx-auto px-4 py-6 sm:py-8">
@@ -694,25 +829,11 @@ export default function AdminCategoriesPage() {
                             <label htmlFor="category-parent" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
                                 Categoría padre
                             </label>
-                            <select
-                                id="category-parent"
+                            <ParentCategorySelector
                                 value={formParentId || ''}
-                                onChange={(e) => setValue('parent_id', e.target.value)}
-                                className="w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white dark:focus:bg-gray-700 transition-all"
-                            >
-                                <option value="">— Ninguna (categoría principal) —</option>
-                                {availableParents.map((cat) => {
-                                    const path = getCategoryPath(cat.id);
-                                    const indent = path.length > 1
-                                        ? '  '.repeat(path.length - 1) + '↳ '
-                                        : '';
-                                    return (
-                                        <option key={cat.id} value={cat.id}>
-                                            {indent}{cat.name}
-                                        </option>
-                                    );
-                                })}
-                            </select>
+                                onChange={(v) => setValue('parent_id', v)}
+                                options={parentOptions}
+                            />
                             <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
                                 Déjalo vacío para crear una categoría principal
                             </p>
