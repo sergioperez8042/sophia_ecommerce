@@ -1,15 +1,11 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useLoading } from './LoadingContext';
+import { LOADING_KEYS, useLoading } from './LoadingContext';
 import { useProducts } from './ProductContext';
 import { useCategories } from './CategoryContext';
 import { useAuth } from './AuthContext';
 
-/**
- * Bridges existing context isLoading flags into the global LoadingContext.
- * Mount once near the root, after the relevant providers.
- */
 export default function LoadingBridge() {
     const { startLoading, stopLoading } = useLoading();
     const { isLoading: productsLoading } = useProducts();
@@ -17,18 +13,18 @@ export default function LoadingBridge() {
     const { isLoaded: authLoaded } = useAuth();
 
     useEffect(() => {
-        if (productsLoading) startLoading('products');
-        else stopLoading('products');
+        if (productsLoading) startLoading(LOADING_KEYS.PRODUCTS);
+        else stopLoading(LOADING_KEYS.PRODUCTS);
     }, [productsLoading, startLoading, stopLoading]);
 
     useEffect(() => {
-        if (categoriesLoading) startLoading('categories');
-        else stopLoading('categories');
+        if (categoriesLoading) startLoading(LOADING_KEYS.CATEGORIES);
+        else stopLoading(LOADING_KEYS.CATEGORIES);
     }, [categoriesLoading, startLoading, stopLoading]);
 
     useEffect(() => {
-        if (!authLoaded) startLoading('auth');
-        else stopLoading('auth');
+        if (!authLoaded) startLoading(LOADING_KEYS.AUTH);
+        else stopLoading(LOADING_KEYS.AUTH);
     }, [authLoaded, startLoading, stopLoading]);
 
     return null;

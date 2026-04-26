@@ -12,6 +12,7 @@ import { CatalogConfigProvider } from './CatalogConfigContext';
 import { LocationProvider } from './LocationContext';
 import { LoadingProvider } from './LoadingContext';
 import LoadingBridge from './LoadingBridge';
+import GlobalLoader from '@/components/ui/global-loader';
 
 export { useCart } from './CartContext';
 export { useWishlist } from './WishlistContext';
@@ -42,6 +43,7 @@ export function StoreProvider({ children }: StoreProviderProps) {
                   <CartProvider>
                     <WishlistProvider>
                       <LoadingBridge />
+                      <GlobalLoader />
                       {children}
                     </WishlistProvider>
                   </CartProvider>

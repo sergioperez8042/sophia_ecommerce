@@ -97,6 +97,17 @@ body {
   display: none;
 }
 
+/* Indeterminate top progress bar animation */
+@keyframes loading-bar {
+  0% { transform: translateX(-100%); width: 30%; }
+  50% { transform: translateX(50%); width: 50%; }
+  100% { transform: translateX(200%); width: 30%; }
+}
+.animate-loading-bar {
+  animation: loading-bar 1.5s ease-in-out infinite;
+  width: 100%;
+}
+
 /* Respect user's motion preferences (WCAG 2.3.3) */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

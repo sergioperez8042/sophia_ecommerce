@@ -1,27 +1,29 @@
 'use client';
 
-import React, { createContext, useContext, useState, useCallback, ReactNode, useMemo } from 'react';
+import { createContext, useContext, useState, useCallback, ReactNode, useMemo } from 'react';
+
+export const LOADING_KEYS = {
+    PRODUCTS: 'products',
+    CATEGORIES: 'categories',
+    AUTH: 'auth',
+} as const;
+
+export type LoadingKey = typeof LOADING_KEYS[keyof typeof LOADING_KEYS] | string;
 
 interface LoadingContextType {
-    /** True when at least one operation is loading */
     isLoading: boolean;
-    /** Set of active loading operation keys */
-    activeKeys: string[];
-    /** Register a loading operation. Call stopLoading(key) when done. */
-    startLoading: (key: string) => void;
-    /** Unregister a loading operation. */
-    stopLoading: (key: string) => void;
-    /** Helper that wraps an async function with loading state. */
-    withLoading: <T>(key: string, fn: () => Promise<T>) => Promise<T>;
+    startLoading: (key: LoadingKey) => void;
+    stopLoading: (key: LoadingKey) => void;
+    withLoading: <T>(key: LoadingKey, fn: () => Promise<T>) => Promise<T>;
 }
 
 const LoadingContext = createContext<LoadingContextType | undefined>(undefined);
 
 export function LoadingProvider({ children }: { children: ReactNode }) {
-    const [activeKeysSet, setActiveKeysSet] = useState<Set<string>>(new Set());
+    const [activeKeys, setActiveKeys] = useState<Set<string>>(() => new Set());
 
-    const startLoading = useCallback((key: string) => {
-        setActiveKeysSet(prev => {
+    const startLoading = useCallback((key: LoadingKey) => {
+        setActiveKeys(prev => {
             if (prev.has(key)) return prev;
             const next = new Set(prev);
             next.add(key);
@@ -29,8 +31,8 @@ export function LoadingProvider({ children }: { children: ReactNode }) {
         });
     }, []);
 
-    const stopLoading = useCallback((key: string) => {
-        setActiveKeysSet(prev => {
+    const stopLoading = useCallback((key: LoadingKey) => {
+        setActiveKeys(prev => {
             if (!prev.has(key)) return prev;
             const next = new Set(prev);
             next.delete(key);
@@ -38,22 +40,18 @@ export function LoadingProvider({ children }: { children: ReactNode }) {
         });
     }, []);
 
-    const withLoading = useCallback(async <T,>(key: string, fn: () => Promise<T>): Promise<T> => {
+    const withLoading = useCallback(async <T,>(key: LoadingKey, fn: () => Promise<T>): Promise<T> => {
         startLoading(key);
-        try {
-            return await fn();
-        } finally {
-            stopLoading(key);
-        }
+        try { return await fn(); }
+        finally { stopLoading(key); }
     }, [startLoading, stopLoading]);
 
     const value = useMemo<LoadingContextType>(() => ({
-        isLoading: activeKeysSet.size > 0,
-        activeKeys: Array.from(activeKeysSet),
+        isLoading: activeKeys.size > 0,
         startLoading,
         stopLoading,
         withLoading,
-    }), [activeKeysSet, startLoading, stopLoading, withLoading]);
+    }), [activeKeys, startLoading, stopLoading, withLoading]);
 
     return <LoadingContext.Provider value={value}>{children}</LoadingContext.Provider>;
 }

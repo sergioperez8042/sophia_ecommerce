@@ -2,7 +2,6 @@
 
 import "./globals.css";
 import Header from "@/components/Header";
-import GlobalLoader from "@/components/ui/global-loader";
 import { StoreProvider } from "@/store";
 import { ThemeProvider } from "@/store/ThemeContext";
 import { Toaster } from "sonner";
@@ -94,7 +93,6 @@ export default function RootLayout({
           <LazyMotion features={domAnimation} strict>
             <MotionConfig reducedMotion="user">
               <StoreProvider>
-                  <GlobalLoader />
                   <Toaster position="top-right" richColors closeButton duration={4000} />
                   {children}
               </StoreProvider>
@@ -119,7 +117,6 @@ export default function RootLayout({
         <LazyMotion features={domAnimation} strict>
           <MotionConfig reducedMotion="user">
             <StoreProvider>
-                <GlobalLoader />
                 <Toaster position="top-right" richColors closeButton duration={4000} />
                 {!isAuthPage && !isLegalPage && !isGestorPage && <Header />}
                 <div className={`min-h-screen ${isAuthPage || isLegalPage || isGestorPage ? '' : 'bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8] dark:from-[#1a1d19] dark:to-[#1a1d19]'}`}>
