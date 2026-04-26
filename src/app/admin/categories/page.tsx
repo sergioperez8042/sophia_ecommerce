@@ -146,20 +146,22 @@ function CategoryTreeItem({
                         {/* Stats + Actions */}
                         <div className="flex items-center justify-between gap-2 mt-2">
                             <div className="flex items-center gap-2 text-xs text-gray-400 dark:text-gray-500 min-w-0 flex-1">
-                                {(category.product_count || 0) > 0 ? (
+                                {hasChildren ? (
+                                    /* Categoría padre: solo muestra # de subcategorías */
+                                    <span className="whitespace-nowrap truncate">{childCategories.length} subcategorías</span>
+                                ) : (category.product_count || 0) > 0 ? (
+                                    /* Subcategoría con productos: link clickeable */
                                     <Link
                                         href={`/admin/products?category=${category.id}`}
                                         className="whitespace-nowrap inline-flex items-center gap-1 px-2 py-1 -mx-1 -my-1 rounded-md text-[#505A4A] dark:text-[#b8b0a2] hover:bg-[#505A4A]/10 font-medium transition-colors"
                                         title="Ver productos"
                                     >
-                                        {category.product_count} prod.
+                                        {category.product_count} productos
                                         <ChevronRight className="w-3 h-3" />
                                     </Link>
                                 ) : (
-                                    <span className="whitespace-nowrap">0 prod.</span>
-                                )}
-                                {hasChildren && (
-                                    <span className="whitespace-nowrap truncate">· {childCategories.length} subs.</span>
+                                    /* Subcategoría vacía */
+                                    <span className="whitespace-nowrap">Sin productos</span>
                                 )}
                             </div>
 
