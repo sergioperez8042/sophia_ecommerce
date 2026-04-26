@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, Suspense } from 'react';
 import { useAuth, useProducts, useCategories } from '@/store';
 import { IProduct } from '@/entities/all';
 import {
@@ -344,7 +344,7 @@ function CategoryFilterDropdown({
     );
 }
 
-export default function AdminProductsPage() {
+function AdminProductsPageInner() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { isAdmin, isLoaded, isAuthenticated, getIdToken } = useAuth();
@@ -1346,5 +1346,19 @@ export default function AdminProductsPage() {
                 </form>
             </div>
         </div>
+    );
+}
+
+export default function AdminProductsPage() {
+    return (
+        <Suspense
+            fallback={
+                <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+                    <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#505A4A] border-t-transparent" />
+                </div>
+            }
+        >
+            <AdminProductsPageInner />
+        </Suspense>
     );
 }
