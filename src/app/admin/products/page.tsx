@@ -33,7 +33,7 @@ import {
     ChevronRight,
 } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import ProductImage from '@/components/ui/product-image';
 import CheckboxGroup from '@/components/ui/checkbox-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -346,6 +346,7 @@ function CategoryFilterDropdown({
 
 export default function AdminProductsPage() {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const { isAdmin, isLoaded, isAuthenticated, getIdToken } = useAuth();
     const {
         products,
@@ -360,7 +361,7 @@ export default function AdminProductsPage() {
 
     const [viewMode, setViewMode] = useState<ViewMode>('list');
     const [searchQuery, setSearchQuery] = useState('');
-    const [categoryFilter, setCategoryFilter] = useState<string>('all');
+    const [categoryFilter, setCategoryFilter] = useState<string>(() => searchParams.get('category') || 'all');
     const [displayMode, setDisplayMode] = useState<DisplayMode>('list');
     const [currentPage, setCurrentPage] = useState(1);
     const ITEMS_PER_PAGE = 5;
