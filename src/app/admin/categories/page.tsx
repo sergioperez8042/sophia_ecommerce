@@ -28,7 +28,7 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ProductImage from '@/components/ui/product-image';
-import { SearchableDropdown, type DropdownOption } from '@/components/ui';
+import SearchableDropdown, { type DropdownOption } from '@/components/ui/searchable-dropdown';
 
 type ViewMode = 'list' | 'create' | 'edit';
 

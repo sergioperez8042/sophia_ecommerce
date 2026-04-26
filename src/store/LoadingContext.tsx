@@ -10,14 +10,18 @@ export const LOADING_KEYS = {
 
 export type LoadingKey = typeof LOADING_KEYS[keyof typeof LOADING_KEYS] | string;
 
-interface LoadingContextType {
+interface LoadingState {
     isLoading: boolean;
+}
+
+interface LoadingActions {
     startLoading: (key: LoadingKey) => void;
     stopLoading: (key: LoadingKey) => void;
     withLoading: <T>(key: LoadingKey, fn: () => Promise<T>) => Promise<T>;
 }
 
-const LoadingContext = createContext<LoadingContextType | undefined>(undefined);
+const LoadingStateContext = createContext<LoadingState | undefined>(undefined);
+const LoadingActionsContext = createContext<LoadingActions | undefined>(undefined);
 
 export function LoadingProvider({ children }: { children: ReactNode }) {
     const [activeKeys, setActiveKeys] = useState<Set<string>>(() => new Set());
@@ -46,18 +50,40 @@ export function LoadingProvider({ children }: { children: ReactNode }) {
         finally { stopLoading(key); }
     }, [startLoading, stopLoading]);
 
-    const value = useMemo<LoadingContextType>(() => ({
-        isLoading: activeKeys.size > 0,
-        startLoading,
-        stopLoading,
-        withLoading,
-    }), [activeKeys, startLoading, stopLoading, withLoading]);
+    // Actions are stable forever (callbacks have empty deps); memo prevents object re-creation
+    const actions = useMemo<LoadingActions>(
+        () => ({ startLoading, stopLoading, withLoading }),
+        [startLoading, stopLoading, withLoading]
+    );
 
-    return <LoadingContext.Provider value={value}>{children}</LoadingContext.Provider>;
+    // State only changes when the boolean flips, not on every Set mutation
+    const isLoading = activeKeys.size > 0;
+    const state = useMemo<LoadingState>(() => ({ isLoading }), [isLoading]);
+
+    return (
+        <LoadingActionsContext.Provider value={actions}>
+            <LoadingStateContext.Provider value={state}>
+                {children}
+            </LoadingStateContext.Provider>
+        </LoadingActionsContext.Provider>
+    );
 }
 
-export function useLoading() {
-    const ctx = useContext(LoadingContext);
-    if (!ctx) throw new Error('useLoading must be used within LoadingProvider');
+/** Subscribes to loading state — re-renders only when isLoading flips. */
+export function useLoadingState() {
+    const ctx = useContext(LoadingStateContext);
+    if (!ctx) throw new Error('useLoadingState must be used within LoadingProvider');
     return ctx;
+}
+
+/** Returns stable action callbacks — never causes re-renders by itself. */
+export function useLoadingActions() {
+    const ctx = useContext(LoadingActionsContext);
+    if (!ctx) throw new Error('useLoadingActions must be used within LoadingProvider');
+    return ctx;
+}
+
+/** Combined hook for callers that need both. Prefer the split hooks above when possible. */
+export function useLoading() {
+    return { ...useLoadingState(), ...useLoadingActions() };
 }

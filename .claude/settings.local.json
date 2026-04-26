@@ -160,7 +160,12 @@
       "Bash(brew list:*)",
       "Bash(export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\")",
       "Bash(node)",
-      "mcp__engram__mem_save"
+      "mcp__engram__mem_save",
+      "mcp__engram__mem_search",
+      "Bash(export PATH=\"/opt/homebrew/bin:$PATH\")",
+      "WebFetch(domain:chatgpt.com)",
+      "Bash(/opt/homebrew/Cellar/node/22.9.0_1/bin/node /Users/sergio/Projects/sophia_ecommerce/scripts/sync-catalog-to-official-table.mjs)",
+      "Bash(git ls-remote *)"
     ]
   }
 }

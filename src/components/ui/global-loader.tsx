@@ -1,10 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useLoading } from '@/store/LoadingContext';
+import { useLoadingState } from '@/store/LoadingContext';
+
+const FADE_OUT_MS = 300;
 
 export default function GlobalLoader() {
-    const { isLoading } = useLoading();
+    const { isLoading } = useLoadingState();
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {
@@ -12,8 +14,7 @@ export default function GlobalLoader() {
             setVisible(true);
             return;
         }
-        // Keep visible briefly to allow the completion animation to play
-        const t = setTimeout(() => setVisible(false), 300);
+        const t = setTimeout(() => setVisible(false), FADE_OUT_MS);
         return () => clearTimeout(t);
     }, [isLoading]);
 

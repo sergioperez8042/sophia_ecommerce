@@ -1,13 +1,13 @@
 'use client';
 
 import { useEffect } from 'react';
-import { LOADING_KEYS, useLoading } from './LoadingContext';
+import { LOADING_KEYS, useLoadingActions } from './LoadingContext';
 import { useProducts } from './ProductContext';
 import { useCategories } from './CategoryContext';
 import { useAuth } from './AuthContext';
 
 export default function LoadingBridge() {
-    const { startLoading, stopLoading } = useLoading();
+    const { startLoading, stopLoading } = useLoadingActions();
     const { isLoading: productsLoading } = useProducts();
     const { isLoading: categoriesLoading } = useCategories();
     const { isLoaded: authLoaded } = useAuth();

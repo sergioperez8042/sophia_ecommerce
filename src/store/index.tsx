@@ -23,7 +23,7 @@ export { useCategories } from './CategoryContext';
 export { useTheme } from './ThemeContext';
 export { useCatalogConfig } from './CatalogConfigContext';
 export { useLocation } from './LocationContext';
-export { useLoading } from './LoadingContext';
+export { useLoading, useLoadingState, useLoadingActions } from './LoadingContext';
 export type { User, RegisterData } from './AuthContext';
 
 interface StoreProviderProps {
