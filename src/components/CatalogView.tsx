@@ -11,7 +11,7 @@ import { useCart } from '@/store/CartContext';
 import { CartProduct } from '@/store/CartContext';
 import { useWishlist } from '@/store/WishlistContext';
 import BrandLogo from '@/components/BrandLogo';
-import NewsletterPopup from '@/components/NewsletterPopup';
+// import NewsletterPopup from '@/components/NewsletterPopup'; // disabled 12-may-2026
 import NewsletterFooter from '@/components/NewsletterFooter';
 import LocationPopup from '@/components/LocationPopup';
 import CatalogHeader from '@/components/CatalogHeader';
@@ -187,7 +187,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.4 }}
                         >
-                            Productos naturales elaborados con ingredientes organicos de la mas alta calidad.
+                            Productos naturales elaborados con ingredientes orgánicos de la más alta calidad.
                         </m.p>
                     </m.div>
                 </div>
@@ -476,7 +476,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                     </div>
 
                     <p className="text-white/60 text-xs leading-relaxed mb-6 max-w-xs mx-auto">
-                        Productos naturales elaborados con ingredientes organicos de la mas alta calidad.
+                        Productos naturales elaborados con ingredientes orgánicos de la más alta calidad.
                     </p>
 
                     {/* Contacto */}
@@ -523,8 +523,9 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
             {/* Location Popup - appears first (immediate) */}
             <LocationPopup />
 
-            {/* Newsletter Popup - appears after (8s + 40% scroll) */}
-            <NewsletterPopup />
+            {/* Newsletter Popup - disabled by request (12-mayo-2026)
+                Para reactivar: descomentar la línea siguiente. */}
+            {/* <NewsletterPopup /> */}
 
             {/* Floating WhatsApp button for doubts - visible on all screen sizes */}
             <div className="fixed bottom-6 right-4 z-40">

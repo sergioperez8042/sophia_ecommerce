@@ -190,7 +190,7 @@ export default function CartPage() {
             const itemsList = items
                 .map((i) => `- ${i.product.name} x${i.quantity} (${formatPrice(i.product.price * i.quantity)})`)
                 .join('\n');
-            const message = `Hola${gestor ? ` ${gestor.name}` : ''}, te envio mi pedido de Sophia:\n\n${itemsList}\n\nTotal: ${formatPrice(subtotal)}\n\nZona: ${location?.municipality || ''}, ${location?.province || ''}\n\nTe adjunto el PDF con los detalles.`;
+            const message = `Hola${gestor ? ` ${gestor.name}` : ''}, te envío mi pedido de Sophia:\n\n${itemsList}\n\nTotal: ${formatPrice(subtotal)}\n\nZona: ${location?.municipality || ''}, ${location?.province || ''}\n\nTe adjunto el PDF con los detalles.`;
             const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 
             setTimeout(() => {

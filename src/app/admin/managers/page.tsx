@@ -298,7 +298,7 @@ export default function GestoresAdminPage() {
   };
 
   const handleDelete = async (gestorToDelete: IGestor) => {
-    if (!confirm(`Eliminar el gestor "${gestorToDelete.name}"? Esto tambien eliminara su cuenta de acceso.`)) return;
+    if (!confirm(`¿Eliminar el gestor "${gestorToDelete.name}"? Esto también eliminará su cuenta de acceso.`)) return;
     try {
       // If gestor has an Auth account, delete it too
       if (gestorToDelete.userId) {

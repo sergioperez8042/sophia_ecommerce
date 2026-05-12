@@ -907,7 +907,7 @@ export default function NewsletterAdminPage() {
     try {
       const token = await getIdToken();
       if (!token) {
-        toast.error('Sesion expirada. Vuelve a iniciar sesion.');
+        toast.error('Sesión expirada. Vuelve a iniciar sesión.');
         setIsSending(false);
         return;
       }
