@@ -34,6 +34,7 @@ interface Category {
   icon: string;
   image: string;
   sort_order?: number;
+  parent_id?: string;
 }
 
 export async function getActiveProducts(): Promise<Product[]> {
@@ -72,10 +73,29 @@ export async function getCategories(): Promise<Category[]> {
 
   try {
     const snapshot = await getDocs(collection(db, 'categories'));
-    return (snapshot.docs.map(doc => ({
+    const all = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
-    })) as Category[]).sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+    })) as Category[];
+
+    // Composite sort: respect parent hierarchy so subcategories are grouped
+    // under their parent's bucket. Without this, every sub with sort_order=1
+    // tied with every parent at sort_order=1 and the order became arbitrary.
+    const byId = new Map(all.map(c => [c.id, c]));
+    const topOrder = (c: Category) => {
+      const parent = c.parent_id ? byId.get(c.parent_id) : null;
+      return parent ? (parent.sort_order || 0) : (c.sort_order || 0);
+    };
+
+    return all.sort((a, b) => {
+      const aTop = topOrder(a);
+      const bTop = topOrder(b);
+      if (aTop !== bTop) return aTop - bTop;
+      // Same top bucket: render the parent first, then its subcategories.
+      if (!a.parent_id && b.parent_id) return -1;
+      if (a.parent_id && !b.parent_id) return 1;
+      return (a.sort_order || 0) - (b.sort_order || 0);
+    });
   } catch {
     return [];
   }

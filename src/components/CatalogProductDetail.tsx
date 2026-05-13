@@ -156,7 +156,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                             <ProductImage
                                 src={images[selectedImage]}
                                 alt={product.name}
-                                className={`object-cover ${product.out_of_stock ? 'opacity-70 grayscale-[20%]' : ''}`}
+                                className="object-cover"
                             />
                         ) : (
                             <div className={`w-full h-full flex items-center justify-center ${isDark ? 'bg-[#22261f]' : 'bg-[#F0EDE6]'}`}>

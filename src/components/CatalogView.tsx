@@ -608,7 +608,7 @@ function ProductCard({
                         <ProductImage
                             src={product.image}
                             alt={product.name}
-                            className={`object-cover transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'} ${product.out_of_stock ? 'opacity-60 grayscale-[30%]' : ''}`}
+                            className={`object-cover transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
                         />
                     </Link>
                     {product.featured && !product.out_of_stock && (
@@ -699,7 +699,7 @@ function ProductCard({
                     <ProductImage
                         src={product.image}
                         alt={product.name}
-                        className={`object-cover transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'} ${product.out_of_stock ? 'opacity-60 grayscale-[30%]' : ''}`}
+                        className={`object-cover transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
                     />
                 </Link>
                 {product.featured && !product.out_of_stock && (
