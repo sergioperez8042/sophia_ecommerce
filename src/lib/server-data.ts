@@ -38,7 +38,10 @@ interface Category {
 }
 
 export async function getActiveProducts(): Promise<Product[]> {
-  if (!db) return [];
+  if (!db) {
+    console.error('[getActiveProducts] Firestore not initialized (db is null). Check NEXT_PUBLIC_FIREBASE_* env vars.');
+    return [];
+  }
 
   try {
     const productsQuery = query(
@@ -50,26 +53,34 @@ export async function getActiveProducts(): Promise<Product[]> {
       id: doc.id,
       ...doc.data()
     })) as Product[];
-  } catch {
+  } catch (err) {
+    console.error('[getActiveProducts] Firestore query failed:', err);
     return [];
   }
 }
 
 export async function getProductById(id: string): Promise<Product | null> {
-  if (!db) return null;
+  if (!db) {
+    console.error('[getProductById] Firestore not initialized (db is null).');
+    return null;
+  }
 
   try {
     const docRef = doc(db, 'products', id);
     const snapshot = await getDoc(docRef);
     if (!snapshot.exists()) return null;
     return { id: snapshot.id, ...snapshot.data() } as Product;
-  } catch {
+  } catch (err) {
+    console.error(`[getProductById] Failed for id="${id}":`, err);
     return null;
   }
 }
 
 export async function getCategories(): Promise<Category[]> {
-  if (!db) return [];
+  if (!db) {
+    console.error('[getCategories] Firestore not initialized (db is null). Check NEXT_PUBLIC_FIREBASE_* env vars.');
+    return [];
+  }
 
   try {
     const snapshot = await getDocs(collection(db, 'categories'));
@@ -96,13 +107,17 @@ export async function getCategories(): Promise<Category[]> {
       if (a.parent_id && !b.parent_id) return 1;
       return (a.sort_order || 0) - (b.sort_order || 0);
     });
-  } catch {
+  } catch (err) {
+    console.error('[getCategories] Firestore query failed:', err);
     return [];
   }
 }
 
 export async function getCatalogConfig(): Promise<CatalogConfig> {
-  if (!db) return { group_by_category: false };
+  if (!db) {
+    console.error('[getCatalogConfig] Firestore not initialized (db is null).');
+    return { group_by_category: false };
+  }
 
   try {
     const docRef = doc(db, 'config', 'catalog');
@@ -111,7 +126,8 @@ export async function getCatalogConfig(): Promise<CatalogConfig> {
       return { group_by_category: false, ...snapshot.data() } as CatalogConfig;
     }
     return { group_by_category: false };
-  } catch {
+  } catch (err) {
+    console.error('[getCatalogConfig] Firestore query failed:', err);
     return { group_by_category: false };
   }
 }
