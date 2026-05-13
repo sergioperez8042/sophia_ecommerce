@@ -77,7 +77,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
     }, [initialProducts, selectedCategory, searchTerm]);
 
     const getCategoryName = (categoryId: string) => {
-        return initialCategories.find(c => c.id === categoryId)?.name || "Sin categoria";
+        return initialCategories.find(c => c.id === categoryId)?.name || "Sin categoría";
     };
 
     // Grouped products for list view with groupByCategory
@@ -371,7 +371,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                                 className={`flex items-center gap-2 text-sm font-medium mb-4 transition-colors ${isDark ? 'text-[#C4B590] hover:text-[#e8e4dc]' : 'text-[#505A4A] hover:text-gray-900'}`}
                             >
                                 <ArrowLeft className="w-4 h-4" />
-                                Volver a categorias
+                                Volver a categorías
                             </button>
                             <h2 className={`text-lg sm:text-xl font-bold mb-4 ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>
                                 {browsingCategoryData.name}
@@ -428,7 +428,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                                 <Search className={`w-8 h-8 ${isDark ? 'text-[#7a7568]' : 'text-gray-400'}`} />
                             </div>
                             <h3 className={`text-lg font-medium mb-2 ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>No se encontraron productos</h3>
-                            <p className={isDark ? 'text-[#8a8278]' : 'text-gray-600'}>Prueba con otros filtros o terminos de busqueda</p>
+                            <p className={isDark ? 'text-[#8a8278]' : 'text-gray-600'}>Prueba con otros filtros o términos de búsqueda</p>
                         </m.div>
                     ) : (
                         <m.div

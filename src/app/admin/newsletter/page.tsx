@@ -160,7 +160,7 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
   <div style="text-align: center; margin: 30px 0;">
     <p style="color: #C4B590; font-size: 14px; letter-spacing: 3px; margin: 0;">OFERTA EXCLUSIVA</p>
     <h2 style="color: #C4B590; font-size: 36px; margin: 10px 0;">XX% DESCUENTO</h2>
-    <p style="color: #d4cdc0; font-size: 16px; margin: 0;">En toda nuestra linea de [categoria]</p>
+    <p style="color: #d4cdc0; font-size: 16px; margin: 0;">En toda nuestra línea de [categoría]</p>
   </div>
   <p style="line-height: 1.8; color: #d4cdc0; font-size: 15px; text-align: center;">
     Solo por tiempo limitado. Aprovecha esta oportunidad para probar nuestros productos mas vendidos con un descuento especial.

@@ -442,7 +442,7 @@ export default function CartPage() {
                                     </div>
                                     <div className="text-[#DDD]">·</div>
                                     <div className="text-center">
-                                        <p className="text-[11px] text-[#AAA] tracking-[0.05em]">Devolucion 30 dias</p>
+                                        <p className="text-[11px] text-[#AAA] tracking-[0.05em]">Devolución 30 días</p>
                                     </div>
                                     <div className="text-[#DDD]">·</div>
                                     <div className="text-center">
