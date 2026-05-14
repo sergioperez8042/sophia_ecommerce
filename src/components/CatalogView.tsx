@@ -694,7 +694,7 @@ function ProductCard({
             onHoverStart={() => setIsHovered(true)}
             onHoverEnd={() => setIsHovered(false)}
         >
-            <div className="relative w-32 sm:w-40 h-32 sm:h-40 flex-shrink-0 overflow-hidden">
+            <div className="relative w-32 sm:w-40 min-h-32 sm:min-h-40 flex-shrink-0 overflow-hidden self-stretch">
                 <Link href={`/catalog/${product.id}`} className="block w-full h-full">
                     <ProductImage
                         src={product.image}
