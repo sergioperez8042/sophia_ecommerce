@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef, Suspense } from 'react';
 import { useAuth, useProducts, useCategories } from '@/store';
 import { IProduct } from '@/entities/all';
+import { uploadImage } from '@/lib/upload-helpers';
 import {
     Plus,
     Pencil,
@@ -629,31 +630,21 @@ function AdminProductsPageInner() {
         setUploadError(null);
 
         try {
-            const uploadFormData = new FormData();
-            uploadFormData.append('file', file);
-            uploadFormData.append('folder', 'products');
             setUploadProgress(30);
-
             const token = await getIdToken();
-            const response = await fetch('/api/upload', {
-                method: 'POST',
-                headers: token ? { Authorization: `Bearer ${token}` } : {},
-                body: uploadFormData,
-            });
+            setUploadProgress(60);
 
-            setUploadProgress(80);
-            const result = await response.json();
+            const result = await uploadImage({ file, folder: 'products', token });
+            setUploadProgress(90);
 
-            if (!response.ok) {
-                throw new Error(result.error || 'Error al subir la imagen');
+            if (!result.ok) {
+                setUploadError(result.message);
+                return;
             }
 
             URL.revokeObjectURL(localPreviewUrl);
             setValue('image', result.url, { shouldValidate: true });
             setUploadProgress(100);
-        } catch (error: unknown) {
-            const msg = error instanceof Error ? error.message : 'No se pudo subir la imagen';
-            setUploadError(msg);
         } finally {
             setIsUploading(false);
         }

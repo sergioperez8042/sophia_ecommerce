@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { categorySchema, type CategoryFormData } from '@/lib/validations';
+import { uploadImage } from '@/lib/upload-helpers';
 import { toast } from 'sonner';
 import { useAuth, useCategories } from '@/store';
 import { ICategory } from '@/entities/all';
@@ -434,31 +435,21 @@ export default function AdminCategoriesPage() {
         setUploadError(null);
 
         try {
-            const uploadFormData = new FormData();
-            uploadFormData.append('file', file);
-            uploadFormData.append('folder', 'categories');
             setUploadProgress(30);
-
             const token = await getIdToken();
-            const response = await fetch('/api/upload', {
-                method: 'POST',
-                headers: token ? { Authorization: `Bearer ${token}` } : {},
-                body: uploadFormData,
-            });
+            setUploadProgress(60);
 
-            setUploadProgress(80);
-            const result = await response.json();
+            const result = await uploadImage({ file, folder: 'categories', token });
+            setUploadProgress(90);
 
-            if (!response.ok) {
-                throw new Error(result.error || 'Error al subir la imagen');
+            if (!result.ok) {
+                setUploadError(result.message);
+                return;
             }
 
             URL.revokeObjectURL(localPreviewUrl);
             setValue('image', result.url);
             setUploadProgress(100);
-        } catch (error: unknown) {
-            const msg = error instanceof Error ? error.message : 'No se pudo subir la imagen';
-            setUploadError(msg);
         } finally {
             setIsUploading(false);
         }
