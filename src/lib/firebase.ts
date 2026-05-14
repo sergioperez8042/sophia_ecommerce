@@ -21,7 +21,7 @@ const firebaseConfig = {
 };
 
 // Check if Firebase config is valid (has required values)
-const isFirebaseConfigValid = 
+const isFirebaseConfigValid =
   isValidEnvVar(firebaseConfig.apiKey) &&
   isValidEnvVar(firebaseConfig.authDomain) &&
   isValidEnvVar(firebaseConfig.projectId);
@@ -32,17 +32,41 @@ let db: Firestore | null = null;
 let auth: Auth | null = null;
 let storage: ReturnType<typeof getStorage> | null = null;
 
-// Initialize Firebase if config is valid
-// This will work on both client (browser) and server (API routes)
-// It will fail during build if env vars are not set, but that's expected
-if (isFirebaseConfigValid) {
+if (!isFirebaseConfigValid) {
+  console.error(
+    '[firebase] Config inválida — NEXT_PUBLIC_FIREBASE_API_KEY / AUTH_DOMAIN / PROJECT_ID ausentes o demasiado cortos. Los SDK no se inicializarán.'
+  );
+} else {
+  // Cada SDK en su propio try/catch para que un fallo de auth/storage en SSR
+  // (donde no hay window/document) no impida a Firestore funcionar. Antes lo
+  // teníamos todo en un solo try { ... } catch {}, así que si getStorage tiraba
+  // en Vercel Functions, db quedaba en null y el catálogo aparecía vacío.
   try {
     app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-    db = getFirestore(app);
-    auth = getAuth(app);
-    storage = getStorage(app);
-  } catch {
-    // Keep all values as null - app will work in degraded mode
+  } catch (err) {
+    console.error('[firebase] initializeApp falló:', err);
+  }
+
+  if (app) {
+    try {
+      db = getFirestore(app);
+    } catch (err) {
+      console.error('[firebase] getFirestore falló:', err);
+    }
+
+    try {
+      auth = getAuth(app);
+    } catch (err) {
+      // No es bloqueante en SSR — auth solo se usa en flujos cliente.
+      console.error('[firebase] getAuth falló (no bloqueante en SSR):', err);
+    }
+
+    try {
+      storage = getStorage(app);
+    } catch (err) {
+      // Tampoco bloqueante — storage se usa para uploads desde cliente.
+      console.error('[firebase] getStorage falló (no bloqueante en SSR):', err);
+    }
   }
 }
 
