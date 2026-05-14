@@ -162,13 +162,13 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                 <div className="absolute inset-0 flex items-end justify-center px-4 pb-10 sm:pb-14 md:pb-16">
                     <m.div
                         className="text-center"
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
                     >
                         <m.div
                             className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full mb-3"
-                            initial={{ opacity: 0, y: 10 }}
+                            initial={{ opacity: 0 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3 }}
                         >
@@ -183,7 +183,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
 
                         <m.p
                             className="text-white/90 max-w-xl mx-auto text-sm sm:text-base"
-                            initial={{ opacity: 0, y: 10 }}
+                            initial={{ opacity: 0 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.4 }}
                         >
@@ -206,7 +206,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                             <m.div
                                 key={badge.label}
                                 className="flex flex-col items-center gap-1.5 min-w-0 flex-1 cursor-default"
-                                initial={{ opacity: 0, y: 15, scale: 0.8 }}
+                                initial={{ opacity: 0 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 transition={{ delay: 0.3 + i * 0.15, type: "spring", stiffness: 150 }}
                                 whileHover={{ scale: 1.1, y: -3 }}
@@ -335,7 +335,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                                     key={cat.id}
                                     onClick={() => setBrowsingCategory(cat.id)}
                                     className={`relative aspect-[4/3] rounded-2xl overflow-hidden group ${isDark ? 'ring-1 ring-[#C4B590]/10' : 'ring-1 ring-[#505A4A]/10'}`}
-                                    initial={{ opacity: 0, y: 20 }}
+                                    initial={{ opacity: 0 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: i * 0.08 }}
                                     whileHover={{ scale: 1.03 }}
@@ -420,7 +420,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                         <m.div
                             key="empty"
                             className="text-center py-16"
-                            initial={{ opacity: 0, scale: 0.9 }}
+                            initial={{ opacity: 0 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.9 }}
                         >
@@ -596,7 +596,7 @@ function ProductCard({
         return (
             <m.div
                 className={`rounded-2xl overflow-hidden shadow-sm ${isDark ? 'bg-[#22261f]' : 'bg-white'}`}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05, duration: 0.4 }}
                 whileHover={{ scale: 1.03 }}
@@ -687,7 +687,7 @@ function ProductCard({
     return (
         <m.div
             className={`rounded-2xl overflow-hidden shadow-sm flex ${isDark ? 'bg-[#22261f]' : 'bg-white'}`}
-            initial={{ opacity: 0, x: -50 }}
+            initial={{ opacity: 0 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.05, duration: 0.4 }}
             whileHover={{ scale: 1.02, boxShadow: "0 10px 40px rgba(0,0,0,0.1)" }}
