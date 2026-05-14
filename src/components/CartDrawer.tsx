@@ -223,11 +223,31 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     return doc.output('blob');
   };
 
-  // Download PDF and open the correct WhatsApp chat
+  // Envía el pedido al gestor adjuntando el PDF cuando el navegador lo permite
+  // (Web Share API Nivel 2). Si no hay soporte, cae al flujo viejo: descarga
+  // del PDF + redirect a wa.me con un texto que el cliente debe completar
+  // adjuntando el PDF a mano.
   const sendOrderPDF = async (pdfBlob: Blob, whatsappNumber: string) => {
     const fileName = `Pedido_Sophia_${new Date().toISOString().slice(0, 10)}.pdf`;
 
-    // 1. Download the PDF to the device
+    const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
+    const message = `Hola${gestor ? ` ${gestor.name}` : ''}, te envío mi pedido de Sophia.`;
+    const canShareFile =
+      typeof navigator !== 'undefined' &&
+      typeof navigator.canShare === 'function' &&
+      navigator.canShare({ files: [pdfFile] });
+
+    if (canShareFile) {
+      try {
+        await navigator.share({ files: [pdfFile], text: message, title: 'Pedido Sophia' });
+        return;
+      } catch (shareErr) {
+        // Usuario canceló o navegador rechazó el share — fallback.
+        console.warn('Web Share cancelado, usando fallback descarga+wa.me:', shareErr);
+      }
+    }
+
+    // Fallback: descarga local + WhatsApp Click-to-Chat
     const url = URL.createObjectURL(pdfBlob);
     const a = document.createElement('a');
     a.href = url;
@@ -237,12 +257,9 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(url), 1000);
 
-    // 2. Show toast with instruction
-    toast.success('PDF descargado. Adjuntalo en el chat de WhatsApp.', { duration: 5000 });
-
-    // 3. Open WhatsApp directly to the gestor's chat (no text, just the right contact)
+    toast.success('PDF descargado. Adjúntalo en el chat de WhatsApp.', { duration: 5000 });
     setTimeout(() => {
-      window.location.href = `https://wa.me/${whatsappNumber}`;
+      window.location.href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
     }, 600);
   };
 

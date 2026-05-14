@@ -362,6 +362,8 @@ function AdminProductsPageInner() {
     const [viewMode, setViewMode] = useState<ViewMode>('list');
     const [searchQuery, setSearchQuery] = useState('');
     const [categoryFilter, setCategoryFilter] = useState<string>(() => searchParams.get('category') || 'all');
+    // Filtro por estado conectado a las 4 tarjetas de la cabecera (Total, Activos, Destacados, Ocultos)
+    const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'featured' | 'inactive'>('all');
     const [displayMode, setDisplayMode] = useState<DisplayMode>('list');
     const [currentPage, setCurrentPage] = useState(1);
     const ITEMS_PER_PAGE = 5;
@@ -448,7 +450,13 @@ function AdminProductsPageInner() {
             p.description.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesCategory =
             categoryFilter === 'all' || p.category_id === categoryFilter;
-        return matchesSearch && matchesCategory;
+        const matchesStatus =
+            statusFilter === 'all' ? true :
+            statusFilter === 'active' ? p.active === true :
+            statusFilter === 'featured' ? p.featured === true :
+            statusFilter === 'inactive' ? p.active === false :
+            true;
+        return matchesSearch && matchesCategory && matchesStatus;
     });
 
     // Pagination (not used for grouped view)
@@ -703,20 +711,33 @@ function AdminProductsPageInner() {
                         </button>
                     </div>
 
-                    {/* Quick Stats */}
+                    {/* Quick Stats — clickeables: filtran la lista por estado */}
                     <div className="grid grid-cols-4 gap-2 sm:gap-3 mb-5">
-                        {[
-                            { label: 'Total', value: stats.total, icon: Package },
-                            { label: 'Activos', value: stats.active, icon: Eye },
-                            { label: 'Destacados', value: stats.featured, icon: Star },
-                            { label: 'Ocultos', value: stats.inactive, icon: EyeOff },
-                        ].map((stat) => (
-                            <div key={stat.label} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-3 text-center">
-                                <stat.icon className="w-4 h-4 text-gray-400 dark:text-gray-500 mx-auto mb-1" />
-                                <p className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">{stat.value}</p>
-                                <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">{stat.label}</p>
-                            </div>
-                        ))}
+                        {([
+                            { label: 'Total', value: stats.total, icon: Package, status: 'all' as const },
+                            { label: 'Activos', value: stats.active, icon: Eye, status: 'active' as const },
+                            { label: 'Destacados', value: stats.featured, icon: Star, status: 'featured' as const },
+                            { label: 'Ocultos', value: stats.inactive, icon: EyeOff, status: 'inactive' as const },
+                        ]).map((stat) => {
+                            const isActive = statusFilter === stat.status;
+                            return (
+                                <button
+                                    key={stat.label}
+                                    type="button"
+                                    onClick={() => { setStatusFilter(stat.status); setCurrentPage(1); }}
+                                    aria-pressed={isActive}
+                                    className={`rounded-xl border p-3 text-center transition-all hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#505A4A]/40 ${
+                                        isActive
+                                            ? 'bg-[#505A4A]/10 dark:bg-[#C4B590]/10 border-[#505A4A] dark:border-[#C4B590]'
+                                            : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-[#505A4A]/40 dark:hover:border-[#C4B590]/40'
+                                    }`}
+                                >
+                                    <stat.icon className={`w-4 h-4 mx-auto mb-1 ${isActive ? 'text-[#505A4A] dark:text-[#C4B590]' : 'text-gray-400 dark:text-gray-500'}`} />
+                                    <p className={`text-lg sm:text-xl font-bold ${isActive ? 'text-[#505A4A] dark:text-[#C4B590]' : 'text-gray-900 dark:text-white'}`}>{stat.value}</p>
+                                    <p className={`text-[10px] sm:text-xs ${isActive ? 'text-[#505A4A] dark:text-[#C4B590] font-medium' : 'text-gray-500 dark:text-gray-400'}`}>{stat.label}</p>
+                                </button>
+                            );
+                        })}
                     </div>
 
                     {/* Search + Filter + View Modes */}

@@ -179,19 +179,44 @@ export default function CartPage() {
         setIsSending(true);
         try {
             const pdfBlob = await generateOrderPDF();
-            const url = URL.createObjectURL(pdfBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `Sophia_Pedido_${Date.now()}.pdf`;
-            link.click();
-            URL.revokeObjectURL(url);
-
+            const fileName = `Sophia_Pedido_${Date.now()}.pdf`;
             const phone = gestor ? gestor.whatsapp : WHATSAPP_GENERAL;
             const itemsList = items
                 .map((i) => `- ${i.product.name} x${i.quantity} (${formatPrice(i.product.price * i.quantity)})`)
                 .join('\n');
-            const message = `Hola${gestor ? ` ${gestor.name}` : ''}, te envío mi pedido de Sophia:\n\n${itemsList}\n\nTotal: ${formatPrice(subtotal)}\n\nZona: ${location?.municipality || ''}, ${location?.province || ''}\n\nTe adjunto el PDF con los detalles.`;
-            const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+            const message = `Hola${gestor ? ` ${gestor.name}` : ''}, te envío mi pedido de Sophia:\n\n${itemsList}\n\nTotal: ${formatPrice(subtotal)}\n\nZona: ${location?.municipality || ''}, ${location?.province || ''}`;
+
+            // Web Share API: si el dispositivo soporta compartir archivos, abrimos
+            // el share sheet nativo con el PDF adjunto + texto. WhatsApp aparece
+            // como destino y el adjunto llega de verdad al gestor.
+            const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
+            const canShareFile =
+                typeof navigator !== 'undefined' &&
+                typeof navigator.canShare === 'function' &&
+                navigator.canShare({ files: [pdfFile] });
+
+            if (canShareFile) {
+                try {
+                    await navigator.share({ files: [pdfFile], text: message, title: 'Pedido Sophia' });
+                    clearCart();
+                    return;
+                } catch (shareErr) {
+                    // Usuario canceló o falló el share — caemos al fallback.
+                    console.warn('Web Share cancelado, usando fallback descarga+wa.me:', shareErr);
+                }
+            }
+
+            // Fallback: descarga local + WhatsApp Click-to-Chat con texto.
+            // El cliente tiene que adjuntar el PDF descargado manualmente.
+            const url = URL.createObjectURL(pdfBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            link.click();
+            URL.revokeObjectURL(url);
+
+            const fallbackMessage = `${message}\n\nTe adjunto el PDF con los detalles (revisá tu descarga).`;
+            const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(fallbackMessage)}`;
 
             setTimeout(() => {
                 window.open(waUrl, '_blank');
