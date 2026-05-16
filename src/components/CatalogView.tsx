@@ -700,7 +700,7 @@ function ProductCard({
 
     return (
         <m.div
-            className={`rounded-2xl overflow-hidden shadow-sm flex h-32 sm:h-40 ${isDark ? 'bg-[#22261f]' : 'bg-white'}`}
+            className={`rounded-2xl overflow-hidden shadow-sm flex ${isDark ? 'bg-[#22261f]' : 'bg-white'}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.05, duration: 0.4 }}
@@ -708,7 +708,11 @@ function ProductCard({
             onHoverStart={() => setIsHovered(true)}
             onHoverEnd={() => setIsHovered(false)}
         >
-            <div className="relative w-32 sm:w-40 flex-shrink-0 overflow-hidden self-stretch">
+            {/* Imagen: ancho fijo, alto se estira al alto natural del card vía
+                self-stretch. Combinado con line-clamp-1 en el título (más abajo)
+                reduce mucho la variabilidad de altura entre cards sin recortar
+                contenido como sí pasaba con h-32 fija. */}
+            <div className="relative w-32 sm:w-40 min-h-32 sm:min-h-40 flex-shrink-0 overflow-hidden self-stretch">
                 <Link href={`/catalog/${product.id}`} className="block w-full h-full">
                     <ProductImage
                         src={product.image}
