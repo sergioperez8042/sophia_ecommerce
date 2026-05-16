@@ -350,16 +350,13 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                                     ) : (
                                         <div className={`w-full h-full ${isDark ? 'bg-[#22261f]' : 'bg-[#F0EDE6]'}`} />
                                     )}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                                    <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
-                                        {/* Altura FIJA de 2 líneas (2.5em a leading-tight) —
-                                            garantiza que título + conteo ocupen exactamente lo
-                                            mismo en todas las cards, independientemente de si
-                                            el nombre cabe en 1 o 2 líneas. */}
-                                        <div className="h-[2.5em] flex items-end justify-center">
-                                            <h3 className="text-white font-semibold text-sm sm:text-base leading-tight line-clamp-2 text-center">{cat.name}</h3>
-                                        </div>
-                                        <span className="block text-center text-white/70 text-xs mt-1">{cat.productCount} {cat.productCount === 1 ? 'producto' : 'productos'}</span>
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                                    {/* Contenedor de altura FIJA con el título centrado
+                                        verticalmente. El CENTRO óptico del título cae al
+                                        mismo Y en todas las cards, independientemente de
+                                        si rompe a 1 o 2 líneas. */}
+                                    <div className="absolute inset-x-0 bottom-0 h-20 sm:h-24 flex items-center justify-center px-3 sm:px-4">
+                                        <h3 className="text-white font-semibold text-sm sm:text-base leading-tight line-clamp-2 text-center">{cat.name}</h3>
                                     </div>
                                 </m.button>
                             ))}
@@ -464,29 +461,29 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
             {/* Footer */}
             <footer className={`py-10 sm:py-12 px-4 pb-24 sm:pb-12 transition-colors duration-300 ${isDark ? 'bg-[#141613]' : 'bg-[#414A3C]'}`}>
                 <div className="max-w-lg mx-auto text-center">
-                    {/* Logo + Marca */}
-                    <div className="flex items-center justify-center gap-2.5 mb-5">
-                        <div className="relative w-9 h-9 rounded-lg overflow-hidden ring-1 ring-white/15">
-                            <Image
-                                src="/images/sophia_logo_nuevo.jpeg"
-                                alt="Sophia"
-                                fill
-                                sizes="36px"
-                                className="object-cover"
-                            />
-                        </div>
-                        <div className="text-left">
-                            <p className="text-white text-sm font-semibold leading-tight">Sophia</p>
-                            <p className="text-white/50 text-[10px] leading-tight">Sophia</p>
-                        </div>
-                    </div>
-
-                    <p className="text-white/60 text-xs leading-relaxed mb-6 max-w-xs mx-auto">
-                        Productos naturales elaborados con ingredientes orgánicos de la más alta calidad.
-                    </p>
-
-                    {/* Contacto */}
+                    {/* Bloque logo + contactos: una sola columna inline-flex para que
+                        TODOS los items (logo, teléfono, email, Instagram, Facebook)
+                        compartan el mismo borde izquierdo cuando la columna se
+                        centra dentro del contenedor con text-center. */}
                     <div className="inline-flex flex-col gap-2.5 mb-6">
+                        {/* Logo + Marca */}
+                        <div className="flex items-center gap-2.5 mb-3">
+                            <div className="relative w-9 h-9 rounded-lg overflow-hidden ring-1 ring-white/15 flex-shrink-0">
+                                <Image
+                                    src="/images/sophia_logo_nuevo.jpeg"
+                                    alt="Sophia"
+                                    fill
+                                    sizes="36px"
+                                    className="object-cover"
+                                />
+                            </div>
+                            <div className="text-left">
+                                <p className="text-white text-sm font-semibold leading-tight">Sophia</p>
+                                <p className="text-white/50 text-[10px] leading-tight">Sophia</p>
+                            </div>
+                        </div>
+
+                        {/* Contacto */}
                         <a
                             href="tel:+34642633982"
                             className="flex items-center gap-2.5 text-white/70 hover:text-white transition-colors text-xs"
@@ -542,8 +539,10 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                 Para reactivar: descomentar la línea siguiente. */}
             {/* <NewsletterPopup /> */}
 
-            {/* Floating WhatsApp button for doubts - visible on all screen sizes */}
-            <div className="fixed bottom-6 right-4 z-40">
+            {/* Floating WhatsApp button for doubts - visible on all screen sizes.
+                bottom-24 deja espacio para el navbar inferior del navegador móvil
+                (Safari/Chrome) y el home indicator del iPhone. */}
+            <div className="fixed bottom-24 right-4 z-40">
                 <m.a
                     href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hola! Tengo una consulta sobre sus productos`}
                     target="_blank"

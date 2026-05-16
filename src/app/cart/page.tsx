@@ -193,10 +193,27 @@ export default function CartPage() {
             const pdfBlob = await generateOrderPDF();
             const fileName = `Sophia_Pedido_${Date.now()}.pdf`;
             const phone = gestor ? gestor.whatsapp : WHATSAPP_GENERAL;
-            const itemsList = items
-                .map((i) => `- ${i.product.name} x${i.quantity} (${formatPrice(i.product.price * i.quantity)})`)
-                .join('\n');
-            const message = `Hola${gestor ? ` ${gestor.name}` : ''}, te envío mi pedido de Sophia:\n\n${itemsList}\n\nTotal: ${formatPrice(subtotal)}\n\nZona: ${location?.municipality || ''}, ${location?.province || ''}`;
+            // Mensaje estructurado para el gestor: cliente (zona), pedido detallado
+            // y total. Usa Markdown de WhatsApp (*negrita*) para legibilidad.
+            // Si en el futuro esta página gana inputs de nombre/teléfono/email,
+            // se añaden a la sección "Cliente" siguiendo el patrón del drawer.
+            const lines: string[] = [];
+            lines.push(`Hola${gestor ? ` ${gestor.name}` : ''}, te envío mi pedido de Sophia.`);
+            lines.push('');
+            if (location?.province || location?.municipality) {
+                lines.push('*Cliente*');
+                const loc = [location.municipality, location.province].filter(Boolean).join(', ');
+                lines.push(loc);
+                lines.push('');
+            }
+            lines.push('*Pedido*');
+            items.forEach((i) => {
+                const itemSub = i.product.price * i.quantity;
+                lines.push(`${i.quantity}x ${i.product.name} — ${formatPrice(itemSub)}`);
+            });
+            lines.push('');
+            lines.push(`*Total: ${formatPrice(subtotal)}*`);
+            const message = lines.join('\n');
 
             // Web Share API: si el dispositivo soporta compartir archivos, abrimos
             // el share sheet nativo con el PDF adjunto + texto. WhatsApp aparece

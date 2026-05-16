@@ -237,6 +237,49 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     return doc.output('blob');
   };
 
+  // Construye el mensaje rico que recibe el gestor por WhatsApp.
+  // Incluye datos del cliente, lista del pedido y total — así el gestor
+  // tiene la info esencial aunque el PDF no llegue (fallback de navegador
+  // viejo sin Web Share API L2, o si el cliente olvida adjuntarlo).
+  // Usa la sintaxis Markdown de WhatsApp: *negrita* con asteriscos.
+  const buildOrderMessage = (): string => {
+    const lines: string[] = [];
+
+    lines.push(`Hola${gestor ? ` ${gestor.name}` : ''}, te envío mi pedido de Sophia.`);
+    lines.push('');
+
+    // -- Datos del cliente --
+    lines.push('*Cliente*');
+    if (customerName.trim()) lines.push(customerName.trim());
+    if (location?.province || location?.municipality) {
+      const loc = [location.municipality, location.province].filter(Boolean).join(', ');
+      lines.push(loc);
+    }
+    if (customerPhone.trim()) lines.push(customerPhone.trim());
+    if (customerEmail.trim()) lines.push(customerEmail.trim());
+    lines.push('');
+
+    // -- Pedido --
+    lines.push('*Pedido*');
+    items.forEach((item) => {
+      const itemSub = item.product.price * item.quantity;
+      lines.push(`${item.quantity}x ${item.product.name} — ${formatPrice(itemSub)}`);
+    });
+    lines.push('');
+
+    // -- Total --
+    lines.push(`*Total: ${formatPrice(subtotal)}*`);
+
+    // -- Notas opcionales --
+    if (orderNotes.trim()) {
+      lines.push('');
+      lines.push('*Notas*');
+      lines.push(orderNotes.trim());
+    }
+
+    return lines.join('\n');
+  };
+
   // Envía el pedido al gestor adjuntando el PDF cuando el navegador lo permite
   // (Web Share API Nivel 2). Si no hay soporte, cae al flujo viejo: descarga
   // del PDF + redirect a wa.me con un texto que el cliente debe completar
@@ -245,7 +288,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     const fileName = `Pedido_Sophia_${new Date().toISOString().slice(0, 10)}.pdf`;
 
     const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
-    const message = `Hola${gestor ? ` ${gestor.name}` : ''}, te envío mi pedido de Sophia.`;
+    const message = buildOrderMessage();
     const canShareFile =
       typeof navigator !== 'undefined' &&
       typeof navigator.canShare === 'function' &&

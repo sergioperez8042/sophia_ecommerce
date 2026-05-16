@@ -57,6 +57,26 @@ jest.mock('@/store', () => ({
   useCart: () => mockCartReturn,
 }));
 
+// El componente lee `useTheme()` desde @/store/ThemeContext (no expuesto
+// en el barrel `@/store`). Por defecto devolvemos isDark=false para que
+// los tests verifiquen el camino de tema claro; cada test puede
+// reasignar `mockThemeReturn` si quiere probar el dark.
+let mockThemeReturn: {
+  theme: 'light' | 'dark';
+  isDark: boolean;
+  toggleTheme: jest.Mock;
+  setTheme: jest.Mock;
+} = {
+  theme: 'light',
+  isDark: false,
+  toggleTheme: jest.fn(),
+  setTheme: jest.fn(),
+};
+
+jest.mock('@/store/ThemeContext', () => ({
+  useTheme: () => mockThemeReturn,
+}));
+
 jest.mock('framer-motion', () => {
   const React = require('react');
   return {
