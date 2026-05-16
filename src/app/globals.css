@@ -117,3 +117,17 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* Prevent iOS Safari auto-zoom on form focus.
+   iOS Safari (iPhone + iPad) zooms in when the user taps an input whose
+   computed font-size is < 16px, and never zooms back out. Force 16px on
+   all form controls on TOUCH devices only — desktop keeps its designed
+   text-sm (14px) sizing. Uses (hover:none) + (pointer:coarse) which
+   correctly matches touch-only devices and excludes desktop/laptop. */
+@media (hover: none) and (pointer: coarse) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
