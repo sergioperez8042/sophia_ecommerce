@@ -8,10 +8,27 @@ import { CUBA_PROVINCES } from '@/data/cuba-locations';
 import { useLocation } from '@/store/LocationContext';
 import { useTheme } from '@/store/ThemeContext';
 
-export default function LocationPopup() {
-  const { hasLocation, setLocation } = useLocation();
+interface LocationPopupProps {
+  /**
+   * Cuando se pasa `open`, el popup es controlado (se puede cancelar con
+   * ESC / click fuera). Cuando no se pasa, el popup se auto-abre una sola
+   * vez si no hay ubicación guardada y FUERZA la selección (sin escape).
+   * Útil para "Cambiar zona" desde el carrito o el perfil.
+   */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+export default function LocationPopup({ open, onOpenChange }: LocationPopupProps = {}) {
+  const { hasLocation, setLocation, location } = useLocation();
   const { isDark } = useTheme();
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = open !== undefined;
+  const isOpen = isControlled ? open : internalOpen;
+  const setIsOpen = (next: boolean) => {
+    if (isControlled) onOpenChange?.(next);
+    else setInternalOpen(next);
+  };
   const [selectedProvince, setSelectedProvince] = useState('');
   const [selectedMunicipality, setSelectedMunicipality] = useState('');
   const [provinceSearch, setProvinceSearch] = useState('');
@@ -21,11 +38,25 @@ export default function LocationPopup() {
   const provinceRef = useRef<HTMLDivElement>(null);
   const municipalityRef = useRef<HTMLDivElement>(null);
 
+  // Auto-abrir solo en modo no controlado (primera visita sin location).
   useEffect(() => {
+    if (isControlled) return;
     if (hasLocation) return;
-    const timer = setTimeout(() => setIsOpen(true), 500);
+    const timer = setTimeout(() => setInternalOpen(true), 500);
     return () => clearTimeout(timer);
-  }, [hasLocation]);
+  }, [hasLocation, isControlled]);
+
+  // Pre-rellenar selección con la location actual cuando se abre desde
+  // "Cambiar" (modo controlado con location existente).
+  useEffect(() => {
+    if (!isOpen) return;
+    if (location) {
+      setSelectedProvince(location.province);
+      setSelectedMunicipality(location.municipality);
+      setProvinceSearch(location.province);
+      setMunicipalitySearch(location.municipality);
+    }
+  }, [isOpen, location]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -101,8 +132,19 @@ export default function LocationPopup() {
   const emptyText = isDark ? 'text-[#C4B590]/50' : 'text-gray-400';
   const btnBg = isDark ? 'bg-[#C4B590] hover:bg-[#b5a680] text-[#1a1d19]' : 'bg-[#505A4A] hover:bg-[#414A3C] text-white';
 
+  // En modo controlado permitimos cerrar con ESC / click fuera (el user inició
+  // un "Cambiar" intencional, debe poder cancelarlo). En modo auto (primera
+  // visita) bloqueamos el dismiss para forzar la selección.
+  const dismissProps = isControlled
+    ? {}
+    : {
+        onEscapeKeyDown: (e: Event) => e.preventDefault(),
+        onPointerDownOutside: (e: Event) => e.preventDefault(),
+        onInteractOutside: (e: Event) => e.preventDefault(),
+      };
+
   return (
-    <Dialog.Root open={isOpen} onOpenChange={() => {}}>
+    <Dialog.Root open={isOpen} onOpenChange={isControlled ? setIsOpen : () => {}}>
       <AnimatePresence>
         {isOpen && (
           <Dialog.Portal forceMount>
@@ -114,7 +156,7 @@ export default function LocationPopup() {
                 exit={{ opacity: 0 }}
               />
             </Dialog.Overlay>
-            <Dialog.Content asChild onEscapeKeyDown={(e) => e.preventDefault()} onPointerDownOutside={(e) => e.preventDefault()} onInteractOutside={(e) => e.preventDefault()}>
+            <Dialog.Content asChild {...dismissProps}>
               <m.div
                 className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[90vw] max-w-md"
                 initial={{ opacity: 0, scale: 0.95, y: 10 }}

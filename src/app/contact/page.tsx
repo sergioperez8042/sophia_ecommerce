@@ -2,7 +2,7 @@
 
 import { m, useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
-import { Mail, Phone, MapPin, Clock, Send, Leaf, MessageCircle, Instagram } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, Send, Leaf, MessageCircle, Instagram, Facebook } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -88,6 +88,12 @@ export default function ContactPage() {
             title: "Instagram",
             value: "@sophia.products_",
             href: "https://www.instagram.com/sophia.products_/"
+        },
+        {
+            icon: Facebook,
+            title: "Facebook",
+            value: "Sophia en Facebook",
+            href: "https://www.facebook.com/share/18dBKXnxDt/?mibextid=wwXIfr"
         },
         {
             icon: MapPin,

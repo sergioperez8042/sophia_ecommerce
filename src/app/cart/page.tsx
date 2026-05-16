@@ -7,6 +7,7 @@ import ProductImage from "@/components/ui/product-image";
 import { m, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Breadcrumb from "@/components/ui/breadcrumb";
+import LocationPopup from "@/components/LocationPopup";
 import { GestorService } from "@/lib/firestore-services";
 import { IGestor } from "@/entities/all";
 
@@ -20,14 +21,13 @@ export default function CartPage() {
         clearCart,
         totalItems,
         subtotal,
-        shipping,
-        total,
         isLoaded
     } = useCart();
     const { location } = useLocation();
     const [gestor, setGestor] = useState<IGestor | null>(null);
     const [gestorLoading, setGestorLoading] = useState(false);
     const [isSending, setIsSending] = useState(false);
+    const [showLocationEditor, setShowLocationEditor] = useState(false);
 
     // Find gestor when location changes
     useEffect(() => {
@@ -155,12 +155,24 @@ export default function CartPage() {
 
         doc.setFontSize(10);
         doc.setTextColor(120, 120, 120);
-        doc.text('Total', margin + contentWidth * 0.55, y);
+        doc.text('Total productos', margin + contentWidth * 0.55, y);
 
         doc.setFontSize(16);
         doc.setTextColor(80, 90, 74);
         doc.setFont('helvetica', 'bold');
         doc.text(formatPrice(subtotal), pw - margin, y, { align: 'right' });
+
+        // Nota de envío: no se incluye en el total, se gestiona con el gestor
+        y += 10;
+        doc.setFontSize(8);
+        doc.setFont('helvetica', 'italic');
+        doc.setTextColor(140, 140, 140);
+        const shippingNote = gestor
+            ? `Este total cubre solo los productos. La mensajeria se gestiona directamente con ${gestor.name}.`
+            : 'Este total cubre solo los productos. La mensajeria se gestiona directamente con tu gestor de zona.';
+        const wrappedNote = doc.splitTextToSize(shippingNote, contentWidth);
+        doc.text(wrappedNote, margin, y);
+        y += wrappedNote.length * 4;
 
         // Footer
         const footerY = doc.internal.pageSize.getHeight() - 15;
@@ -389,49 +401,53 @@ export default function CartPage() {
 
                                     {/* Location info */}
                                     {location && (
-                                        <div className="flex items-center gap-2 mb-6 pb-6 border-b border-[#D5D0C8]/40">
-                                            <MapPin className="w-4 h-4 text-[#505A4A]" strokeWidth={1.5} />
-                                            <div>
-                                                <p className="text-[13px] text-[#333] font-medium">
-                                                    {location.municipality}, {location.province}
-                                                </p>
-                                                {gestorLoading ? (
-                                                    <p className="text-[11px] text-[#999] mt-0.5">Buscando repartidor...</p>
-                                                ) : gestor ? (
-                                                    <p className="text-[11px] text-[#505A4A] mt-0.5">
-                                                        Entrega por {gestor.name}
+                                        <div className="flex items-start justify-between gap-3 mb-6 pb-6 border-b border-[#D5D0C8]/40">
+                                            <div className="flex items-start gap-2 min-w-0">
+                                                <MapPin className="w-4 h-4 text-[#505A4A] mt-0.5 flex-shrink-0" strokeWidth={1.5} />
+                                                <div className="min-w-0">
+                                                    <p className="text-[13px] text-[#333] font-medium truncate">
+                                                        {location.municipality}, {location.province}
                                                     </p>
-                                                ) : (
-                                                    <p className="text-[11px] text-[#C4956A] mt-0.5">
-                                                        Sin repartidor en tu zona
-                                                    </p>
-                                                )}
+                                                    {gestorLoading ? (
+                                                        <p className="text-[11px] text-[#999] mt-0.5">Buscando repartidor...</p>
+                                                    ) : gestor ? (
+                                                        <p className="text-[11px] text-[#505A4A] mt-0.5">
+                                                            Entrega por {gestor.name}
+                                                        </p>
+                                                    ) : (
+                                                        <p className="text-[11px] text-[#C4956A] mt-0.5">
+                                                            Sin repartidor en tu zona
+                                                        </p>
+                                                    )}
+                                                </div>
                                             </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowLocationEditor(true)}
+                                                className="text-[11px] uppercase tracking-[0.1em] text-[#505A4A] hover:text-[#414A3C] underline underline-offset-2 flex-shrink-0 mt-0.5"
+                                            >
+                                                Cambiar
+                                            </button>
                                         </div>
                                     )}
 
                                     <div className="space-y-4 text-[14px]">
                                         <div className="flex justify-between">
-                                            <span className="text-[#666]">Subtotal</span>
+                                            <span className="text-[#666]">Subtotal productos</span>
                                             <span className="text-[#333] tabular-nums">${subtotal.toFixed(2)}</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span className="text-[#666]">Envio</span>
-                                            {shipping === 0 ? (
-                                                <span className="text-[#505A4A]">Cortesia</span>
-                                            ) : (
-                                                <span className="text-[#333] tabular-nums">${shipping.toFixed(2)}</span>
-                                            )}
                                         </div>
                                     </div>
 
                                     <div className="border-t border-[#D5D0C8]/60 mt-6 pt-6">
                                         <div className="flex justify-between items-baseline">
-                                            <span className="text-[14px] text-[#333]">Total</span>
+                                            <span className="text-[14px] text-[#333]">Total a pagar</span>
                                             <span className="text-[24px] font-light text-[#333] tabular-nums tracking-tight">
-                                                ${total.toFixed(2)}
+                                                ${subtotal.toFixed(2)}
                                             </span>
                                         </div>
+                                        <p className="text-[11px] text-[#666] mt-3 leading-relaxed">
+                                            Este total cubre <strong className="font-medium text-[#333]">solo los productos</strong>. La mensajería y el envío se coordinan directamente con {gestor ? `${gestor.name}, tu gestor de zona.` : 'tu gestor de zona.'}
+                                        </p>
                                     </div>
 
                                     {/* WhatsApp order button */}
@@ -479,6 +495,11 @@ export default function CartPage() {
                     </div>
                 </m.div>
             </div>
+
+            {/* Popup controlado para cambiar la zona desde el carrito. Se abre
+                con la ubicación actual pre-seleccionada y se puede cancelar
+                con ESC / click fuera. */}
+            <LocationPopup open={showLocationEditor} onOpenChange={setShowLocationEditor} />
         </div>
     );
 }

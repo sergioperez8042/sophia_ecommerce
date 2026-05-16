@@ -9,6 +9,7 @@ import { useTheme } from '@/store/ThemeContext';
 import { GestorService, OrderService } from '@/lib/firestore-services';
 import { IGestor, IOrderItem } from '@/entities/all';
 import ProductImage from '@/components/ui/product-image';
+import LocationPopup from '@/components/LocationPopup';
 import { toast } from 'sonner';
 
 const WHATSAPP_GENERAL = "34642633982";
@@ -27,6 +28,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const [noGestorMessage, setNoGestorMessage] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
+  const [showLocationEditor, setShowLocationEditor] = useState(false);
   const [customerName, setCustomerName] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
@@ -173,12 +175,24 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
     doc.setFontSize(10);
     doc.setTextColor(120, 120, 120);
-    doc.text('Total', margin + contentWidth * 0.55, y);
+    doc.text('Total productos', margin + contentWidth * 0.55, y);
 
     doc.setFontSize(16);
     doc.setTextColor(80, 90, 74);
     doc.setFont('helvetica', 'bold');
     doc.text(formatPrice(subtotal), pw - margin, y, { align: 'right' });
+
+    // Nota de envío: no se incluye en el total, se gestiona con el gestor
+    y += 10;
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'italic');
+    doc.setTextColor(140, 140, 140);
+    const shippingNote = gestor
+      ? `Este total cubre solo los productos. La mensajeria se gestiona directamente con ${gestor.name}.`
+      : 'Este total cubre solo los productos. La mensajeria se gestiona directamente con tu gestor de zona.';
+    const wrappedNote = doc.splitTextToSize(shippingNote, contentWidth);
+    doc.text(wrappedNote, margin, y);
+    y += wrappedNote.length * 4;
 
     // -- Gestor info section --
     if (gestor) {
@@ -555,7 +569,16 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     isDark ? 'text-[#8a8278]' : 'text-[#666]'
                   }`}>
                     <MapPin className="w-3 h-3" />
-                    <span>{location.municipality}, {location.province}</span>
+                    <span className="truncate">{location.municipality}, {location.province}</span>
+                    <button
+                      type="button"
+                      onClick={() => setShowLocationEditor(true)}
+                      className={`ml-1 underline underline-offset-2 text-[10px] uppercase tracking-wide ${
+                        isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'
+                      }`}
+                    >
+                      Cambiar
+                    </button>
                     {gestor && !gestorLoading && (
                       <span className={`ml-auto px-2 py-0.5 rounded-full text-[10px] font-medium ${
                         isDark ? 'bg-[#C4B590]/10 text-[#C4B590]' : 'bg-[#505A4A]/10 text-[#505A4A]'
@@ -567,13 +590,18 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 )}
 
                 {/* Total */}
-                <div className="flex items-center justify-between mb-3">
-                  <span className={`text-sm font-medium ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>
-                    Total
-                  </span>
-                  <span className={`text-xl font-bold ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>
-                    {formatPrice(subtotal)}
-                  </span>
+                <div className="mb-3">
+                  <div className="flex items-center justify-between">
+                    <span className={`text-sm font-medium ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>
+                      Total productos
+                    </span>
+                    <span className={`text-xl font-bold ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>
+                      {formatPrice(subtotal)}
+                    </span>
+                  </div>
+                  <p className={`text-[10px] mt-1.5 leading-relaxed ${isDark ? 'text-[#8a8278]' : 'text-[#888]'}`}>
+                    La mensajería se coordina directamente con {gestor ? gestor.name : 'tu gestor de zona'}.
+                  </p>
                 </div>
 
                 {/* Checkout form - appears when user clicks the button */}
@@ -665,6 +693,9 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               </div>
             )}
           </m.div>
+
+          {/* Popup controlado para cambiar la zona de entrega desde el drawer. */}
+          <LocationPopup open={showLocationEditor} onOpenChange={setShowLocationEditor} />
         </>
       )}
     </AnimatePresence>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
-import { Star, Search, Leaf, Phone, Mail, Instagram, MessageCircle, Rabbit, Droplets, ShieldCheck, Hand, Sun, Moon, LayoutGrid, List, ArrowLeft, ShoppingBag, Plus, Heart, LogOut, User, Package } from "lucide-react";
+import { Star, Search, Leaf, Phone, Mail, Instagram, Facebook, MessageCircle, Rabbit, Droplets, ShieldCheck, Hand, Sun, Moon, LayoutGrid, List, ArrowLeft, ShoppingBag, Plus, Heart, LogOut, User, Package } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import ProductImage from "@/components/ui/product-image";
@@ -504,6 +504,15 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                             <Instagram className="w-3.5 h-3.5 flex-shrink-0" />
                             <span>@sophia.products_</span>
                         </a>
+                        <a
+                            href="https://www.facebook.com/share/18dBKXnxDt/?mibextid=wwXIfr"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2.5 text-white/70 hover:text-white transition-colors text-xs"
+                        >
+                            <Facebook className="w-3.5 h-3.5 flex-shrink-0" />
+                            <span>Sophia en Facebook</span>
+                        </a>
                     </div>
 
                     {/* Newsletter */}
@@ -686,7 +695,7 @@ function ProductCard({
 
     return (
         <m.div
-            className={`rounded-2xl overflow-hidden shadow-sm flex ${isDark ? 'bg-[#22261f]' : 'bg-white'}`}
+            className={`rounded-2xl overflow-hidden shadow-sm flex h-32 sm:h-40 ${isDark ? 'bg-[#22261f]' : 'bg-white'}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.05, duration: 0.4 }}
@@ -694,7 +703,7 @@ function ProductCard({
             onHoverStart={() => setIsHovered(true)}
             onHoverEnd={() => setIsHovered(false)}
         >
-            <div className="relative w-32 sm:w-40 min-h-32 sm:min-h-40 flex-shrink-0 overflow-hidden self-stretch">
+            <div className="relative w-32 sm:w-40 flex-shrink-0 overflow-hidden self-stretch">
                 <Link href={`/catalog/${product.id}`} className="block w-full h-full">
                     <ProductImage
                         src={product.image}
@@ -726,7 +735,7 @@ function ProductCard({
             <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between">
                 <Link href={`/catalog/${product.id}`}>
                     {categoryName && <span className={`text-[10px] sm:text-xs font-medium ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>{categoryName}</span>}
-                    <h3 className={`font-semibold mt-1 ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>{product.name}</h3>
+                    <h3 className={`font-semibold mt-1 line-clamp-1 ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>{product.name}</h3>
                     {product.rating > 0 && (
                         <div className="flex items-center gap-1 mt-0.5">
                             <div className="flex items-center">
