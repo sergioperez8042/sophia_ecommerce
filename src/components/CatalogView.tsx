@@ -352,12 +352,18 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                                     )}
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                                     <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
-                                        {/* Reservamos siempre 2 líneas para el título así el TOP del bloque
-                                            queda en el mismo Y en TODAS las cards, aunque el nombre sea
-                                            corto (Jabones) o largo (Tratamientos para uñas). Sin esto las
-                                            cards de 1 línea tenían el título más abajo que las de 2 líneas
-                                            y el mosaico se veía desalineado. */}
-                                        <h3 className="text-white font-semibold text-sm sm:text-base leading-tight line-clamp-2 min-h-[2lh]">{cat.name}</h3>
+                                        {/* Wrapper con espacio reservado de 2 líneas + items-end:
+                                            el TÍTULO se alinea al fondo del wrapper. Así, cuando el
+                                            nombre cabe en 1 línea (Jabones, Cremas) el título cae
+                                            pegado al conteo "X productos" en lugar de flotar arriba
+                                            dejando un gap fantasma. Para nombres de 2 líneas
+                                            (Mascarillas exfoliantes) el título llena el wrapper.
+                                            Resultado: el conteo "X productos" siempre está a la
+                                            misma distancia del título — y al mismo Y absoluto entre
+                                            cards vecinas. */}
+                                        <div className="min-h-[2lh] flex items-end">
+                                            <h3 className="text-white font-semibold text-sm sm:text-base leading-tight line-clamp-2">{cat.name}</h3>
+                                        </div>
                                         <span className="block text-white/70 text-xs mt-0.5">{cat.productCount} {cat.productCount === 1 ? 'producto' : 'productos'}</span>
                                     </div>
                                 </m.button>
