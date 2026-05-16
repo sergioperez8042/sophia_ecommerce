@@ -352,12 +352,14 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                                     )}
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                                     <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
-                                        {/* Reserva 2 líneas y alinea al fondo: el conteo queda al
-                                            mismo Y en cards de 1 y 2 líneas de título. */}
-                                        <div className="min-h-[2lh] flex items-end">
-                                            <h3 className="text-white font-semibold text-sm sm:text-base leading-tight line-clamp-2">{cat.name}</h3>
+                                        {/* Altura FIJA de 2 líneas (2.5em a leading-tight) —
+                                            garantiza que título + conteo ocupen exactamente lo
+                                            mismo en todas las cards, independientemente de si
+                                            el nombre cabe en 1 o 2 líneas. */}
+                                        <div className="h-[2.5em] flex items-end justify-center">
+                                            <h3 className="text-white font-semibold text-sm sm:text-base leading-tight line-clamp-2 text-center">{cat.name}</h3>
                                         </div>
-                                        <span className="block text-white/70 text-xs mt-0.5">{cat.productCount} {cat.productCount === 1 ? 'producto' : 'productos'}</span>
+                                        <span className="block text-center text-white/70 text-xs mt-1">{cat.productCount} {cat.productCount === 1 ? 'producto' : 'productos'}</span>
                                     </div>
                                 </m.button>
                             ))}
