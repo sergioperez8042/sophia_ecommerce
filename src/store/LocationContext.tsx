@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from 'react';
 
 interface LocationData {
   province: string;
@@ -35,36 +35,37 @@ export function LocationProvider({ children }: { children: ReactNode }) {
     setIsLoaded(true);
   }, []);
 
-  const setLocation = (loc: LocationData) => {
+  const setLocation = useCallback((loc: LocationData) => {
     setLocationState(loc);
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(loc));
     } catch {
       // ignore
     }
-  };
+  }, []);
 
-  const clearLocation = () => {
+  const clearLocation = useCallback(() => {
     setLocationState(null);
     try {
       localStorage.removeItem(STORAGE_KEY);
     } catch {
       // ignore
     }
-  };
+  }, []);
 
-  return (
-    <LocationContext.Provider
-      value={{
-        location,
-        setLocation,
-        clearLocation,
-        hasLocation: isLoaded && location !== null,
-      }}
-    >
-      {children}
-    </LocationContext.Provider>
+  // Sin este memo, el provider entrega un objeto literal nuevo cada render,
+  // forzando re-render a todos los consumers (cart, drawer, popup) en cascada.
+  const value = useMemo(
+    () => ({
+      location,
+      setLocation,
+      clearLocation,
+      hasLocation: isLoaded && location !== null,
+    }),
+    [location, setLocation, clearLocation, isLoaded]
   );
+
+  return <LocationContext.Provider value={value}>{children}</LocationContext.Provider>;
 }
 
 export function useLocation() {

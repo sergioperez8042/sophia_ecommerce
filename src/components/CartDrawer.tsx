@@ -694,8 +694,9 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             )}
           </m.div>
 
-          {/* Popup controlado para cambiar la zona de entrega desde el drawer. */}
-          <LocationPopup open={showLocationEditor} onOpenChange={setShowLocationEditor} />
+          {showLocationEditor && (
+            <LocationPopup open={showLocationEditor} onOpenChange={setShowLocationEditor} />
+          )}
         </>
       )}
     </AnimatePresence>

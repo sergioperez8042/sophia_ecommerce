@@ -496,10 +496,9 @@ export default function CartPage() {
                 </m.div>
             </div>
 
-            {/* Popup controlado para cambiar la zona desde el carrito. Se abre
-                con la ubicación actual pre-seleccionada y se puede cancelar
-                con ESC / click fuera. */}
-            <LocationPopup open={showLocationEditor} onOpenChange={setShowLocationEditor} />
+            {showLocationEditor && (
+                <LocationPopup open={showLocationEditor} onOpenChange={setShowLocationEditor} />
+            )}
         </div>
     );
 }

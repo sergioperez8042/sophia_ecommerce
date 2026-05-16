@@ -26,13 +26,15 @@ export interface UploadFailure {
 
 export type UploadResult = UploadSuccess | UploadFailure;
 
+export type UploadFolder = 'products' | 'categories';
+
 /**
  * Envuelve fetch + response parsing con manejo robusto de errores.
  * Nunca lanza una excepción: siempre devuelve un UploadResult.
  */
 export async function uploadImage(params: {
   file: File;
-  folder: 'products' | 'categories' | string;
+  folder: UploadFolder;
   token: string | null;
 }): Promise<UploadResult> {
   const { file, folder, token } = params;

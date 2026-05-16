@@ -9,12 +9,9 @@ import { useLocation } from '@/store/LocationContext';
 import { useTheme } from '@/store/ThemeContext';
 
 interface LocationPopupProps {
-  /**
-   * Cuando se pasa `open`, el popup es controlado (se puede cancelar con
-   * ESC / click fuera). Cuando no se pasa, el popup se auto-abre una sola
-   * vez si no hay ubicación guardada y FUERZA la selección (sin escape).
-   * Útil para "Cambiar zona" desde el carrito o el perfil.
-   */
+  // Pasando `open` → modo controlado (cancelable con ESC / click fuera).
+  // Sin `open` → auto-abre una sola vez si no hay location guardada y
+  // fuerza la selección. Modo controlado lo usa el botón "Cambiar".
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
@@ -46,11 +43,15 @@ export default function LocationPopup({ open, onOpenChange }: LocationPopupProps
     return () => clearTimeout(timer);
   }, [hasLocation, isControlled]);
 
-  // Pre-rellenar selección con la location actual cuando se abre desde
-  // "Cambiar" (modo controlado con location existente).
+  // Pre-rellenar SOLO en la transición closed→open. Sin este guard, cualquier
+  // re-render del padre que cambie la identidad de `location` (el provider
+  // crea objeto nuevo cada render) re-corre el efecto y pisa lo que el
+  // usuario haya tipeado en la búsqueda mientras el popup está abierto.
+  const prevOpenRef = useRef(false);
   useEffect(() => {
-    if (!isOpen) return;
-    if (location) {
+    const justOpened = isOpen && !prevOpenRef.current;
+    prevOpenRef.current = isOpen;
+    if (justOpened && location) {
       setSelectedProvince(location.province);
       setSelectedMunicipality(location.municipality);
       setProvinceSearch(location.province);

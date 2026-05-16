@@ -352,15 +352,8 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                                     )}
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                                     <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
-                                        {/* Wrapper con espacio reservado de 2 líneas + items-end:
-                                            el TÍTULO se alinea al fondo del wrapper. Así, cuando el
-                                            nombre cabe en 1 línea (Jabones, Cremas) el título cae
-                                            pegado al conteo "X productos" en lugar de flotar arriba
-                                            dejando un gap fantasma. Para nombres de 2 líneas
-                                            (Mascarillas exfoliantes) el título llena el wrapper.
-                                            Resultado: el conteo "X productos" siempre está a la
-                                            misma distancia del título — y al mismo Y absoluto entre
-                                            cards vecinas. */}
+                                        {/* Reserva 2 líneas y alinea al fondo: el conteo queda al
+                                            mismo Y en cards de 1 y 2 líneas de título. */}
                                         <div className="min-h-[2lh] flex items-end">
                                             <h3 className="text-white font-semibold text-sm sm:text-base leading-tight line-clamp-2">{cat.name}</h3>
                                         </div>
@@ -714,10 +707,6 @@ function ProductCard({
             onHoverStart={() => setIsHovered(true)}
             onHoverEnd={() => setIsHovered(false)}
         >
-            {/* Imagen: ancho fijo, alto se estira al alto natural del card vía
-                self-stretch. Combinado con line-clamp-1 en el título (más abajo)
-                reduce mucho la variabilidad de altura entre cards sin recortar
-                contenido como sí pasaba con h-32 fija. */}
             <div className="relative w-32 sm:w-40 min-h-32 sm:min-h-40 flex-shrink-0 overflow-hidden self-stretch">
                 <Link href={`/catalog/${product.id}`} className="block w-full h-full">
                     <ProductImage
