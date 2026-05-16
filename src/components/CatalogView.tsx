@@ -352,8 +352,13 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                                     )}
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                                     <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
-                                        <h3 className="text-white font-semibold text-sm sm:text-base leading-tight">{cat.name}</h3>
-                                        <span className="text-white/70 text-xs mt-0.5">{cat.productCount} {cat.productCount === 1 ? 'producto' : 'productos'}</span>
+                                        {/* Reservamos siempre 2 líneas para el título así el TOP del bloque
+                                            queda en el mismo Y en TODAS las cards, aunque el nombre sea
+                                            corto (Jabones) o largo (Tratamientos para uñas). Sin esto las
+                                            cards de 1 línea tenían el título más abajo que las de 2 líneas
+                                            y el mosaico se veía desalineado. */}
+                                        <h3 className="text-white font-semibold text-sm sm:text-base leading-tight line-clamp-2 min-h-[2lh]">{cat.name}</h3>
+                                        <span className="block text-white/70 text-xs mt-0.5">{cat.productCount} {cat.productCount === 1 ? 'producto' : 'productos'}</span>
                                     </div>
                                 </m.button>
                             ))}
