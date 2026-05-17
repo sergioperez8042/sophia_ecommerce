@@ -213,6 +213,12 @@ export default function CartPage() {
             });
             lines.push('');
             lines.push(`*Total: ${formatPrice(subtotal)}*`);
+            // Nota de envío: el total cubre SOLO los productos. En Cuba la
+            // mensajería no se puede calcular automáticamente (varía por zona,
+            // peso, distancia), así que se cuadra aparte con el gestor.
+            lines.push('');
+            const gestorRef = gestor ? gestor.name : 'tu gestor de zona';
+            lines.push(`*El total cubre únicamente los productos. La mensajería se coordinará directamente con ${gestorRef}.*`);
             const message = lines.join('\n');
 
             // Web Share API: si el dispositivo soporta compartir archivos, abrimos

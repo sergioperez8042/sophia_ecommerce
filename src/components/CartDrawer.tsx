@@ -270,6 +270,15 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     // -- Total --
     lines.push(`*Total: ${formatPrice(subtotal)}*`);
 
+    // -- Nota de envío --
+    // En Cuba el costo de mensajería no se puede calcular automáticamente
+    // (varía por zona, peso, distancia y disponibilidad del gestor). Esta
+    // línea aclara al cliente y al gestor que el total mostrado es SOLO
+    // por los productos y que la mensajería se cuadra aparte.
+    lines.push('');
+    const gestorRef = gestor ? gestor.name : 'tu gestor de zona';
+    lines.push(`*El total cubre únicamente los productos. La mensajería se coordinará directamente con ${gestorRef}.*`);
+
     // -- Notas opcionales --
     if (orderNotes.trim()) {
       lines.push('');
