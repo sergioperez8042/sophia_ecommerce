@@ -50,7 +50,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
     const [selectedCategory, setSelectedCategory] = useState<string>("all");
     const [searchTerm, setSearchTerm] = useState("");
     const [visibleCount, setVisibleCount] = useState(5);
-    const [viewMode, setViewMode] = useState<"grid" | "list">("list");
+    const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const { isDark } = useTheme();
 
