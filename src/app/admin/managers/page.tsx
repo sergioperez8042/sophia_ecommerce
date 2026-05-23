@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useAuth } from '@/store';
 import { GestorService, GestorAccountService } from '@/lib/firestore-services';
 import { IGestor, GESTOR_PERMISSIONS, GestorPermission, DEFAULT_GESTOR_PERMISSIONS } from '@/entities/all';
@@ -236,7 +236,7 @@ export default function GestoresAdminPage() {
       // todavía seleccionados (evita orphans si admin deseleccionó un muni
       // después de marcar sus consejos)
       const cleanConsejos = selectedConsejos.filter((c) =>
-        selectedMunicipalities.includes(c.municipality),
+        selectedMunicipalitiesSet.has(c.municipality),
       );
 
       const gestorData = {
@@ -385,10 +385,27 @@ export default function GestoresAdminPage() {
     });
   };
 
-  const isConsejoSelected = (municipality: string, consejo: string) =>
-    selectedConsejos.some(
-      (c) => c.municipality === municipality && c.consejo === consejo,
-    );
+  // Sets memoizados para que los checkbox renders sean O(1) en vez de O(N)
+  // por celda. Con ~15 municipios × ~10 consejos cada uno, el render tenía
+  // hasta ~150 .some() por keystroke en cualquier input del formulario.
+  const selectedMunicipalitiesSet = useMemo(
+    () => new Set(selectedMunicipalities),
+    [selectedMunicipalities],
+  );
+  const selectedConsejosSet = useMemo(
+    () => new Set(selectedConsejos.map((c) => `${c.municipality}|${c.consejo}`)),
+    [selectedConsejos],
+  );
+
+  const isMunicipalitySelected = useCallback(
+    (m: string) => selectedMunicipalitiesSet.has(m),
+    [selectedMunicipalitiesSet],
+  );
+  const isConsejoSelected = useCallback(
+    (municipality: string, consejo: string) =>
+      selectedConsejosSet.has(`${municipality}|${consejo}`),
+    [selectedConsejosSet],
+  );
 
   // Solo mostramos la sección de consejos si la provincia los usa
   // (La Habana). Para Matanzas y otras provincias sin consejos detallados,
@@ -774,7 +791,7 @@ export default function GestoresAdminPage() {
                         <label key={m} className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer">
                           <input
                             type="checkbox"
-                            checked={selectedMunicipalities.includes(m)}
+                            checked={isMunicipalitySelected(m)}
                             onChange={() => toggleMunicipality(m)}
                             className="rounded border-gray-300 text-[#505A4A] focus:ring-[#505A4A]"
                           />

@@ -249,6 +249,10 @@ export const PROVINCES_DATA: ProvinceData[] = [LA_HABANA, MATANZAS];
 // HELPERS DE LOOKUP — pure functions, sin IO
 // =============================================================================
 
+// Regex hoisted a módulo: evita crear una nueva instancia en cada llamada a
+// normalizeForMatch (que se invoca decenas de veces por render del admin).
+const DIACRITIC_RE = /\p{Diacritic}/gu;
+
 /**
  * Normaliza un string para hacer comparaciones tolerantes a acentos y
  * mayúsculas. Es la pieza que evita que "San Miguel del Padron" (escrito sin
@@ -262,50 +266,94 @@ export const PROVINCES_DATA: ProvinceData[] = [LA_HABANA, MATANZAS];
  * Idempotente: aplicar dos veces da el mismo resultado.
  */
 export const normalizeForMatch = (s: string): string =>
-  s
-    .normalize("NFD")
-    // \p{Diacritic} = cualquier combinación diacrítica unicode
-    .replace(/\p{Diacritic}/gu, "")
-    .toLowerCase()
-    .trim();
+  s.normalize("NFD").replace(DIACRITIC_RE, "").toLowerCase().trim();
 
-export const getProvinces = (): string[] =>
-  PROVINCES_DATA.map((p) => p.province);
+// Cachés a nivel de módulo. Los datos son ESTÁTICOS (la división política
+// no cambia en runtime), así que precomputamos lo que cada lookup devuelve.
+// Pasamos de O(N) en cada llamada a O(1) tras el primer hit.
+//
+// NOTA: los caches no se invalidan nunca a propósito — `PROVINCES_DATA` es
+// const y se inicializa una sola vez. Si en el futuro estos datos pasaran
+// a venir de Firestore, habría que añadir invalidación.
+
+// Mapa con clave normalizada → ProvinceData. Permite que el lookup tolere
+// variantes de acentos/case sin recalcular normalización en cada find.
+const PROVINCE_INDEX: ReadonlyMap<string, ProvinceData> = (() => {
+  const m = new Map<string, ProvinceData>();
+  for (const p of PROVINCES_DATA) m.set(normalizeForMatch(p.province), p);
+  return m;
+})();
+
+// Lista plana de nombres canónicos de provincia (orden de declaración).
+const PROVINCE_NAMES: readonly string[] = PROVINCES_DATA.map((p) => p.province);
+
+// Municipios ordenados por provincia. La key es la province normalizada.
+const MUNICIPALITIES_BY_PROVINCE: ReadonlyMap<string, readonly string[]> =
+  (() => {
+    const m = new Map<string, readonly string[]>();
+    for (const p of PROVINCES_DATA) {
+      const sorted = p.municipalities
+        .map((mu) => mu.municipality)
+        .slice()
+        .sort((a, b) => a.localeCompare(b, "es"));
+      m.set(normalizeForMatch(p.province), sorted);
+    }
+    return m;
+  })();
+
+// Consejos por (province + municipality). Key = "provN|muniN".
+const CONSEJOS_INDEX: ReadonlyMap<string, readonly string[]> = (() => {
+  const m = new Map<string, readonly string[]>();
+  for (const p of PROVINCES_DATA) {
+    const provN = normalizeForMatch(p.province);
+    for (const mu of p.municipalities) {
+      const sorted = mu.consejos
+        .slice()
+        .sort((a, b) => a.localeCompare(b, "es"));
+      m.set(`${provN}|${normalizeForMatch(mu.municipality)}`, sorted);
+    }
+  }
+  return m;
+})();
+
+// Map plano de municipality data por (provN|muniN). Útil para internos.
+const MUNICIPALITY_INDEX: ReadonlyMap<string, MunicipalityData> = (() => {
+  const m = new Map<string, MunicipalityData>();
+  for (const p of PROVINCES_DATA) {
+    const provN = normalizeForMatch(p.province);
+    for (const mu of p.municipalities) {
+      m.set(`${provN}|${normalizeForMatch(mu.municipality)}`, mu);
+    }
+  }
+  return m;
+})();
+
+export const getProvinces = (): readonly string[] => PROVINCE_NAMES;
 
 export const requiresConsejoPopular = (province: string): boolean => {
-  // Province es un literal corto, normalizamos por simetría con resto del API
-  const target = normalizeForMatch(province);
-  const p = PROVINCES_DATA.find((x) => normalizeForMatch(x.province) === target);
+  const p = PROVINCE_INDEX.get(normalizeForMatch(province));
   return p?.usesConsejos ?? false;
 };
 
-export const getMunicipalities = (province: string): string[] => {
-  const target = normalizeForMatch(province);
-  const p = PROVINCES_DATA.find((x) => normalizeForMatch(x.province) === target);
-  if (!p) return [];
-  return p.municipalities
-    .map((m) => m.municipality)
-    .slice()
-    .sort((a, b) => a.localeCompare(b, "es"));
+export const getMunicipalities = (province: string): readonly string[] => {
+  return MUNICIPALITIES_BY_PROVINCE.get(normalizeForMatch(province)) ?? [];
 };
 
 export const getConsejos = (
   province: string,
   municipality: string,
-): string[] => {
-  const m = findMunicipality(province, municipality);
-  if (!m) return [];
-  return m.consejos.slice().sort((a, b) => a.localeCompare(b, "es"));
+): readonly string[] => {
+  const key = `${normalizeForMatch(province)}|${normalizeForMatch(municipality)}`;
+  return CONSEJOS_INDEX.get(key) ?? [];
 };
 
+// Reservado por si algún consumer interno necesita el objeto completo.
+// Hoy no se usa fuera del módulo — lo dejo private por YAGNI.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const findMunicipality = (
   province: string,
   municipality: string,
 ): MunicipalityData | undefined => {
-  const provN = normalizeForMatch(province);
-  const muniN = normalizeForMatch(municipality);
-  const p = PROVINCES_DATA.find((x) => normalizeForMatch(x.province) === provN);
-  return p?.municipalities.find(
-    (m) => normalizeForMatch(m.municipality) === muniN,
-  );
+  const key = `${normalizeForMatch(province)}|${normalizeForMatch(municipality)}`;
+  return MUNICIPALITY_INDEX.get(key);
 };

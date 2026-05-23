@@ -26,33 +26,53 @@ interface LocationContextType {
 
 const STORAGE_KEY = 'sophia_location';
 
+/**
+ * Versión del schema persistido. Si en el futuro añadimos campos requeridos
+ * a LocationData (p.ej. coordenadas, código postal) o cambiamos la forma de
+ * algún campo, incrementamos esta constante y la lectura descarta las
+ * entradas con versión distinta. Evita corromper sesiones cuando el shape
+ * evoluciona.
+ *
+ * Historial:
+ *   v0 (implícito): { municipality } — pre-rollout. Se descarta en hidrate.
+ *   v1: { v: 1, province, municipality, consejoPopular? } — actual.
+ */
+const STORAGE_SCHEMA_VERSION = 1;
+
+type StoredLocation = LocationData & { v: number };
+
 const LocationContext = createContext<LocationContextType | undefined>(undefined);
 
 export function LocationProvider({ children }: { children: ReactNode }) {
   const [location, setLocationState] = useState<LocationData | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Load from localStorage on mount
+  // Load from localStorage on mount.
+  // Validación en este orden: (1) parse OK, (2) versión actual, (3) shape
+  // completo. Cualquier fallo descarta la entrada y deja al usuario en
+  // estado limpio — el LocationPopup auto-abre por hasFullLocation=false.
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        const parsed = JSON.parse(saved) as Partial<LocationData>;
-        // Guard contra shape legacy: antes del rollout de provincia (Nov 2025)
-        // se guardaba solo { municipality }. Si carga un objeto incompleto,
-        // forzamos re-confirmación con el LocationPopup (que auto-abre por
-        // hasFullLocation=false). NO inferimos `province` desde `municipality`
-        // — podría haber municipios ambiguos y meter al usuario en la
-        // provincia equivocada.
-        if (parsed && parsed.province && parsed.municipality) {
-          setLocationState(parsed as LocationData);
+        const parsed = JSON.parse(saved) as Partial<StoredLocation>;
+        const isValid =
+          parsed &&
+          parsed.v === STORAGE_SCHEMA_VERSION &&
+          typeof parsed.province === 'string' &&
+          typeof parsed.municipality === 'string';
+        if (isValid) {
+          setLocationState({
+            province: parsed.province!,
+            municipality: parsed.municipality!,
+            consejoPopular: parsed.consejoPopular,
+          });
         } else {
-          // Limpiar la entrada inválida para no quedar en bucle
           localStorage.removeItem(STORAGE_KEY);
         }
       }
     } catch {
-      // ignore
+      // localStorage no disponible o JSON malformado — fallback silencioso
     }
     setIsLoaded(true);
   }, []);
@@ -60,7 +80,8 @@ export function LocationProvider({ children }: { children: ReactNode }) {
   const setLocation = useCallback((loc: LocationData) => {
     setLocationState(loc);
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(loc));
+      const stored: StoredLocation = { ...loc, v: STORAGE_SCHEMA_VERSION };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
     } catch {
       // ignore
     }
