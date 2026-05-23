@@ -60,6 +60,16 @@ export interface IGestor {
   whatsapp: string; // número sin +, ej: "5352010900"
   province: string;
   municipalities: string[]; // municipios que cubre
+  /**
+   * Consejos populares específicos que cubre el gestor (dentro de los
+   * municipios listados). Solo se usa para provincias con flag
+   * usesConsejos=true (La Habana). Para provincias sin consejos (Matanzas
+   * y futuras), este campo queda vacío y la cobertura es a nivel municipio.
+   *
+   * El admin gestiona estos arrays vía la UI: checkboxes por municipio
+   * que muestran los consejos disponibles de localities.ts.
+   */
+  consejos?: Array<{ municipality: string; consejo: string }>;
   active: boolean;
   photoUrl?: string; // foto del gestor (Cloudinary)
   createdAt?: string;

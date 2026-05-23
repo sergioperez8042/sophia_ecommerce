@@ -5,6 +5,7 @@ import { useAuth } from '@/store';
 import { GestorService, GestorAccountService } from '@/lib/firestore-services';
 import { IGestor, GESTOR_PERMISSIONS, GestorPermission, DEFAULT_GESTOR_PERMISSIONS } from '@/entities/all';
 import { CUBA_PROVINCES } from '@/data/cuba-locations';
+import { getConsejos, requiresConsejoPopular } from '@/data/localities';
 import {
   Users,
   Plus,
@@ -47,6 +48,10 @@ export default function GestoresAdminPage() {
   const [whatsapp, setWhatsapp] = useState('');
   const [province, setProvince] = useState('');
   const [selectedMunicipalities, setSelectedMunicipalities] = useState<string[]>([]);
+  // Consejos populares cubiertos por el gestor (solo cuando la provincia
+  // tiene usesConsejos=true en localities.ts, ej. La Habana). Cada item
+  // identifica un consejo específico dentro de un municipio.
+  const [selectedConsejos, setSelectedConsejos] = useState<Array<{ municipality: string; consejo: string }>>([]);
   const [provinceSearch, setProvinceSearch] = useState('');
   const [showProvinceDropdown, setShowProvinceDropdown] = useState(false);
   const [municipalitySearch, setMunicipalitySearch] = useState('');
@@ -94,6 +99,7 @@ export default function GestoresAdminPage() {
     setProvince('');
     setProvinceSearch('');
     setSelectedMunicipalities([]);
+    setSelectedConsejos([]);
     setPhotoFile(null);
     setPhotoPreview('');
     setEditingId(null);
@@ -113,6 +119,7 @@ export default function GestoresAdminPage() {
     setProvince(gestor.province);
     setProvinceSearch('');
     setSelectedMunicipalities([...gestor.municipalities]);
+    setSelectedConsejos(gestor.consejos ? [...gestor.consejos] : []);
     setPhotoFile(null);
     setPhotoPreview(gestor.photoUrl || '');
     setGestorEmail(gestor.email || '');
@@ -225,11 +232,19 @@ export default function GestoresAdminPage() {
         photoUrl = await uploadPhoto();
       }
 
+      // Filtrar consejos: solo guardar los que corresponden a municipios
+      // todavía seleccionados (evita orphans si admin deseleccionó un muni
+      // después de marcar sus consejos)
+      const cleanConsejos = selectedConsejos.filter((c) =>
+        selectedMunicipalities.includes(c.municipality),
+      );
+
       const gestorData = {
         name,
         whatsapp: whatsapp.replace(/[^0-9]/g, ''),
         province,
         municipalities: selectedMunicipalities,
+        consejos: cleanConsejos,
         active: true,
         permissions,
         ...(photoUrl ? { photoUrl } : {}),
@@ -346,7 +361,34 @@ export default function GestoresAdminPage() {
     setSelectedMunicipalities((prev) =>
       prev.includes(m) ? prev.filter((x) => x !== m) : [...prev, m]
     );
+    // Si se desmarca un municipio, también limpiar los consejos suyos
+    if (selectedMunicipalities.includes(m)) {
+      setSelectedConsejos((prev) => prev.filter((c) => c.municipality !== m));
+    }
   };
+
+  const toggleConsejo = (municipality: string, consejo: string) => {
+    setSelectedConsejos((prev) => {
+      const exists = prev.some(
+        (c) => c.municipality === municipality && c.consejo === consejo,
+      );
+      return exists
+        ? prev.filter(
+            (c) => !(c.municipality === municipality && c.consejo === consejo),
+          )
+        : [...prev, { municipality, consejo }];
+    });
+  };
+
+  const isConsejoSelected = (municipality: string, consejo: string) =>
+    selectedConsejos.some(
+      (c) => c.municipality === municipality && c.consejo === consejo,
+    );
+
+  // Solo mostramos la sección de consejos si la provincia los usa
+  // (La Habana). Para Matanzas y otras provincias sin consejos detallados,
+  // la sección queda oculta — la cobertura es a nivel municipio.
+  const showConsejosSection = province && requiresConsejoPopular(province);
 
   if (!isLoaded || !isAdmin) {
     return (
@@ -741,6 +783,57 @@ export default function GestoresAdminPage() {
                 )}
               </div>
             </div>
+
+            {/* Consejos Populares — solo aparece para provincias con
+                usesConsejos=true (La Habana). Si el admin desmarca un municipio,
+                sus consejos se limpian automáticamente. */}
+            {showConsejosSection && selectedMunicipalities.length > 0 && (
+              <div className="mt-4">
+                <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 block">
+                  Consejos Populares / Localidades ({selectedConsejos.length})
+                </label>
+                <p className="text-xs text-gray-400 dark:text-gray-500 mb-3 leading-relaxed">
+                  Marca los consejos populares específicos que cubre el gestor dentro
+                  de cada municipio. Solo los consejos marcados aparecerán en el flujo
+                  del cliente como cubiertos por este gestor.
+                </p>
+                <div className="space-y-3 max-h-72 overflow-y-auto pr-2">
+                  {selectedMunicipalities.map((muni) => {
+                    const consejos = getConsejos(province, muni);
+                    if (consejos.length === 0) return null;
+                    return (
+                      <div
+                        key={muni}
+                        className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 bg-gray-50/50 dark:bg-gray-900/30"
+                      >
+                        <div className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2 uppercase tracking-wide">
+                          {muni}
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
+                          {consejos.map((consejo) => (
+                            <label
+                              key={consejo}
+                              className="flex items-center gap-2 px-2 py-1 rounded hover:bg-white dark:hover:bg-gray-800 cursor-pointer"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={isConsejoSelected(muni, consejo)}
+                                onChange={() => toggleConsejo(muni, consejo)}
+                                className="rounded border-gray-300 text-[#505A4A] focus:ring-[#505A4A]"
+                              />
+                              <span className="text-sm text-gray-700 dark:text-gray-300">
+                                {consejo}
+                              </span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             <div className="flex gap-3 mt-4">
               <button
                 onClick={handleSave}

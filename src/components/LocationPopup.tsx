@@ -8,11 +8,9 @@ import {
   getProvinces,
   getMunicipalities,
   getConsejos,
-  findGestorNameForLocality,
-  findGestorNameForMunicipality,
-  getNearbyConsejosWithGestor,
   requiresConsejoPopular,
 } from '@/data/localities';
+import { GestorService } from '@/lib/firestore-services';
 import { useLocation } from '@/store/LocationContext';
 import { useTheme } from '@/store/ThemeContext';
 
@@ -133,40 +131,57 @@ export default function LocationPopup({ open, onOpenChange }: LocationPopupProps
     return consejos.filter((c) => c.toLowerCase().includes(term));
   }, [consejos, consejoSearch]);
 
-  // Estado del gestor — la lógica depende de si la provincia usa consejos
-  // o no:
-  //   - Con consejos: el feedback aparece al seleccionar el consejo
-  //   - Sin consejos: el feedback aparece al seleccionar el municipio
-  const gestorStatus = useMemo(() => {
+  // Estado del gestor — ahora viene de Firestore (no de localities.ts), así
+  // que es asíncrono y vive en useState + useEffect en lugar de useMemo.
+  // Aceptamos un pequeño "loading" mientras se resuelve el lookup.
+  type GestorStatus =
+    | { state: 'idle' }
+    | { state: 'loading' }
+    | { state: 'available'; gestorName: string }
+    | { state: 'unavailable'; nearby: Array<{ consejo: string; gestorName: string }> };
+
+  const [gestorStatus, setGestorStatus] = useState<GestorStatus>({ state: 'idle' });
+
+  useEffect(() => {
     if (!selectedProvince || !selectedMunicipality) {
-      return { state: 'idle' as const };
+      setGestorStatus({ state: 'idle' });
+      return;
     }
-    if (showConsejoStep) {
-      if (!selectedConsejo) return { state: 'idle' as const };
-      const gestorName = findGestorNameForLocality(
-        selectedProvince,
-        selectedMunicipality,
-        selectedConsejo,
-      );
-      if (gestorName) return { state: 'available' as const, gestorName };
-      return {
-        state: 'unavailable' as const,
-        nearby: getNearbyConsejosWithGestor(selectedProvince, selectedMunicipality),
-      };
+    if (showConsejoStep && !selectedConsejo) {
+      setGestorStatus({ state: 'idle' });
+      return;
     }
-    // Flujo 2-niveles (Matanzas y futuras)
-    const gestorName = findGestorNameForMunicipality(
-      selectedProvince,
-      selectedMunicipality,
-    );
-    if (gestorName) return { state: 'available' as const, gestorName };
-    return { state: 'unavailable' as const, nearby: [] };
-  }, [
-    showConsejoStep,
-    selectedProvince,
-    selectedMunicipality,
-    selectedConsejo,
-  ]);
+    let cancelled = false;
+    setGestorStatus({ state: 'loading' });
+
+    (async () => {
+      try {
+        const found = await GestorService.findByLocation(
+          selectedMunicipality,
+          showConsejoStep ? selectedConsejo : undefined,
+        );
+        if (cancelled) return;
+        if (found) {
+          setGestorStatus({ state: 'available', gestorName: found.name });
+        } else {
+          // Si no hay match exacto y la provincia usa consejos, sugerimos
+          // consejos cercanos del mismo municipio que SÍ tienen gestor
+          const nearby = showConsejoStep
+            ? await GestorService.getCoveredConsejosInMunicipality(selectedMunicipality)
+            : [];
+          if (cancelled) return;
+          setGestorStatus({ state: 'unavailable', nearby });
+        }
+      } catch {
+        if (cancelled) return;
+        setGestorStatus({ state: 'unavailable', nearby: [] });
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [showConsejoStep, selectedProvince, selectedMunicipality, selectedConsejo]);
 
   const handleSelectProvince = (name: string) => {
     setSelectedProvince(name);

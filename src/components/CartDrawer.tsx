@@ -7,7 +7,6 @@ import { useCart } from '@/store/CartContext';
 import { useLocation } from '@/store/LocationContext';
 import { useTheme } from '@/store/ThemeContext';
 import { GestorService, OrderService } from '@/lib/firestore-services';
-import { findGestorNameForLocation } from '@/data/localities';
 import { IGestor, IOrderItem } from '@/entities/all';
 import ProductImage from '@/components/ui/product-image';
 import LocationPopup from '@/components/LocationPopup';
@@ -36,11 +35,10 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const [orderNotes, setOrderNotes] = useState('');
 
   // Find gestor when location changes.
-  //
-  // `findGestorNameForLocation` decide internamente si necesita el consejo
-  // (La Habana usa 3 niveles) o resuelve a nivel municipio (Matanzas y
-  // futuras). Si devuelve null, hacemos fallback a `findByMunicipality`
-  // para preservar pedidos de sesiones antiguas sin consejo guardado.
+  // GestorService.findByLocation hace el match dinámico en Firestore:
+  // si hay consejoPopular busca por (municipality, consejo), si no busca
+  // a nivel municipio. La asignación consejo→gestor vive en Firestore,
+  // editable desde admin.
   useEffect(() => {
     if (!location?.municipality || !location?.province) {
       setGestor(null);
@@ -50,18 +48,17 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     const findGestor = async () => {
       setGestorLoading(true);
       try {
-        const gestorName = findGestorNameForLocation(
-          location.province,
+        const found = await GestorService.findByLocation(
           location.municipality,
           location.consejoPopular,
         );
-        if (gestorName) {
-          const found = await GestorService.findByName(gestorName);
+        if (found) {
           setGestor(found);
         } else {
-          // Fallback para casos edge (sesión antigua, o data incompleta)
-          const found = await GestorService.findByMunicipality(location.municipality);
-          setGestor(found);
+          // Fallback: si el lookup por consejo falla (data incompleta o
+          // sesión antigua), intentamos a nivel municipio
+          const fallback = await GestorService.findByMunicipality(location.municipality);
+          setGestor(fallback);
         }
       } catch {
         setGestor(null);

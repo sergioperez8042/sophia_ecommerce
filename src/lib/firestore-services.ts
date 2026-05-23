@@ -768,14 +768,79 @@ export const GestorService = {
     ) || null;
   },
 
-  // Find gestor by exact name (case-insensitive). Usado por la lógica de
-  // consejos populares: el dataset estático devuelve el NOMBRE del gestor,
-  // y este helper resuelve el IGestor completo (con whatsapp, foto, etc).
-  // Devuelve null si no se encuentra ningún gestor activo con ese nombre.
+  // Find gestor by exact name (case-insensitive). Mantenido por backward-
+  // compat. La nueva ruta principal es findByLocation que combina
+  // municipality + consejo (cuando aplica).
   async findByName(name: string): Promise<IGestor | null> {
     const gestores = await this.getActive();
     const normalized = name.toLowerCase().trim();
     return gestores.find((g) => g.name.toLowerCase().trim() === normalized) || null;
+  },
+
+  /**
+   * Resuelve el gestor que cubre una ubicación específica.
+   *
+   * - Si la provincia usa consejos populares (La Habana): busca el primer
+   *   gestor activo cuyo `consejos[]` incluya el par (municipality, consejo).
+   * - Si no usa consejos (Matanzas, etc): busca el primer gestor activo
+   *   cuyo `municipalities[]` incluya el municipio.
+   *
+   * Devuelve null si nadie cubre esa zona. El consumer (CartDrawer,
+   * LocationPopup) muestra el mensaje "no hay gestor disponible".
+   */
+  async findByLocation(
+    municipality: string,
+    consejoPopular?: string,
+  ): Promise<IGestor | null> {
+    const gestores = await this.getActive();
+    const normalizedMuni = municipality.toLowerCase().trim();
+
+    if (consejoPopular) {
+      const normalizedConsejo = consejoPopular.toLowerCase().trim();
+      const match = gestores.find((g) =>
+        (g.consejos ?? []).some(
+          (c) =>
+            c.municipality.toLowerCase().trim() === normalizedMuni &&
+            c.consejo.toLowerCase().trim() === normalizedConsejo,
+        ),
+      );
+      if (match) return match;
+      // Si no hay gestor para ese consejo específico, NO hacemos fallback
+      // al municipio entero — el cliente debe ver "no hay gestor en esta
+      // zona, selecciona uno cercano".
+      return null;
+    }
+
+    // Sin consejo: lookup a nivel municipio
+    return (
+      gestores.find((g) =>
+        g.municipalities.some(
+          (m) => m.toLowerCase().trim() === normalizedMuni,
+        ),
+      ) || null
+    );
+  },
+
+  /**
+   * Para la UX de "no hay gestor en tu consejo, prueba con estos cercanos":
+   * devuelve hasta 3 pares (consejo, gestorName) del mismo municipio que SÍ
+   * tienen cobertura.
+   */
+  async getCoveredConsejosInMunicipality(
+    municipality: string,
+  ): Promise<Array<{ consejo: string; gestorName: string }>> {
+    const gestores = await this.getActive();
+    const normalizedMuni = municipality.toLowerCase().trim();
+    const result: Array<{ consejo: string; gestorName: string }> = [];
+    for (const g of gestores) {
+      for (const c of g.consejos ?? []) {
+        if (c.municipality.toLowerCase().trim() === normalizedMuni) {
+          result.push({ consejo: c.consejo, gestorName: g.name });
+          if (result.length >= 3) return result;
+        }
+      }
+    }
+    return result;
   },
 
   // Seed initial gestores

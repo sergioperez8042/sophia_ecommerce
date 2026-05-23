@@ -9,7 +9,6 @@ import Link from "next/link";
 import Breadcrumb from "@/components/ui/breadcrumb";
 import LocationPopup from "@/components/LocationPopup";
 import { GestorService } from "@/lib/firestore-services";
-import { findGestorNameForLocation } from "@/data/localities";
 import { IGestor } from "@/entities/all";
 
 const WHATSAPP_GENERAL = "34642633982";
@@ -30,9 +29,9 @@ export default function CartPage() {
     const [isSending, setIsSending] = useState(false);
     const [showLocationEditor, setShowLocationEditor] = useState(false);
 
-    // Find gestor when location changes. findGestorNameForLocation decide
-    // según el flag usesConsejos de la provincia (La Habana=3 niveles,
-    // Matanzas=2 niveles).
+    // Find gestor when location changes. Usa GestorService.findByLocation
+    // que busca dinámicamente en Firestore por (municipality, consejo) o
+    // solo municipality según la provincia.
     useEffect(() => {
         if (!location?.municipality || !location?.province) {
             setGestor(null);
@@ -41,17 +40,15 @@ export default function CartPage() {
         const findGestor = async () => {
             setGestorLoading(true);
             try {
-                const gestorName = findGestorNameForLocation(
-                    location.province,
+                const found = await GestorService.findByLocation(
                     location.municipality,
                     location.consejoPopular,
                 );
-                if (gestorName) {
-                    const found = await GestorService.findByName(gestorName);
+                if (found) {
                     setGestor(found);
                 } else {
-                    const found = await GestorService.findByMunicipality(location.municipality);
-                    setGestor(found);
+                    const fallback = await GestorService.findByMunicipality(location.municipality);
+                    setGestor(fallback);
                 }
             } catch {
                 setGestor(null);

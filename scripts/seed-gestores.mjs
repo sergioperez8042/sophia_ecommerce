@@ -103,6 +103,10 @@ async function writeDoc(collection, docId, obj, idToken) {
 //
 // Los municipios cubiertos se deducen de la asignación consejo→gestor en
 // localities.ts. Si en el futuro se reasigna un consejo, regenerar esta lista.
+// El campo `consejos` lista los consejos populares específicos que cubre
+// cada gestor dentro de sus municipios (solo para provincias con
+// usesConsejos=true en localities.ts). Para gestores en Matanzas, este
+// array queda vacío — la cobertura es a nivel municipio.
 const GESTORES = [
   {
     id: 'arturo',
@@ -110,6 +114,22 @@ const GESTORES = [
     whatsapp: '5352010900',
     province: 'La Habana',
     municipalities: ['La Habana del Este', 'Centro Habana', 'Diez de Octubre'],
+    consejos: [
+      { municipality: 'La Habana del Este', consejo: 'Camilo Cienfuegos' },
+      { municipality: 'La Habana del Este', consejo: 'Cojímar' },
+      { municipality: 'La Habana del Este', consejo: 'Gaiteras' },
+      { municipality: 'Centro Habana', consejo: 'San Leopoldo' },
+      { municipality: 'Centro Habana', consejo: 'Los Sitios' },
+      { municipality: 'Diez de Octubre', consejo: 'Luyanó' },
+      { municipality: 'Diez de Octubre', consejo: 'Jesús del Monte' },
+      { municipality: 'Diez de Octubre', consejo: 'Lawton' },
+      { municipality: 'Diez de Octubre', consejo: 'Vista Alegre' },
+      { municipality: 'Diez de Octubre', consejo: 'Tamarindo' },
+      { municipality: 'Diez de Octubre', consejo: 'Santos Suárez' },
+      { municipality: 'Diez de Octubre', consejo: 'Víbora' },
+      { municipality: 'Diez de Octubre', consejo: 'Acosta' },
+      { municipality: 'Diez de Octubre', consejo: 'Sevillano' },
+    ],
     active: true,
   },
   {
@@ -118,6 +138,7 @@ const GESTORES = [
     whatsapp: '5353969396',
     province: 'La Habana',
     municipalities: ['La Habana del Este'],
+    consejos: [{ municipality: 'La Habana del Este', consejo: 'Alamar' }],
     active: true,
   },
   {
@@ -126,6 +147,7 @@ const GESTORES = [
     whatsapp: '5353639460',
     province: 'La Habana',
     municipalities: ['La Habana del Este'],
+    consejos: [{ municipality: 'La Habana del Este', consejo: 'Guanabo' }],
     active: true,
   },
   {
@@ -134,6 +156,17 @@ const GESTORES = [
     whatsapp: '5358747563',
     province: 'La Habana',
     municipalities: ['Guanabacoa', 'Regla'],
+    consejos: [
+      { municipality: 'Guanabacoa', consejo: 'Villa I (Centro Histórico)' },
+      { municipality: 'Guanabacoa', consejo: 'Villa II' },
+      { municipality: 'Guanabacoa', consejo: 'Chibás - Jata' },
+      { municipality: 'Guanabacoa', consejo: "D'Beche - Nalón" },
+      { municipality: 'Guanabacoa', consejo: 'Minas - Barrera y Pedro Pi' },
+      { municipality: 'Guanabacoa', consejo: 'Peñalver - Bacuranao' },
+      { municipality: 'Regla', consejo: 'Guaicanamar' },
+      { municipality: 'Regla', consejo: 'Casablanca' },
+      { municipality: 'Regla', consejo: 'Loma - Modelo' },
+    ],
     active: true,
   },
   {
@@ -142,6 +175,16 @@ const GESTORES = [
     whatsapp: '5359710567',
     province: 'La Habana',
     municipalities: ['Plaza de la Revolución'],
+    consejos: [
+      { municipality: 'Plaza de la Revolución', consejo: 'Vedado' },
+      { municipality: 'Plaza de la Revolución', consejo: 'Vedado - Malecón' },
+      { municipality: 'Plaza de la Revolución', consejo: 'El Carmelo' },
+      { municipality: 'Plaza de la Revolución', consejo: 'Rampa' },
+      { municipality: 'Plaza de la Revolución', consejo: 'Príncipe' },
+      { municipality: 'Plaza de la Revolución', consejo: 'Plaza' },
+      { municipality: 'Plaza de la Revolución', consejo: 'Nuevo Vedado' },
+      { municipality: 'Plaza de la Revolución', consejo: 'Colón' },
+    ],
     active: true,
   },
   {
@@ -150,6 +193,12 @@ const GESTORES = [
     whatsapp: '5354223000',
     province: 'La Habana',
     municipalities: ['Centro Habana', 'La Habana Vieja'],
+    consejos: [
+      { municipality: 'Centro Habana', consejo: 'Cayo Hueso' },
+      { municipality: 'Centro Habana', consejo: 'Dragones' },
+      { municipality: 'Centro Habana', consejo: 'Pueblo Nuevo' },
+      { municipality: 'La Habana Vieja', consejo: 'Prado' },
+    ],
     active: true,
   },
   {
@@ -158,6 +207,7 @@ const GESTORES = [
     whatsapp: '5355739238',
     province: 'Matanzas',
     municipalities: ['Cárdenas', 'Limonar', 'Unión de Reyes'],
+    consejos: [],
     active: true,
   },
 ];
@@ -191,10 +241,12 @@ for (const g of GESTORES) {
     whatsapp: g.whatsapp,
     province: g.province,
     municipalities: g.municipalities,
+    consejos: g.consejos,
     active: g.active,
     createdAt: new Date().toISOString(),
   };
-  console.log(`• ${g.name.padEnd(10)} +${g.whatsapp}  →  ${g.municipalities.join(', ')}`);
+  const consejosCount = g.consejos?.length ?? 0;
+  console.log(`• ${g.name.padEnd(10)} +${g.whatsapp}  →  ${g.municipalities.join(', ')}${consejosCount > 0 ? ` (${consejosCount} consejos)` : ''}`);
 
   if (APPLY) {
     try {
