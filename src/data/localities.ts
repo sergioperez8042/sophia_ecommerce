@@ -46,6 +46,7 @@ const LA_HABANA: ProvinceData = {
         "Camilo Cienfuegos",
         "Cojímar",
         "Gaiteras",
+        "El Bahía",
         "Alamar",
         "Guanabo",
         "Campo Florido",

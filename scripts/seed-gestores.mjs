@@ -118,6 +118,7 @@ const GESTORES = [
       { municipality: 'La Habana del Este', consejo: 'Camilo Cienfuegos' },
       { municipality: 'La Habana del Este', consejo: 'Cojímar' },
       { municipality: 'La Habana del Este', consejo: 'Gaiteras' },
+      { municipality: 'La Habana del Este', consejo: 'El Bahía' },
       { municipality: 'Centro Habana', consejo: 'San Leopoldo' },
       { municipality: 'Centro Habana', consejo: 'Los Sitios' },
       { municipality: 'Diez de Octubre', consejo: 'Luyanó' },
