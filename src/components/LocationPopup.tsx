@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useMemo, useRef, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { m, AnimatePresence } from 'framer-motion';
-import { MapPin, ChevronDown, Search, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { MapPin, AlertCircle, CheckCircle2 } from 'lucide-react';
 import {
   getProvinces,
   getMunicipalities,
@@ -13,6 +13,7 @@ import {
 import { GestorService } from '@/lib/firestore-services';
 import { useLocation } from '@/store/LocationContext';
 import { useTheme } from '@/store/ThemeContext';
+import { InlineSearchSelect } from '@/components/ui/inline-search-select';
 
 interface LocationPopupProps {
   // Pasando `open` → modo controlado (cancelable con ESC / click fuera).
@@ -43,9 +44,6 @@ export default function LocationPopup({ open, onOpenChange }: LocationPopupProps
   const [showProvinceDropdown, setShowProvinceDropdown] = useState(false);
   const [showMunicipalityDropdown, setShowMunicipalityDropdown] = useState(false);
   const [showConsejoDropdown, setShowConsejoDropdown] = useState(false);
-  const provinceRef = useRef<HTMLDivElement>(null);
-  const municipalityRef = useRef<HTMLDivElement>(null);
-  const consejoRef = useRef<HTMLDivElement>(null);
 
   // Auto-abrir solo si no hay location COMPLETA (con consejo). Esto cubre
   // sesiones antiguas que tienen province+municipality guardado pero todavía
@@ -75,22 +73,7 @@ export default function LocationPopup({ open, onOpenChange }: LocationPopupProps
     }
   }, [isOpen, location]);
 
-  // Click outside cierra cualquier dropdown abierto
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (provinceRef.current && !provinceRef.current.contains(e.target as Node)) {
-        setShowProvinceDropdown(false);
-      }
-      if (municipalityRef.current && !municipalityRef.current.contains(e.target as Node)) {
-        setShowMunicipalityDropdown(false);
-      }
-      if (consejoRef.current && !consejoRef.current.contains(e.target as Node)) {
-        setShowConsejoDropdown(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  // Click-outside: cada InlineSearchSelect lo maneja internamente.
 
   // Lista de provincias con cobertura (solo La Habana por ahora)
   const allProvinces = useMemo(() => getProvinces(), []);
@@ -231,25 +214,14 @@ export default function LocationPopup({ open, onOpenChange }: LocationPopupProps
     }
   };
 
-  // Theme-aware colors
+  // Theme-aware colors (los selectores de provincia/municipio/consejo viven
+  // ahora en InlineSearchSelect; aquí quedan solo los colores del modal
+  // wrapper y los banners de status)
   const bg = isDark ? 'bg-[#1a1d19]' : 'bg-white';
   const border = isDark ? 'border-[#C4B590]/20' : 'border-[#505A4A]/15';
   const accent = isDark ? 'text-[#C4B590]' : 'text-[#505A4A]';
   const accentBg = isDark ? 'bg-[#C4B590]/10' : 'bg-[#505A4A]/10';
   const textSecondary = isDark ? 'text-[#d4cdc0]/80' : 'text-gray-500';
-  const labelColor = isDark ? 'text-[#C4B590]/60' : 'text-[#505A4A]/60';
-  const inputBg = isDark ? 'bg-white/5' : 'bg-gray-50';
-  const inputBorder = isDark ? 'border-[#C4B590]/20' : 'border-gray-200';
-  const inputText = isDark ? 'text-[#e8e0d0]' : 'text-gray-900';
-  const inputPlaceholder = isDark ? 'placeholder-[#C4B590]/30' : 'placeholder-gray-400';
-  const inputFocus = isDark ? 'focus:border-[#C4B590]/50' : 'focus:border-[#505A4A]/40';
-  const iconColor = isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/40';
-  const dropdownBg = isDark ? 'bg-[#22261f]' : 'bg-white';
-  const dropdownBorder = isDark ? 'border-[#C4B590]/20' : 'border-gray-200';
-  const optionHover = isDark ? 'hover:bg-[#C4B590]/10' : 'hover:bg-[#505A4A]/5';
-  const optionText = isDark ? 'text-[#d4cdc0]' : 'text-gray-700';
-  const optionActive = isDark ? 'text-[#C4B590] bg-[#C4B590]/5' : 'text-[#505A4A] bg-[#505A4A]/5';
-  const emptyText = isDark ? 'text-[#C4B590]/50' : 'text-gray-400';
   const btnBg = isDark ? 'bg-[#C4B590] hover:bg-[#b5a680] text-[#1a1d19]' : 'bg-[#505A4A] hover:bg-[#414A3C] text-white';
   // Colores del feedback de gestor (success verde, warning ámbar)
   const successBg = isDark ? 'bg-green-500/10' : 'bg-green-50';
@@ -306,159 +278,79 @@ export default function LocationPopup({ open, onOpenChange }: LocationPopupProps
                   </Dialog.Description>
 
                   <div className="space-y-4">
-                    {/* Province selector */}
-                    <div ref={provinceRef} className="relative">
-                      <label className={`text-xs ${labelColor} uppercase tracking-wider mb-1.5 block`}>
-                        Provincia
-                      </label>
-                      <div className="relative">
-                        <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${iconColor}`} />
-                        <input
-                          type="text"
-                          value={provinceSearch}
-                          onChange={(e) => {
-                            setProvinceSearch(e.target.value);
-                            setShowProvinceDropdown(true);
-                            if (selectedProvince && e.target.value !== selectedProvince) {
-                              setSelectedProvince('');
-                              setSelectedMunicipality('');
-                              setMunicipalitySearch('');
-                              setSelectedConsejo('');
-                              setConsejoSearch('');
-                            }
-                          }}
-                          onFocus={() => setShowProvinceDropdown(true)}
-                          placeholder="Buscar provincia..."
-                          className={`w-full pl-10 pr-10 py-3 ${inputBg} border ${inputBorder} rounded-xl ${inputText} ${inputPlaceholder} text-sm focus:outline-none ${inputFocus}`}
-                        />
-                        <ChevronDown className={`absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 ${iconColor}`} />
-                      </div>
-                      {showProvinceDropdown && (
-                        <div className={`absolute z-10 w-full mt-1 ${dropdownBg} border ${dropdownBorder} rounded-xl max-h-48 overflow-y-auto shadow-xl`}>
-                          {filteredProvinces.length === 0 ? (
-                            <div className={`px-4 py-3 text-sm ${emptyText}`}>
-                              No se encontraron provincias
-                            </div>
-                          ) : (
-                            filteredProvinces.map((p) => (
-                              <button
-                                key={p}
-                                onClick={() => handleSelectProvince(p)}
-                                className={`w-full text-left px-4 py-2.5 text-sm ${optionHover} transition-colors ${
-                                  selectedProvince === p ? optionActive : optionText
-                                }`}
-                              >
-                                {p}
-                              </button>
-                            ))
-                          )}
-                        </div>
-                      )}
-                    </div>
+                    {/* Province */}
+                    <InlineSearchSelect
+                      label="Provincia"
+                      searchTerm={provinceSearch}
+                      onSearchTermChange={(v) => {
+                        setProvinceSearch(v);
+                        // Si el usuario empieza a tipear algo distinto al
+                        // canónico ya elegido, limpiamos cascada
+                        if (selectedProvince && v !== selectedProvince) {
+                          setSelectedProvince('');
+                          setSelectedMunicipality('');
+                          setMunicipalitySearch('');
+                          setSelectedConsejo('');
+                          setConsejoSearch('');
+                        }
+                      }}
+                      selected={selectedProvince}
+                      options={filteredProvinces}
+                      onSelect={handleSelectProvince}
+                      isOpen={showProvinceDropdown}
+                      onOpenChange={setShowProvinceDropdown}
+                      placeholder="Buscar provincia..."
+                      emptyMessage="No se encontraron provincias"
+                      isDark={isDark}
+                      testId="province-select"
+                    />
 
-                    {/* Municipality selector */}
-                    <div ref={municipalityRef} className="relative">
-                      <label className={`text-xs ${labelColor} uppercase tracking-wider mb-1.5 block`}>
-                        Municipio
-                      </label>
-                      <div className="relative">
-                        <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${iconColor}`} />
-                        <input
-                          type="text"
-                          value={municipalitySearch}
-                          onChange={(e) => {
-                            setMunicipalitySearch(e.target.value);
-                            setShowMunicipalityDropdown(true);
-                            if (selectedMunicipality && e.target.value !== selectedMunicipality) {
-                              setSelectedMunicipality('');
-                              setSelectedConsejo('');
-                              setConsejoSearch('');
-                            }
-                          }}
-                          onFocus={() => {
-                            if (selectedProvince) setShowMunicipalityDropdown(true);
-                          }}
-                          placeholder={selectedProvince ? 'Buscar municipio...' : 'Selecciona primero una provincia'}
-                          disabled={!selectedProvince}
-                          className={`w-full pl-10 pr-10 py-3 ${inputBg} border ${inputBorder} rounded-xl ${inputText} ${inputPlaceholder} text-sm focus:outline-none ${inputFocus} disabled:opacity-40 disabled:cursor-not-allowed`}
-                        />
-                        <ChevronDown className={`absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 ${iconColor}`} />
-                      </div>
-                      {showMunicipalityDropdown && selectedProvince && (
-                        <div className={`absolute z-10 w-full mt-1 ${dropdownBg} border ${dropdownBorder} rounded-xl max-h-48 overflow-y-auto shadow-xl`}>
-                          {filteredMunicipalities.length === 0 ? (
-                            <div className={`px-4 py-3 text-sm ${emptyText}`}>
-                              No se encontraron municipios
-                            </div>
-                          ) : (
-                            filteredMunicipalities.map((m) => (
-                              <button
-                                key={m}
-                                onClick={() => handleSelectMunicipality(m)}
-                                className={`w-full text-left px-4 py-2.5 text-sm ${optionHover} transition-colors ${
-                                  selectedMunicipality === m ? optionActive : optionText
-                                }`}
-                              >
-                                {m}
-                              </button>
-                            ))
-                          )}
-                        </div>
-                      )}
-                    </div>
+                    {/* Municipality */}
+                    <InlineSearchSelect
+                      label="Municipio"
+                      searchTerm={municipalitySearch}
+                      onSearchTermChange={(v) => {
+                        setMunicipalitySearch(v);
+                        if (selectedMunicipality && v !== selectedMunicipality) {
+                          setSelectedMunicipality('');
+                          setSelectedConsejo('');
+                          setConsejoSearch('');
+                        }
+                      }}
+                      selected={selectedMunicipality}
+                      options={filteredMunicipalities}
+                      onSelect={handleSelectMunicipality}
+                      isOpen={showMunicipalityDropdown}
+                      onOpenChange={setShowMunicipalityDropdown}
+                      placeholder={selectedProvince ? 'Buscar municipio...' : 'Selecciona primero una provincia'}
+                      emptyMessage="No se encontraron municipios"
+                      disabled={!selectedProvince}
+                      isDark={isDark}
+                      testId="municipality-select"
+                    />
 
-                    {/* Consejo Popular selector — el 3er nivel.
-                        Solo se renderiza si la provincia seleccionada lo usa
-                        (por ahora, solo La Habana). El resto de provincias
-                        cobran cobertura a nivel municipio. */}
+                    {/* Consejo Popular — solo si la provincia lo usa (La Habana) */}
                     {showConsejoStep && (
-                    <div ref={consejoRef} className="relative">
-                      <label className={`text-xs ${labelColor} uppercase tracking-wider mb-1.5 block`}>
-                        Consejo Popular / Localidad
-                      </label>
-                      <div className="relative">
-                        <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${iconColor}`} />
-                        <input
-                          type="text"
-                          value={consejoSearch}
-                          onChange={(e) => {
-                            setConsejoSearch(e.target.value);
-                            setShowConsejoDropdown(true);
-                            if (selectedConsejo && e.target.value !== selectedConsejo) {
-                              setSelectedConsejo('');
-                            }
-                          }}
-                          onFocus={() => {
-                            if (selectedMunicipality) setShowConsejoDropdown(true);
-                          }}
-                          placeholder={selectedMunicipality ? 'Buscar consejo popular...' : 'Selecciona primero un municipio'}
-                          disabled={!selectedMunicipality}
-                          className={`w-full pl-10 pr-10 py-3 ${inputBg} border ${inputBorder} rounded-xl ${inputText} ${inputPlaceholder} text-sm focus:outline-none ${inputFocus} disabled:opacity-40 disabled:cursor-not-allowed`}
-                        />
-                        <ChevronDown className={`absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 ${iconColor}`} />
-                      </div>
-                      {showConsejoDropdown && selectedMunicipality && (
-                        <div className={`absolute z-10 w-full mt-1 ${dropdownBg} border ${dropdownBorder} rounded-xl max-h-48 overflow-y-auto shadow-xl`}>
-                          {filteredConsejos.length === 0 ? (
-                            <div className={`px-4 py-3 text-sm ${emptyText}`}>
-                              No se encontraron consejos populares
-                            </div>
-                          ) : (
-                            filteredConsejos.map((c) => (
-                              <button
-                                key={c}
-                                onClick={() => handleSelectConsejo(c)}
-                                className={`w-full text-left px-4 py-2.5 text-sm ${optionHover} transition-colors ${
-                                  selectedConsejo === c ? optionActive : optionText
-                                }`}
-                              >
-                                {c}
-                              </button>
-                            ))
-                          )}
-                        </div>
-                      )}
-                    </div>
+                      <InlineSearchSelect
+                        label="Consejo Popular / Localidad"
+                        searchTerm={consejoSearch}
+                        onSearchTermChange={(v) => {
+                          setConsejoSearch(v);
+                          if (selectedConsejo && v !== selectedConsejo) {
+                            setSelectedConsejo('');
+                          }
+                        }}
+                        selected={selectedConsejo}
+                        options={filteredConsejos}
+                        onSelect={handleSelectConsejo}
+                        isOpen={showConsejoDropdown}
+                        onOpenChange={setShowConsejoDropdown}
+                        placeholder={selectedMunicipality ? 'Buscar consejo popular...' : 'Selecciona primero un municipio'}
+                        emptyMessage="No se encontraron consejos populares"
+                        disabled={!selectedMunicipality}
+                        isDark={isDark}
+                        testId="consejo-select"
+                      />
                     )}
                   </div>
 
