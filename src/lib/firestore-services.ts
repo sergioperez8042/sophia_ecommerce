@@ -768,6 +768,16 @@ export const GestorService = {
     ) || null;
   },
 
+  // Find gestor by exact name (case-insensitive). Usado por la lógica de
+  // consejos populares: el dataset estático devuelve el NOMBRE del gestor,
+  // y este helper resuelve el IGestor completo (con whatsapp, foto, etc).
+  // Devuelve null si no se encuentra ningún gestor activo con ese nombre.
+  async findByName(name: string): Promise<IGestor | null> {
+    const gestores = await this.getActive();
+    const normalized = name.toLowerCase().trim();
+    return gestores.find((g) => g.name.toLowerCase().trim() === normalized) || null;
+  },
+
   // Seed initial gestores
   async seed(gestores: Omit<IGestor, 'id'>[]): Promise<number> {
     const firestore = getDb();

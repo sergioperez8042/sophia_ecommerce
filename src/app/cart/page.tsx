@@ -9,6 +9,7 @@ import Link from "next/link";
 import Breadcrumb from "@/components/ui/breadcrumb";
 import LocationPopup from "@/components/LocationPopup";
 import { GestorService } from "@/lib/firestore-services";
+import { findGestorNameForLocation } from "@/data/localities";
 import { IGestor } from "@/entities/all";
 
 const WHATSAPP_GENERAL = "34642633982";
@@ -29,17 +30,29 @@ export default function CartPage() {
     const [isSending, setIsSending] = useState(false);
     const [showLocationEditor, setShowLocationEditor] = useState(false);
 
-    // Find gestor when location changes
+    // Find gestor when location changes. findGestorNameForLocation decide
+    // según el flag usesConsejos de la provincia (La Habana=3 niveles,
+    // Matanzas=2 niveles).
     useEffect(() => {
-        if (!location?.municipality) {
+        if (!location?.municipality || !location?.province) {
             setGestor(null);
             return;
         }
         const findGestor = async () => {
             setGestorLoading(true);
             try {
-                const found = await GestorService.findByMunicipality(location.municipality);
-                setGestor(found);
+                const gestorName = findGestorNameForLocation(
+                    location.province,
+                    location.municipality,
+                    location.consejoPopular,
+                );
+                if (gestorName) {
+                    const found = await GestorService.findByName(gestorName);
+                    setGestor(found);
+                } else {
+                    const found = await GestorService.findByMunicipality(location.municipality);
+                    setGestor(found);
+                }
             } catch {
                 setGestor(null);
             } finally {
@@ -47,7 +60,7 @@ export default function CartPage() {
             }
         };
         findGestor();
-    }, [location?.municipality]);
+    }, [location?.province, location?.municipality, location?.consejoPopular]);
 
     const formatPrice = (price: number) => `$${price.toFixed(2)}`;
 

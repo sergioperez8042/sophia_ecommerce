@@ -2,9 +2,16 @@
 
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from 'react';
 
+/**
+ * Ubicación granular del cliente. El consejoPopular es opcional por
+ * backward compatibility — sesiones antiguas guardadas solo tenían province
+ * y municipality. Cuando el usuario re-abra la app después del rollout de
+ * consejos, el popup le pedirá el consejo si no lo tiene guardado.
+ */
 interface LocationData {
   province: string;
   municipality: string;
+  consejoPopular?: string;
 }
 
 interface LocationContextType {
@@ -12,6 +19,8 @@ interface LocationContextType {
   setLocation: (location: LocationData) => void;
   clearLocation: () => void;
   hasLocation: boolean;
+  /** True si la location guardada tiene los 3 niveles completos (no solo province+municipio) */
+  hasFullLocation: boolean;
 }
 
 const STORAGE_KEY = 'sophia_location';
@@ -61,6 +70,10 @@ export function LocationProvider({ children }: { children: ReactNode }) {
       setLocation,
       clearLocation,
       hasLocation: isLoaded && location !== null,
+      hasFullLocation:
+        isLoaded &&
+        location !== null &&
+        !!location.consejoPopular,
     }),
     [location, setLocation, clearLocation, isLoaded]
   );

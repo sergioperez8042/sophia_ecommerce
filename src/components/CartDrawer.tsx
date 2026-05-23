@@ -7,6 +7,7 @@ import { useCart } from '@/store/CartContext';
 import { useLocation } from '@/store/LocationContext';
 import { useTheme } from '@/store/ThemeContext';
 import { GestorService, OrderService } from '@/lib/firestore-services';
+import { findGestorNameForLocation } from '@/data/localities';
 import { IGestor, IOrderItem } from '@/entities/all';
 import ProductImage from '@/components/ui/product-image';
 import LocationPopup from '@/components/LocationPopup';
@@ -34,9 +35,14 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const [customerPhone, setCustomerPhone] = useState('');
   const [orderNotes, setOrderNotes] = useState('');
 
-  // Find gestor when location changes
+  // Find gestor when location changes.
+  //
+  // `findGestorNameForLocation` decide internamente si necesita el consejo
+  // (La Habana usa 3 niveles) o resuelve a nivel municipio (Matanzas y
+  // futuras). Si devuelve null, hacemos fallback a `findByMunicipality`
+  // para preservar pedidos de sesiones antiguas sin consejo guardado.
   useEffect(() => {
-    if (!location?.municipality) {
+    if (!location?.municipality || !location?.province) {
       setGestor(null);
       return;
     }
@@ -44,8 +50,19 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     const findGestor = async () => {
       setGestorLoading(true);
       try {
-        const found = await GestorService.findByMunicipality(location.municipality);
-        setGestor(found);
+        const gestorName = findGestorNameForLocation(
+          location.province,
+          location.municipality,
+          location.consejoPopular,
+        );
+        if (gestorName) {
+          const found = await GestorService.findByName(gestorName);
+          setGestor(found);
+        } else {
+          // Fallback para casos edge (sesión antigua, o data incompleta)
+          const found = await GestorService.findByMunicipality(location.municipality);
+          setGestor(found);
+        }
       } catch {
         setGestor(null);
       } finally {
@@ -54,7 +71,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     };
 
     findGestor();
-  }, [location?.municipality]);
+  }, [location?.province, location?.municipality, location?.consejoPopular]);
 
   const formatPrice = (price: number) => `$${price.toFixed(2)}`;
 
