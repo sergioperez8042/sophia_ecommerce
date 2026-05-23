@@ -25,6 +25,30 @@ jest.mock('@/store', () => ({
   useCategories: () => ({
     categories: mockCategories,
   }),
+  useAuth: () => ({
+    user: null,
+    isAuthenticated: false,
+    isAdmin: false,
+    isGestor: false,
+    login: jest.fn(),
+    logout: jest.fn(),
+  }),
+}));
+
+// Evita que AuthContext.tsx importe firebase-auth (necesita fetch en jsdom)
+jest.mock('@/store/AuthContext', () => ({
+  useAuth: () => ({ user: null, isAuthenticated: false, isAdmin: false }),
+  AuthProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
+
+// firestore-services importa firebase/auth — mockear el servicio que esta
+// página usa directamente
+jest.mock('@/lib/firestore-services', () => ({
+  ReviewService: {
+    getByProductId: jest.fn().mockResolvedValue([]),
+    create: jest.fn(),
+    delete: jest.fn(),
+  },
 }));
 
 jest.mock('framer-motion', () => {

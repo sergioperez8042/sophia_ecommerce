@@ -33,7 +33,9 @@ describe('BrandLogo', () => {
   describe('Renderizado basico', () => {
     it('se renderiza sin errores', () => {
       render(<BrandLogo />);
-      expect(screen.getByAltText('Sophia Cosm\u00e9tica Bot\u00e1nica')).toBeInTheDocument();
+      // El alt actual es "Sophia" \u2014 el subt\u00edtulo "Cosm\u00e9tica Bot\u00e1nica" se
+      // elimin\u00f3 del componente en una refactorizaci\u00f3n de branding.
+      expect(screen.getByAltText('Sophia')).toBeInTheDocument();
     });
 
     it('muestra el nombre de la marca "Sophia"', () => {
@@ -41,14 +43,9 @@ describe('BrandLogo', () => {
       expect(screen.getByText('Sophia')).toBeInTheDocument();
     });
 
-    it('muestra el subtitulo "Cosmetica Botanica"', () => {
-      render(<BrandLogo />);
-      expect(screen.getByText('Cosm\u00e9tica Bot\u00e1nica')).toBeInTheDocument();
-    });
-
     it('muestra la imagen del logo', () => {
       render(<BrandLogo />);
-      const img = screen.getByAltText('Sophia Cosm\u00e9tica Bot\u00e1nica');
+      const img = screen.getByAltText('Sophia');
       expect(img).toHaveAttribute('src', '/images/sophia_logo_nuevo.jpeg');
     });
   });
@@ -57,13 +54,11 @@ describe('BrandLogo', () => {
     it('muestra el texto por defecto', () => {
       render(<BrandLogo />);
       expect(screen.getByText('Sophia')).toBeInTheDocument();
-      expect(screen.getByText('Cosm\u00e9tica Bot\u00e1nica')).toBeInTheDocument();
     });
 
     it('oculta el texto cuando showText es false', () => {
       render(<BrandLogo showText={false} />);
       expect(screen.queryByText('Sophia')).not.toBeInTheDocument();
-      expect(screen.queryByText('Cosm\u00e9tica Bot\u00e1nica')).not.toBeInTheDocument();
     });
   });
 

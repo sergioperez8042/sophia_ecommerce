@@ -117,7 +117,7 @@ describe('POST /api/send-order', () => {
 
       const segundoEmail = mockSendMail.mock.calls[1][0];
       expect(segundoEmail.to).toBe('maria@example.com');
-      expect(segundoEmail.subject).toContain('Confirmacion de Pedido');
+      expect(segundoEmail.subject).toContain('Confirmación de Pedido');
       expect(segundoEmail.subject).toContain('ORD-2024-001');
     });
 

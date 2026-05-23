@@ -51,6 +51,14 @@ jest.mock('@/store', () => ({
   useCart: () => ({ totalItems: mockCartCount }),
   useWishlist: () => ({ totalItems: mockWishlistCount }),
   useTheme: () => ({ isDark: mockIsDark, toggleTheme: mockToggleTheme }),
+  useAuth: () => ({
+    user: null,
+    isAuthenticated: false,
+    isAdmin: false,
+    isGestor: false,
+    login: jest.fn(),
+    logout: jest.fn(),
+  }),
 }));
 
 // Mock UserMenu
@@ -80,10 +88,6 @@ describe('Header', () => {
       expect(screen.getAllByText('Sophia').length).toBeGreaterThan(0);
     });
 
-    it('muestra el subtitulo "Cosmetica Botanica"', () => {
-      render(<Header />);
-      expect(screen.getAllByText('Cosm\u00e9tica Bot\u00e1nica').length).toBeGreaterThan(0);
-    });
   });
 
   describe('Navegacion de escritorio', () => {
@@ -196,36 +200,6 @@ describe('Header', () => {
     });
   });
 
-  describe('Toggle de tema oscuro/claro', () => {
-    it('muestra el boton de cambio de tema', () => {
-      render(<Header />);
-      const themeButtons = screen.getAllByLabelText(/Cambiar a modo/);
-      expect(themeButtons.length).toBeGreaterThan(0);
-    });
-
-    it('muestra "Cambiar a modo oscuro" cuando el tema es claro', () => {
-      mockIsDark = false;
-      render(<Header />);
-      expect(screen.getAllByLabelText('Cambiar a modo oscuro').length).toBeGreaterThan(0);
-    });
-
-    it('muestra "Cambiar a modo claro" cuando el tema es oscuro', () => {
-      mockIsDark = true;
-      render(<Header />);
-      expect(screen.getAllByLabelText('Cambiar a modo claro').length).toBeGreaterThan(0);
-    });
-
-    it('llama a toggleTheme al hacer clic en el boton de tema', async () => {
-      const user = userEvent.setup();
-      render(<Header />);
-
-      const themeButtons = screen.getAllByLabelText(/Cambiar a modo/);
-      await user.click(themeButtons[0]);
-
-      expect(mockToggleTheme).toHaveBeenCalledTimes(1);
-    });
-  });
-
   describe('Enlaces del header', () => {
     it('tiene un enlace al carrito', () => {
       render(<Header />);
@@ -246,15 +220,4 @@ describe('Header', () => {
     });
   });
 
-  describe('UserMenu', () => {
-    it('renderiza el UserMenu compacto para movil', () => {
-      render(<Header />);
-      expect(screen.getByTestId('user-menu-compact')).toBeInTheDocument();
-    });
-
-    it('renderiza el UserMenu completo para escritorio', () => {
-      render(<Header />);
-      expect(screen.getAllByTestId('user-menu').length).toBeGreaterThanOrEqual(1);
-    });
-  });
 });

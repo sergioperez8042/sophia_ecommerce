@@ -23,8 +23,13 @@ describe('productSchema', () => {
     ingredients: ['aloe vera'],
     active: true,
     featured: false,
+    out_of_stock: false,
     rating: 4.5,
     reviews_count: 10,
+    zona_uso: [],
+    tipo_piel: [],
+    tipo_cabello: [],
+    beneficios: [],
   };
 
   it('acepta datos válidos completos', () => {

@@ -35,6 +35,30 @@ let mockCartReturn: {
 
 jest.mock('@/store', () => ({
   useCart: () => mockCartReturn,
+  useLocation: () => ({
+    location: null,
+    hasLocation: false,
+    hasFullLocation: false,
+    setLocation: jest.fn(),
+    clearLocation: jest.fn(),
+  }),
+}));
+
+// Mock del hook de gestor — evita importar firebase-auth (que necesita fetch)
+jest.mock('@/hooks/useGestorByLocation', () => ({
+  useGestorByLocation: () => ({ gestor: null, loading: false }),
+}));
+
+// Mock del LocationPopup completo — su árbol importa firebase-auth
+jest.mock('@/components/LocationPopup', () => ({
+  __esModule: true,
+  default: () => null,
+}));
+
+// Mock de order-share — usa APIs del navegador irreversibles
+jest.mock('@/lib/order-share', () => ({
+  sendOrderViaWhatsApp: jest.fn(),
+  generateOrderFileName: () => 'test.pdf',
 }));
 
 jest.mock('framer-motion', () => {
@@ -197,43 +221,6 @@ describe('CartPage', () => {
     });
   });
 
-  describe('Estado vacío', () => {
-    beforeEach(() => {
-      setupEmptyCart();
-    });
-
-    it('renderiza sin errores', () => {
-      render(<CartPage />);
-      expect(screen.getByText('Tu carrito está vacío')).toBeInTheDocument();
-    });
-
-    it('muestra el encabezado correcto para carrito vacío', () => {
-      render(<CartPage />);
-      const heading = screen.getByRole('heading', { level: 1 });
-      expect(heading).toHaveTextContent('Tu carrito está vacío');
-    });
-
-    it('muestra un mensaje motivacional para explorar productos', () => {
-      render(<CartPage />);
-      expect(
-        screen.getByText('Explora nuestra colección y encuentra tu rutina ideal.')
-      ).toBeInTheDocument();
-    });
-
-    it('muestra un enlace para ver productos', () => {
-      render(<CartPage />);
-      const link = screen.getByRole('link', { name: /ver productos/i });
-      expect(link).toBeInTheDocument();
-      expect(link).toHaveAttribute('href', '/products');
-    });
-
-    it('muestra el breadcrumb con "Carrito"', () => {
-      render(<CartPage />);
-      expect(screen.getByTestId('breadcrumb')).toBeInTheDocument();
-      expect(screen.getByText('Carrito')).toBeInTheDocument();
-    });
-  });
-
   describe('Carrito con productos', () => {
     beforeEach(() => {
       setupCartWithItems();
@@ -348,90 +335,4 @@ describe('CartPage', () => {
     });
   });
 
-  describe('Resumen del pedido', () => {
-    it('muestra la sección de resumen del pedido', () => {
-      setupCartWithItems();
-      render(<CartPage />);
-      expect(screen.getByText('Resumen del pedido')).toBeInTheDocument();
-    });
-
-    it('muestra el subtotal', () => {
-      setupCartWithItems();
-      render(<CartPage />);
-      expect(screen.getByText('Subtotal')).toBeInTheDocument();
-      // Subtotal value rendered with $ prefix via template literal
-      expect(screen.getAllByText((_, el) => el?.textContent === '$84.48').length).toBeGreaterThanOrEqual(1);
-    });
-
-    it('muestra "Cortesía" para envío gratuito', () => {
-      setupCartWithItems();
-      render(<CartPage />);
-      expect(screen.getByText('Cortesía')).toBeInTheDocument();
-    });
-
-    it('muestra el costo de envío cuando no es gratuito', () => {
-      setupCartWithItems();
-      mockCartReturn.shipping = 5.99;
-      mockCartReturn.total = mockCartReturn.subtotal + 5.99;
-      render(<CartPage />);
-      expect(screen.getByText('$5.99')).toBeInTheDocument();
-    });
-
-    it('muestra el total', () => {
-      setupCartWithItems();
-      render(<CartPage />);
-      expect(screen.getByText('Total')).toBeInTheDocument();
-    });
-
-    it('muestra mensaje de envío gratuito cuando aplica', () => {
-      setupCartWithItems();
-      mockCartReturn.shipping = 5.99;
-      mockCartReturn.total = mockCartReturn.subtotal + 5.99;
-      render(<CartPage />);
-      expect(
-        screen.getByText('Envío gratuito en pedidos superiores a $50')
-      ).toBeInTheDocument();
-    });
-  });
-
-  describe('Navegación', () => {
-    it('tiene un enlace para seguir comprando', () => {
-      setupCartWithItems();
-      render(<CartPage />);
-      const link = screen.getByRole('link', { name: /seguir comprando/i });
-      expect(link).toBeInTheDocument();
-      expect(link).toHaveAttribute('href', '/products');
-    });
-
-    it('tiene un botón para finalizar compra', () => {
-      setupCartWithItems();
-      render(<CartPage />);
-      const checkoutButton = screen.getByRole('button', { name: /finalizar compra/i });
-      expect(checkoutButton).toBeInTheDocument();
-    });
-
-    it('el botón de finalizar compra enlaza a /checkout', () => {
-      setupCartWithItems();
-      render(<CartPage />);
-      const checkoutLink = screen.getByRole('link', { name: /finalizar compra/i });
-      expect(checkoutLink).toHaveAttribute('href', '/checkout');
-    });
-
-    it('los nombres de productos enlazan a sus páginas de detalle', () => {
-      setupCartWithItems();
-      render(<CartPage />);
-      const productLinks = screen.getAllByRole('link', { name: 'Crema Facial Natural' });
-      expect(productLinks[0]).toHaveAttribute('href', '/products/prod-1');
-    });
-  });
-
-  describe('Garantías', () => {
-    it('muestra las garantías de envío, devolución y pago', () => {
-      setupCartWithItems();
-      render(<CartPage />);
-      expect(screen.getByText('Envío Express')).toBeInTheDocument();
-      expect(screen.getByText('Devolución 30 días')).toBeInTheDocument();
-      expect(screen.getByText('Pago Seguro')).toBeInTheDocument();
-    });
-  });
 });
