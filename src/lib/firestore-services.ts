@@ -20,6 +20,7 @@ import { initializeApp, getApps, deleteApp } from 'firebase/app';
 import { db, auth } from './firebase';
 import { IProduct, ICategory, IGestor, IOrder, IOrderItem, OrderStatus, IReview } from '@/entities/all';
 import { User, UserRole } from '@/store/AuthContext';
+import { normalizeForMatch } from '@/data/localities';
 
 // Collection names
 const PRODUCTS_COLLECTION = 'products';
@@ -760,11 +761,13 @@ export const GestorService = {
   },
 
   // Find gestor by municipality - returns the first active gestor covering that municipality
+  // Comparación normalizada (NFD + sin diacríticos + lowercase) para tolerar
+  // diferencias de acentos entre fuentes de datos (CUBA_PROVINCES vs Firestore).
   async findByMunicipality(municipality: string): Promise<IGestor | null> {
     const gestores = await this.getActive();
-    const normalizedMuni = municipality.toLowerCase().trim();
+    const muniN = normalizeForMatch(municipality);
     return gestores.find((g) =>
-      g.municipalities.some((m) => m.toLowerCase().trim() === normalizedMuni)
+      g.municipalities.some((m) => normalizeForMatch(m) === muniN)
     ) || null;
   },
 
@@ -793,15 +796,15 @@ export const GestorService = {
     consejoPopular?: string,
   ): Promise<IGestor | null> {
     const gestores = await this.getActive();
-    const normalizedMuni = municipality.toLowerCase().trim();
+    const muniN = normalizeForMatch(municipality);
 
     if (consejoPopular) {
-      const normalizedConsejo = consejoPopular.toLowerCase().trim();
+      const conN = normalizeForMatch(consejoPopular);
       const match = gestores.find((g) =>
         (g.consejos ?? []).some(
           (c) =>
-            c.municipality.toLowerCase().trim() === normalizedMuni &&
-            c.consejo.toLowerCase().trim() === normalizedConsejo,
+            normalizeForMatch(c.municipality) === muniN &&
+            normalizeForMatch(c.consejo) === conN,
         ),
       );
       if (match) return match;
@@ -814,9 +817,7 @@ export const GestorService = {
     // Sin consejo: lookup a nivel municipio
     return (
       gestores.find((g) =>
-        g.municipalities.some(
-          (m) => m.toLowerCase().trim() === normalizedMuni,
-        ),
+        g.municipalities.some((m) => normalizeForMatch(m) === muniN),
       ) || null
     );
   },
@@ -830,11 +831,11 @@ export const GestorService = {
     municipality: string,
   ): Promise<Array<{ consejo: string; gestorName: string }>> {
     const gestores = await this.getActive();
-    const normalizedMuni = municipality.toLowerCase().trim();
+    const muniN = normalizeForMatch(municipality);
     const result: Array<{ consejo: string; gestorName: string }> = [];
     for (const g of gestores) {
       for (const c of g.consejos ?? []) {
-        if (c.municipality.toLowerCase().trim() === normalizedMuni) {
+        if (normalizeForMatch(c.municipality) === muniN) {
           result.push({ consejo: c.consejo, gestorName: g.name });
           if (result.length >= 3) return result;
         }

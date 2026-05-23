@@ -40,6 +40,10 @@ export const CUBA_PROVINCES: Province[] = [
   },
   {
     name: "La Habana",
+    // Nombres alineados con PROVINCES_DATA (localities.ts) y con los
+    // datos seedeados en Firestore por seed-gestores.mjs. Cualquier divergencia
+    // aquí rompe el admin (no detecta checkboxes ya marcados en gestores
+    // existentes) y el matching cliente↔gestor.
     municipalities: [
       "Arroyo Naranjo",
       "Boyeros",
@@ -48,14 +52,14 @@ export const CUBA_PROVINCES: Province[] = [
       "Cotorro",
       "Diez de Octubre",
       "Guanabacoa",
-      "Habana del Este",
-      "Habana Vieja",
+      "La Habana del Este",
+      "La Habana Vieja",
       "La Lisa",
       "Marianao",
       "Playa",
-      "Plaza de la Revolucion",
+      "Plaza de la Revolución",
       "Regla",
-      "San Miguel del Padron",
+      "San Miguel del Padrón",
     ],
   },
   {
@@ -76,20 +80,21 @@ export const CUBA_PROVINCES: Province[] = [
   },
   {
     name: "Matanzas",
+    // Nombres alineados con PROVINCES_DATA (localities.ts).
     municipalities: [
       "Calimete",
-      "Cardenas",
-      "Cienaga de Zapata",
-      "Colon",
-      "Jaguey Grande",
+      "Cárdenas",
+      "Ciénaga de Zapata",
+      "Colón",
+      "Jagüey Grande",
       "Jovellanos",
       "Limonar",
       "Los Arabos",
-      "Marti",
+      "Martí",
       "Matanzas",
       "Pedro Betancourt",
       "Perico",
-      "Union de Reyes",
+      "Unión de Reyes",
     ],
   },
   {

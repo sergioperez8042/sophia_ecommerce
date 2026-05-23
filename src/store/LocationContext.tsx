@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from 'react';
+import { requiresConsejoPopular } from '@/data/localities';
 
 /**
  * Ubicación granular del cliente. El consejoPopular es opcional por
@@ -70,10 +71,14 @@ export function LocationProvider({ children }: { children: ReactNode }) {
       setLocation,
       clearLocation,
       hasLocation: isLoaded && location !== null,
+      // "Completa" significa que el flujo de selección está terminado para
+      // esa provincia — no que TODOS los campos estén poblados. Matanzas
+      // tiene usesConsejos:false, así que provincia+municipio ya es completo;
+      // exigir consejoPopular reabriría el popup en cada visita.
       hasFullLocation:
         isLoaded &&
         location !== null &&
-        !!location.consejoPopular,
+        (!requiresConsejoPopular(location.province) || !!location.consejoPopular),
     }),
     [location, setLocation, clearLocation, isLoaded]
   );

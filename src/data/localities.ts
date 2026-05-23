@@ -249,16 +249,39 @@ export const PROVINCES_DATA: ProvinceData[] = [LA_HABANA, MATANZAS];
 // HELPERS DE LOOKUP — pure functions, sin IO
 // =============================================================================
 
+/**
+ * Normaliza un string para hacer comparaciones tolerantes a acentos y
+ * mayúsculas. Es la pieza que evita que "San Miguel del Padron" (escrito sin
+ * tilde en `cuba-locations.ts`) deje de matchear contra "San Miguel del
+ * Padrón" (con tilde, escrito en `PROVINCES_DATA` aquí o en Firestore).
+ *
+ * IMPORTANTE: solo se usa en COMPARACIONES. Los strings guardados (en
+ * Firestore, en este archivo, en localStorage) NO se modifican — el usuario
+ * sigue viendo "Padrón" en la UI. Esto es symmetric matching, no rewriting.
+ *
+ * Idempotente: aplicar dos veces da el mismo resultado.
+ */
+export const normalizeForMatch = (s: string): string =>
+  s
+    .normalize("NFD")
+    // \p{Diacritic} = cualquier combinación diacrítica unicode
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase()
+    .trim();
+
 export const getProvinces = (): string[] =>
   PROVINCES_DATA.map((p) => p.province);
 
 export const requiresConsejoPopular = (province: string): boolean => {
-  const p = PROVINCES_DATA.find((x) => x.province === province);
+  // Province es un literal corto, normalizamos por simetría con resto del API
+  const target = normalizeForMatch(province);
+  const p = PROVINCES_DATA.find((x) => normalizeForMatch(x.province) === target);
   return p?.usesConsejos ?? false;
 };
 
 export const getMunicipalities = (province: string): string[] => {
-  const p = PROVINCES_DATA.find((x) => x.province === province);
+  const target = normalizeForMatch(province);
+  const p = PROVINCES_DATA.find((x) => normalizeForMatch(x.province) === target);
   if (!p) return [];
   return p.municipalities
     .map((m) => m.municipality)
@@ -279,6 +302,10 @@ const findMunicipality = (
   province: string,
   municipality: string,
 ): MunicipalityData | undefined => {
-  const p = PROVINCES_DATA.find((x) => x.province === province);
-  return p?.municipalities.find((m) => m.municipality === municipality);
+  const provN = normalizeForMatch(province);
+  const muniN = normalizeForMatch(municipality);
+  const p = PROVINCES_DATA.find((x) => normalizeForMatch(x.province) === provN);
+  return p?.municipalities.find(
+    (m) => normalizeForMatch(m.municipality) === muniN,
+  );
 };
