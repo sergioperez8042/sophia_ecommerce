@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useCart, useLocation } from "@/store";
 import { Minus, Plus, ShoppingBag, ArrowLeft, X, MapPin, MessageCircle, Loader2, FileText } from "lucide-react";
 import ProductImage from "@/components/ui/product-image";
@@ -8,9 +8,9 @@ import { m, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Breadcrumb from "@/components/ui/breadcrumb";
 import LocationPopup from "@/components/LocationPopup";
-import { GestorService } from "@/lib/firestore-services";
 import { buildOrderMessage } from "@/lib/whatsapp-message";
-import { IGestor } from "@/entities/all";
+import { sendOrderViaWhatsApp, generateOrderFileName } from "@/lib/order-share";
+import { useGestorByLocation } from "@/hooks/useGestorByLocation";
 
 const WHATSAPP_GENERAL = "34642633982";
 
@@ -25,42 +25,12 @@ export default function CartPage() {
         isLoaded
     } = useCart();
     const { location } = useLocation();
-    const [gestor, setGestor] = useState<IGestor | null>(null);
-    const [gestorLoading, setGestorLoading] = useState(false);
+    // Resolución asíncrona del gestor (mismo hook que CartDrawer para
+    // garantizar que /cart y el drawer se comportan idénticos)
+    const { gestor, loading: gestorLoading } = useGestorByLocation(location);
+
     const [isSending, setIsSending] = useState(false);
     const [showLocationEditor, setShowLocationEditor] = useState(false);
-
-    // Find gestor when location changes. findByLocation enforce el contrato
-    // (La Habana requiere consejo, no fallback a municipio cuando el consejo
-    // no está cubierto). Si devuelve null → UI muestra banner "no hay gestor".
-    useEffect(() => {
-        if (!location?.municipality || !location?.province) {
-            setGestor(null);
-            return;
-        }
-        let cancelled = false;
-        const findGestor = async () => {
-            setGestorLoading(true);
-            try {
-                const found = await GestorService.findByLocation(
-                    location.province,
-                    location.municipality,
-                    location.consejoPopular,
-                );
-                if (cancelled) return;
-                setGestor(found);
-            } catch {
-                if (cancelled) return;
-                setGestor(null);
-            } finally {
-                if (!cancelled) setGestorLoading(false);
-            }
-        };
-        findGestor();
-        return () => {
-            cancelled = true;
-        };
-    }, [location?.province, location?.municipality, location?.consejoPopular]);
 
     const formatPrice = (price: number) => `$${price.toFixed(2)}`;
 
@@ -204,12 +174,7 @@ export default function CartPage() {
         setIsSending(true);
         try {
             const pdfBlob = await generateOrderPDF();
-            const fileName = `Sophia_Pedido_${Date.now()}.pdf`;
             const phone = gestor ? gestor.whatsapp : WHATSAPP_GENERAL;
-            // Mensaje delegado al helper compartido buildOrderMessage para
-            // evitar divergencia con CartDrawer. Esta ruta aún no recoge
-            // nombre/teléfono/email/notas del cliente — el helper acepta esos
-            // campos como opcionales y los omite si vienen vacíos.
             const message = buildOrderMessage({
                 gestorName: gestor?.name,
                 municipality: location?.municipality,
@@ -223,42 +188,15 @@ export default function CartPage() {
                 formatPrice,
             });
 
-            // Web Share API: si el dispositivo soporta compartir archivos, abrimos
-            // el share sheet nativo con el PDF adjunto + texto. WhatsApp aparece
-            // como destino y el adjunto llega de verdad al gestor.
-            const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
-            const canShareFile =
-                typeof navigator !== 'undefined' &&
-                typeof navigator.canShare === 'function' &&
-                navigator.canShare({ files: [pdfFile] });
-
-            if (canShareFile) {
-                try {
-                    await navigator.share({ files: [pdfFile], text: message, title: 'Pedido Sophia' });
-                    clearCart();
-                    return;
-                } catch (shareErr) {
-                    // Usuario canceló o falló el share — caemos al fallback.
-                    console.warn('Web Share cancelado, usando fallback descarga+wa.me:', shareErr);
-                }
-            }
-
-            // Fallback: descarga local + WhatsApp Click-to-Chat con texto.
-            // El cliente tiene que adjuntar el PDF descargado manualmente.
-            const url = URL.createObjectURL(pdfBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = fileName;
-            link.click();
-            URL.revokeObjectURL(url);
-
-            const fallbackMessage = `${message}\n\nTe adjunto el PDF con los detalles (revisá tu descarga).`;
-            const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(fallbackMessage)}`;
-
-            setTimeout(() => {
-                window.open(waUrl, '_blank');
-                clearCart();
-            }, 500);
+            // El helper unifica Web Share API + fallback de descarga + redirect
+            // a wa.me con el mismo comportamiento que el CartDrawer.
+            await sendOrderViaWhatsApp({
+                pdfBlob,
+                fileName: generateOrderFileName(),
+                whatsappNumber: phone,
+                message,
+            });
+            clearCart();
         } catch (err) {
             console.error('Error generating order:', err);
         } finally {
