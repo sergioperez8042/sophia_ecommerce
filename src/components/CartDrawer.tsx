@@ -7,6 +7,7 @@ import { useCart } from '@/store/CartContext';
 import { useLocation } from '@/store/LocationContext';
 import { useTheme } from '@/store/ThemeContext';
 import { GestorService, OrderService } from '@/lib/firestore-services';
+import { buildOrderMessage } from '@/lib/whatsapp-message';
 import { IGestor, IOrderItem } from '@/entities/all';
 import ProductImage from '@/components/ui/product-image';
 import LocationPopup from '@/components/LocationPopup';
@@ -258,53 +259,25 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   // tiene la info esencial aunque el PDF no llegue (fallback de navegador
   // viejo sin Web Share API L2, o si el cliente olvida adjuntarlo).
   // Usa la sintaxis Markdown de WhatsApp: *negrita* con asteriscos.
-  const buildOrderMessage = (): string => {
-    const lines: string[] = [];
-
-    lines.push(`Hola${gestor ? ` ${gestor.name}` : ''}, te envío mi pedido de Sophia.`);
-    lines.push('');
-
-    // -- Datos del cliente --
-    lines.push('*Cliente*');
-    if (customerName.trim()) lines.push(customerName.trim());
-    if (location?.province || location?.municipality) {
-      const loc = [location.municipality, location.province].filter(Boolean).join(', ');
-      lines.push(loc);
-    }
-    if (customerPhone.trim()) lines.push(customerPhone.trim());
-    if (customerEmail.trim()) lines.push(customerEmail.trim());
-    lines.push('');
-
-    // -- Pedido --
-    lines.push('*Pedido*');
-    items.forEach((item) => {
-      const itemSub = item.product.price * item.quantity;
-      lines.push(`${item.quantity}x ${item.product.name} — ${formatPrice(itemSub)}`);
+  // Construcción del mensaje delegada a `buildOrderMessage` (helper compartido
+  // entre CartDrawer y app/cart/page). Antes este código vivía duplicado.
+  const renderOrderMessage = (): string =>
+    buildOrderMessage({
+      gestorName: gestor?.name,
+      customerName,
+      customerPhone,
+      customerEmail,
+      municipality: location?.municipality,
+      province: location?.province,
+      items: items.map((item) => ({
+        productName: item.product.name,
+        quantity: item.quantity,
+        lineSubtotal: item.product.price * item.quantity,
+      })),
+      subtotal,
+      notes: orderNotes,
+      formatPrice,
     });
-    lines.push('');
-
-    // -- Total --
-    lines.push(`*Total: ${formatPrice(subtotal)}*`);
-
-    // -- Nota de envío --
-    // En Cuba el costo de mensajería no se puede calcular automáticamente
-    // (varía por zona, peso, distancia y disponibilidad del gestor). Esta
-    // línea aclara que el total mostrado es SOLO por los productos y que
-    // la mensajería es OPCIONAL — solo si el cliente la necesita se
-    // coordina con el gestor.
-    lines.push('');
-    const gestorRef = gestor ? gestor.name : 'tu gestor de zona';
-    lines.push(`*El total cubre únicamente los productos, en caso de necesitar mensajería se coordinará directamente con ${gestorRef}.*`);
-
-    // -- Notas opcionales --
-    if (orderNotes.trim()) {
-      lines.push('');
-      lines.push('*Notas*');
-      lines.push(orderNotes.trim());
-    }
-
-    return lines.join('\n');
-  };
 
   // Envía el pedido al gestor adjuntando el PDF cuando el navegador lo permite
   // (Web Share API Nivel 2). Si no hay soporte, cae al flujo viejo: descarga
@@ -314,7 +287,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     const fileName = `Pedido_Sophia_${new Date().toISOString().slice(0, 10)}.pdf`;
 
     const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
-    const message = buildOrderMessage();
+    const message = renderOrderMessage();
     const canShareFile =
       typeof navigator !== 'undefined' &&
       typeof navigator.canShare === 'function' &&

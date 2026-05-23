@@ -9,6 +9,7 @@ import Link from "next/link";
 import Breadcrumb from "@/components/ui/breadcrumb";
 import LocationPopup from "@/components/LocationPopup";
 import { GestorService } from "@/lib/firestore-services";
+import { buildOrderMessage } from "@/lib/whatsapp-message";
 import { IGestor } from "@/entities/all";
 
 const WHATSAPP_GENERAL = "34642633982";
@@ -205,34 +206,22 @@ export default function CartPage() {
             const pdfBlob = await generateOrderPDF();
             const fileName = `Sophia_Pedido_${Date.now()}.pdf`;
             const phone = gestor ? gestor.whatsapp : WHATSAPP_GENERAL;
-            // Mensaje estructurado para el gestor: cliente (zona), pedido detallado
-            // y total. Usa Markdown de WhatsApp (*negrita*) para legibilidad.
-            // Si en el futuro esta página gana inputs de nombre/teléfono/email,
-            // se añaden a la sección "Cliente" siguiendo el patrón del drawer.
-            const lines: string[] = [];
-            lines.push(`Hola${gestor ? ` ${gestor.name}` : ''}, te envío mi pedido de Sophia.`);
-            lines.push('');
-            if (location?.province || location?.municipality) {
-                lines.push('*Cliente*');
-                const loc = [location.municipality, location.province].filter(Boolean).join(', ');
-                lines.push(loc);
-                lines.push('');
-            }
-            lines.push('*Pedido*');
-            items.forEach((i) => {
-                const itemSub = i.product.price * i.quantity;
-                lines.push(`${i.quantity}x ${i.product.name} — ${formatPrice(itemSub)}`);
+            // Mensaje delegado al helper compartido buildOrderMessage para
+            // evitar divergencia con CartDrawer. Esta ruta aún no recoge
+            // nombre/teléfono/email/notas del cliente — el helper acepta esos
+            // campos como opcionales y los omite si vienen vacíos.
+            const message = buildOrderMessage({
+                gestorName: gestor?.name,
+                municipality: location?.municipality,
+                province: location?.province,
+                items: items.map((i) => ({
+                    productName: i.product.name,
+                    quantity: i.quantity,
+                    lineSubtotal: i.product.price * i.quantity,
+                })),
+                subtotal,
+                formatPrice,
             });
-            lines.push('');
-            lines.push(`*Total: ${formatPrice(subtotal)}*`);
-            // Nota de envío: el total cubre SOLO los productos. La mensajería
-            // es OPCIONAL — en Cuba no se puede calcular automáticamente
-            // (varía por zona, peso, distancia), así que solo si el cliente
-            // la necesita se cuadra aparte con el gestor.
-            lines.push('');
-            const gestorRef = gestor ? gestor.name : 'tu gestor de zona';
-            lines.push(`*El total cubre únicamente los productos, en caso de necesitar mensajería se coordinará directamente con ${gestorRef}.*`);
-            const message = lines.join('\n');
 
             // Web Share API: si el dispositivo soporta compartir archivos, abrimos
             // el share sheet nativo con el PDF adjunto + texto. WhatsApp aparece

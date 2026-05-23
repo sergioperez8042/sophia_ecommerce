@@ -20,7 +20,7 @@ import { initializeApp, getApps, deleteApp } from 'firebase/app';
 import { db, auth } from './firebase';
 import { IProduct, ICategory, IGestor, IOrder, IOrderItem, OrderStatus, IReview } from '@/entities/all';
 import { User, UserRole } from '@/store/AuthContext';
-import { normalizeForMatch, requiresConsejoPopular } from '@/data/localities';
+import { normalizeForMatch, requiresConsejoPopular, getConsejos } from '@/data/localities';
 
 // Collection names
 const PRODUCTS_COLLECTION = 'products';
@@ -839,19 +839,37 @@ export const GestorService = {
    * Para la UX de "no hay gestor en tu consejo, prueba con estos cercanos":
    * devuelve hasta 3 pares (consejo, gestorName) del mismo municipio que SÍ
    * tienen cobertura.
+   *
+   * Orden = geográfico (orden de aparición en `localities.ts`), NO el orden
+   * de documentos en Firestore. Antes podía pasar que un gestor con 5+
+   * consejos consecutivos llenara el top-3 y otros gestores con consejos
+   * relevantes nunca aparecieran. Ahora recorremos los consejos del
+   * municipio en su orden de definición (geográfico) y vamos buscando
+   * cuál gestor cubre cada uno.
    */
   async getCoveredConsejosInMunicipality(
+    province: string,
     municipality: string,
   ): Promise<Array<{ consejo: string; gestorName: string }>> {
+    const allConsejos = getConsejos(province, municipality);
+    if (allConsejos.length === 0) return [];
+
     const gestores = await this.getActive();
     const muniN = normalizeForMatch(municipality);
     const result: Array<{ consejo: string; gestorName: string }> = [];
-    for (const g of gestores) {
-      for (const c of g.consejos ?? []) {
-        if (normalizeForMatch(c.municipality) === muniN) {
-          result.push({ consejo: c.consejo, gestorName: g.name });
-          if (result.length >= 3) return result;
-        }
+
+    for (const consejo of allConsejos) {
+      const conN = normalizeForMatch(consejo);
+      const g = gestores.find((gest) =>
+        (gest.consejos ?? []).some(
+          (c) =>
+            normalizeForMatch(c.municipality) === muniN &&
+            normalizeForMatch(c.consejo) === conN,
+        ),
+      );
+      if (g) {
+        result.push({ consejo, gestorName: g.name });
+        if (result.length >= 3) break;
       }
     }
     return result;

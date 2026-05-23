@@ -168,7 +168,7 @@ export default function LocationPopup({ open, onOpenChange }: LocationPopupProps
           // Si no hay match exacto y la provincia usa consejos, sugerimos
           // consejos cercanos del mismo municipio que SÍ tienen gestor
           const nearby = showConsejoStep
-            ? await GestorService.getCoveredConsejosInMunicipality(selectedMunicipality)
+            ? await GestorService.getCoveredConsejosInMunicipality(selectedProvince, selectedMunicipality)
             : [];
           if (cancelled) return;
           setGestorStatus({ state: 'unavailable', nearby });

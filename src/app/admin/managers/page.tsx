@@ -358,13 +358,18 @@ export default function GestoresAdminPage() {
     : CUBA_PROVINCES;
 
   const toggleMunicipality = (m: string) => {
-    setSelectedMunicipalities((prev) =>
-      prev.includes(m) ? prev.filter((x) => x !== m) : [...prev, m]
-    );
-    // Si se desmarca un municipio, también limpiar los consejos suyos
-    if (selectedMunicipalities.includes(m)) {
-      setSelectedConsejos((prev) => prev.filter((c) => c.municipality !== m));
-    }
+    // Combinamos los dos setState en uno solo con functional updaters para
+    // evitar leer `selectedMunicipalities` capturado en closure (stale).
+    // El cleanup de consejos se deriva del valor `next`, no de `prev`.
+    setSelectedMunicipalities((prev) => {
+      const wasSelected = prev.includes(m);
+      const next = wasSelected ? prev.filter((x) => x !== m) : [...prev, m];
+      if (wasSelected) {
+        // Solo si removimos el municipio: limpiar sus consejos
+        setSelectedConsejos((cs) => cs.filter((c) => c.municipality !== m));
+      }
+      return next;
+    });
   };
 
   const toggleConsejo = (municipality: string, consejo: string) => {

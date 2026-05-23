@@ -37,7 +37,19 @@ export function LocationProvider({ children }: { children: ReactNode }) {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        setLocationState(JSON.parse(saved));
+        const parsed = JSON.parse(saved) as Partial<LocationData>;
+        // Guard contra shape legacy: antes del rollout de provincia (Nov 2025)
+        // se guardaba solo { municipality }. Si carga un objeto incompleto,
+        // forzamos re-confirmación con el LocationPopup (que auto-abre por
+        // hasFullLocation=false). NO inferimos `province` desde `municipality`
+        // — podría haber municipios ambiguos y meter al usuario en la
+        // provincia equivocada.
+        if (parsed && parsed.province && parsed.municipality) {
+          setLocationState(parsed as LocationData);
+        } else {
+          // Limpiar la entrada inválida para no quedar en bucle
+          localStorage.removeItem(STORAGE_KEY);
+        }
       }
     } catch {
       // ignore
