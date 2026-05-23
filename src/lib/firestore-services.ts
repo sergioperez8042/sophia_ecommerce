@@ -20,7 +20,7 @@ import { initializeApp, getApps, deleteApp } from 'firebase/app';
 import { db, auth } from './firebase';
 import { IProduct, ICategory, IGestor, IOrder, IOrderItem, OrderStatus, IReview } from '@/entities/all';
 import { User, UserRole } from '@/store/AuthContext';
-import { normalizeForMatch } from '@/data/localities';
+import { normalizeForMatch, requiresConsejoPopular } from '@/data/localities';
 
 // Collection names
 const PRODUCTS_COLLECTION = 'products';
@@ -783,22 +783,39 @@ export const GestorService = {
   /**
    * Resuelve el gestor que cubre una ubicación específica.
    *
-   * - Si la provincia usa consejos populares (La Habana): busca el primer
-   *   gestor activo cuyo `consejos[]` incluya el par (municipality, consejo).
-   * - Si no usa consejos (Matanzas, etc): busca el primer gestor activo
-   *   cuyo `municipalities[]` incluya el municipio.
+   * CONTRATO (enforced por la firma — recibe `province` precisamente para
+   * decidir el modo de búsqueda):
    *
-   * Devuelve null si nadie cubre esa zona. El consumer (CartDrawer,
-   * LocationPopup) muestra el mensaje "no hay gestor disponible".
+   * 1. Si `requiresConsejoPopular(province)` (La Habana) y NO se pasa
+   *    `consejoPopular` → devuelve `null` inmediatamente. La invariante
+   *    "La Habana requiere consejo" vive aquí, no en cada caller.
+   * 2. Si se pasa `consejoPopular`: match estricto por el par
+   *    (municipality, consejo) en `g.consejos[]`. Si no hay match → `null`.
+   *    **NO** hacemos fallback al municipio — el cliente debe ver
+   *    "no hay gestor en esta zona, selecciona uno cercano".
+   * 3. Si la provincia no usa consejos (Matanzas, etc): match por
+   *    `municipality` en `g.municipalities[]`.
+   *
+   * Cualquier caller que necesite el comportamiento viejo (fallback a
+   * municipio para La Habana) debe pedirlo explícitamente llamando a
+   * `findByMunicipality` aparte — pero ojo: eso rompe la precisión a
+   * nivel consejo que es el punto del rollout.
    */
   async findByLocation(
+    province: string,
     municipality: string,
     consejoPopular?: string,
   ): Promise<IGestor | null> {
+    // (1) Invariante: La Habana requiere consejo
+    if (requiresConsejoPopular(province) && !consejoPopular) {
+      return null;
+    }
+
     const gestores = await this.getActive();
     const muniN = normalizeForMatch(municipality);
 
     if (consejoPopular) {
+      // (2) Match estricto (municipio, consejo); sin fallback al municipio
       const conN = normalizeForMatch(consejoPopular);
       const match = gestores.find((g) =>
         (g.consejos ?? []).some(
@@ -807,14 +824,10 @@ export const GestorService = {
             normalizeForMatch(c.consejo) === conN,
         ),
       );
-      if (match) return match;
-      // Si no hay gestor para ese consejo específico, NO hacemos fallback
-      // al municipio entero — el cliente debe ver "no hay gestor en esta
-      // zona, selecciona uno cercano".
-      return null;
+      return match ?? null;
     }
 
-    // Sin consejo: lookup a nivel municipio
+    // (3) Provincia sin consejos: lookup por municipio
     return (
       gestores.find((g) =>
         g.municipalities.some((m) => normalizeForMatch(m) === muniN),

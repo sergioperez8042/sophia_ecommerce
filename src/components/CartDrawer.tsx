@@ -35,39 +35,41 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const [orderNotes, setOrderNotes] = useState('');
 
   // Find gestor when location changes.
-  // GestorService.findByLocation hace el match dinámico en Firestore:
-  // si hay consejoPopular busca por (municipality, consejo), si no busca
-  // a nivel municipio. La asignación consejo→gestor vive en Firestore,
-  // editable desde admin.
+  // GestorService.findByLocation enforce el contrato:
+  // - La Habana sin consejo → null (UI debe mostrar "selecciona consejo")
+  // - Consejo no cubierto → null (UI muestra banner "no hay gestor")
+  // - Provincia sin consejos (Matanzas) → match por municipio
+  // NO hacemos fallback a findByMunicipality cuando findByLocation devuelve
+  // null: ese fallback rompía la precisión a nivel consejo del rollout.
   useEffect(() => {
     if (!location?.municipality || !location?.province) {
       setGestor(null);
       return;
     }
 
+    let cancelled = false;
     const findGestor = async () => {
       setGestorLoading(true);
       try {
         const found = await GestorService.findByLocation(
+          location.province,
           location.municipality,
           location.consejoPopular,
         );
-        if (found) {
-          setGestor(found);
-        } else {
-          // Fallback: si el lookup por consejo falla (data incompleta o
-          // sesión antigua), intentamos a nivel municipio
-          const fallback = await GestorService.findByMunicipality(location.municipality);
-          setGestor(fallback);
-        }
+        if (cancelled) return;
+        setGestor(found);
       } catch {
+        if (cancelled) return;
         setGestor(null);
       } finally {
-        setGestorLoading(false);
+        if (!cancelled) setGestorLoading(false);
       }
     };
 
     findGestor();
+    return () => {
+      cancelled = true;
+    };
   }, [location?.province, location?.municipality, location?.consejoPopular]);
 
   const formatPrice = (price: number) => `$${price.toFixed(2)}`;

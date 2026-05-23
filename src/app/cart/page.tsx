@@ -29,34 +29,36 @@ export default function CartPage() {
     const [isSending, setIsSending] = useState(false);
     const [showLocationEditor, setShowLocationEditor] = useState(false);
 
-    // Find gestor when location changes. Usa GestorService.findByLocation
-    // que busca dinámicamente en Firestore por (municipality, consejo) o
-    // solo municipality según la provincia.
+    // Find gestor when location changes. findByLocation enforce el contrato
+    // (La Habana requiere consejo, no fallback a municipio cuando el consejo
+    // no está cubierto). Si devuelve null → UI muestra banner "no hay gestor".
     useEffect(() => {
         if (!location?.municipality || !location?.province) {
             setGestor(null);
             return;
         }
+        let cancelled = false;
         const findGestor = async () => {
             setGestorLoading(true);
             try {
                 const found = await GestorService.findByLocation(
+                    location.province,
                     location.municipality,
                     location.consejoPopular,
                 );
-                if (found) {
-                    setGestor(found);
-                } else {
-                    const fallback = await GestorService.findByMunicipality(location.municipality);
-                    setGestor(fallback);
-                }
+                if (cancelled) return;
+                setGestor(found);
             } catch {
+                if (cancelled) return;
                 setGestor(null);
             } finally {
-                setGestorLoading(false);
+                if (!cancelled) setGestorLoading(false);
             }
         };
         findGestor();
+        return () => {
+            cancelled = true;
+        };
     }, [location?.province, location?.municipality, location?.consejoPopular]);
 
     const formatPrice = (price: number) => `$${price.toFixed(2)}`;

@@ -157,6 +157,7 @@ export default function LocationPopup({ open, onOpenChange }: LocationPopupProps
     (async () => {
       try {
         const found = await GestorService.findByLocation(
+          selectedProvince,
           selectedMunicipality,
           showConsejoStep ? selectedConsejo : undefined,
         );
