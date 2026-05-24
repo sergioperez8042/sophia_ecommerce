@@ -237,39 +237,21 @@ const GESTORES = [
     active: true,
   },
   {
-    // Multi-provincia: cubre Santiago de Cuba (9 municipios) + Granma
-    // (13 municipios). El campo provinces lista ambas; municipalities
-    // contiene la unión. findByLocation matchea por municipio, así que el
-    // mismo doc responde para ambas provincias.
+    // Multi-provincia: cubre Santiago de Cuba + Granma, PERO no todos los
+    // municipios de cada una — solo los listados aquí. El resto aparecen
+    // en el dropdown del cliente (vienen de localities.ts) pero al
+    // seleccionarlos verá "no hay gestor en esta zona". Es decisión del
+    // cliente (Sophia) qué cobertura activa por gestor.
     id: 'marian',
     name: 'Marian',
     whatsapp: '5359188843',
     provinces: ['Santiago de Cuba', 'Granma'],
     municipalities: [
-      // Santiago de Cuba
+      // Santiago de Cuba (2 de 9)
       'Contramaestre',
-      'Guamá',
-      'Mella',
-      'Palma Soriano',
-      'San Luis',
       'Santiago de Cuba',
-      'Segundo Frente',
-      'Songo-La Maya',
-      'Tercer Frente',
-      // Granma
-      'Bartolomé Masó',
-      'Bayamo',
-      'Buey Arriba',
-      'Campechuela',
-      'Cauto Cristo',
-      'Guisa',
+      // Granma (1 de 13)
       'Jiguaní',
-      'Manzanillo',
-      'Media Luna',
-      'Niquero',
-      'Pilón',
-      'Río Cauto',
-      'Yara',
     ],
     consejos: [],
     active: true,
