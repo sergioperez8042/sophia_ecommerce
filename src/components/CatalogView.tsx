@@ -13,7 +13,6 @@ import { useWishlist } from '@/store/WishlistContext';
 import BrandLogo from '@/components/BrandLogo';
 // import NewsletterPopup from '@/components/NewsletterPopup'; // disabled 12-may-2026
 import NewsletterFooter from '@/components/NewsletterFooter';
-import LocationPopup from '@/components/LocationPopup';
 import CatalogHeader from '@/components/CatalogHeader';
 
 const WHATSAPP_NUMBER = "34642633982";
@@ -531,9 +530,6 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                     </div>
                 </div>
             </footer>
-
-            {/* Location Popup - appears first (immediate) */}
-            <LocationPopup />
 
             {/* Newsletter Popup - disabled by request (12-mayo-2026)
                 Para reactivar: descomentar la línea siguiente. */}

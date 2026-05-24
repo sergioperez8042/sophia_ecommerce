@@ -232,10 +232,12 @@ export default function LocationPopup({ open, onOpenChange }: LocationPopupProps
   const warnText = isDark ? 'text-amber-300' : 'text-amber-800';
   const warnLink = isDark ? 'text-amber-200 hover:text-amber-100' : 'text-amber-900 hover:text-amber-700';
 
-  // En modo controlado permitimos cerrar con ESC / click fuera (el user inició
-  // un "Cambiar" intencional, debe poder cancelarlo). En modo auto (primera
-  // visita) bloqueamos el dismiss para forzar la selección.
-  const dismissProps = isControlled
+  // Permitir cerrar con ESC / click fuera SOLO cuando ya hay una location
+  // completa guardada (el cliente está cambiando algo que ya eligió antes,
+  // debe poder cancelar). Primera visita o location incompleta → forzamos
+  // selección bloqueando el dismiss. Esta condición sirve tanto si el popup
+  // se abrió automáticamente como si se abrió desde el botón "Cambiar".
+  const dismissProps = hasFullLocation
     ? {}
     : {
         onEscapeKeyDown: (e: Event) => e.preventDefault(),

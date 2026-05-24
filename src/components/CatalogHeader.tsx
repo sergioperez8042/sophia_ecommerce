@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
-import { Sun, Moon, ShoppingBag, Heart, MessageCircle, LogOut, User, Package, ArrowLeft } from "lucide-react";
+import { Sun, Moon, ShoppingBag, Heart, MessageCircle, LogOut, User, Package, ArrowLeft, MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { m, AnimatePresence } from 'framer-motion';
@@ -9,7 +9,9 @@ import { useTheme } from '@/store/ThemeContext';
 import { useCart } from '@/store/CartContext';
 import { useWishlist } from '@/store/WishlistContext';
 import { useAuth } from '@/store/AuthContext';
+import { useLocation } from '@/store/LocationContext';
 import CartDrawer from '@/components/CartDrawer';
+import LocationPopup from '@/components/LocationPopup';
 
 const WHATSAPP_NUMBER = "34642633982";
 
@@ -22,13 +24,33 @@ export default function CatalogHeader({ showBackButton = false }: CatalogHeaderP
     const { totalItems } = useCart();
     const { totalItems: wishlistCount } = useWishlist();
     const { user, isAuthenticated, logout } = useAuth();
+    const { location, hasFullLocation } = useLocation();
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isAvatarMenuOpen, setIsAvatarMenuOpen] = useState(false);
+    const [isLocationOpen, setIsLocationOpen] = useState(false);
     const avatarMenuRef = useRef<HTMLDivElement>(null);
 
     const userInitials = user?.name
         ? user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
         : '?';
+
+    // Auto-abrir el popup la PRIMERA vez (cuando no hay location completa).
+    // Tras 500 ms para no interrumpir el render inicial. Una vez el cliente
+    // confirma su zona, hasFullLocation pasa a true y este efecto no vuelve
+    // a abrir nada — el cliente abre manualmente vía el botón si quiere
+    // cambiarla.
+    useEffect(() => {
+        if (hasFullLocation) return;
+        const timer = setTimeout(() => setIsLocationOpen(true), 500);
+        return () => clearTimeout(timer);
+    }, [hasFullLocation]);
+
+    // Texto compacto del botón. Prefiere el consejo > municipio porque
+    // es la unidad de cobertura más fina; si solo hay municipio (Matanzas
+    // y otras sin consejos), mostramos eso.
+    const locationLabel = location
+        ? location.consejoPopular || location.municipality
+        : 'Selecciona zona';
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -73,6 +95,21 @@ export default function CatalogHeader({ showBackButton = false }: CatalogHeaderP
                         </div>
 
                         <div className="flex items-center gap-2">
+                            {/* Selector de ubicación: muestra la zona actual y al
+                                hacer click abre el popup en modo controlado. En
+                                mobile solo el ícono, en desktop ícono + texto. */}
+                            <button
+                                onClick={() => setIsLocationOpen(true)}
+                                className={`flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-xl transition-colors max-w-[180px] sm:max-w-[220px] ${isDark ? 'bg-[#C4B590]/15 text-[#C4B590] hover:bg-[#C4B590]/25' : 'bg-[#505A4A]/10 text-[#505A4A] hover:bg-[#505A4A]/20'}`}
+                                aria-label={`Cambiar ubicación (actual: ${locationLabel})`}
+                                title={locationLabel}
+                            >
+                                <MapPin className="w-4 h-4 flex-shrink-0" />
+                                <span className="hidden sm:inline text-xs font-medium truncate">
+                                    {locationLabel}
+                                </span>
+                            </button>
+
                             <button
                                 onClick={toggleTheme}
                                 className={`p-2 rounded-xl transition-colors ${isDark ? 'bg-[#C4B590]/15 text-[#C4B590] hover:bg-[#C4B590]/25' : 'bg-[#505A4A]/10 text-[#505A4A] hover:bg-[#505A4A]/20'}`}
@@ -177,6 +214,12 @@ export default function CatalogHeader({ showBackButton = false }: CatalogHeaderP
             </header>
 
             <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+
+            {/* LocationPopup montado a nivel header: vive en cada página del
+                catálogo. Sale automáticamente la primera vez (efecto arriba)
+                y también cuando el cliente hace click en el botón con la
+                pin de ubicación. */}
+            <LocationPopup open={isLocationOpen} onOpenChange={setIsLocationOpen} />
         </>
     );
 }
