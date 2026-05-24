@@ -190,7 +190,7 @@ const GESTORES = [
       { municipality: 'Arroyo Naranjo', consejo: 'Los Pinos' },
       { municipality: 'Arroyo Naranjo', consejo: 'Joey' },
       { municipality: 'Arroyo Naranjo', consejo: 'Víbora Park' },
-      { municipality: 'Arroyo Naranjo', consejo: 'Mantilla' },
+      // Mantilla → Kathy (no Arturo)
       { municipality: 'Arroyo Naranjo', consejo: 'Párraga' },
       { municipality: 'Arroyo Naranjo', consejo: 'Calzada de Managua' },
       { municipality: 'Arroyo Naranjo', consejo: 'Guadalupe' },
@@ -268,7 +268,7 @@ const GESTORES = [
     name: 'Kathy',
     whatsapp: '5359710567',
     provinces: ['La Habana'],
-    municipalities: ['Plaza de la Revolución'],
+    municipalities: ['Plaza de la Revolución', 'Arroyo Naranjo'],
     consejos: [
       { municipality: 'Plaza de la Revolución', consejo: 'Vedado' },
       { municipality: 'Plaza de la Revolución', consejo: 'Vedado - Malecón' },
@@ -278,6 +278,8 @@ const GESTORES = [
       { municipality: 'Plaza de la Revolución', consejo: 'Plaza' },
       { municipality: 'Plaza de la Revolución', consejo: 'Nuevo Vedado' },
       { municipality: 'Plaza de la Revolución', consejo: 'Colón' },
+      // Mantilla movido desde Arturo (mayo 2026 — solicitud del cliente)
+      { municipality: 'Arroyo Naranjo', consejo: 'Mantilla' },
     ],
     active: true,
   },
