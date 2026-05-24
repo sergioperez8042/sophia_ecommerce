@@ -307,23 +307,17 @@ const GESTORES = [
     active: true,
   },
   {
+    // Heydi cubre SOLO Santa Cruz del Norte por el momento. El resto de
+    // municipios de Mayabeque (Batabanó, Bejucal, Güines, Jaruco, Madruga,
+    // Melena del Sur, Nueva Paz, Quivicán, San José de las Lajas,
+    // San Nicolás de Bari) siguen apareciendo en el dropdown del cliente
+    // pero al seleccionarlos verán "no hay gestor en esta zona" hasta que
+    // se incorpore otro gestor o Heydi extienda su cobertura.
     id: 'heydi',
     name: 'Heydi',
     whatsapp: '5354520796',
     provinces: ['Mayabeque'],
-    municipalities: [
-      'Batabanó',
-      'Bejucal',
-      'Güines',
-      'Jaruco',
-      'Madruga',
-      'Melena del Sur',
-      'Nueva Paz',
-      'Quivicán',
-      'San José de las Lajas',
-      'San Nicolás de Bari',
-      'Santa Cruz del Norte',
-    ],
+    municipalities: ['Santa Cruz del Norte'],
     consejos: [],
     active: true,
   },
