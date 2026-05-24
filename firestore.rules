@@ -1,6 +1,17 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // Helper: is the current user an admin?
+    // Admin se identifica por su doc en users/{uid} con role == 'admin'.
+    // Usamos exists() antes de get() para que la regla no se rompa si por
+    // alguna razón el doc del propio admin no existe (e.g. cuenta huérfana).
+    function isAdmin() {
+      return request.auth != null &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
     // Products - TEMPORARILY OPEN FOR MIGRATION
     match /products/{productId} {
       allow read: if true;
@@ -19,12 +30,16 @@ service cloud.firestore {
       allow write: if true;
     }
 
-    // Users - authenticated can read, create allowed for account setup, update/delete own doc only
-    // Admin creates user docs when setting up gestor accounts (uid != userId)
+    // Users - authenticated can read, create allowed for account setup.
+    // Update/delete: el propio usuario, o un admin (necesario para que el
+    // admin pueda enlazar cuenta de gestor al doc users/{gestorUid}, lo cual
+    // es un setDoc que cae como update si el doc ya existe).
     match /users/{userId} {
       allow read: if request.auth != null;
       allow create: if request.auth != null;
-      allow update, delete: if request.auth != null && request.auth.uid == userId;
+      allow update, delete: if request.auth != null && (
+        request.auth.uid == userId || isAdmin()
+      );
     }
 
     // Orders
