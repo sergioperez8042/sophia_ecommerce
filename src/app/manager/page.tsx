@@ -277,7 +277,7 @@ export default function GestorDashboard() {
               {gestor && (
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 flex items-center gap-2">
                   <MapPin className="w-3.5 h-3.5" />
-                  {gestor.province} · {gestor.municipalities.join(', ')}
+                  {gestor.provinces.join(', ')} · {gestor.municipalities.join(', ')}
                 </p>
               )}
             </div>

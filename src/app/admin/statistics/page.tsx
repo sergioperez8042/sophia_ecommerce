@@ -318,7 +318,7 @@ export default function EstadisticasPage() {
                           )}
                         </div>
                         <p className="text-[11px] text-gray-400 dark:text-gray-500 truncate">
-                          {stat.gestor.province} · {stat.orderCount} pedidos · {stat.productsSold} productos
+                          {stat.gestor.provinces.join(', ')} · {stat.orderCount} pedidos · {stat.productsSold} productos
                         </p>
                       </div>
 

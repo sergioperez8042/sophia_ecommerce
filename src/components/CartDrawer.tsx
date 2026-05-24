@@ -205,7 +205,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
       y += 6;
       doc.text(`Zona: ${gestor.municipalities.join(', ')}`, margin, y);
       y += 6;
-      doc.text(`Provincia: ${gestor.province}`, margin, y);
+      doc.text(`Provincia: ${gestor.provinces.join(', ')}`, margin, y);
     }
 
     // -- Footer --

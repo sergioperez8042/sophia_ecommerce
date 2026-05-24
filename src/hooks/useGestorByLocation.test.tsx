@@ -17,7 +17,7 @@ const fakeGestor: IGestor = {
   name: 'Maday',
   whatsapp: '5350000000',
   email: 'maday@sophia.test',
-  province: 'La Habana',
+  provinces: ['La Habana'],
   municipalities: ['Centro Habana'],
   consejos: [{ municipality: 'Centro Habana', consejo: 'Cayo Hueso' }],
   active: true,

@@ -58,7 +58,15 @@ export interface IGestor {
   id: string;
   name: string;
   whatsapp: string; // número sin +, ej: "5352010900"
-  province: string;
+  /**
+   * Provincias que cubre el gestor. Se introdujo como array (antes era
+   * `province: string`) para soportar gestores que cubren varias
+   * provincias (e.g. Marian cubre Santiago de Cuba + Granma). El admin
+   * lo gestiona como multi-select; el lookup en findByLocation no usa
+   * este campo directamente — sólo se filtra por `municipalities[]` y
+   * `consejos[]`, así que es informativo / agrupador.
+   */
+  provinces: string[];
   municipalities: string[]; // municipios que cubre
   /**
    * Consejos populares específicos que cubre el gestor (dentro de los

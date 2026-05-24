@@ -107,17 +107,21 @@ async function writeDoc(collection, docId, obj, idToken) {
 // cada gestor dentro de sus municipios (solo para provincias con
 // usesConsejos=true en localities.ts). Para gestores en Matanzas, este
 // array queda vacío — la cobertura es a nivel municipio.
+// Shape: cada gestor tiene `provinces: string[]` (multi-provincia). El admin
+// las gestiona como multi-select. El lookup en findByLocation no usa este
+// campo directamente — el matching real es por `municipalities[]` y
+// `consejos[]`. Provinces es informativo / agrupador para la UI del admin.
 const GESTORES = [
   {
     id: 'arturo',
     name: 'Arturo',
     whatsapp: '5352010900',
-    province: 'La Habana',
+    provinces: ['La Habana'],
     municipalities: ['La Habana del Este', 'Centro Habana', 'Diez de Octubre'],
     consejos: [
       { municipality: 'La Habana del Este', consejo: 'Camilo Cienfuegos' },
       { municipality: 'La Habana del Este', consejo: 'Cojímar' },
-      { municipality: 'La Habana del Este', consejo: 'Gaiteras' },
+      { municipality: 'La Habana del Este', consejo: 'Guiteras' },
       { municipality: 'La Habana del Este', consejo: 'El Bahía' },
       { municipality: 'Centro Habana', consejo: 'San Leopoldo' },
       { municipality: 'Centro Habana', consejo: 'Los Sitios' },
@@ -137,7 +141,7 @@ const GESTORES = [
     id: 'danay',
     name: 'Danay',
     whatsapp: '5353969396',
-    province: 'La Habana',
+    provinces: ['La Habana'],
     municipalities: ['La Habana del Este'],
     consejos: [{ municipality: 'La Habana del Este', consejo: 'Alamar' }],
     active: true,
@@ -146,7 +150,7 @@ const GESTORES = [
     id: 'mariam',
     name: 'Mariam',
     whatsapp: '5353639460',
-    province: 'La Habana',
+    provinces: ['La Habana'],
     municipalities: ['La Habana del Este'],
     consejos: [{ municipality: 'La Habana del Este', consejo: 'Guanabo' }],
     active: true,
@@ -155,7 +159,7 @@ const GESTORES = [
     id: 'gisselle',
     name: 'Gisselle',
     whatsapp: '5358747563',
-    province: 'La Habana',
+    provinces: ['La Habana'],
     municipalities: ['Guanabacoa', 'Regla'],
     consejos: [
       { municipality: 'Guanabacoa', consejo: 'Villa I (Centro Histórico)' },
@@ -174,7 +178,7 @@ const GESTORES = [
     id: 'kathy',
     name: 'Kathy',
     whatsapp: '5359710567',
-    province: 'La Habana',
+    provinces: ['La Habana'],
     municipalities: ['Plaza de la Revolución'],
     consejos: [
       { municipality: 'Plaza de la Revolución', consejo: 'Vedado' },
@@ -192,7 +196,7 @@ const GESTORES = [
     id: 'maday',
     name: 'Maday',
     whatsapp: '5354223000',
-    province: 'La Habana',
+    provinces: ['La Habana'],
     municipalities: ['Centro Habana', 'La Habana Vieja'],
     consejos: [
       { municipality: 'Centro Habana', consejo: 'Cayo Hueso' },
@@ -206,8 +210,67 @@ const GESTORES = [
     id: 'deborah',
     name: 'Deborah',
     whatsapp: '5355739238',
-    province: 'Matanzas',
-    municipalities: ['Cárdenas', 'Limonar', 'Unión de Reyes'],
+    provinces: ['Matanzas'],
+    municipalities: ['Matanzas', 'Cárdenas', 'Limonar', 'Unión de Reyes'],
+    consejos: [],
+    active: true,
+  },
+  {
+    id: 'heydi',
+    name: 'Heydi',
+    whatsapp: '5354520796',
+    provinces: ['Mayabeque'],
+    municipalities: [
+      'Batabanó',
+      'Bejucal',
+      'Güines',
+      'Jaruco',
+      'Madruga',
+      'Melena del Sur',
+      'Nueva Paz',
+      'Quivicán',
+      'San José de las Lajas',
+      'San Nicolás de Bari',
+      'Santa Cruz del Norte',
+    ],
+    consejos: [],
+    active: true,
+  },
+  {
+    // Multi-provincia: cubre Santiago de Cuba (9 municipios) + Granma
+    // (13 municipios). El campo provinces lista ambas; municipalities
+    // contiene la unión. findByLocation matchea por municipio, así que el
+    // mismo doc responde para ambas provincias.
+    id: 'marian',
+    name: 'Marian',
+    whatsapp: '5359188843',
+    provinces: ['Santiago de Cuba', 'Granma'],
+    municipalities: [
+      // Santiago de Cuba
+      'Contramaestre',
+      'Guamá',
+      'Julio Antonio Mella',
+      'Palma Soriano',
+      'San Luis',
+      'Santiago de Cuba',
+      'Segundo Frente',
+      'Songo - La Maya',
+      'Tercer Frente',
+      // Granma
+      'Bartolomé Masó',
+      'Bayamo',
+      'Buey Arriba',
+      'Campechuela',
+      'Cauto Cristo',
+      'Guisa',
+      'Jiguaní',
+      'Manzanillo',
+      'Media Luna',
+      'Niquero',
+      'Pilón',
+      'Río Cauto',
+      'Yara',
+    ],
     consejos: [],
     active: true,
   },
@@ -240,14 +303,14 @@ for (const g of GESTORES) {
   const payload = {
     name: g.name,
     whatsapp: g.whatsapp,
-    province: g.province,
+    provinces: g.provinces,
     municipalities: g.municipalities,
     consejos: g.consejos,
     active: g.active,
     createdAt: new Date().toISOString(),
   };
   const consejosCount = g.consejos?.length ?? 0;
-  console.log(`• ${g.name.padEnd(10)} +${g.whatsapp}  →  ${g.municipalities.join(', ')}${consejosCount > 0 ? ` (${consejosCount} consejos)` : ''}`);
+  console.log(`• ${g.name.padEnd(10)} +${g.whatsapp}  [${g.provinces.join(' + ')}]  →  ${g.municipalities.length} municipios${consejosCount > 0 ? ` (${consejosCount} consejos)` : ''}`);
 
   if (APPLY) {
     try {

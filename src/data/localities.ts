@@ -45,7 +45,7 @@ const LA_HABANA: ProvinceData = {
       consejos: [
         "Camilo Cienfuegos",
         "Cojímar",
-        "Gaiteras",
+        "Guiteras",
         "El Bahía",
         "Alamar",
         "Guanabo",
@@ -244,7 +244,76 @@ const MATANZAS: ProvinceData = {
   ],
 };
 
-export const PROVINCES_DATA: ProvinceData[] = [LA_HABANA, MATANZAS];
+// =============================================================================
+// MAYABEQUE — 11 municipios, sin consejos populares detallados.
+// =============================================================================
+const MAYABEQUE: ProvinceData = {
+  province: "Mayabeque",
+  usesConsejos: false,
+  municipalities: [
+    { municipality: "Batabanó", consejos: [] },
+    { municipality: "Bejucal", consejos: [] },
+    { municipality: "Güines", consejos: [] },
+    { municipality: "Jaruco", consejos: [] },
+    { municipality: "Madruga", consejos: [] },
+    { municipality: "Melena del Sur", consejos: [] },
+    { municipality: "Nueva Paz", consejos: [] },
+    { municipality: "Quivicán", consejos: [] },
+    { municipality: "San José de las Lajas", consejos: [] },
+    { municipality: "San Nicolás de Bari", consejos: [] },
+    { municipality: "Santa Cruz del Norte", consejos: [] },
+  ],
+};
+
+// =============================================================================
+// GRANMA — 13 municipios, sin consejos populares detallados.
+// =============================================================================
+const GRANMA: ProvinceData = {
+  province: "Granma",
+  usesConsejos: false,
+  municipalities: [
+    { municipality: "Bartolomé Masó", consejos: [] },
+    { municipality: "Bayamo", consejos: [] },
+    { municipality: "Buey Arriba", consejos: [] },
+    { municipality: "Campechuela", consejos: [] },
+    { municipality: "Cauto Cristo", consejos: [] },
+    { municipality: "Guisa", consejos: [] },
+    { municipality: "Jiguaní", consejos: [] },
+    { municipality: "Manzanillo", consejos: [] },
+    { municipality: "Media Luna", consejos: [] },
+    { municipality: "Niquero", consejos: [] },
+    { municipality: "Pilón", consejos: [] },
+    { municipality: "Río Cauto", consejos: [] },
+    { municipality: "Yara", consejos: [] },
+  ],
+};
+
+// =============================================================================
+// SANTIAGO DE CUBA — 9 municipios, sin consejos populares detallados.
+// =============================================================================
+const SANTIAGO_DE_CUBA: ProvinceData = {
+  province: "Santiago de Cuba",
+  usesConsejos: false,
+  municipalities: [
+    { municipality: "Contramaestre", consejos: [] },
+    { municipality: "Guamá", consejos: [] },
+    { municipality: "Julio Antonio Mella", consejos: [] },
+    { municipality: "Palma Soriano", consejos: [] },
+    { municipality: "San Luis", consejos: [] },
+    { municipality: "Santiago de Cuba", consejos: [] },
+    { municipality: "Segundo Frente", consejos: [] },
+    { municipality: "Songo - La Maya", consejos: [] },
+    { municipality: "Tercer Frente", consejos: [] },
+  ],
+};
+
+export const PROVINCES_DATA: ProvinceData[] = [
+  LA_HABANA,
+  MATANZAS,
+  MAYABEQUE,
+  GRANMA,
+  SANTIAGO_DE_CUBA,
+];
 
 // =============================================================================
 // HELPERS DE LOOKUP — pure functions, sin IO

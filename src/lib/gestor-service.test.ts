@@ -32,7 +32,7 @@ const makeGestor = (overrides: Partial<IGestor> = {}): IGestor => ({
   name: 'Tester',
   whatsapp: '5350000000',
   email: 'tester@sophia.test',
-  province: 'La Habana',
+  provinces: ['La Habana'],
   municipalities: ['Centro Habana'],
   consejos: [],
   active: true,
@@ -137,7 +137,7 @@ describe('GestorService.findByLocation', () => {
       const deborah = makeGestor({
         id: 'deborah',
         name: 'Deborah',
-        province: 'Matanzas',
+        provinces: ['Matanzas'],
         municipalities: ['Cárdenas', 'Limonar', 'Unión de Reyes'],
         consejos: [],
       });
@@ -148,7 +148,7 @@ describe('GestorService.findByLocation', () => {
 
     it('matches with unaccented municipality input (admin legacy)', async () => {
       const deborah = makeGestor({
-        province: 'Matanzas',
+        provinces: ['Matanzas'],
         municipalities: ['Cárdenas'],
       });
       mockGestoresList([deborah]);
@@ -158,13 +158,57 @@ describe('GestorService.findByLocation', () => {
 
     it('returns null when no gestor covers the municipality', async () => {
       const deborah = makeGestor({
-        province: 'Matanzas',
+        provinces: ['Matanzas'],
         municipalities: ['Cárdenas'],
       });
       mockGestoresList([deborah]);
       const result = await GestorService.findByLocation(
         'Matanzas',
         'Jovellanos',
+      );
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('gestor multi-provincia (Marian: Santiago de Cuba + Granma)', () => {
+    const makeMarian = () =>
+      makeGestor({
+        id: 'marian',
+        name: 'Marian',
+        provinces: ['Santiago de Cuba', 'Granma'],
+        municipalities: [
+          // SdC
+          'Contramaestre',
+          'Palma Soriano',
+          'Santiago de Cuba',
+          // Granma
+          'Bayamo',
+          'Manzanillo',
+          'Yara',
+        ],
+        consejos: [],
+      });
+
+    it('matches the same doc when searched from Santiago de Cuba', async () => {
+      mockGestoresList([makeMarian()]);
+      const result = await GestorService.findByLocation(
+        'Santiago de Cuba',
+        'Palma Soriano',
+      );
+      expect(result?.name).toBe('Marian');
+    });
+
+    it('matches the same doc when searched from Granma', async () => {
+      mockGestoresList([makeMarian()]);
+      const result = await GestorService.findByLocation('Granma', 'Bayamo');
+      expect(result?.name).toBe('Marian');
+    });
+
+    it('returns null for a municipality not covered (even within a covered province)', async () => {
+      mockGestoresList([makeMarian()]);
+      const result = await GestorService.findByLocation(
+        'Granma',
+        'Niquero', // Granma sí, pero Marian no lo cubre
       );
       expect(result).toBeNull();
     });
@@ -204,7 +248,7 @@ describe('GestorService.findByLocation', () => {
 
 describe('GestorService.getCoveredConsejosInMunicipality', () => {
   it('returns consejos in geographic order (localities.ts order)', async () => {
-    // En localities.ts, 'La Habana del Este' tiene: Camilo, Cojímar, Gaiteras,
+    // En localities.ts, 'La Habana del Este' tiene: Camilo, Cojímar, Guiteras,
     // Alamar, Guanabo, Campo Florido (en ese orden de declaración pero los
     // consejos se ordenan alfabético en getConsejos)
     const arturo = makeGestor({
@@ -214,7 +258,7 @@ describe('GestorService.getCoveredConsejosInMunicipality', () => {
       consejos: [
         { municipality: 'La Habana del Este', consejo: 'Cojímar' },
         { municipality: 'La Habana del Este', consejo: 'Camilo Cienfuegos' },
-        { municipality: 'La Habana del Este', consejo: 'Gaiteras' },
+        { municipality: 'La Habana del Este', consejo: 'Guiteras' },
       ],
     });
     const danay = makeGestor({
@@ -232,7 +276,7 @@ describe('GestorService.getCoveredConsejosInMunicipality', () => {
     );
 
     // Orden alfabético en getConsejos: Alamar, Camilo Cienfuegos, Cojímar,
-    // Gaiteras... → top 3 = Alamar (Danay), Camilo (Arturo), Cojímar (Arturo)
+    // Guiteras... → top 3 = Alamar (Danay), Camilo (Arturo), Cojímar (Arturo)
     expect(result.length).toBeLessThanOrEqual(3);
     expect(result[0]?.consejo).toBe('Alamar');
     expect(result[0]?.gestorName).toBe('Danay');

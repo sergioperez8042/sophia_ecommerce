@@ -17,7 +17,6 @@ import {
   Save,
   X,
   Search,
-  ChevronDown,
   AlertCircle,
   Camera,
   Pencil,
@@ -46,14 +45,15 @@ export default function GestoresAdminPage() {
   // Form state
   const [name, setName] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
-  const [province, setProvince] = useState('');
+  // Multi-provincia: un gestor puede cubrir varias (ej. Marian → Santiago de
+  // Cuba + Granma). En la UI se renderiza como checkbox grid.
+  const [provinces, setProvinces] = useState<string[]>([]);
   const [selectedMunicipalities, setSelectedMunicipalities] = useState<string[]>([]);
-  // Consejos populares cubiertos por el gestor (solo cuando la provincia
-  // tiene usesConsejos=true en localities.ts, ej. La Habana). Cada item
-  // identifica un consejo específico dentro de un municipio.
+  // Consejos populares cubiertos por el gestor (solo cuando alguna provincia
+  // seleccionada tiene usesConsejos=true en localities.ts, ej. La Habana).
+  // Cada item identifica un consejo específico dentro de un municipio.
   const [selectedConsejos, setSelectedConsejos] = useState<Array<{ municipality: string; consejo: string }>>([]);
   const [provinceSearch, setProvinceSearch] = useState('');
-  const [showProvinceDropdown, setShowProvinceDropdown] = useState(false);
   const [municipalitySearch, setMunicipalitySearch] = useState('');
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState('');
@@ -96,7 +96,7 @@ export default function GestoresAdminPage() {
   const resetForm = () => {
     setName('');
     setWhatsapp('');
-    setProvince('');
+    setProvinces([]);
     setProvinceSearch('');
     setSelectedMunicipalities([]);
     setSelectedConsejos([]);
@@ -116,7 +116,11 @@ export default function GestoresAdminPage() {
     setEditingId(gestor.id);
     setName(gestor.name);
     setWhatsapp(gestor.whatsapp);
-    setProvince(gestor.province);
+    // Backward-compat: tolerar docs viejos con `province` singular hasta que
+    // el re-seed actualice todos a `provinces: []`.
+    const gestorAsLegacy = gestor as IGestor & { province?: string };
+    const provs = gestor.provinces ?? (gestorAsLegacy.province ? [gestorAsLegacy.province] : []);
+    setProvinces(provs);
     setProvinceSearch('');
     setSelectedMunicipalities([...gestor.municipalities]);
     setSelectedConsejos(gestor.consejos ? [...gestor.consejos] : []);
@@ -187,7 +191,7 @@ export default function GestoresAdminPage() {
   const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 
   const handleSave = async () => {
-    if (!name || !whatsapp || !province || selectedMunicipalities.length === 0) return;
+    if (!name || !whatsapp || provinces.length === 0 || selectedMunicipalities.length === 0) return;
     const editingGestor = editingId ? gestores.find(g => g.id === editingId) : null;
 
     // Check for duplicates (exclude current gestor when editing)
@@ -242,7 +246,7 @@ export default function GestoresAdminPage() {
       const gestorData = {
         name,
         whatsapp: whatsapp.replace(/[^0-9]/g, ''),
-        province,
+        provinces,
         municipalities: selectedMunicipalities,
         consejos: cleanConsejos,
         active: true,
@@ -341,9 +345,34 @@ export default function GestoresAdminPage() {
     }
   };
 
-  const availableMunicipalities = province
-    ? CUBA_PROVINCES.find((p) => p.name === province)?.municipalities || []
-    : [];
+  // Municipios disponibles = unión de los municipios de TODAS las provincias
+  // seleccionadas. Memoizamos para evitar recomputar en cada render.
+  const availableMunicipalities = useMemo(() => {
+    if (provinces.length === 0) return [];
+    const all = provinces.flatMap(
+      (p) => CUBA_PROVINCES.find((x) => x.name === p)?.municipalities ?? [],
+    );
+    // Deduplicar (un nombre de municipio podría existir en dos provincias,
+    // ej. "Matanzas" provincia + "Matanzas" municipio; aquí solo viene como
+    // municipio porque iteramos sobre municipalities[])
+    return Array.from(new Set(all)).sort((a, b) => a.localeCompare(b, 'es'));
+  }, [provinces]);
+
+  // Map municipio → provincia. Necesario para llamar getConsejos(provincia,
+  // municipio) en el grid de consejos cuando un gestor cubre varias
+  // provincias con consejos (ej. Marian futuro caso).
+  const municipalityToProvince = useMemo(() => {
+    const m = new Map<string, string>();
+    for (const p of provinces) {
+      const munis = CUBA_PROVINCES.find((x) => x.name === p)?.municipalities ?? [];
+      for (const muni of munis) {
+        // Si un municipio aparece en dos provincias, el primero gana —
+        // suficientemente raro en la práctica para asumir 1:1.
+        if (!m.has(muni)) m.set(muni, p);
+      }
+    }
+    return m;
+  }, [provinces]);
 
   const filteredMunicipalities = municipalitySearch
     ? availableMunicipalities.filter((m) =>
@@ -385,9 +414,38 @@ export default function GestoresAdminPage() {
     });
   };
 
+  // Toggle de provincia con cleanup en cascada: al desmarcar una provincia,
+  // limpiamos los municipios que solo pertenecían a ella y los consejos
+  // huérfanos. Patrón análogo a toggleMunicipality.
+  const toggleProvince = (p: string) => {
+    setProvinces((prev) => {
+      const wasSelected = prev.includes(p);
+      const next = wasSelected ? prev.filter((x) => x !== p) : [...prev, p];
+      if (wasSelected) {
+        // Municipios que pertenecían a `p` y a ninguna otra provincia restante
+        const stillCoveredSet = new Set(
+          next.flatMap(
+            (q) => CUBA_PROVINCES.find((x) => x.name === q)?.municipalities ?? [],
+          ),
+        );
+        setSelectedMunicipalities((munis) =>
+          munis.filter((m) => stillCoveredSet.has(m)),
+        );
+        setSelectedConsejos((cs) =>
+          cs.filter((c) => stillCoveredSet.has(c.municipality)),
+        );
+      }
+      return next;
+    });
+  };
+
   // Sets memoizados para que los checkbox renders sean O(1) en vez de O(N)
   // por celda. Con ~15 municipios × ~10 consejos cada uno, el render tenía
   // hasta ~150 .some() por keystroke en cualquier input del formulario.
+  const selectedProvincesSet = useMemo(
+    () => new Set(provinces),
+    [provinces],
+  );
   const selectedMunicipalitiesSet = useMemo(
     () => new Set(selectedMunicipalities),
     [selectedMunicipalities],
@@ -397,6 +455,10 @@ export default function GestoresAdminPage() {
     [selectedConsejos],
   );
 
+  const isProvinceSelected = useCallback(
+    (p: string) => selectedProvincesSet.has(p),
+    [selectedProvincesSet],
+  );
   const isMunicipalitySelected = useCallback(
     (m: string) => selectedMunicipalitiesSet.has(m),
     [selectedMunicipalitiesSet],
@@ -407,10 +469,10 @@ export default function GestoresAdminPage() {
     [selectedConsejosSet],
   );
 
-  // Solo mostramos la sección de consejos si la provincia los usa
-  // (La Habana). Para Matanzas y otras provincias sin consejos detallados,
-  // la sección queda oculta — la cobertura es a nivel municipio.
-  const showConsejosSection = province && requiresConsejoPopular(province);
+  // Mostramos la sección de consejos si CUALQUIERA de las provincias
+  // seleccionadas los usa (La Habana). Para Matanzas/Mayabeque/Granma/SdC
+  // y demás sin consejos detallados, la sección queda oculta.
+  const showConsejosSection = provinces.some(requiresConsejoPopular);
 
   if (!isLoaded || !isAdmin) {
     return (
@@ -731,50 +793,46 @@ export default function GestoresAdminPage() {
                 </div>
               </div>
 
-              <div className="relative">
-                <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 block">Provincia</label>
-                <div className="relative">
+              {/* Provincia multi-select. Un gestor puede cubrir más de una
+                  (ej. Marian → Santiago de Cuba + Granma). El filtro por
+                  texto permanece pero ahora marca/desmarca via checkbox en
+                  lugar de seleccionar uno solo. */}
+              <div>
+                <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 block">
+                  Provincias ({provinces.length})
+                </label>
+                <div className="relative mb-2">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
                   <input
                     type="text"
-                    value={provinceSearch || province}
-                    onChange={(e) => {
-                      setProvinceSearch(e.target.value);
-                      setShowProvinceDropdown(true);
-                      if (province) {
-                        setProvince('');
-                        setSelectedMunicipalities([]);
-                      }
-                    }}
-                    onFocus={() => setShowProvinceDropdown(true)}
-                    placeholder="Buscar provincia..."
-                    className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white pr-8"
+                    value={provinceSearch}
+                    onChange={(e) => setProvinceSearch(e.target.value)}
+                    placeholder="Filtrar provincias..."
+                    className="w-full pl-9 pr-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   />
-                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 </div>
-                {showProvinceDropdown && (
-                  <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg max-h-48 overflow-y-auto shadow-lg">
-                    {filteredProvinces.map((p) => (
-                      <button
-                        key={p.name}
-                        onClick={() => {
-                          setProvince(p.name);
-                          setProvinceSearch('');
-                          setShowProvinceDropdown(false);
-                          setSelectedMunicipalities([]);
-                        }}
-                        className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white"
-                      >
-                        {p.name}
-                      </button>
-                    ))}
-                  </div>
-                )}
+                <div className="max-h-36 overflow-y-auto space-y-1 border border-gray-200 dark:border-gray-600 rounded-lg p-2">
+                  {filteredProvinces.map((p) => (
+                    <label
+                      key={p.name}
+                      className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isProvinceSelected(p.name)}
+                        onChange={() => toggleProvince(p.name)}
+                        className="rounded border-gray-300 text-[#505A4A] focus:ring-[#505A4A]"
+                      />
+                      <span className="text-sm text-gray-700 dark:text-gray-300">{p.name}</span>
+                    </label>
+                  ))}
+                </div>
               </div>
               <div>
                 <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 block">
                   Municipios ({selectedMunicipalities.length})
                 </label>
-                {province ? (
+                {provinces.length > 0 ? (
                   <>
                     <div className="relative mb-2">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
@@ -801,7 +859,7 @@ export default function GestoresAdminPage() {
                     </div>
                   </>
                 ) : (
-                  <p className="text-sm text-gray-400 py-2">Selecciona primero una provincia</p>
+                  <p className="text-sm text-gray-400 py-2">Selecciona primero al menos una provincia</p>
                 )}
               </div>
             </div>
@@ -821,7 +879,11 @@ export default function GestoresAdminPage() {
                 </p>
                 <div className="space-y-3 max-h-72 overflow-y-auto pr-2">
                   {selectedMunicipalities.map((muni) => {
-                    const consejos = getConsejos(province, muni);
+                    // Para cada municipio, buscamos a qué provincia pertenece
+                    // (puede venir de cualquiera de las seleccionadas) y
+                    // resolvemos sus consejos con esa provincia.
+                    const muniProvince = municipalityToProvince.get(muni);
+                    const consejos = muniProvince ? getConsejos(muniProvince, muni) : [];
                     if (consejos.length === 0) return null;
                     return (
                       <div
@@ -859,7 +921,7 @@ export default function GestoresAdminPage() {
             <div className="flex gap-3 mt-4">
               <button
                 onClick={handleSave}
-                disabled={saving || uploadingPhoto || !name || !whatsapp || !province || selectedMunicipalities.length === 0}
+                disabled={saving || uploadingPhoto || !name || !whatsapp || provinces.length === 0 || selectedMunicipalities.length === 0}
                 className="flex items-center gap-2 bg-[#505A4A] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#414A3C] transition-colors disabled:opacity-50"
               >
                 {saving || uploadingPhoto ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
@@ -976,7 +1038,8 @@ export default function GestoresAdminPage() {
                       </span>
                       <span className="flex items-center gap-1.5">
                         <MapPin className="w-3.5 h-3.5" />
-                        {gestor.province}
+                        {/* Backward-compat: tolerar docs viejos con `province` singular */}
+                        {gestor.provinces?.join(', ') ?? (gestor as IGestor & { province?: string }).province ?? ''}
                       </span>
                       {gestor.email && (
                         <span className="flex items-center gap-1.5">
