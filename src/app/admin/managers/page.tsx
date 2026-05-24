@@ -194,12 +194,17 @@ export default function GestoresAdminPage() {
     if (!name || !whatsapp || provinces.length === 0 || selectedMunicipalities.length === 0) return;
     const editingGestor = editingId ? gestores.find(g => g.id === editingId) : null;
 
-    // Check for duplicates (exclude current gestor when editing)
-    const duplicateName = gestores.find(g => g.name.trim().toLowerCase() === name.trim().toLowerCase() && g.id !== editingId);
-    if (duplicateName) {
-      setError(`Ya existe un gestor con el nombre "${duplicateName.name}".`);
-      return;
-    }
+    // Validación de duplicados (excluye al propio gestor cuando editamos).
+    //
+    // Permitimos nombres repetidos — el cliente puede tener dos "Marian" o dos
+    // "Heydi" cubriendo zonas distintas, y obligarles a inventarse alias
+    // ("Marian 2") rompe la naturalidad. El gestor se identifica internamente
+    // por su `id` en Firestore, no por el nombre, así que duplicarlo no
+    // genera ambigüedad en findByLocation.
+    //
+    // Lo que SÍ bloqueamos: teléfono WhatsApp duplicado (dos gestores con
+    // el mismo número causaría que un mensaje al gestor X llegara a una
+    // persona que cubre la zona Y). Y email duplicado (login de cuenta).
     const cleanWhatsapp = whatsapp.replace(/[^0-9]/g, '');
     const duplicatePhone = gestores.find(g => g.whatsapp === cleanWhatsapp && g.id !== editingId);
     if (duplicatePhone) {
