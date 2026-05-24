@@ -266,14 +266,28 @@ export default function LocationPopup({ open, onOpenChange }: LocationPopupProps
               />
             </Dialog.Overlay>
             <Dialog.Content asChild {...dismissProps}>
+              {/* Posicionamiento responsive del popup:
+                  - Mobile (< sm): anclado arriba (top-3) y alto máximo
+                    100dvh - margen. Sin centrar verticalmente porque al
+                    aparecer el teclado iOS el popup centrado quedaría detrás.
+                    `dvh` (dynamic viewport height) SÍ se ajusta al teclado,
+                    a diferencia de `vh`. Soporte: iOS 15.4+, Android Chrome.
+                  - Desktop (sm+): centrado normal como antes.
+                  El popup mismo es flex column para que el CTA quede sticky
+                  abajo y el contenido scrollee por dentro. */}
               <m.div
-                className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[calc(100vw-1.5rem)] sm:w-[90vw] max-w-md max-h-[92vh] sm:max-h-[90vh] overflow-y-auto"
+                className="fixed left-1/2 -translate-x-1/2 z-50 w-[calc(100vw-1.5rem)] sm:w-[90vw] max-w-md
+                           top-3 sm:top-1/2 sm:-translate-y-1/2
+                           max-h-[calc(100dvh-1.5rem)] sm:max-h-[90vh]
+                           flex flex-col"
                 initial={{ opacity: 0, scale: 0.95, y: 10 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 10 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className={`${bg} border ${border} rounded-2xl p-5 sm:p-8 relative shadow-2xl`}>
+                <div className={`${bg} border ${border} rounded-2xl relative shadow-2xl flex flex-col overflow-hidden`}>
+                  {/* Contenido scrolleable */}
+                  <div className="overflow-y-auto p-5 sm:p-8 pb-3 sm:pb-3 overscroll-contain">
                   {/* Botón X de cerrar — solo visible cuando ya hay una
                       location completa guardada (el cliente está cambiando,
                       puede cancelar). Primera visita: forzar selección, no
@@ -441,14 +455,21 @@ export default function LocationPopup({ open, onOpenChange }: LocationPopupProps
                     </div>
                   )}
 
-                  {/* Confirm button */}
-                  <button
-                    onClick={handleConfirm}
-                    disabled={!canConfirm}
-                    className={`w-full mt-6 ${btnBg} py-3 rounded-xl text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed`}
-                  >
-                    Confirmar ubicación
-                  </button>
+                  </div>
+                  {/* Sticky footer con el CTA: el botón Confirmar SIEMPRE
+                      queda visible aunque el teclado virtual de iOS aparezca
+                      o la lista de opciones sea larga. Si lo dejábamos al
+                      final del scrollable, en mobile con teclado abierto el
+                      cliente perdía el botón. */}
+                  <div className={`flex-shrink-0 px-5 sm:px-8 py-3 sm:py-4 ${bg} border-t ${border}`}>
+                    <button
+                      onClick={handleConfirm}
+                      disabled={!canConfirm}
+                      className={`w-full min-h-[44px] ${btnBg} py-3 rounded-xl text-sm font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed`}
+                    >
+                      Confirmar ubicación
+                    </button>
+                  </div>
                 </div>
               </m.div>
             </Dialog.Content>
