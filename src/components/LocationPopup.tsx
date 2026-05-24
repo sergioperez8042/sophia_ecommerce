@@ -77,11 +77,18 @@ export default function LocationPopup({ open, onOpenChange }: LocationPopupProps
 
   // Lista de provincias con cobertura (solo La Habana por ahora)
   const allProvinces = useMemo(() => getProvinces(), []);
+  // Filtrado tolerante al estado "ya hay algo seleccionado":
+  //   - searchTerm vacío → mostramos toda la lista.
+  //   - searchTerm === valor seleccionado → mostramos toda la lista
+  //     también. Sin esto, al re-abrir el popup pre-rellenado con
+  //     "La Habana", el filtro lo cierra a 1 opción y el cliente no
+  //     puede ver las otras provincias para cambiar.
+  //   - searchTerm distinto al seleccionado → filtramos normal.
   const filteredProvinces = useMemo(() => {
-    if (!provinceSearch) return allProvinces;
+    if (!provinceSearch || provinceSearch === selectedProvince) return allProvinces;
     const term = provinceSearch.toLowerCase();
     return allProvinces.filter((p) => p.toLowerCase().includes(term));
-  }, [allProvinces, provinceSearch]);
+  }, [allProvinces, provinceSearch, selectedProvince]);
 
   // Municipios de la provincia seleccionada
   const municipalities = useMemo(
@@ -89,10 +96,10 @@ export default function LocationPopup({ open, onOpenChange }: LocationPopupProps
     [selectedProvince],
   );
   const filteredMunicipalities = useMemo(() => {
-    if (!municipalitySearch) return municipalities;
+    if (!municipalitySearch || municipalitySearch === selectedMunicipality) return municipalities;
     const term = municipalitySearch.toLowerCase();
     return municipalities.filter((m) => m.toLowerCase().includes(term));
-  }, [municipalities, municipalitySearch]);
+  }, [municipalities, municipalitySearch, selectedMunicipality]);
 
   // Si la provincia usa consejos populares (solo La Habana por ahora),
   // mostramos el 3er dropdown. Si no, el flujo es Provincia + Municipio.
@@ -109,10 +116,10 @@ export default function LocationPopup({ open, onOpenChange }: LocationPopupProps
     [showConsejoStep, selectedProvince, selectedMunicipality],
   );
   const filteredConsejos = useMemo(() => {
-    if (!consejoSearch) return consejos;
+    if (!consejoSearch || consejoSearch === selectedConsejo) return consejos;
     const term = consejoSearch.toLowerCase();
     return consejos.filter((c) => c.toLowerCase().includes(term));
-  }, [consejos, consejoSearch]);
+  }, [consejos, consejoSearch, selectedConsejo]);
 
   // Estado del gestor — ahora viene de Firestore (no de localities.ts), así
   // que es asíncrono y vive en useState + useEffect en lugar de useMemo.
