@@ -67,40 +67,41 @@ export default function CatalogHeader({ showBackButton = false }: CatalogHeaderP
             <header
                 className={`sticky top-0 z-40 backdrop-blur-xl border-b transition-colors duration-300 ${isDark ? 'bg-[#1a1d19]/95 border-[#C4B590]/15' : 'bg-white/80 border-[#505A4A]/10'}`}
             >
-                <div className="max-w-7xl mx-auto px-4 sm:px-6">
-                    <div className="flex items-center justify-between h-16 sm:h-20">
-                        <div className="flex items-center gap-3">
+                <div className="max-w-7xl mx-auto px-3 sm:px-6">
+                    <div className="flex items-center justify-between gap-2 h-14 sm:h-20">
+                        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                             {showBackButton && (
                                 <Link
                                     href="/"
-                                    className={`flex items-center justify-center h-9 w-9 rounded-lg transition-colors ${isDark ? 'hover:bg-[#C4B590]/15' : 'hover:bg-gray-100'}`}
+                                    className={`flex items-center justify-center h-10 w-10 rounded-lg transition-colors flex-shrink-0 ${isDark ? 'hover:bg-[#C4B590]/15' : 'hover:bg-gray-100'}`}
                                     aria-label="Volver al catálogo"
                                 >
                                     <ArrowLeft className={`w-5 h-5 ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`} />
                                 </Link>
                             )}
-                            <Link href="/" className="flex items-center gap-3">
-                                <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#505A4A]/15">
+                            <Link href="/" className="flex items-center gap-2 sm:gap-3 min-w-0">
+                                <div className="relative w-10 h-10 sm:w-14 sm:h-14 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#505A4A]/15 flex-shrink-0">
                                     <Image
                                         src="/images/sophia_logo_nuevo.jpeg"
                                         alt="Sophia"
                                         fill
-                                        sizes="56px"
+                                        sizes="(min-width: 640px) 56px, 40px"
                                         className="object-cover"
                                         priority
                                     />
                                 </div>
-                                <span className={`text-base sm:text-lg font-semibold tracking-tight leading-tight ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>Sophia</span>
+                                <span className={`hidden min-[420px]:inline text-sm sm:text-lg font-semibold tracking-tight leading-tight truncate ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>Sophia</span>
                             </Link>
                         </div>
 
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
                             {/* Selector de ubicación: muestra la zona actual y al
                                 hacer click abre el popup en modo controlado. En
-                                mobile solo el ícono, en desktop ícono + texto. */}
+                                mobile solo el ícono (40px touch target), en
+                                desktop ícono + texto truncado. */}
                             <button
                                 onClick={() => setIsLocationOpen(true)}
-                                className={`flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-xl transition-colors max-w-[180px] sm:max-w-[220px] ${isDark ? 'bg-[#C4B590]/15 text-[#C4B590] hover:bg-[#C4B590]/25' : 'bg-[#505A4A]/10 text-[#505A4A] hover:bg-[#505A4A]/20'}`}
+                                className={`flex items-center justify-center sm:justify-start gap-1.5 h-10 w-10 sm:w-auto sm:px-3 sm:py-2 sm:h-auto sm:min-h-[40px] rounded-xl transition-colors sm:max-w-[200px] ${isDark ? 'bg-[#C4B590]/15 text-[#C4B590] hover:bg-[#C4B590]/25' : 'bg-[#505A4A]/10 text-[#505A4A] hover:bg-[#505A4A]/20'}`}
                                 aria-label={`Cambiar ubicación (actual: ${locationLabel})`}
                                 title={locationLabel}
                             >
@@ -112,7 +113,7 @@ export default function CatalogHeader({ showBackButton = false }: CatalogHeaderP
 
                             <button
                                 onClick={toggleTheme}
-                                className={`p-2 rounded-xl transition-colors ${isDark ? 'bg-[#C4B590]/15 text-[#C4B590] hover:bg-[#C4B590]/25' : 'bg-[#505A4A]/10 text-[#505A4A] hover:bg-[#505A4A]/20'}`}
+                                className={`flex items-center justify-center h-10 w-10 rounded-xl transition-colors ${isDark ? 'bg-[#C4B590]/15 text-[#C4B590] hover:bg-[#C4B590]/25' : 'bg-[#505A4A]/10 text-[#505A4A] hover:bg-[#505A4A]/20'}`}
                                 aria-label={isDark ? 'Modo claro' : 'Modo oscuro'}
                             >
                                 {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
@@ -120,7 +121,7 @@ export default function CatalogHeader({ showBackButton = false }: CatalogHeaderP
 
                             <Link href="/wishlist">
                                 <div
-                                    className={`relative p-2 rounded-xl transition-colors ${isDark ? 'bg-[#C4B590]/15 text-[#C4B590] hover:bg-[#C4B590]/25' : 'bg-[#505A4A]/10 text-[#505A4A] hover:bg-[#505A4A]/20'}`}
+                                    className={`relative flex items-center justify-center h-10 w-10 rounded-xl transition-colors ${isDark ? 'bg-[#C4B590]/15 text-[#C4B590] hover:bg-[#C4B590]/25' : 'bg-[#505A4A]/10 text-[#505A4A] hover:bg-[#505A4A]/20'}`}
                                 >
                                     <Heart className="w-4 h-4" />
                                     {wishlistCount > 0 && (
@@ -133,7 +134,7 @@ export default function CatalogHeader({ showBackButton = false }: CatalogHeaderP
 
                             <button
                                 onClick={() => setIsCartOpen(true)}
-                                className={`relative p-2 rounded-xl transition-colors ${isDark ? 'bg-[#C4B590]/15 text-[#C4B590] hover:bg-[#C4B590]/25' : 'bg-[#505A4A]/10 text-[#505A4A] hover:bg-[#505A4A]/20'}`}
+                                className={`relative flex items-center justify-center h-10 w-10 rounded-xl transition-colors ${isDark ? 'bg-[#C4B590]/15 text-[#C4B590] hover:bg-[#C4B590]/25' : 'bg-[#505A4A]/10 text-[#505A4A] hover:bg-[#505A4A]/20'}`}
                                 aria-label="Carrito"
                             >
                                 <ShoppingBag className="w-4 h-4" />
@@ -148,7 +149,8 @@ export default function CatalogHeader({ showBackButton = false }: CatalogHeaderP
                                 <div ref={avatarMenuRef} className="relative">
                                     <button
                                         onClick={() => setIsAvatarMenuOpen(!isAvatarMenuOpen)}
-                                        className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-semibold transition-colors ${isDark ? 'bg-[#C4B590]/20 text-[#C4B590] hover:bg-[#C4B590]/30' : 'bg-[#505A4A] text-white hover:bg-[#414A3C]'}`}
+                                        className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-semibold transition-colors ${isDark ? 'bg-[#C4B590]/20 text-[#C4B590] hover:bg-[#C4B590]/30' : 'bg-[#505A4A] text-white hover:bg-[#414A3C]'}`}
+                                        aria-label="Menú de usuario"
                                     >
                                         {userInitials}
                                     </button>
