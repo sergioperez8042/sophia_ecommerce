@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { m, AnimatePresence } from 'framer-motion';
-import { MapPin, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { MapPin, AlertCircle, CheckCircle2, Info } from 'lucide-react';
 import {
   getProvinces,
   getMunicipalities,
@@ -273,9 +273,27 @@ export default function LocationPopup({ open, onOpenChange }: LocationPopupProps
                   <Dialog.Title className={`text-xl font-semibold ${accent} mb-2`}>
                     Selecciona tu ubicación
                   </Dialog.Title>
-                  <Dialog.Description className={`text-sm ${textSecondary} mb-6 leading-relaxed`}>
+                  <Dialog.Description className={`text-sm ${textSecondary} mb-4 leading-relaxed`}>
                     Para asignarte un gestor de venta, necesitamos saber tu zona exacta.
                   </Dialog.Description>
+
+                  {/* Cobertura actual — aviso al cliente de que solo las
+                      provincias listadas en el dropdown tienen entregas.
+                      Reduce confusión cuando alguien busca una provincia
+                      que aún no incorporamos. */}
+                  <div
+                    className={`flex items-start gap-2.5 mb-5 px-3 py-2.5 rounded-lg border ${
+                      isDark
+                        ? 'bg-[#C4B590]/8 border-[#C4B590]/25 text-[#d4cdc0]'
+                        : 'bg-[#505A4A]/5 border-[#505A4A]/20 text-[#505A4A]'
+                    }`}
+                    role="note"
+                  >
+                    <Info className="w-4 h-4 flex-shrink-0 mt-0.5" aria-hidden />
+                    <p className="text-xs leading-relaxed">
+                      Por el momento solo hacemos entregas en las provincias listadas abajo. Estamos sumando más zonas progresivamente.
+                    </p>
+                  </div>
 
                   <div className="space-y-4">
                     {/* Province */}
