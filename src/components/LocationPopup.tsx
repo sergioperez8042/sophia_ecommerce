@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { m, AnimatePresence } from 'framer-motion';
-import { MapPin, AlertCircle, CheckCircle2, Info } from 'lucide-react';
+import { MapPin, AlertCircle, CheckCircle2, Info, X } from 'lucide-react';
 import {
   getProvinces,
   getMunicipalities,
@@ -260,13 +260,28 @@ export default function LocationPopup({ open, onOpenChange }: LocationPopupProps
             </Dialog.Overlay>
             <Dialog.Content asChild {...dismissProps}>
               <m.div
-                className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[90vw] max-w-md max-h-[90vh] overflow-y-auto"
+                className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[calc(100vw-1.5rem)] sm:w-[90vw] max-w-md max-h-[92vh] sm:max-h-[90vh] overflow-y-auto"
                 initial={{ opacity: 0, scale: 0.95, y: 10 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 10 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className={`${bg} border ${border} rounded-2xl p-6 sm:p-8 relative shadow-2xl`}>
+                <div className={`${bg} border ${border} rounded-2xl p-5 sm:p-8 relative shadow-2xl`}>
+                  {/* Botón X de cerrar — solo visible cuando ya hay una
+                      location completa guardada (el cliente está cambiando,
+                      puede cancelar). Primera visita: forzar selección, no
+                      mostramos X. Coherente con dismissProps de arriba. */}
+                  {hasFullLocation && (
+                    <button
+                      type="button"
+                      onClick={() => setIsOpen(false)}
+                      aria-label="Cerrar"
+                      className={`absolute top-3 right-3 sm:top-4 sm:right-4 flex items-center justify-center h-10 w-10 rounded-xl transition-colors z-10 ${isDark ? 'text-[#C4B590]/60 hover:text-[#C4B590] hover:bg-[#C4B590]/10' : 'text-[#505A4A]/60 hover:text-[#505A4A] hover:bg-[#505A4A]/10'}`}
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  )}
+
                   {/* Icon */}
                   <div className={`w-12 h-12 rounded-xl ${accentBg} flex items-center justify-center mb-4`}>
                     <MapPin className={`w-6 h-6 ${accent}`} />
