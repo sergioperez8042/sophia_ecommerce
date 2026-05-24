@@ -249,12 +249,12 @@ const GESTORES = [
       // Santiago de Cuba
       'Contramaestre',
       'Guamá',
-      'Julio Antonio Mella',
+      'Mella',
       'Palma Soriano',
       'San Luis',
       'Santiago de Cuba',
       'Segundo Frente',
-      'Songo - La Maya',
+      'Songo-La Maya',
       'Tercer Frente',
       // Granma
       'Bartolomé Masó',

@@ -297,12 +297,12 @@ const SANTIAGO_DE_CUBA: ProvinceData = {
   municipalities: [
     { municipality: "Contramaestre", consejos: [] },
     { municipality: "Guamá", consejos: [] },
-    { municipality: "Julio Antonio Mella", consejos: [] },
+    { municipality: "Mella", consejos: [] },
     { municipality: "Palma Soriano", consejos: [] },
     { municipality: "San Luis", consejos: [] },
     { municipality: "Santiago de Cuba", consejos: [] },
     { municipality: "Segundo Frente", consejos: [] },
-    { municipality: "Songo - La Maya", consejos: [] },
+    { municipality: "Songo-La Maya", consejos: [] },
     { municipality: "Tercer Frente", consejos: [] },
   ],
 };
