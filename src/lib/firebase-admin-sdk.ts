@@ -1,5 +1,6 @@
 import { initializeApp, getApps, cert, App } from 'firebase-admin/app';
 import { getAuth, Auth } from 'firebase-admin/auth';
+import { getFirestore, Firestore } from 'firebase-admin/firestore';
 
 let adminApp: App | undefined;
 
@@ -31,4 +32,14 @@ function getAdminApp(): App {
 
 export function getAdminAuth(): Auth {
   return getAuth(getAdminApp());
+}
+
+/**
+ * Admin SDK Firestore client. Bypasses security rules — ideal for
+ * server-side mutations done on behalf of an admin (the auth check has
+ * to be enforced ANTES de llamar a esta función, normalmente con
+ * `verifyFirebaseAuth` + verificación del role).
+ */
+export function getAdminFirestore(): Firestore {
+  return getFirestore(getAdminApp());
 }

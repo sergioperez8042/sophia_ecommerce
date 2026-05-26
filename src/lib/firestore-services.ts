@@ -15,8 +15,7 @@ import {
   Timestamp,
   Firestore,
 } from 'firebase/firestore';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, deleteUser, Auth, getAuth } from 'firebase/auth';
-import { initializeApp, getApps, deleteApp } from 'firebase/app';
+import { createUserWithEmailAndPassword, updateProfile, deleteUser, Auth } from 'firebase/auth';
 import { db, auth } from './firebase';
 import { IProduct, ICategory, IGestor, IOrder, IOrderItem, OrderStatus, IReview } from '@/entities/all';
 import { User, UserRole } from '@/store/AuthContext';
@@ -1032,9 +1031,26 @@ export const OrderService = {
 
 export const GestorAccountService = {
   /**
-   * Creates a Firebase Auth account for a gestor using a secondary Firebase app instance.
-   * This prevents the admin from being logged out when creating a new user.
-   * Also creates the `users` doc with role: 'manager' and links gestorId.
+   * Creates (or relinks) a Firebase Auth account for a gestor.
+   *
+   * Delegates ALL writes to the server-side API route
+   * `/api/managers/create-account` which uses Firebase Admin SDK to
+   * bypass Firestore security rules. Esto resuelve el bug intermitente
+   * "Missing or insufficient permissions" del flow client-side anterior,
+   * que necesitaba que las rules permitieran al admin actualizar
+   * `users/{otroUid}` — algo frágil porque depende del role del propio
+   * admin estando exactamente como 'admin' en su doc, y porque cualquier
+   * setDoc de users/* cuyo doc no existía caía como create y luego al
+   * re-intentarse caía como update con reglas distintas.
+   *
+   * El endpoint server-side:
+   *  - Verifica el Firebase ID token del caller (admin).
+   *  - Verifica que el caller tenga role=admin en Firestore.
+   *  - Crea / re-enlaza el Auth user vía Admin SDK (sin necesidad de
+   *    saber la password del user existente).
+   *  - Escribe `users/{uid}` (merge) y actualiza `gestores/{id}` en un
+   *    batch atómico.
+   *  - Loguea cada etapa para diagnóstico.
    */
   async createAccount(data: {
     email: string;
@@ -1042,75 +1058,49 @@ export const GestorAccountService = {
     name: string;
     gestorId: string;
   }): Promise<{ userId: string }> {
-    const firestore = getDb();
+    // Obtener el Firebase ID token del admin actual para autenticar al
+    // endpoint. Sin esto el endpoint nos rechazará con 401.
+    const currentUser = auth?.currentUser;
+    if (!currentUser) {
+      throw new Error('Debes iniciar sesión como admin para crear cuentas de gestor.');
+    }
+    const idToken = await currentUser.getIdToken();
 
-    // Create a secondary Firebase app to avoid logging out the admin
-    const secondaryAppName = `gestor-creator-${Date.now()}`;
-    const firebaseConfig = {
-      apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-      authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    const res = await fetch('/api/managers/create-account', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${idToken}`,
+      },
+      body: JSON.stringify({
+        gestorId: data.gestorId,
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      }),
+    });
+
+    const json = (await res.json().catch(() => ({}))) as {
+      success?: boolean;
+      userId?: string;
+      error?: string;
+      code?: string;
+      detail?: string;
     };
 
-    let secondaryApp;
-    try {
-      secondaryApp = initializeApp(firebaseConfig, secondaryAppName);
-      const secondaryAuth = getAuth(secondaryApp);
-
-      let uid: string;
-
-      try {
-        // Try to create a new user
-        const userCredential = await createUserWithEmailAndPassword(
-          secondaryAuth,
-          data.email,
-          data.password
-        );
-        uid = userCredential.user.uid;
-        await updateProfile(userCredential.user, { displayName: data.name });
-        await secondaryAuth.signOut();
-      } catch (createErr) {
-        const err = createErr as { code?: string };
-        if (err.code === 'auth/email-already-in-use') {
-          // Email already exists — sign in to get the UID and relink
-          const existingCred = await signInWithEmailAndPassword(
-            secondaryAuth,
-            data.email,
-            data.password
-          );
-          uid = existingCred.user.uid;
-          await secondaryAuth.signOut();
-        } else {
-          throw createErr;
-        }
-      }
-
-      // Create/update the users doc in Firestore with role: 'manager'
-      await setDoc(doc(firestore, USERS_COLLECTION, uid), {
-        name: data.name.trim(),
-        email: data.email.trim().toLowerCase(),
-        role: 'manager' as UserRole,
-        gestorId: data.gestorId,
-        createdAt: Timestamp.now(),
-      });
-
-      // Update the gestor doc with the userId and email
-      await updateDoc(doc(firestore, GESTORES_COLLECTION, data.gestorId), {
-        userId: uid,
-        email: data.email.trim().toLowerCase(),
-      });
-
-      return { userId: uid };
-    } finally {
-      // Clean up the secondary app
-      if (secondaryApp) {
-        try {
-          await deleteApp(secondaryApp);
-        } catch {
-          // Ignore cleanup errors
-        }
-      }
+    if (!res.ok || !json.success || !json.userId) {
+      // Componer un mensaje útil para el admin con todo lo que el endpoint
+      // pueda darnos. El form del admin ya lo muestra como `setError(...)`.
+      const parts: string[] = [];
+      if (json.error) parts.push(json.error);
+      if (json.code) parts.push(`(${json.code})`);
+      if (json.detail) parts.push(`— ${json.detail}`);
+      throw new Error(
+        parts.join(' ') || `Error ${res.status} al crear la cuenta del gestor.`,
+      );
     }
+
+    return { userId: json.userId };
   },
 
   /**
