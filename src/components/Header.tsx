@@ -7,9 +7,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart, useWishlist, useAuth, useTheme } from "@/store";
 
-const navItems = [
+// Nav items base — el href de "Productos" se decide en runtime:
+//   - admin → /admin/products (gestión)
+//   - cliente o anónimo → / (la home YA es el catálogo desde que
+//     /products dejó de existir como vista pública duplicada)
+const baseNavItems = [
     { name: "Inicio", href: "/", icon: Home },
-    { name: "Productos", href: "/products", icon: Package },
+    { name: "Productos", href: "/", icon: Package },
     { name: "Categorías", href: "/categories", icon: Grid3X3 },
     { name: "Nosotros", href: "/about", icon: Users },
     { name: "Contacto", href: "/contact", icon: Phone }
@@ -23,6 +27,16 @@ export default function Header() {
     const { totalItems: wishlistCount } = useWishlist();
     const { logout, isAuthenticated, user } = useAuth();
     const { isDark, toggleTheme } = useTheme();
+
+    // Derivamos los nav items según el rol: para admin, "Productos" va a
+    // la gestión (/admin/products); para clientes/anónimos, a la home
+    // (que ES el catálogo). Solo se sobrescribe esa entrada.
+    const isAdmin = user?.role === 'admin';
+    const navItems = baseNavItems.map((item) =>
+        item.name === 'Productos' && isAdmin
+            ? { ...item, href: '/admin/products' }
+            : item,
+    );
 
     // Close menu on route change
     useEffect(() => {
