@@ -205,7 +205,7 @@ export default function MiCuentaPage() {
             </div>
             <button
               onClick={handleLogout}
-              className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm transition-colors ${isDark ? 'text-[#C4B590]/70 hover:text-[#C4B590] hover:bg-[#C4B590]/10' : 'text-[#505A4A]/60 hover:text-[#505A4A] hover:bg-[#505A4A]/10'}`}
+              className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm transition-colors ${isDark ? 'text-[#C4B590]/70 hover:text-[#C4B590] hover:bg-[#C4B590]/10' : 'text-[#505A4A]/75 hover:text-[#505A4A] hover:bg-[#505A4A]/10'}`}
             >
               <LogOut className="w-4 h-4" />
               <span className="hidden sm:inline">Cerrar sesión</span>
@@ -257,27 +257,27 @@ export default function MiCuentaPage() {
             </label>
             <div className="flex-1 min-w-0">
               <h2 className={`text-lg font-semibold truncate ${isDark ? 'text-white' : 'text-[#333]'}`}>{user.name}</h2>
-              <p className={`text-sm truncate ${isDark ? 'text-[#C4B590]/60' : 'text-[#505A4A]/60'}`}>{user.email}</p>
+              <p className={`text-sm truncate ${isDark ? 'text-[#C4B590]/60' : 'text-[#505A4A]/75'}`}>{user.email}</p>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-4 mt-5">
             <div className="text-center">
               <p className={`text-2xl font-semibold ${isDark ? 'text-white' : 'text-[#333]'}`}>{orders.length}</p>
-              <p className={`text-xs mt-0.5 ${isDark ? 'text-[#C4B590]/50' : 'text-[#505A4A]/50'}`}>Pedidos</p>
+              <p className={`text-xs mt-0.5 ${isDark ? 'text-[#C4B590]/50' : 'text-[#505A4A]/65'}`}>Pedidos</p>
             </div>
             <div className="text-center">
               <p className={`text-2xl font-semibold ${isDark ? 'text-white' : 'text-[#333]'}`}>{reviews.length}</p>
-              <p className={`text-xs mt-0.5 ${isDark ? 'text-[#C4B590]/50' : 'text-[#505A4A]/50'}`}>Reseñas</p>
+              <p className={`text-xs mt-0.5 ${isDark ? 'text-[#C4B590]/50' : 'text-[#505A4A]/65'}`}>Reseñas</p>
             </div>
             <div className="text-center">
               <p className={`text-2xl font-semibold ${isDark ? 'text-white' : 'text-[#333]'}`}>{formatPrice(totalSpent)}</p>
-              <p className={`text-xs mt-0.5 ${isDark ? 'text-[#C4B590]/50' : 'text-[#505A4A]/50'}`}>Total</p>
+              <p className={`text-xs mt-0.5 ${isDark ? 'text-[#C4B590]/50' : 'text-[#505A4A]/65'}`}>Total</p>
             </div>
           </div>
         </m.div>
 
         {/* Tabs */}
-        <div className={`flex gap-1 p-1 rounded-xl mb-6 ${isDark ? 'bg-[#232820]' : 'bg-[#505A4A]/5'}`}>
+        <div className={`flex gap-1 p-1 rounded-xl mb-6 ${isDark ? 'bg-[#232820]' : 'bg-[#505A4A]/12'}`}>
           {tabs.map(tab => (
             <button
               key={tab.id}
@@ -289,7 +289,7 @@ export default function MiCuentaPage() {
                     : 'bg-white text-[#505A4A] shadow-sm'
                   : isDark
                     ? 'text-[#C4B590]/40 hover:text-[#C4B590]/60'
-                    : 'text-[#505A4A]/40 hover:text-[#505A4A]/60'
+                    : 'text-[#505A4A]/65 hover:text-[#505A4A]/75'
               }`}
             >
               {tab.icon}
@@ -298,7 +298,7 @@ export default function MiCuentaPage() {
                 <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
                   activeTab === tab.id
                     ? isDark ? 'bg-[#C4B590]/30' : 'bg-[#505A4A]/10'
-                    : isDark ? 'bg-[#C4B590]/10' : 'bg-[#505A4A]/5'
+                    : isDark ? 'bg-[#C4B590]/10' : 'bg-[#505A4A]/12'
                 }`}>
                   {tab.count}
                 </span>
@@ -326,7 +326,7 @@ export default function MiCuentaPage() {
                 {orders.length === 0 ? (
                   <div className="text-center py-16">
                     <ShoppingBag className={`w-10 h-10 mx-auto mb-3 ${isDark ? 'text-[#C4B590]/30' : 'text-[#505A4A]/20'}`} />
-                    <p className={`text-sm ${isDark ? 'text-[#C4B590]/50' : 'text-[#505A4A]/50'}`}>Aún no tienes pedidos</p>
+                    <p className={`text-sm ${isDark ? 'text-[#C4B590]/50' : 'text-[#505A4A]/65'}`}>Aún no tienes pedidos</p>
                     <Link
                       href="/catalog"
                       className={`inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${isDark ? 'bg-[#C4B590]/20 text-[#C4B590] hover:bg-[#C4B590]/30' : 'bg-[#505A4A] text-white hover:bg-[#414A3C]'}`}
@@ -348,7 +348,7 @@ export default function MiCuentaPage() {
                             <p className={`text-sm font-medium ${isDark ? 'text-white' : 'text-[#333]'}`}>
                               {order.orderNumber}
                             </p>
-                            <p className={`text-xs mt-0.5 ${isDark ? 'text-[#C4B590]/50' : 'text-[#505A4A]/50'}`}>
+                            <p className={`text-xs mt-0.5 ${isDark ? 'text-[#C4B590]/50' : 'text-[#505A4A]/65'}`}>
                               {new Date(order.createdAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
                             </p>
                           </div>
@@ -356,12 +356,12 @@ export default function MiCuentaPage() {
                             {ORDER_STATUSES[order.status]}
                           </span>
                         </div>
-                        <div className={`space-y-2 ${isDark ? 'divide-[#C4B590]/10' : 'divide-[#505A4A]/5'} divide-y`}>
+                        <div className={`space-y-2 ${isDark ? 'divide-[#C4B590]/10' : 'divide-[#505A4A]/15'} divide-y`}>
                           {order.items.map((item, i) => (
                             <div key={i} className={`flex items-center justify-between ${i > 0 ? 'pt-2' : ''}`}>
                               <div className="flex-1 min-w-0">
                                 <p className={`text-sm truncate ${isDark ? 'text-[#e8e4dc]' : 'text-[#333]'}`}>{item.name}</p>
-                                <p className={`text-xs ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/40'}`}>x{item.quantity}</p>
+                                <p className={`text-xs ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/65'}`}>x{item.quantity}</p>
                               </div>
                               <p className={`text-sm font-medium ml-4 ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>
                                 {formatPrice(item.price * item.quantity)}
@@ -369,8 +369,8 @@ export default function MiCuentaPage() {
                             </div>
                           ))}
                         </div>
-                        <div className={`flex justify-between items-center mt-3 pt-3 border-t ${isDark ? 'border-[#C4B590]/10' : 'border-[#505A4A]/5'}`}>
-                          <p className={`text-xs ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/40'}`}>
+                        <div className={`flex justify-between items-center mt-3 pt-3 border-t ${isDark ? 'border-[#C4B590]/10' : 'border-[#505A4A]/15'}`}>
+                          <p className={`text-xs ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/65'}`}>
                             {order.items.reduce((s, i) => s + i.quantity, 0)} artículos
                           </p>
                           <p className={`text-sm font-semibold ${isDark ? 'text-white' : 'text-[#333]'}`}>
@@ -396,7 +396,7 @@ export default function MiCuentaPage() {
                 {reviews.length === 0 ? (
                   <div className="text-center py-16">
                     <MessageSquare className={`w-10 h-10 mx-auto mb-3 ${isDark ? 'text-[#C4B590]/30' : 'text-[#505A4A]/20'}`} />
-                    <p className={`text-sm ${isDark ? 'text-[#C4B590]/50' : 'text-[#505A4A]/50'}`}>No has escrito reseñas aún</p>
+                    <p className={`text-sm ${isDark ? 'text-[#C4B590]/50' : 'text-[#505A4A]/65'}`}>No has escrito reseñas aún</p>
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -414,7 +414,7 @@ export default function MiCuentaPage() {
                           >
                             {getProductName(review.productId)}
                           </Link>
-                          <span className={`text-xs ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/40'}`}>
+                          <span className={`text-xs ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/65'}`}>
                             {new Date(review.createdAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
                           </span>
                         </div>
@@ -455,7 +455,7 @@ export default function MiCuentaPage() {
               >
                 <div className={`rounded-xl p-5 ${isDark ? 'bg-[#232820] border border-[#C4B590]/10' : 'bg-white border border-[#505A4A]/10'}`}>
                   <div className="flex items-center justify-between mb-5">
-                    <h3 className={`text-sm font-semibold uppercase tracking-wider ${isDark ? 'text-[#C4B590]/60' : 'text-[#505A4A]/60'}`}>
+                    <h3 className={`text-sm font-semibold uppercase tracking-wider ${isDark ? 'text-[#C4B590]/60' : 'text-[#505A4A]/75'}`}>
                       Datos personales
                     </h3>
                     {!editing ? (
@@ -470,7 +470,7 @@ export default function MiCuentaPage() {
                       <div className="flex gap-2">
                         <button
                           onClick={() => { setEditing(false); setProfileForm({ name: user.name || '', phone: user.phone || '', address: user.address || '', city: user.city || '' }); }}
-                          className={`p-1.5 rounded-lg transition-colors ${isDark ? 'text-[#C4B590]/50 hover:text-[#C4B590] hover:bg-[#C4B590]/10' : 'text-[#505A4A]/50 hover:text-[#505A4A] hover:bg-[#505A4A]/10'}`}
+                          className={`p-1.5 rounded-lg transition-colors ${isDark ? 'text-[#C4B590]/50 hover:text-[#C4B590] hover:bg-[#C4B590]/10' : 'text-[#505A4A]/65 hover:text-[#505A4A] hover:bg-[#505A4A]/10'}`}
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -488,9 +488,9 @@ export default function MiCuentaPage() {
                   <div className="space-y-4">
                     {/* Name */}
                     <div className="flex items-start gap-3">
-                      <User className={`w-4 h-4 mt-1 flex-shrink-0 ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/40'}`} />
+                      <User className={`w-4 h-4 mt-1 flex-shrink-0 ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/65'}`} />
                       <div className="flex-1">
-                        <p className={`text-xs mb-1 ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/40'}`}>Nombre</p>
+                        <p className={`text-xs mb-1 ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/65'}`}>Nombre</p>
                         {editing ? (
                           <input
                             type="text"
@@ -506,18 +506,18 @@ export default function MiCuentaPage() {
 
                     {/* Email (read-only) */}
                     <div className="flex items-start gap-3">
-                      <Mail className={`w-4 h-4 mt-1 flex-shrink-0 ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/40'}`} />
+                      <Mail className={`w-4 h-4 mt-1 flex-shrink-0 ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/65'}`} />
                       <div className="flex-1">
-                        <p className={`text-xs mb-1 ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/40'}`}>Email</p>
+                        <p className={`text-xs mb-1 ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/65'}`}>Email</p>
                         <p className={`text-sm ${isDark ? 'text-white/60' : 'text-[#333]/60'}`}>{user.email}</p>
                       </div>
                     </div>
 
                     {/* Phone */}
                     <div className="flex items-start gap-3">
-                      <Phone className={`w-4 h-4 mt-1 flex-shrink-0 ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/40'}`} />
+                      <Phone className={`w-4 h-4 mt-1 flex-shrink-0 ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/65'}`} />
                       <div className="flex-1">
-                        <p className={`text-xs mb-1 ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/40'}`}>Teléfono</p>
+                        <p className={`text-xs mb-1 ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/65'}`}>Teléfono</p>
                         {editing ? (
                           <input
                             type="tel"
@@ -534,9 +534,9 @@ export default function MiCuentaPage() {
 
                     {/* Address */}
                     <div className="flex items-start gap-3">
-                      <MapPin className={`w-4 h-4 mt-1 flex-shrink-0 ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/40'}`} />
+                      <MapPin className={`w-4 h-4 mt-1 flex-shrink-0 ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/65'}`} />
                       <div className="flex-1">
-                        <p className={`text-xs mb-1 ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/40'}`}>Dirección</p>
+                        <p className={`text-xs mb-1 ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/65'}`}>Dirección</p>
                         {editing ? (
                           <input
                             type="text"
@@ -553,9 +553,9 @@ export default function MiCuentaPage() {
 
                     {/* City */}
                     <div className="flex items-start gap-3">
-                      <MapPin className={`w-4 h-4 mt-1 flex-shrink-0 ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/40'}`} />
+                      <MapPin className={`w-4 h-4 mt-1 flex-shrink-0 ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/65'}`} />
                       <div className="flex-1">
-                        <p className={`text-xs mb-1 ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/40'}`}>Ciudad</p>
+                        <p className={`text-xs mb-1 ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/65'}`}>Ciudad</p>
                         {editing ? (
                           <input
                             type="text"
@@ -572,7 +572,7 @@ export default function MiCuentaPage() {
                   </div>
 
                   {/* Member since */}
-                  <div className={`mt-6 pt-4 border-t ${isDark ? 'border-[#C4B590]/10' : 'border-[#505A4A]/5'}`}>
+                  <div className={`mt-6 pt-4 border-t ${isDark ? 'border-[#C4B590]/10' : 'border-[#505A4A]/15'}`}>
                     <p className={`text-xs ${isDark ? 'text-[#C4B590]/30' : 'text-[#505A4A]/30'}`}>
                       Miembro desde {user.createdAt ? new Date(user.createdAt).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' }) : '—'}
                     </p>

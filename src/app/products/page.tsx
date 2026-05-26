@@ -492,9 +492,18 @@ export default function ProductsPage() {
               </CardContent>
             </Card>
 
-            {/* Grid de productos */}
+            {/* Grid de productos.
+                viewMode controla el layout: 'grid' = 3 columnas en desktop /
+                2 en tablet / 1 en mobile. 'list' = 1 columna ancha para
+                ver más detalle por fila. Sin esto, el toggle de la card
+                de ordenación (líneas 432-444) cambiaba el estado pero no
+                tenía efecto visible — el bug que el usuario reportó. */}
             <m.div
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8"
+              className={`mt-8 gap-6 ${
+                viewMode === 'list'
+                  ? 'grid grid-cols-1 max-w-2xl mx-auto'
+                  : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+              }`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3 }}
