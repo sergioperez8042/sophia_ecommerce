@@ -39,6 +39,8 @@ import {
 } from '@/components/ui/phone-input';
 import MultiSearchableDropdown from '@/components/ui/multi-searchable-dropdown';
 import Switch from '@/components/ui/switch';
+import InlineAccountCreator from '@/components/ui/inline-account-creator';
+import { generateGestorPassword } from '@/lib/random-password';
 
 export default function GestoresAdminPage() {
   const router = useRouter();
@@ -196,12 +198,7 @@ export default function GestoresAdminPage() {
     setTimeout(() => setCopiedField(null), 2000);
   };
 
-  const generatePassword = () => {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
-    let pwd = '';
-    for (let i = 0; i < 10; i++) pwd += chars.charAt(Math.floor(Math.random() * chars.length));
-    setGestorPassword(pwd);
-  };
+  const generatePassword = () => setGestorPassword(generateGestorPassword());
 
   const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 
@@ -543,6 +540,16 @@ export default function GestoresAdminPage() {
                     <Camera className="w-5 h-5 text-gray-400 group-hover:text-[#505A4A] transition-colors" />
                   )}
                 </div>
+                {/* Overlay con icono cámara cuando ya hay foto cargada:
+                    - Móvil (default): siempre visible — indica clickable sin hover
+                    - Desktop (sm:): oculto, aparece en hover via group-hover
+                    pointer-events-none deja que el click pase al <label> para
+                    abrir el file picker. */}
+                {photoPreview && (
+                  <div className="absolute inset-0 rounded-full flex items-center justify-center bg-black/40 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity pointer-events-none">
+                    <Camera className="w-5 h-5 text-white" />
+                  </div>
+                )}
                 <input
                   type="file"
                   accept="image/jpeg,image/png,image/webp"
@@ -1000,8 +1007,13 @@ export default function GestoresAdminPage() {
                     {/* Row 2: Phone + Province + Email
                         Phone y email son enlaces (tel:/mailto:) para que el
                         admin pueda llamar o escribirle al gestor con un solo
-                        click desde la card. */}
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 dark:text-gray-400 mb-2 pl-12">
+                        click desde la card.
+
+                        Mobile: stacked verticalmente (más legible y los enlaces
+                          tel/mailto no se confunden con los chips de zona).
+                        sm+: inline-wrap (cabe todo en una/dos líneas en
+                          desktop). */}
+                    <div className="flex flex-col gap-1 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-1 text-xs text-gray-500 dark:text-gray-400 mb-2 pl-12">
                       <a
                         href={`tel:+${gestor.whatsapp}`}
                         className="flex items-center gap-1.5 hover:text-[#505A4A] dark:hover:text-[#C4B590] hover:underline transition-colors"
@@ -1025,18 +1037,19 @@ export default function GestoresAdminPage() {
                       )}
                     </div>
 
-                    {/* Row 2.5: Estado de la cuenta — siempre en línea propia
-                        para que la posición sea idéntica en todos los gestores
-                        (antes salía intercalado con el email según el ancho). */}
+                    {/* Row 2.5: Estado de la cuenta
+                        - Si ya tiene userId: badge verde estático "Con cuenta"
+                        - Si no: CTA inline (InlineAccountCreator). Al click,
+                          se expande un mini-form (email + password) que
+                          llama al endpoint Admin SDK directamente, sin
+                          obligar a entrar al form completo de edición. */}
                     <div className="mb-3 pl-12">
                       {gestor.userId ? (
                         <span className="inline-flex items-center text-[10px] px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-medium">
                           Con cuenta
                         </span>
                       ) : (
-                        <span className="inline-flex items-center text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 font-medium">
-                          Sin cuenta
-                        </span>
+                        <InlineAccountCreator gestor={gestor} />
                       )}
                     </div>
 
