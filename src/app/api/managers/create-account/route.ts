@@ -23,6 +23,7 @@ import { FieldValue } from 'firebase-admin/firestore';
 const LOG_PREFIX = '[api/managers/create-account]';
 
 export async function POST(request: NextRequest) {
+  try {
   // 1) Verifica que el caller esté autenticado
   const caller = await verifyFirebaseAuth(request);
   if (!caller) {
@@ -201,4 +202,30 @@ export async function POST(request: NextRequest) {
     createdNew,
     role: safeRole,
   });
+  } catch (err) {
+    // Top-level catch: cualquier excepción no manejada (Admin SDK no
+    // inicializado por env vars faltantes en local, crash de Firestore,
+    // network timeout, etc.) cae aquí. Sin esto, Next.js devolvía un 500
+    // sin body y el cliente solo veía "Error 500 al crear la cuenta" sin
+    // pista de qué pasó.
+    const e = err as { code?: string; message?: string; stack?: string };
+    console.error(
+      `${LOG_PREFIX} UNHANDLED: code=${e.code} msg=${e.message}\n${e.stack ?? ''}`,
+    );
+    // Detectar env vars faltantes para dar un mensaje útil en local
+    const hasAdminCreds = !!(
+      process.env.FIREBASE_PRIVATE_KEY && process.env.FIREBASE_CLIENT_EMAIL
+    );
+    const hint = !hasAdminCreds
+      ? ' [LOCAL: faltan FIREBASE_PRIVATE_KEY/FIREBASE_CLIENT_EMAIL en .env.local — pruébalo en producción]'
+      : '';
+    return NextResponse.json(
+      {
+        error: 'Excepción no controlada en el endpoint.' + hint,
+        code: e.code ?? 'unknown',
+        detail: e.message ?? String(err),
+      },
+      { status: 500 },
+    );
+  }
 }
