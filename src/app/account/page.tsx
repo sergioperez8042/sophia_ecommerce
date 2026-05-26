@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { useAuth } from '@/store';
+import { useAuth, usePricing } from '@/store';
 import { OrderService, ReviewService, ProductService } from '@/lib/firestore-services';
 import { IOrder, IReview, IProduct, ORDER_STATUSES, OrderStatus } from '@/entities/all';
 import { useTheme } from '@/store/ThemeContext';
@@ -30,7 +30,7 @@ import BrandLogo from '@/components/BrandLogo';
 type Tab = 'orders' | 'reviews' | 'profile';
 
 const STATUS_COLORS: Record<OrderStatus, string> = {
-  pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+  pending: 'bg-[#F5F1E8] text-[#505A4A] dark:bg-[#C4B590]/15 dark:text-[#C4B590]',
   confirmed: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
   in_transit: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400',
   delivered: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
@@ -41,6 +41,7 @@ export default function MiCuentaPage() {
   const router = useRouter();
   const { user, isLoaded, isAuthenticated, isClient, logout, updateUser } = useAuth();
   const { isDark } = useTheme();
+  const { formatPrice } = usePricing();
   const [activeTab, setActiveTab] = useState<Tab>('orders');
   const [orders, setOrders] = useState<IOrder[]>([]);
   const [reviews, setReviews] = useState<IReview[]>([]);
@@ -197,7 +198,7 @@ export default function MiCuentaPage() {
               <p className={`text-xs mt-0.5 ${isDark ? 'text-[#C4B590]/50' : 'text-[#505A4A]/50'}`}>Reseñas</p>
             </div>
             <div className="text-center">
-              <p className={`text-2xl font-semibold ${isDark ? 'text-white' : 'text-[#333]'}`}>{totalSpent.toFixed(0)}€</p>
+              <p className={`text-2xl font-semibold ${isDark ? 'text-white' : 'text-[#333]'}`}>{formatPrice(totalSpent)}</p>
               <p className={`text-xs mt-0.5 ${isDark ? 'text-[#C4B590]/50' : 'text-[#505A4A]/50'}`}>Total</p>
             </div>
           </div>
@@ -291,7 +292,7 @@ export default function MiCuentaPage() {
                                 <p className={`text-xs ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/40'}`}>x{item.quantity}</p>
                               </div>
                               <p className={`text-sm font-medium ml-4 ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>
-                                {(item.price * item.quantity).toFixed(2)}€
+                                {formatPrice(item.price * item.quantity)}
                               </p>
                             </div>
                           ))}
@@ -301,7 +302,7 @@ export default function MiCuentaPage() {
                             {order.items.reduce((s, i) => s + i.quantity, 0)} artículos
                           </p>
                           <p className={`text-sm font-semibold ${isDark ? 'text-white' : 'text-[#333]'}`}>
-                            Total: {order.subtotal.toFixed(2)}€
+                            Total: {formatPrice(order.subtotal)}
                           </p>
                         </div>
                       </m.div>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Leaf, Heart, ShoppingBag, Menu, X, Home, Package, Grid3X3, Users, Phone, LogOut, LayoutDashboard, Newspaper, UserCog, Sun, Moon } from "lucide-react";
+import { Heart, ShoppingBag, Menu, X, Home, Package, Grid3X3, Users, Phone, LogOut, LayoutDashboard, Newspaper, UserCog, Sun, Moon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart, useWishlist, useAuth, useTheme } from "@/store";
@@ -222,20 +222,22 @@ export default function Header() {
                                 </div>
                             )}
 
-                            {/* Logout */}
-                            <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-800 space-y-1">
-                                {isAuthenticated && (
-                                    <button onClick={() => { logout(); setIsMenuOpen(false); }} className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all text-sm font-medium">
-                                        <LogOut className="w-5 h-5" />
-                                        Cerrar Sesión
-                                    </button>
-                                )}
-                            </div>
-
-                            {/* Footer brand */}
+                            {/* Footer brand: logo de la marca en lugar del leaf-icon
+                                (más reconocible y consistente con la cabecera).
+                                Cerrar Sesión eliminado de aquí — vive ya en la
+                                página de cuenta para el cliente, y en el menú
+                                admin (`/admin`) para el rol admin. */}
                             <div className="px-5 py-4 border-t border-gray-100 dark:border-gray-800">
                                 <div className="flex items-center justify-center gap-2 text-xs text-gray-400 dark:text-gray-500">
-                                    <Leaf className="w-3.5 h-3.5 text-[#505A4A]/50" />
+                                    <div className="relative w-5 h-5 rounded-md overflow-hidden ring-1 ring-[#505A4A]/15 flex-shrink-0">
+                                        <Image
+                                            src="/images/sophia_logo_nuevo.jpeg"
+                                            alt="Sophia"
+                                            fill
+                                            sizes="20px"
+                                            className="object-cover"
+                                        />
+                                    </div>
                                     <span>Sophia</span>
                                 </div>
                             </div>
