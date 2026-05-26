@@ -20,7 +20,9 @@ import {
   Edit3,
   Check,
   X,
+  Camera,
 } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -39,9 +41,49 @@ const STATUS_COLORS: Record<OrderStatus, string> = {
 
 export default function MiCuentaPage() {
   const router = useRouter();
-  const { user, isLoaded, isAuthenticated, isClient, logout, updateUser } = useAuth();
+  const { user, isLoaded, isAuthenticated, isClient, logout, updateUser, getIdToken } = useAuth();
   const { isDark } = useTheme();
   const { formatPrice } = usePricing();
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+
+  /**
+   * Sube la nueva foto del usuario a /api/upload (Cloudinary detrás)
+   * y persiste la URL en `user.avatar` vía updateUser (que sincroniza
+   * Firebase Auth + Firestore en una transacción ya implementada).
+   */
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('La imagen es demasiado grande (máx 5 MB).');
+      return;
+    }
+    setUploadingAvatar(true);
+    try {
+      const token = await getIdToken();
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('folder', 'avatars');
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        body: formData,
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || !json.url) {
+        throw new Error(json.error || `Error ${res.status} al subir foto`);
+      }
+      await updateUser({ avatar: json.url });
+      toast.success('Foto de perfil actualizada');
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Error desconocido';
+      toast.error(`No se pudo actualizar la foto: ${msg}`);
+    } finally {
+      setUploadingAvatar(false);
+      // Reset input para permitir re-subir el mismo archivo
+      e.target.value = '';
+    }
+  };
   const [activeTab, setActiveTab] = useState<Tab>('orders');
   const [orders, setOrders] = useState<IOrder[]>([]);
   const [reviews, setReviews] = useState<IReview[]>([]);
@@ -180,9 +222,39 @@ export default function MiCuentaPage() {
           className={`rounded-2xl p-6 mb-6 ${isDark ? 'bg-[#232820] border border-[#C4B590]/15' : 'bg-white border border-[#505A4A]/10'}`}
         >
           <div className="flex items-center gap-4">
-            <div className={`w-14 h-14 rounded-full flex items-center justify-center text-lg font-semibold ${isDark ? 'bg-[#C4B590]/20 text-[#C4B590]' : 'bg-[#505A4A]/10 text-[#505A4A]'}`}>
-              {initials}
-            </div>
+            {/* Avatar clickable. Si el usuario tiene foto, la mostramos;
+                si no, mostramos sus iniciales. En ambos casos un overlay
+                de cámara (siempre visible en mobile, en hover desktop)
+                indica que es clickable para cambiar la foto. */}
+            <label className="relative cursor-pointer group block w-14 h-14 flex-shrink-0">
+              <div className={`w-14 h-14 rounded-full overflow-hidden flex items-center justify-center text-lg font-semibold ${isDark ? 'bg-[#C4B590]/20 text-[#C4B590]' : 'bg-[#505A4A]/10 text-[#505A4A]'}`}>
+                {user.avatar ? (
+                  <Image
+                    src={user.avatar}
+                    alt={user.name}
+                    width={56}
+                    height={56}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  initials
+                )}
+              </div>
+              <div className="absolute inset-0 rounded-full flex items-center justify-center bg-black/40 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity pointer-events-none">
+                {uploadingAvatar ? (
+                  <Loader2 className="w-5 h-5 text-white animate-spin" />
+                ) : (
+                  <Camera className="w-4 h-4 text-white" />
+                )}
+              </div>
+              <input
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handleAvatarUpload}
+                disabled={uploadingAvatar}
+                className="hidden"
+              />
+            </label>
             <div className="flex-1 min-w-0">
               <h2 className={`text-lg font-semibold truncate ${isDark ? 'text-white' : 'text-[#333]'}`}>{user.name}</h2>
               <p className={`text-sm truncate ${isDark ? 'text-[#C4B590]/60' : 'text-[#505A4A]/60'}`}>{user.email}</p>

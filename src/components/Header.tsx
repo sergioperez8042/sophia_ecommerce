@@ -101,7 +101,7 @@ export default function Header() {
                         <div className="flex items-center gap-1 sm:gap-1.5">
                             {/* Theme toggle */}
                             <button
-                                onClick={toggleTheme}
+                                onClick={(e) => toggleTheme(e)}
                                 className="flex items-center justify-center h-9 w-9 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 transition-colors"
                                 aria-label={isDark ? "Modo claro" : "Modo oscuro"}
                                 title={isDark ? "Modo claro" : "Modo oscuro"}
@@ -222,25 +222,9 @@ export default function Header() {
                                 </div>
                             )}
 
-                            {/* Footer brand: logo de la marca en lugar del leaf-icon
-                                (más reconocible y consistente con la cabecera).
-                                Cerrar Sesión eliminado de aquí — vive ya en la
-                                página de cuenta para el cliente, y en el menú
-                                admin (`/admin`) para el rol admin. */}
-                            <div className="px-5 py-4 border-t border-gray-100 dark:border-gray-800">
-                                <div className="flex items-center justify-center gap-2 text-xs text-gray-400 dark:text-gray-500">
-                                    <div className="relative w-5 h-5 rounded-md overflow-hidden ring-1 ring-[#505A4A]/15 flex-shrink-0">
-                                        <Image
-                                            src="/images/sophia_logo_nuevo.jpeg"
-                                            alt="Sophia"
-                                            fill
-                                            sizes="20px"
-                                            className="object-cover"
-                                        />
-                                    </div>
-                                    <span>Sophia</span>
-                                </div>
-                            </div>
+                            {/* Footer brand eliminado — el logo + nombre ya están
+                                en la cabecera del menú móvil, dejarlo duplicado
+                                abajo era ruido visual. */}
                         </div>
                     </nav>
                 </div>

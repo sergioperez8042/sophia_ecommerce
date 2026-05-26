@@ -202,7 +202,7 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
+    <div className="min-h-screen bg-gray-50 dark:bg-[#1a1d19] pt-20">
       <div className="container mx-auto px-4 pb-6">
         {/* Breadcrumb */}
         <div className="mb-6">
@@ -216,10 +216,10 @@ export default function ProductsPage() {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Sidebar de filtros - Desktop */}
           <div className="hidden mt-5 lg:block w-64 flex-shrink-0">
-            <Card className="sticky top-6 shadow-lg border-0 bg-white">
+            <Card className="sticky top-6 shadow-lg border-0 bg-white dark:bg-[#232820] dark:border-[#3a3d36]">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-lg font-bold mt-4 text-gray-900 flex items-center">
+                  <h2 className="text-lg font-bold mt-4 text-gray-900 dark:text-[#e8e0d0] flex items-center">
                     <SlidersHorizontal className="h-5 w-5 mr-2 text-[#505A4A]" />
                     Filtros
                   </h2>
@@ -234,8 +234,8 @@ export default function ProductsPage() {
                 </div>
 
                 {/* Filtro de Categorías - Jerárquico */}
-                <div className="border-b border-gray-200 py-4">
-                  <h3 className="font-semibold text-gray-900 mb-3">Categoría</h3>
+                <div className="border-b border-gray-200 dark:border-[#3a3d36] py-4">
+                  <h3 className="font-semibold text-gray-900 dark:text-[#e8e0d0] mb-3">Categoría</h3>
                   <div className="space-y-1">
                     {activeRootCategories.map(parent => {
                       const children = getActiveChildren(parent.id);
@@ -262,7 +262,7 @@ export default function ProductsPage() {
                             )}
                             <button
                               onClick={() => toggleFilterValue(parent.id, selectedCategoryIds, setSelectedCategoryIds)}
-                              className={`flex-1 flex items-center justify-between text-left p-1.5 rounded-lg transition-colors hover:bg-[#505A4A]/10 ${selectedCategoryIds.includes(parent.id) ? 'bg-[#505A4A]/10 text-[#505A4A] font-medium' : 'text-gray-700'}`}
+                              className={`flex-1 flex items-center justify-between text-left p-1.5 rounded-lg transition-colors hover:bg-[#505A4A]/10 ${selectedCategoryIds.includes(parent.id) ? 'bg-[#505A4A]/10 text-[#505A4A] font-medium' : 'text-gray-700 dark:text-[#C4B590]/70'}`}
                             >
                               <span className="text-sm">{parent.name}</span>
                               <span className="text-xs text-gray-500">({parentProductCount})</span>
@@ -292,14 +292,14 @@ export default function ProductsPage() {
                 </div>
 
                 {/* Filtro Zona de Uso */}
-                <div className="border-b border-gray-200 py-4">
-                  <h3 className="font-semibold text-gray-900 mb-3">Zona de Uso</h3>
+                <div className="border-b border-gray-200 dark:border-[#3a3d36] py-4">
+                  <h3 className="font-semibold text-gray-900 dark:text-[#e8e0d0] mb-3">Zona de Uso</h3>
                   <div className="space-y-1.5">
                     {ZONA_USO_OPTIONS.map(option => (
                       <button
                         key={option}
                         onClick={() => toggleFilterValue(option, selectedZonaUso, setSelectedZonaUso)}
-                        className={`w-full text-left p-2 rounded-lg text-sm transition-colors hover:bg-[#505A4A]/10 ${selectedZonaUso.includes(option) ? 'bg-[#505A4A]/10 text-[#505A4A] font-medium' : 'text-gray-700'}`}
+                        className={`w-full text-left p-2 rounded-lg text-sm transition-colors hover:bg-[#505A4A]/10 ${selectedZonaUso.includes(option) ? 'bg-[#505A4A]/10 text-[#505A4A] font-medium' : 'text-gray-700 dark:text-[#C4B590]/70'}`}
                       >
                         {option}
                       </button>
@@ -308,14 +308,14 @@ export default function ProductsPage() {
                 </div>
 
                 {/* Filtro Tipo de Piel */}
-                <div className="border-b border-gray-200 py-4">
-                  <h3 className="font-semibold text-gray-900 mb-3">Tipo de Piel</h3>
+                <div className="border-b border-gray-200 dark:border-[#3a3d36] py-4">
+                  <h3 className="font-semibold text-gray-900 dark:text-[#e8e0d0] mb-3">Tipo de Piel</h3>
                   <div className="space-y-1.5">
                     {TIPO_PIEL_OPTIONS.map(option => (
                       <button
                         key={option}
                         onClick={() => toggleFilterValue(option, selectedTipoPiel, setSelectedTipoPiel)}
-                        className={`w-full text-left p-2 rounded-lg text-sm transition-colors hover:bg-[#505A4A]/10 ${selectedTipoPiel.includes(option) ? 'bg-[#505A4A]/10 text-[#505A4A] font-medium' : 'text-gray-700'}`}
+                        className={`w-full text-left p-2 rounded-lg text-sm transition-colors hover:bg-[#505A4A]/10 ${selectedTipoPiel.includes(option) ? 'bg-[#505A4A]/10 text-[#505A4A] font-medium' : 'text-gray-700 dark:text-[#C4B590]/70'}`}
                       >
                         {option}
                       </button>
@@ -324,14 +324,14 @@ export default function ProductsPage() {
                 </div>
 
                 {/* Filtro Beneficios */}
-                <div className="border-b border-gray-200 py-4">
-                  <h3 className="font-semibold text-gray-900 mb-3">Beneficios</h3>
+                <div className="border-b border-gray-200 dark:border-[#3a3d36] py-4">
+                  <h3 className="font-semibold text-gray-900 dark:text-[#e8e0d0] mb-3">Beneficios</h3>
                   <div className="space-y-1.5">
                     {BENEFICIOS_OPTIONS.map(option => (
                       <button
                         key={option}
                         onClick={() => toggleFilterValue(option, selectedBeneficios, setSelectedBeneficios)}
-                        className={`w-full text-left p-2 rounded-lg text-sm transition-colors hover:bg-[#505A4A]/10 ${selectedBeneficios.includes(option) ? 'bg-[#505A4A]/10 text-[#505A4A] font-medium' : 'text-gray-700'}`}
+                        className={`w-full text-left p-2 rounded-lg text-sm transition-colors hover:bg-[#505A4A]/10 ${selectedBeneficios.includes(option) ? 'bg-[#505A4A]/10 text-[#505A4A] font-medium' : 'text-gray-700 dark:text-[#C4B590]/70'}`}
                       >
                         {option}
                       </button>
@@ -340,8 +340,8 @@ export default function ProductsPage() {
                 </div>
 
                 {/* Filtro de Precio */}
-                <div className="border-b border-gray-200 py-4">
-                  <h3 className="font-semibold text-gray-900 mb-3">Precio</h3>
+                <div className="border-b border-gray-200 dark:border-[#3a3d36] py-4">
+                  <h3 className="font-semibold text-gray-900 dark:text-[#e8e0d0] mb-3">Precio</h3>
                   <div className="space-y-2">
                     {priceRanges.map(range => (
                       <button
@@ -355,7 +355,7 @@ export default function ProductsPage() {
                         }}
                         className={`w-full flex items-center justify-between text-left p-2 rounded-lg transition-colors hover:bg-[#505A4A]/10 ${selectedPriceRanges.includes(range.value)
                           ? 'bg-[#505A4A]/10 text-[#505A4A] font-medium'
-                          : 'text-gray-700 hover:text-[#505A4A]'
+                          : 'text-gray-700 dark:text-[#C4B590]/70 hover:text-[#505A4A]'
                           }`}
                       >
                         <span className="text-sm flex-1">
@@ -368,12 +368,12 @@ export default function ProductsPage() {
 
                 {/* Filtro de Disponibilidad */}
                 <div className="py-4">
-                  <h3 className="font-semibold text-gray-900 mb-3">Disponibilidad</h3>
+                  <h3 className="font-semibold text-gray-900 dark:text-[#e8e0d0] mb-3">Disponibilidad</h3>
                   <button
                     onClick={() => setInStockOnly(!inStockOnly)}
                     className={`w-full flex items-center text-left p-2 rounded-lg transition-colors hover:bg-[#505A4A]/10 ${inStockOnly
                       ? 'bg-[#505A4A]/10 text-[#505A4A] font-medium'
-                      : 'text-gray-700 hover:text-[#505A4A]'
+                      : 'text-gray-700 dark:text-[#C4B590]/70 hover:text-[#505A4A]'
                       }`}
                   >
                     <span className="text-sm">
@@ -388,12 +388,12 @@ export default function ProductsPage() {
           {/* Contenido principal */}
           <div className="flex-1">
             {/* Header con controles */}
-            <Card className="mb-8 mt-5 shadow-sm border-0 bg-white">
+            <Card className="mb-8 mt-5 shadow-sm border-0 bg-white dark:bg-[#232820] dark:border-[#3a3d36]">
               <CardContent className="py-5 px-6">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div className="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-auto">
                     <div className="flex items-baseline gap-2">
-                      <h1 className="text-xl font-bold text-gray-900">Resultados</h1>
+                      <h1 className="text-xl font-bold text-gray-900 dark:text-[#e8e0d0]">Resultados</h1>
                       <span className="text-sm text-gray-500 whitespace-nowrap">{filteredProducts.length} productos</span>
                     </div>
 
@@ -411,16 +411,16 @@ export default function ProductsPage() {
                   <div className="flex items-center justify-center sm:justify-end gap-3">
                     {mounted ? (
                       <Select value={sortBy} onValueChange={setSortBy}>
-                        <SelectTrigger className="w-48 border-[#505A4A] text-gray-900 bg-white hover:border-[#414A3C] focus:border-[#505A4A] focus:ring-[#505A4A]/20">
+                        <SelectTrigger className="w-48 border-[#505A4A] text-gray-900 dark:text-[#e8e0d0] bg-white hover:border-[#414A3C] focus:border-[#505A4A] focus:ring-[#505A4A]/20">
                           <SelectValue placeholder="Ordenar por" className="text-gray-600" />
                         </SelectTrigger>
                         <SelectContent className="bg-white border mt-4 border-gray-200 shadow-lg">
-                          <SelectItem value="featured" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Destacados</SelectItem>
-                          <SelectItem value="price-low" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Precio: menor a mayor</SelectItem>
-                          <SelectItem value="price-high" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Precio: mayor a menor</SelectItem>
-                          <SelectItem value="rating" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Mejor valorados</SelectItem>
-                          <SelectItem value="reviews" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Más reseñas</SelectItem>
-                          <SelectItem value="newest" className="text-gray-900 hover:bg-gray-100 cursor-pointer">Más nuevos</SelectItem>
+                          <SelectItem value="featured" className="text-gray-900 dark:text-[#e8e0d0] hover:bg-gray-100 cursor-pointer">Destacados</SelectItem>
+                          <SelectItem value="price-low" className="text-gray-900 dark:text-[#e8e0d0] hover:bg-gray-100 cursor-pointer">Precio: menor a mayor</SelectItem>
+                          <SelectItem value="price-high" className="text-gray-900 dark:text-[#e8e0d0] hover:bg-gray-100 cursor-pointer">Precio: mayor a menor</SelectItem>
+                          <SelectItem value="rating" className="text-gray-900 dark:text-[#e8e0d0] hover:bg-gray-100 cursor-pointer">Mejor valorados</SelectItem>
+                          <SelectItem value="reviews" className="text-gray-900 dark:text-[#e8e0d0] hover:bg-gray-100 cursor-pointer">Más reseñas</SelectItem>
+                          <SelectItem value="newest" className="text-gray-900 dark:text-[#e8e0d0] hover:bg-gray-100 cursor-pointer">Más nuevos</SelectItem>
                         </SelectContent>
                       </Select>
                     ) : (
@@ -577,7 +577,7 @@ export default function ProductsPage() {
                                 }`}
                             />
                           ))}
-                          <span className="text-xs font-medium text-gray-700 ml-1">
+                          <span className="text-xs font-medium text-gray-700 dark:text-[#C4B590]/70 ml-1">
                             {product.rating} ({product.reviews})
                           </span>
                         </div>
@@ -623,7 +623,7 @@ export default function ProductsPage() {
                   <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Filter className="h-12 w-12 text-gray-400" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">No se encontraron productos</h3>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-[#e8e0d0] mb-2">No se encontraron productos</h3>
                   <p className="text-gray-600 mb-4">Intenta ajustar tus filtros para ver más resultados.</p>
                   <Button
                     onClick={clearAllFilters}

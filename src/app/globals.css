@@ -118,6 +118,17 @@ body {
   }
 }
 
+/* View Transitions API — theme toggle con efecto circle-with-blur.
+   El default del browser hace cross-fade entre old/new — lo desactivamos
+   para que solo se ejecute la animación custom de clip-path + blur que
+   dispara `toggleTheme` en `ThemeContext`. mix-blend-mode normal evita
+   artifacts de compositing durante el growing circle. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
 /* Prevent iOS Safari auto-zoom on form focus.
    iOS Safari (iPhone + iPad) zooms in when the user taps an input whose
    computed font-size is < 16px, and never zooms back out. Force 16px on
