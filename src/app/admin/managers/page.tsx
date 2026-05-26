@@ -16,7 +16,6 @@ import {
   ArrowLeft,
   Save,
   X,
-  Search,
   AlertCircle,
   Camera,
   Pencil,
@@ -32,6 +31,14 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { toast } from 'sonner';
+import {
+  PhoneInput,
+  digitsToE164,
+  e164ToDigits,
+  isValidPhoneNumber,
+} from '@/components/ui/phone-input';
+import MultiSearchableDropdown from '@/components/ui/multi-searchable-dropdown';
+import Switch from '@/components/ui/switch';
 
 export default function GestoresAdminPage() {
   const router = useRouter();
@@ -40,11 +47,15 @@ export default function GestoresAdminPage() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState('');
+  // Errores ahora van por toast.error (sonner, auto-cierre 4s). No más
+  // banner persistente — el state `error` se eliminó.
 
   // Form state
   const [name, setName] = useState('');
-  const [whatsapp, setWhatsapp] = useState('');
+  // El input almacena el número en formato E.164 (+5352010900). Para
+  // Firestore guardamos solo dígitos (5352010900) — los helpers
+  // digitsToE164 / e164ToDigits se ocupan de la conversión.
+  const [whatsapp, setWhatsapp] = useState<string | undefined>(undefined);
   // Multi-provincia: un gestor puede cubrir varias (ej. Marian → Santiago de
   // Cuba + Granma). En la UI se renderiza como checkbox grid.
   const [provinces, setProvinces] = useState<string[]>([]);
@@ -53,8 +64,8 @@ export default function GestoresAdminPage() {
   // seleccionada tiene usesConsejos=true en localities.ts, ej. La Habana).
   // Cada item identifica un consejo específico dentro de un municipio.
   const [selectedConsejos, setSelectedConsejos] = useState<Array<{ municipality: string; consejo: string }>>([]);
-  const [provinceSearch, setProvinceSearch] = useState('');
-  const [municipalitySearch, setMunicipalitySearch] = useState('');
+  // (provinceSearch / municipalitySearch eliminados — el buscador vive ahora
+  // dentro de cada MultiSearchableDropdown)
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState('');
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
@@ -95,9 +106,8 @@ export default function GestoresAdminPage() {
 
   const resetForm = () => {
     setName('');
-    setWhatsapp('');
+    setWhatsapp(undefined);
     setProvinces([]);
-    setProvinceSearch('');
     setSelectedMunicipalities([]);
     setSelectedConsejos([]);
     setPhotoFile(null);
@@ -115,20 +125,25 @@ export default function GestoresAdminPage() {
   const handleEdit = (gestor: IGestor) => {
     setEditingId(gestor.id);
     setName(gestor.name);
-    setWhatsapp(gestor.whatsapp);
+    // Firestore guarda dígitos sueltos ('5352010900') — el componente
+    // necesita E.164 con + ('+5352010900').
+    setWhatsapp(digitsToE164(gestor.whatsapp));
     // Backward-compat: tolerar docs viejos con `province` singular hasta que
     // el re-seed actualice todos a `provinces: []`.
     const gestorAsLegacy = gestor as IGestor & { province?: string };
     const provs = gestor.provinces ?? (gestorAsLegacy.province ? [gestorAsLegacy.province] : []);
     setProvinces(provs);
-    setProvinceSearch('');
     setSelectedMunicipalities([...gestor.municipalities]);
     setSelectedConsejos(gestor.consejos ? [...gestor.consejos] : []);
     setPhotoFile(null);
     setPhotoPreview(gestor.photoUrl || '');
     setGestorEmail(gestor.email || '');
     setGestorPassword('');
-    setCreateAccount(!gestor.userId); // Show account fields if no account yet
+    // Importante: al editar, NUNCA forzamos el checkbox de "Crear cuenta".
+    // Si lo hacíamos, un admin que solo quería cambiar la foto se topaba con
+    // la validación de email+password al guardar. Si quieren crear/reparar
+    // la cuenta, marcan el checkbox manualmente.
+    setCreateAccount(false);
     setPermissions(gestor.permissions ? [...gestor.permissions] : [...DEFAULT_GESTOR_PERMISSIONS]);
     setShowForm(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -191,7 +206,35 @@ export default function GestoresAdminPage() {
   const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 
   const handleSave = async () => {
-    if (!name || !whatsapp || provinces.length === 0 || selectedMunicipalities.length === 0) return;
+    // Validación contextual: en lugar de un early-return silencioso, decimos
+    // exactamente qué campo falta para que el admin no se quede mirando el
+    // botón "Guardar" pensando que la web no funciona.
+    if (!name.trim()) {
+      toast.error('Falta el nombre del gestor.');
+      return;
+    }
+    if (!whatsapp) {
+      toast.error('Falta el número de WhatsApp.');
+      return;
+    }
+    if (provinces.length === 0) {
+      toast.error('Selecciona al menos una provincia.');
+      return;
+    }
+    if (selectedMunicipalities.length === 0) {
+      toast.error('Selecciona al menos un municipio.');
+      return;
+    }
+
+    // Validación E.164: el `PhoneInput` formatea visualmente mientras se
+    // tipea, pero permite estados intermedios incompletos ("+535"). Si
+    // el usuario intenta guardar sin terminar de teclear, libphonenumber
+    // lo rechaza y avisamos por toast.
+    if (!isValidPhoneNumber(whatsapp)) {
+      toast.error('Número de teléfono inválido. Verifica el código de país y el largo.');
+      return;
+    }
+
     const editingGestor = editingId ? gestores.find(g => g.id === editingId) : null;
 
     // Validación de duplicados (excluye al propio gestor cuando editamos).
@@ -205,35 +248,35 @@ export default function GestoresAdminPage() {
     // Lo que SÍ bloqueamos: teléfono WhatsApp duplicado (dos gestores con
     // el mismo número causaría que un mensaje al gestor X llegara a una
     // persona que cubre la zona Y). Y email duplicado (login de cuenta).
-    const cleanWhatsapp = whatsapp.replace(/[^0-9]/g, '');
+    const cleanWhatsapp = e164ToDigits(whatsapp);
     const duplicatePhone = gestores.find(g => g.whatsapp === cleanWhatsapp && g.id !== editingId);
     if (duplicatePhone) {
-      setError(`Ya existe un gestor con ese número de WhatsApp (${duplicatePhone.name}).`);
+      toast.error(`Ya existe un gestor con ese número de WhatsApp (${duplicatePhone.name}).`);
       return;
     }
     if (gestorEmail) {
       const duplicateEmail = gestores.find(g => g.email?.toLowerCase() === gestorEmail.trim().toLowerCase() && g.id !== editingId);
       if (duplicateEmail) {
-        setError(`Ya existe un gestor con ese email (${duplicateEmail.name}).`);
+        toast.error(`Ya existe un gestor con ese email (${duplicateEmail.name}).`);
         return;
       }
     }
 
     const needsAccount = createAccount && !editingGestor?.userId;
     if (needsAccount && (!gestorEmail || !gestorPassword)) {
-      setError('Email y contraseña son requeridos para crear la cuenta del gestor.');
+      toast.error('Email y contraseña son requeridos para crear la cuenta del gestor.');
       return;
     }
     if (needsAccount && gestorEmail && !isValidEmail(gestorEmail)) {
-      setError('El email no es válido. Verifica que tenga formato correcto (ej: nombre@email.com)');
+      toast.error('El email no es válido. Verifica que tenga formato correcto (ej: nombre@email.com)');
       return;
     }
     if (needsAccount && gestorPassword.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres.');
+      toast.error('La contraseña debe tener al menos 6 caracteres.');
       return;
     }
     setSaving(true);
-    setError('');
+    // (banner persistente eliminado — los errores van por toast.error)
     let accountCreated = false;
     try {
       let photoUrl: string | undefined;
@@ -250,7 +293,7 @@ export default function GestoresAdminPage() {
 
       const gestorData = {
         name,
-        whatsapp: whatsapp.replace(/[^0-9]/g, ''),
+        whatsapp: e164ToDigits(whatsapp),
         provinces,
         municipalities: selectedMunicipalities,
         consejos: cleanConsejos,
@@ -276,8 +319,7 @@ export default function GestoresAdminPage() {
             toast.success('Gestor actualizado y cuenta creada');
           } catch (err) {
             const errorMsg = err instanceof Error ? err.message : 'Error al crear la cuenta';
-            setError(`Gestor actualizado pero error al crear cuenta: ${errorMsg}`);
-            toast.error('Error al crear la cuenta del gestor');
+            toast.error(`Gestor actualizado pero error al crear cuenta: ${errorMsg}`);
           }
         } else {
           toast.success('Gestor actualizado correctamente');
@@ -300,8 +342,7 @@ export default function GestoresAdminPage() {
             toast.success('Gestor y cuenta creados correctamente');
           } catch (err) {
             const errorMsg = err instanceof Error ? err.message : 'Error al crear la cuenta';
-            setError(`Gestor creado pero error al crear cuenta: ${errorMsg}`);
-            toast.error('Error al crear la cuenta del gestor');
+            toast.error(`Gestor creado pero error al crear cuenta: ${errorMsg}`);
           }
         } else {
           toast.success('Gestor creado correctamente');
@@ -315,7 +356,7 @@ export default function GestoresAdminPage() {
       await loadGestores();
     } catch (err) {
       console.error('Error saving gestor:', err);
-      setError(err instanceof Error ? err.message : 'Error al guardar gestor. Revisa las reglas de Firestore.');
+      toast.error(err instanceof Error ? err.message : 'Error al guardar gestor. Revisa las reglas de Firestore.');
     } finally {
       setSaving(false);
     }
@@ -379,32 +420,26 @@ export default function GestoresAdminPage() {
     return m;
   }, [provinces]);
 
-  const filteredMunicipalities = municipalitySearch
-    ? availableMunicipalities.filter((m) =>
-        m.toLowerCase().includes(municipalitySearch.toLowerCase())
-      )
-    : availableMunicipalities;
+  // Wrappers para `MultiSearchableDropdown` (recibe array completo, no toggle
+  // individual). Mantienen la lógica de cascade-cleanup: cuando se deselecciona
+  // una provincia, los municipios que solo pertenecían a ella se limpian, y
+  // sus consejos huérfanos también. Análogo para municipios → consejos.
+  const handleProvincesChange = useCallback((next: string[]) => {
+    setProvinces(next);
+    const coveredSet = new Set(
+      next.flatMap(
+        (q) => CUBA_PROVINCES.find((x) => x.name === q)?.municipalities ?? [],
+      ),
+    );
+    setSelectedMunicipalities((munis) => munis.filter((m) => coveredSet.has(m)));
+    setSelectedConsejos((cs) => cs.filter((c) => coveredSet.has(c.municipality)));
+  }, []);
 
-  const filteredProvinces = provinceSearch
-    ? CUBA_PROVINCES.filter((p) =>
-        p.name.toLowerCase().includes(provinceSearch.toLowerCase())
-      )
-    : CUBA_PROVINCES;
-
-  const toggleMunicipality = (m: string) => {
-    // Combinamos los dos setState en uno solo con functional updaters para
-    // evitar leer `selectedMunicipalities` capturado en closure (stale).
-    // El cleanup de consejos se deriva del valor `next`, no de `prev`.
-    setSelectedMunicipalities((prev) => {
-      const wasSelected = prev.includes(m);
-      const next = wasSelected ? prev.filter((x) => x !== m) : [...prev, m];
-      if (wasSelected) {
-        // Solo si removimos el municipio: limpiar sus consejos
-        setSelectedConsejos((cs) => cs.filter((c) => c.municipality !== m));
-      }
-      return next;
-    });
-  };
+  const handleMunicipalitiesChange = useCallback((next: string[]) => {
+    setSelectedMunicipalities(next);
+    const nextSet = new Set(next);
+    setSelectedConsejos((cs) => cs.filter((c) => nextSet.has(c.municipality)));
+  }, []);
 
   const toggleConsejo = (municipality: string, consejo: string) => {
     setSelectedConsejos((prev) => {
@@ -419,38 +454,8 @@ export default function GestoresAdminPage() {
     });
   };
 
-  // Toggle de provincia con cleanup en cascada: al desmarcar una provincia,
-  // limpiamos los municipios que solo pertenecían a ella y los consejos
-  // huérfanos. Patrón análogo a toggleMunicipality.
-  const toggleProvince = (p: string) => {
-    setProvinces((prev) => {
-      const wasSelected = prev.includes(p);
-      const next = wasSelected ? prev.filter((x) => x !== p) : [...prev, p];
-      if (wasSelected) {
-        // Municipios que pertenecían a `p` y a ninguna otra provincia restante
-        const stillCoveredSet = new Set(
-          next.flatMap(
-            (q) => CUBA_PROVINCES.find((x) => x.name === q)?.municipalities ?? [],
-          ),
-        );
-        setSelectedMunicipalities((munis) =>
-          munis.filter((m) => stillCoveredSet.has(m)),
-        );
-        setSelectedConsejos((cs) =>
-          cs.filter((c) => stillCoveredSet.has(c.municipality)),
-        );
-      }
-      return next;
-    });
-  };
-
-  // Sets memoizados para que los checkbox renders sean O(1) en vez de O(N)
-  // por celda. Con ~15 municipios × ~10 consejos cada uno, el render tenía
-  // hasta ~150 .some() por keystroke en cualquier input del formulario.
-  const selectedProvincesSet = useMemo(
-    () => new Set(provinces),
-    [provinces],
-  );
+  // Sets memoizados — ahora solo los usan los consejos (que siguen siendo
+  // un grid de checkboxes manual) y el cleanup de gestorData en handleSave.
   const selectedMunicipalitiesSet = useMemo(
     () => new Set(selectedMunicipalities),
     [selectedMunicipalities],
@@ -460,14 +465,6 @@ export default function GestoresAdminPage() {
     [selectedConsejos],
   );
 
-  const isProvinceSelected = useCallback(
-    (p: string) => selectedProvincesSet.has(p),
-    [selectedProvincesSet],
-  );
-  const isMunicipalitySelected = useCallback(
-    (m: string) => selectedMunicipalitiesSet.has(m),
-    [selectedMunicipalitiesSet],
-  );
   const isConsejoSelected = useCallback(
     (municipality: string, consejo: string) =>
       selectedConsejosSet.has(`${municipality}|${consejo}`),
@@ -521,15 +518,9 @@ export default function GestoresAdminPage() {
         </div>
 
         {/* Error Banner */}
-        {error && (
-          <div className="mb-4 flex items-center gap-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded-xl text-sm">
-            <AlertCircle className="w-4 h-4 flex-shrink-0" />
-            <span>{error}</span>
-            <button onClick={() => setError('')} className="ml-auto">
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        )}
+        {/* Banner persistente de error eliminado — ahora todos los errores
+            del form se muestran como toasts vía sonner (auto-cierre en 4s,
+            posición top-right, configurado globalmente en app/layout.tsx). */}
 
         {/* Create Form */}
         {showForm && (
@@ -631,7 +622,9 @@ export default function GestoresAdminPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 block">Nombre</label>
+                <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 flex items-center gap-1">
+                  Nombre <span className="text-red-500" aria-hidden>*</span>
+                </label>
                 <input
                   type="text"
                   value={name}
@@ -641,13 +634,15 @@ export default function GestoresAdminPage() {
                 />
               </div>
               <div>
-                <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 block">WhatsApp</label>
-                <input
-                  type="text"
+                <label htmlFor="gestor-phone" className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 flex items-center gap-1">
+                  WhatsApp <span className="text-red-500" aria-hidden>*</span>
+                </label>
+                <PhoneInput
+                  id="gestor-phone"
                   value={whatsapp}
-                  onChange={(e) => setWhatsapp(e.target.value)}
-                  placeholder="Ej: +53 5 2010900"
-                  className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  onChange={setWhatsapp}
+                  defaultCountry="CU"
+                  placeholder="Número de WhatsApp"
                 />
               </div>
               {/* Account fields - show for new gestores OR editing gestores without account */}
@@ -694,7 +689,9 @@ export default function GestoresAdminPage() {
                     {createAccount && (
                       <>
                         <div>
-                          <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 block">Email de acceso</label>
+                          <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 flex items-center gap-1">
+                            Email de acceso <span className="text-red-500" aria-hidden>*</span>
+                          </label>
                           <div className="relative">
                             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                             <input
@@ -708,7 +705,9 @@ export default function GestoresAdminPage() {
                         </div>
                         <div>
                           <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 flex items-center justify-between">
-                            <span>Contraseña</span>
+                            <span className="flex items-center gap-1">
+                              Contraseña <span className="text-red-500" aria-hidden>*</span>
+                            </span>
                             <button
                               type="button"
                               onClick={generatePassword}
@@ -803,66 +802,33 @@ export default function GestoresAdminPage() {
                   texto permanece pero ahora marca/desmarca via checkbox en
                   lugar de seleccionar uno solo. */}
               <div>
-                <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 block">
+                <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 flex items-center gap-1">
                   Provincias ({provinces.length})
+                  <span className="text-red-500" aria-hidden>*</span>
                 </label>
-                <div className="relative mb-2">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
-                  <input
-                    type="text"
-                    value={provinceSearch}
-                    onChange={(e) => setProvinceSearch(e.target.value)}
-                    placeholder="Filtrar provincias..."
-                    className="w-full pl-9 pr-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  />
-                </div>
-                <div className="max-h-36 overflow-y-auto space-y-1 border border-gray-200 dark:border-gray-600 rounded-lg p-2">
-                  {filteredProvinces.map((p) => (
-                    <label
-                      key={p.name}
-                      className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={isProvinceSelected(p.name)}
-                        onChange={() => toggleProvince(p.name)}
-                        className="rounded border-gray-300 text-[#505A4A] focus:ring-[#505A4A]"
-                      />
-                      <span className="text-sm text-gray-700 dark:text-gray-300">{p.name}</span>
-                    </label>
-                  ))}
-                </div>
+                <MultiSearchableDropdown
+                  selected={provinces}
+                  onChange={handleProvincesChange}
+                  options={CUBA_PROVINCES.map((p) => ({ id: p.name, label: p.name }))}
+                  placeholder="Selecciona provincias..."
+                  itemLabel="provincia"
+                  searchPlaceholder="Filtrar provincias..."
+                />
               </div>
               <div>
-                <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 block">
+                <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 flex items-center gap-1">
                   Municipios ({selectedMunicipalities.length})
+                  <span className="text-red-500" aria-hidden>*</span>
                 </label>
                 {provinces.length > 0 ? (
-                  <>
-                    <div className="relative mb-2">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
-                      <input
-                        type="text"
-                        value={municipalitySearch}
-                        onChange={(e) => setMunicipalitySearch(e.target.value)}
-                        placeholder="Filtrar municipios..."
-                        className="w-full pl-9 pr-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                      />
-                    </div>
-                    <div className="max-h-36 overflow-y-auto space-y-1">
-                      {filteredMunicipalities.map((m) => (
-                        <label key={m} className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer">
-                          <input
-                            type="checkbox"
-                            checked={isMunicipalitySelected(m)}
-                            onChange={() => toggleMunicipality(m)}
-                            className="rounded border-gray-300 text-[#505A4A] focus:ring-[#505A4A]"
-                          />
-                          <span className="text-sm text-gray-700 dark:text-gray-300">{m}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </>
+                  <MultiSearchableDropdown
+                    selected={selectedMunicipalities}
+                    onChange={handleMunicipalitiesChange}
+                    options={availableMunicipalities.map((m) => ({ id: m, label: m }))}
+                    placeholder="Selecciona municipios..."
+                    itemLabel="municipio"
+                    searchPlaceholder="Filtrar municipios..."
+                  />
                 ) : (
                   <p className="text-sm text-gray-400 py-2">Selecciona primero al menos una provincia</p>
                 )}
@@ -1016,16 +982,12 @@ export default function GestoresAdminPage() {
                         >
                           <Pencil className="w-4 h-4" />
                         </button>
-                        <button
-                          onClick={() => handleToggleActive(gestor)}
-                          className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${
-                            gestor.active
-                              ? 'border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
-                              : 'border-[#505A4A]/20 text-[#505A4A] dark:text-[#C4B590] hover:bg-[#505A4A]/5'
-                          }`}
-                        >
-                          {gestor.active ? 'Desactivar' : 'Activar'}
-                        </button>
+                        <Switch
+                          checked={gestor.active}
+                          onChange={() => handleToggleActive(gestor)}
+                          ariaLabel={gestor.active ? 'Desactivar gestor' : 'Activar gestor'}
+                          title={gestor.active ? 'Desactivar gestor' : 'Activar gestor'}
+                        />
                         <button
                           onClick={() => handleDelete(gestor)}
                           className="p-1.5 rounded-lg text-gray-300 dark:text-gray-600 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
@@ -1035,29 +997,44 @@ export default function GestoresAdminPage() {
                       </div>
                     </div>
 
-                    {/* Row 2: Phone + Province + Email */}
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 dark:text-gray-400 mb-3 pl-12">
-                      <span className="flex items-center gap-1.5">
+                    {/* Row 2: Phone + Province + Email
+                        Phone y email son enlaces (tel:/mailto:) para que el
+                        admin pueda llamar o escribirle al gestor con un solo
+                        click desde la card. */}
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 dark:text-gray-400 mb-2 pl-12">
+                      <a
+                        href={`tel:+${gestor.whatsapp}`}
+                        className="flex items-center gap-1.5 hover:text-[#505A4A] dark:hover:text-[#C4B590] hover:underline transition-colors"
+                      >
                         <Phone className="w-3.5 h-3.5" />
                         +{gestor.whatsapp}
-                      </span>
+                      </a>
                       <span className="flex items-center gap-1.5">
                         <MapPin className="w-3.5 h-3.5" />
                         {/* Backward-compat: tolerar docs viejos con `province` singular */}
                         {gestor.provinces?.join(', ') ?? (gestor as IGestor & { province?: string }).province ?? ''}
                       </span>
                       {gestor.email && (
-                        <span className="flex items-center gap-1.5">
+                        <a
+                          href={`mailto:${gestor.email}`}
+                          className="flex items-center gap-1.5 hover:text-[#505A4A] dark:hover:text-[#C4B590] hover:underline transition-colors"
+                        >
                           <Mail className="w-3.5 h-3.5" />
                           {gestor.email}
-                        </span>
+                        </a>
                       )}
+                    </div>
+
+                    {/* Row 2.5: Estado de la cuenta — siempre en línea propia
+                        para que la posición sea idéntica en todos los gestores
+                        (antes salía intercalado con el email según el ancho). */}
+                    <div className="mb-3 pl-12">
                       {gestor.userId ? (
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-medium">
+                        <span className="inline-flex items-center text-[10px] px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-medium">
                           Con cuenta
                         </span>
                       ) : (
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 font-medium">
+                        <span className="inline-flex items-center text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 font-medium">
                           Sin cuenta
                         </span>
                       )}
@@ -1075,15 +1052,22 @@ export default function GestoresAdminPage() {
                       ))}
                     </div>
 
-                    {/* Row 4: Permissions */}
+                    {/* Row 4: Permissions — chips read-only con check verde
+                        para que el admin entienda de un vistazo que es estado,
+                        no botones interactivos (la edición de permisos vive en
+                        el form). */}
                     {gestor.permissions && gestor.permissions.length > 0 && (
-                      <div className="flex flex-wrap gap-1 pl-12 mt-2">
-                        <Shield className="w-3 h-3 text-gray-400 dark:text-gray-500 mt-0.5 mr-0.5" />
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 pl-12 mt-2">
+                        <span className="flex items-center gap-1 text-[10px] text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                          <Shield className="w-3 h-3" />
+                          Permisos
+                        </span>
                         {gestor.permissions.map((p) => (
                           <span
                             key={p}
-                            className="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
+                            className="inline-flex items-center gap-1 text-[11px] text-gray-600 dark:text-gray-400"
                           >
+                            <Check className="w-3 h-3 text-green-600 dark:text-green-400 flex-shrink-0" />
                             {GESTOR_PERMISSIONS[p] || p}
                           </span>
                         ))}
