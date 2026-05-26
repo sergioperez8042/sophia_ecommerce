@@ -149,10 +149,24 @@ export default function CatalogHeader({ showBackButton = false }: CatalogHeaderP
                                 <div ref={avatarMenuRef} className="relative">
                                     <button
                                         onClick={() => setIsAvatarMenuOpen(!isAvatarMenuOpen)}
-                                        className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-semibold transition-colors ${isDark ? 'bg-[#C4B590]/20 text-[#C4B590] hover:bg-[#C4B590]/30' : 'bg-[#505A4A] text-white hover:bg-[#414A3C]'}`}
+                                        className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-semibold overflow-hidden transition-colors ${isDark ? 'bg-[#C4B590]/20 text-[#C4B590] hover:bg-[#C4B590]/30' : 'bg-[#505A4A] text-white hover:bg-[#414A3C]'}`}
                                         aria-label="Menú de usuario"
                                     >
-                                        {userInitials}
+                                        {/* Si el usuario subió foto en Mi Cuenta, la mostramos;
+                                            si no, fallback a las iniciales (la `bg-...` del botón
+                                            es el placeholder y `overflow-hidden` recorta la foto
+                                            al círculo). */}
+                                        {user.avatar ? (
+                                            <Image
+                                                src={user.avatar}
+                                                alt={user.name}
+                                                width={40}
+                                                height={40}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            userInitials
+                                        )}
                                     </button>
 
                                     <AnimatePresence>
