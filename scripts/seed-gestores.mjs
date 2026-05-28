@@ -134,6 +134,9 @@ const GESTORES = [
       'Boyeros',
       'Marianao',
       'La Lisa',
+      // Asumidos de Gisselle (eliminada mayo 2026 — Arturo absorbe sus zonas)
+      'Guanabacoa',
+      'Regla',
     ],
     consejos: [
       // La Habana del Este (sin Campo Florido — excluido)
@@ -223,6 +226,18 @@ const GESTORES = [
       { municipality: 'La Lisa', consejo: 'Punta Brava' },
       { municipality: 'La Lisa', consejo: 'Versalles' },
       { municipality: 'La Lisa', consejo: 'Coronela' },
+      // ── Zonas asumidas de Gisselle (eliminada mayo 2026) ──
+      // Guanabacoa (6)
+      { municipality: 'Guanabacoa', consejo: 'Villa I (Centro Histórico)' },
+      { municipality: 'Guanabacoa', consejo: 'Villa II' },
+      { municipality: 'Guanabacoa', consejo: 'Chibás - Jata' },
+      { municipality: 'Guanabacoa', consejo: "D'Beche - Nalón" },
+      { municipality: 'Guanabacoa', consejo: 'Minas - Barrera y Pedro Pi' },
+      { municipality: 'Guanabacoa', consejo: 'Peñalver - Bacuranao' },
+      // Regla (3)
+      { municipality: 'Regla', consejo: 'Guaicanamar' },
+      { municipality: 'Regla', consejo: 'Casablanca' },
+      { municipality: 'Regla', consejo: 'Loma - Modelo' },
     ],
     active: true,
   },
@@ -244,25 +259,9 @@ const GESTORES = [
     consejos: [{ municipality: 'La Habana del Este', consejo: 'Guanabo' }],
     active: true,
   },
-  {
-    id: 'gisselle',
-    name: 'Gisselle',
-    whatsapp: '5358747563',
-    provinces: ['La Habana'],
-    municipalities: ['Guanabacoa', 'Regla'],
-    consejos: [
-      { municipality: 'Guanabacoa', consejo: 'Villa I (Centro Histórico)' },
-      { municipality: 'Guanabacoa', consejo: 'Villa II' },
-      { municipality: 'Guanabacoa', consejo: 'Chibás - Jata' },
-      { municipality: 'Guanabacoa', consejo: "D'Beche - Nalón" },
-      { municipality: 'Guanabacoa', consejo: 'Minas - Barrera y Pedro Pi' },
-      { municipality: 'Guanabacoa', consejo: 'Peñalver - Bacuranao' },
-      { municipality: 'Regla', consejo: 'Guaicanamar' },
-      { municipality: 'Regla', consejo: 'Casablanca' },
-      { municipality: 'Regla', consejo: 'Loma - Modelo' },
-    ],
-    active: true,
-  },
+  // NOTA: Gisselle (id 'gisselle') fue ELIMINADA en mayo 2026. Sus zonas
+  // (Guanabacoa + Regla, 9 consejos) las absorbió Arturo arriba. El doc se
+  // borró de Firestore con scripts/migrate-gisselle-to-arturo.mjs.
   {
     id: 'kathy',
     name: 'Kathy',
