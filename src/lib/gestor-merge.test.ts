@@ -1,5 +1,6 @@
 import {
   mergeGestorCoverage,
+  splitMunicipalityCoverage,
   dedupeStringsNormalized,
   dedupeConsejosNormalized,
   consejoKey,
@@ -103,6 +104,55 @@ describe('gestor-merge — robustez de acentos/espacios', () => {
       const twice = mergeGestorCoverage(once, gisselle);
       expect(twice.consejos).toHaveLength(once.consejos.length);
       expect(twice.municipalities).toHaveLength(once.municipalities.length);
+    });
+  });
+
+  describe('splitMunicipalityCoverage — reasignar San Miguel del Padrón', () => {
+    const arturo = {
+      provinces: ['La Habana'],
+      municipalities: ['San Miguel del Padrón', 'Cotorro', 'Playa'],
+      consejos: [
+        { municipality: 'San Miguel del Padrón', consejo: 'Jacomino' },
+        { municipality: 'San Miguel del Padrón', consejo: 'Rocafort' },
+        { municipality: 'Cotorro', consejo: 'Lotería' },
+        { municipality: 'Playa', consejo: 'Miramar' },
+      ],
+    };
+
+    it('extrae el municipio + SUS consejos, deja el resto intacto', () => {
+      const { extracted, remaining } = splitMunicipalityCoverage(arturo, 'San Miguel del Padrón');
+      expect(extracted.municipalities).toEqual(['San Miguel del Padrón']);
+      expect(extracted.consejos).toHaveLength(2);
+      expect(extracted.consejos).toContainEqual({ municipality: 'San Miguel del Padrón', consejo: 'Jacomino' });
+      // remaining conserva Cotorro + Playa y sus consejos
+      expect(remaining.municipalities).toEqual(['Cotorro', 'Playa']);
+      expect(remaining.consejos).toHaveLength(2);
+      expect(remaining.consejos).not.toContainEqual({ municipality: 'San Miguel del Padrón', consejo: 'Jacomino' });
+    });
+
+    it('match normalizado: "san miguel del padron" sin tilde también extrae', () => {
+      const { extracted } = splitMunicipalityCoverage(arturo, 'san miguel del padron');
+      expect(extracted.municipalities).toHaveLength(1);
+      expect(extracted.consejos).toHaveLength(2);
+    });
+
+    it('sin pérdidas: extracted + remaining = total original', () => {
+      const { extracted, remaining } = splitMunicipalityCoverage(arturo, 'San Miguel del Padrón');
+      expect(extracted.consejos.length + remaining.consejos.length).toBe(arturo.consejos.length);
+      expect(extracted.municipalities.length + remaining.municipalities.length).toBe(arturo.municipalities.length);
+    });
+
+    it('municipio inexistente: extracted vacío, remaining = original', () => {
+      const { extracted, remaining } = splitMunicipalityCoverage(arturo, 'Regla');
+      expect(extracted.municipalities).toHaveLength(0);
+      expect(extracted.consejos).toHaveLength(0);
+      expect(remaining.municipalities).toEqual(arturo.municipalities);
+    });
+
+    it('no muta el argumento', () => {
+      const copy = JSON.parse(JSON.stringify(arturo));
+      splitMunicipalityCoverage(arturo, 'San Miguel del Padrón');
+      expect(arturo).toEqual(copy);
     });
   });
 });

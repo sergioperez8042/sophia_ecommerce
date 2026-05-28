@@ -126,7 +126,7 @@ const GESTORES = [
       'La Habana del Este',
       'Centro Habana',
       'Diez de Octubre',
-      'San Miguel del Padrón',
+      // San Miguel del Padrón reasignado a Mary (mayo 2026)
       'Cotorro',
       'Playa',
       'Cerro',
@@ -157,13 +157,7 @@ const GESTORES = [
       { municipality: 'Diez de Octubre', consejo: 'Víbora' },
       { municipality: 'Diez de Octubre', consejo: 'Acosta' },
       { municipality: 'Diez de Octubre', consejo: 'Sevillano' },
-      // San Miguel del Padrón (6)
-      { municipality: 'San Miguel del Padrón', consejo: 'Rocafort' },
-      { municipality: 'San Miguel del Padrón', consejo: 'Luyanó Moderno' },
-      { municipality: 'San Miguel del Padrón', consejo: 'Diezmero' },
-      { municipality: 'San Miguel del Padrón', consejo: 'San Francisco de Paula' },
-      { municipality: 'San Miguel del Padrón', consejo: 'Dolores - Veracruz' },
-      { municipality: 'San Miguel del Padrón', consejo: 'Jacomino' },
+      // San Miguel del Padrón → reasignado a Mary (mayo 2026), ya no Arturo
       // Cotorro (6)
       { municipality: 'Cotorro', consejo: 'San Pedro - Centro Cotorro' },
       { municipality: 'Cotorro', consejo: 'Santa María del Rosario' },
@@ -262,6 +256,23 @@ const GESTORES = [
   // NOTA: Gisselle (id 'gisselle') fue ELIMINADA en mayo 2026. Sus zonas
   // (Guanabacoa + Regla, 9 consejos) las absorbió Arturo arriba. El doc se
   // borró de Firestore con scripts/migrate-gisselle-to-arturo.mjs.
+  {
+    // Mary asume San Miguel del Padrón (reasignado desde Arturo, mayo 2026).
+    id: 'mary',
+    name: 'Mary',
+    whatsapp: '5356868265',
+    provinces: ['La Habana'],
+    municipalities: ['San Miguel del Padrón'],
+    consejos: [
+      { municipality: 'San Miguel del Padrón', consejo: 'Rocafort' },
+      { municipality: 'San Miguel del Padrón', consejo: 'Luyanó Moderno' },
+      { municipality: 'San Miguel del Padrón', consejo: 'Diezmero' },
+      { municipality: 'San Miguel del Padrón', consejo: 'San Francisco de Paula' },
+      { municipality: 'San Miguel del Padrón', consejo: 'Dolores - Veracruz' },
+      { municipality: 'San Miguel del Padrón', consejo: 'Jacomino' },
+    ],
+    active: true,
+  },
   {
     id: 'kathy',
     name: 'Kathy',

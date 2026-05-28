@@ -89,3 +89,45 @@ export function mergeGestorCoverage(
     ]),
   };
 }
+
+/**
+ * Separa de `coverage` toda la cobertura de un municipio dado (el municipio
+ * en sí + sus consejos), devolviendo `extracted` (lo que sale) y `remaining`
+ * (lo que se queda). Útil para REASIGNAR un municipio de un gestor a otro
+ * sin perder ni duplicar consejos.
+ *
+ * El match del municipio es NORMALIZADO (acentos/espacios/mayúsculas), por
+ * la misma razón que el merge: las fuentes pueden escribir el mismo lugar
+ * distinto y un match exacto fallaría silenciosamente.
+ */
+export function splitMunicipalityCoverage(
+  coverage: GestorCoverage,
+  municipality: string,
+): {
+  extracted: { municipalities: string[]; consejos: ConsejoTuple[] };
+  remaining: GestorCoverage;
+} {
+  const target = normalizeForMatch(municipality);
+
+  const extractedMunis = coverage.municipalities.filter(
+    (m) => normalizeForMatch(m) === target,
+  );
+  const remainingMunis = coverage.municipalities.filter(
+    (m) => normalizeForMatch(m) !== target,
+  );
+  const extractedConsejos = coverage.consejos.filter(
+    (c) => normalizeForMatch(c.municipality) === target,
+  );
+  const remainingConsejos = coverage.consejos.filter(
+    (c) => normalizeForMatch(c.municipality) !== target,
+  );
+
+  return {
+    extracted: { municipalities: extractedMunis, consejos: extractedConsejos },
+    remaining: {
+      provinces: coverage.provinces,
+      municipalities: remainingMunis,
+      consejos: remainingConsejos,
+    },
+  };
+}
