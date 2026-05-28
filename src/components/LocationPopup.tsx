@@ -10,7 +10,7 @@ import {
   getConsejos,
   requiresConsejoPopular,
 } from '@/data/localities';
-import { GestorService } from '@/lib/firestore-services';
+import { lookupGestorByLocation } from '@/lib/gestor-lookup-client';
 import { useLocation } from '@/store/LocationContext';
 import { useTheme } from '@/store/ThemeContext';
 import { InlineSearchSelect } from '@/components/ui/inline-search-select';
@@ -146,21 +146,18 @@ export default function LocationPopup({ open, onOpenChange }: LocationPopupProps
 
     (async () => {
       try {
-        const found = await GestorService.findByLocation(
+        // Lookup server-side (vía /api/gestor-lookup). El navegador NO lee
+        // Firestore directo — clave para que funcione desde Cuba, donde esa
+        // conexión está restringida. El endpoint devuelve gestor + nearby.
+        const { available, gestor, nearby } = await lookupGestorByLocation(
           selectedProvince,
           selectedMunicipality,
           showConsejoStep ? selectedConsejo : undefined,
         );
         if (cancelled) return;
-        if (found) {
-          setGestorStatus({ state: 'available', gestorName: found.name });
+        if (available && gestor) {
+          setGestorStatus({ state: 'available', gestorName: gestor.name });
         } else {
-          // Si no hay match exacto y la provincia usa consejos, sugerimos
-          // consejos cercanos del mismo municipio que SÍ tienen gestor
-          const nearby = showConsejoStep
-            ? await GestorService.getCoveredConsejosInMunicipality(selectedProvince, selectedMunicipality)
-            : [];
-          if (cancelled) return;
           setGestorStatus({ state: 'unavailable', nearby });
         }
       } catch {

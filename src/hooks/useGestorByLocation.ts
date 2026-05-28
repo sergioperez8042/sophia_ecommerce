@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { GestorService } from "@/lib/firestore-services";
+import { lookupGestorByLocation } from "@/lib/gestor-lookup-client";
 import type { IGestor } from "@/entities/all";
 
 /**
@@ -64,7 +64,7 @@ export function useGestorByLocation(
 
     (async () => {
       try {
-        const found = await GestorService.findByLocation(
+        const { gestor: found } = await lookupGestorByLocation(
           province,
           municipality,
           consejoPopular,

@@ -1,13 +1,13 @@
 import { renderHook, waitFor, act } from '@testing-library/react';
 import type { IGestor } from '@/entities/all';
 
-// Mock de GestorService — el hook llama findByLocation
-const mockFindByLocation = jest.fn();
+// El hook ahora llama lookupGestorByLocation (endpoint server-side), no
+// GestorService directo — para que funcione desde Cuba (Firestore cliente
+// está restringido allí). Mockeamos ese helper.
+const mockLookup = jest.fn();
 
-jest.mock('@/lib/firestore-services', () => ({
-  GestorService: {
-    findByLocation: (...args: unknown[]) => mockFindByLocation(...args),
-  },
+jest.mock('@/lib/gestor-lookup-client', () => ({
+  lookupGestorByLocation: (...args: unknown[]) => mockLookup(...args),
 }));
 
 import { useGestorByLocation } from './useGestorByLocation';
@@ -24,29 +24,36 @@ const fakeGestor: IGestor = {
   createdAt: new Date().toISOString(),
 } as IGestor;
 
+// Helper: envuelve un gestor (o null) en la forma que devuelve el endpoint.
+const result = (gestor: IGestor | null) => ({
+  available: !!gestor,
+  gestor,
+  nearby: [],
+});
+
 beforeEach(() => {
   jest.clearAllMocks();
 });
 
 describe('useGestorByLocation', () => {
   it('returns gestor=null and loading=false when location is null', () => {
-    const { result } = renderHook(() => useGestorByLocation(null));
-    expect(result.current.gestor).toBeNull();
-    expect(result.current.loading).toBe(false);
-    expect(mockFindByLocation).not.toHaveBeenCalled();
+    const { result: r } = renderHook(() => useGestorByLocation(null));
+    expect(r.current.gestor).toBeNull();
+    expect(r.current.loading).toBe(false);
+    expect(mockLookup).not.toHaveBeenCalled();
   });
 
   it('returns gestor=null when province is missing', () => {
-    const { result } = renderHook(() =>
+    const { result: r } = renderHook(() =>
       useGestorByLocation({ municipality: 'Centro Habana' }),
     );
-    expect(result.current.gestor).toBeNull();
-    expect(mockFindByLocation).not.toHaveBeenCalled();
+    expect(r.current.gestor).toBeNull();
+    expect(mockLookup).not.toHaveBeenCalled();
   });
 
-  it('resolves the gestor from the service', async () => {
-    mockFindByLocation.mockResolvedValue(fakeGestor);
-    const { result } = renderHook(() =>
+  it('resolves the gestor from the lookup endpoint', async () => {
+    mockLookup.mockResolvedValue(result(fakeGestor));
+    const { result: r } = renderHook(() =>
       useGestorByLocation({
         province: 'La Habana',
         municipality: 'Centro Habana',
@@ -54,47 +61,46 @@ describe('useGestorByLocation', () => {
       }),
     );
 
-    // Loading state arranca true mientras espera
-    await waitFor(() => expect(result.current.gestor).not.toBeNull());
+    await waitFor(() => expect(r.current.gestor).not.toBeNull());
 
-    expect(result.current.gestor?.name).toBe('Maday');
-    expect(result.current.loading).toBe(false);
-    expect(mockFindByLocation).toHaveBeenCalledWith(
+    expect(r.current.gestor?.name).toBe('Maday');
+    expect(r.current.loading).toBe(false);
+    expect(mockLookup).toHaveBeenCalledWith(
       'La Habana',
       'Centro Habana',
       'Cayo Hueso',
     );
   });
 
-  it('returns null when service returns null (consejo uncovered)', async () => {
-    mockFindByLocation.mockResolvedValue(null);
-    const { result } = renderHook(() =>
+  it('returns null when endpoint reports no coverage (consejo uncovered)', async () => {
+    mockLookup.mockResolvedValue(result(null));
+    const { result: r } = renderHook(() =>
       useGestorByLocation({
         province: 'La Habana',
         municipality: 'La Habana del Este',
         consejoPopular: 'Campo Florido',
       }),
     );
-    await waitFor(() => expect(result.current.loading).toBe(false));
-    expect(result.current.gestor).toBeNull();
+    await waitFor(() => expect(r.current.loading).toBe(false));
+    expect(r.current.gestor).toBeNull();
   });
 
-  it('returns null when service throws (network/firestore error)', async () => {
-    mockFindByLocation.mockRejectedValue(new Error('Network down'));
-    const { result } = renderHook(() =>
+  it('returns null when the lookup throws (network/firestore error)', async () => {
+    mockLookup.mockRejectedValue(new Error('Network down'));
+    const { result: r } = renderHook(() =>
       useGestorByLocation({
         province: 'La Habana',
         municipality: 'Centro Habana',
         consejoPopular: 'Cayo Hueso',
       }),
     );
-    await waitFor(() => expect(result.current.loading).toBe(false));
-    expect(result.current.gestor).toBeNull();
+    await waitFor(() => expect(r.current.loading).toBe(false));
+    expect(r.current.gestor).toBeNull();
   });
 
   it('refetches when consejoPopular changes', async () => {
-    mockFindByLocation.mockResolvedValue(fakeGestor);
-    const { result, rerender } = renderHook(
+    mockLookup.mockResolvedValue(result(fakeGestor));
+    const { result: r, rerender } = renderHook(
       ({ consejo }) =>
         useGestorByLocation({
           province: 'La Habana',
@@ -104,16 +110,13 @@ describe('useGestorByLocation', () => {
       { initialProps: { consejo: 'Cayo Hueso' } },
     );
 
-    await waitFor(() => expect(result.current.gestor).not.toBeNull());
-    expect(mockFindByLocation).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(r.current.gestor).not.toBeNull());
+    expect(mockLookup).toHaveBeenCalledTimes(1);
 
-    // Cambio de consejo dispara otra búsqueda
-    mockFindByLocation.mockResolvedValueOnce({ ...fakeGestor, name: 'Otro' });
+    mockLookup.mockResolvedValueOnce(result({ ...fakeGestor, name: 'Otro' }));
     rerender({ consejo: 'Dragones' });
-    await waitFor(() =>
-      expect(mockFindByLocation).toHaveBeenCalledTimes(2),
-    );
-    expect(mockFindByLocation).toHaveBeenLastCalledWith(
+    await waitFor(() => expect(mockLookup).toHaveBeenCalledTimes(2));
+    expect(mockLookup).toHaveBeenLastCalledWith(
       'La Habana',
       'Centro Habana',
       'Dragones',
@@ -121,17 +124,15 @@ describe('useGestorByLocation', () => {
   });
 
   it('does NOT update state when a stale fetch resolves after a fresh one', async () => {
-    // Simula carrera: primer fetch lento, segundo rápido. Esperamos que el
-    // resultado final sea el del segundo, sin que el primero "pise" el state.
-    let resolveFirst!: (g: IGestor | null) => void;
-    const firstPromise = new Promise<IGestor | null>((res) => {
+    let resolveFirst!: (r: ReturnType<typeof result>) => void;
+    const firstPromise = new Promise<ReturnType<typeof result>>((res) => {
       resolveFirst = res;
     });
-    mockFindByLocation
+    mockLookup
       .mockReturnValueOnce(firstPromise)
-      .mockResolvedValueOnce({ ...fakeGestor, name: 'Segundo' });
+      .mockResolvedValueOnce(result({ ...fakeGestor, name: 'Segundo' }));
 
-    const { result, rerender } = renderHook(
+    const { result: r, rerender } = renderHook(
       ({ muni }) =>
         useGestorByLocation({
           province: 'Matanzas',
@@ -140,22 +141,19 @@ describe('useGestorByLocation', () => {
       { initialProps: { muni: 'Cárdenas' } },
     );
 
-    // Dispara el segundo render antes de que el primero resuelva
     rerender({ muni: 'Limonar' });
-    await waitFor(() => expect(result.current.gestor?.name).toBe('Segundo'));
+    await waitFor(() => expect(r.current.gestor?.name).toBe('Segundo'));
 
-    // Resolvemos el primero TARDE — no debe pisar
     await act(async () => {
-      resolveFirst({ ...fakeGestor, name: 'Primero' });
-      // dar tiempo a que el microtask termine
+      resolveFirst(result({ ...fakeGestor, name: 'Primero' }));
       await Promise.resolve();
     });
-    expect(result.current.gestor?.name).toBe('Segundo');
+    expect(r.current.gestor?.name).toBe('Segundo');
   });
 
   it('reads only province / municipality / consejoPopular (ignores object identity)', async () => {
-    mockFindByLocation.mockResolvedValue(fakeGestor);
-    const { result, rerender } = renderHook(
+    mockLookup.mockResolvedValue(result(fakeGestor));
+    const { result: r, rerender } = renderHook(
       ({ loc }: { loc: { province: string; municipality: string } }) =>
         useGestorByLocation(loc),
       {
@@ -164,12 +162,11 @@ describe('useGestorByLocation', () => {
         },
       },
     );
-    await waitFor(() => expect(result.current.gestor).not.toBeNull());
-    expect(mockFindByLocation).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(r.current.gestor).not.toBeNull());
+    expect(mockLookup).toHaveBeenCalledTimes(1);
 
-    // Nuevo objeto con MISMOS valores → no debe refetch
     rerender({ loc: { province: 'Matanzas', municipality: 'Cárdenas' } });
-    await new Promise((r) => setTimeout(r, 50));
-    expect(mockFindByLocation).toHaveBeenCalledTimes(1);
+    await new Promise((rs) => setTimeout(rs, 50));
+    expect(mockLookup).toHaveBeenCalledTimes(1);
   });
 });
