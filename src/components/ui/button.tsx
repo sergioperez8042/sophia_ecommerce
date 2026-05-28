@@ -53,4 +53,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 )
 Button.displayName = "Button"
 
+// buttonVariants (cva) se exporta junto al componente — patrón canónico de
+// shadcn/ui usado en toda la app. Mover el cva a otro archivo rompería
+// decenas de imports sin beneficio real (el impacto es solo Fast Refresh
+// en dev). Suprimimos la regla aquí intencionalmente.
+// react-doctor-disable-next-line react-doctor/only-export-components
 export { Button, buttonVariants }

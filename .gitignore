@@ -40,3 +40,28 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .claude/settings.local.json
+
+# react-doctor regó skill files en directorios de muchos agentes IA al
+# correr `react-doctor install`. Solo conservamos .claude/skills (Claude
+# Code, que es lo que usamos). El resto es ruido para este proyecto.
+.claude/worktrees/
+.agents/
+/skills/
+.codebuddy/
+.commandcode/
+.continue/
+.crush/
+.factory/
+.goose/
+.kilocode/
+.kiro/
+.mcpjam/
+.mux/
+.neovate/
+.openhands/
+.qoder/
+.qwen/
+.roo/
+.trae/
+.windsurf/
+.zencoder/

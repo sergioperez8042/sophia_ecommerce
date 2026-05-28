@@ -6,7 +6,7 @@ import ProductImage from './product-image';
 jest.mock('next/image', () => ({
   __esModule: true,
   default: ({ fill, unoptimized, priority, ...props }: any) => {
-    return <img data-fill={fill ? 'true' : undefined} data-unoptimized={unoptimized ? 'true' : undefined} {...props} />;
+    return <img alt="" data-fill={fill ? 'true' : undefined} data-unoptimized={unoptimized ? 'true' : undefined} {...props} />;
   },
 }));
 

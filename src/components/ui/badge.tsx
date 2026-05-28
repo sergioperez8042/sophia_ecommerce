@@ -33,4 +33,7 @@ function Badge({ className, variant, ...props }: BadgeProps) {
   )
 }
 
+// badgeVariants (cva) se exporta junto al componente — patrón canónico de
+// shadcn/ui. Suprimimos la regla aquí intencionalmente (ver button.tsx).
+// react-doctor-disable-next-line react-doctor/only-export-components
 export { Badge, badgeVariants }

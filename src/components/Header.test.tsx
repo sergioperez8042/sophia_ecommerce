@@ -6,7 +6,7 @@ import Header from './Header';
 // Mock next/image - filter out Next.js specific boolean props
 jest.mock('next/image', () => ({
   __esModule: true,
-  default: ({ fill, unoptimized, priority, ...props }: any) => <img {...props} />,
+  default: ({ fill, unoptimized, priority, ...props }: any) => <img alt="" {...props} />,
 }));
 
 // Mock next/link

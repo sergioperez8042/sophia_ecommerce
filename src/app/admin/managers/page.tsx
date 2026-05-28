@@ -31,12 +31,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { toast } from 'sonner';
+import { PhoneInput } from '@/components/ui/phone-input';
 import {
-  PhoneInput,
   digitsToE164,
   e164ToDigits,
   isValidPhoneNumber,
-} from '@/components/ui/phone-input';
+} from '@/lib/phone-utils';
 import MultiSearchableDropdown from '@/components/ui/multi-searchable-dropdown';
 import Switch from '@/components/ui/switch';
 import InlineAccountCreator from '@/components/ui/inline-account-creator';

@@ -123,7 +123,7 @@ jest.mock('next/link', () => {
 jest.mock('next/image', () => {
   return (props: Record<string, unknown>) => {
     const { fill: _fill, priority: _priority, unoptimized: _unoptimized, ...rest } = props;
-    return <img {...(rest as React.ImgHTMLAttributes<HTMLImageElement>)} />;
+    return <img alt="" {...(rest as React.ImgHTMLAttributes<HTMLImageElement>)} />;
   };
 });
 

@@ -18,8 +18,12 @@ import CountrySelect from './country-select';
  * **Almacenamiento**: el componente devuelve siempre el número en formato
  * E.164 (`+5352010900`). Como Firestore guarda los números SIN el `+`
  * (`5352010900`), el caller debe quitar el prefijo antes de persistir y
- * añadirlo antes de pasar el valor al input — el helper `e164ToDigits` y
- * `digitsToE164` ayudan con eso.
+ * añadirlo antes de pasar el valor al input — los helpers `e164ToDigits`
+ * y `digitsToE164` (en `@/lib/phone-utils`) ayudan con eso.
+ *
+ * Nota: los helpers viven en `@/lib/phone-utils` (no aquí) para que este
+ * archivo SOLO exporte el componente React — requisito de Fast Refresh
+ * de Next.js (react-doctor/only-export-components).
  */
 
 export interface PhoneInputProps {
@@ -35,28 +39,6 @@ export interface PhoneInputProps {
   /** Mensaje a mostrar bajo el input cuando el valor no es válido */
   showValidationHint?: boolean;
 }
-
-/**
- * Helper: convierte el formato que Firestore guarda ('5352010900' sin +) al
- * formato que react-phone-number-input espera ('+5352010900').
- */
-export function digitsToE164(digits: string | undefined | null): string | undefined {
-  if (!digits) return undefined;
-  const trimmed = digits.trim();
-  if (!trimmed) return undefined;
-  return trimmed.startsWith('+') ? trimmed : `+${trimmed.replace(/[^0-9]/g, '')}`;
-}
-
-/**
- * Helper inverso: del E.164 del componente al formato Firestore (solo
- * dígitos, sin +).
- */
-export function e164ToDigits(e164: string | undefined | null): string {
-  if (!e164) return '';
-  return e164.replace(/[^0-9]/g, '');
-}
-
-export { isValidPhoneNumber };
 
 export function PhoneInput({
   value,

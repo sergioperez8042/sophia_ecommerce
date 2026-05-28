@@ -1,0 +1,12 @@
+# pnpm supply-chain hardening (react-doctor/require-pnpm-hardening).
+#
+# minimumReleaseAge: ignora versiones publicadas hace menos de N minutos.
+# Mitiga ataques donde una versión maliciosa se publica y se despublica en
+# cuestión de horas — pnpm esperará 1440 min (24h) antes de instalar una
+# versión recién publicada, dando tiempo a que la comunidad la detecte.
+minimumReleaseAge: 1440
+
+# trustPolicy: no-downgrade rechaza paquetes cuyas señales de confianza
+# (provenance, firmas) se debilitan entre actualizaciones. Sin esto pnpm
+# aceptaría silenciosamente un downgrade de seguridad.
+trustPolicy: no-downgrade
