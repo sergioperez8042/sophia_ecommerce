@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyFirebaseAuth, unauthorizedResponse } from '@/lib/api-auth';
+import { getFirebaseRestConfig, toFsValue, fromFsValue } from '@/lib/firestore-rest';
 
 /**
  * POST /api/managers/create-account
@@ -27,55 +28,9 @@ import { verifyFirebaseAuth, unauthorizedResponse } from '@/lib/api-auth';
  */
 const LOG_PREFIX = '[api/managers/create-account]';
 
-function getConfig() {
-  const projectId =
-    process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || process.env.FIREBASE_PROJECT_ID;
-  const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
-  return { projectId, apiKey };
-}
-
-// ── Firestore REST value (de)serialization ──────────────────────────────────
-type FsValue = Record<string, unknown>;
-function toFsValue(value: unknown): FsValue {
-  if (value === null || value === undefined) return { nullValue: null };
-  if (typeof value === 'string') return { stringValue: value };
-  if (typeof value === 'boolean') return { booleanValue: value };
-  if (typeof value === 'number')
-    return Number.isInteger(value) ? { integerValue: String(value) } : { doubleValue: value };
-  if (value instanceof Date) return { timestampValue: value.toISOString() };
-  if (Array.isArray(value))
-    return { arrayValue: { values: value.map(toFsValue) } };
-  if (typeof value === 'object') {
-    const fields: Record<string, FsValue> = {};
-    for (const [k, v] of Object.entries(value as Record<string, unknown>)) fields[k] = toFsValue(v);
-    return { mapValue: { fields } };
-  }
-  return { stringValue: String(value) };
-}
-function fromFsValue(v: FsValue | undefined): unknown {
-  if (!v) return undefined;
-  if ('stringValue' in v) return v.stringValue;
-  if ('booleanValue' in v) return v.booleanValue;
-  if ('integerValue' in v) return Number(v.integerValue);
-  if ('doubleValue' in v) return v.doubleValue;
-  if ('nullValue' in v) return null;
-  if ('timestampValue' in v) return v.timestampValue;
-  if ('arrayValue' in v) {
-    const arr = (v.arrayValue as { values?: FsValue[] })?.values ?? [];
-    return arr.map(fromFsValue);
-  }
-  if ('mapValue' in v) {
-    const o: Record<string, unknown> = {};
-    const fields = (v.mapValue as { fields?: Record<string, FsValue> })?.fields ?? {};
-    for (const [k, val] of Object.entries(fields)) o[k] = fromFsValue(val);
-    return o;
-  }
-  return undefined;
-}
-
 export async function POST(request: NextRequest) {
   try {
-    const { projectId, apiKey } = getConfig();
+    const { projectId, apiKey } = getFirebaseRestConfig();
     if (!projectId || !apiKey) {
       console.error(`${LOG_PREFIX} misconfig: projectId/apiKey ausentes`);
       return NextResponse.json(

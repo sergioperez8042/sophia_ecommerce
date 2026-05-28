@@ -52,6 +52,20 @@ jest.mock('@/lib/firebase', () => ({
   db: {},
 }));
 
+// El login/logout/hidratación ahora pasan por el cliente server-side
+// (cookie httpOnly). Mockeamos ese módulo. Por defecto fetchSession
+// devuelve null → AuthContext cae al fallback del SDK (onAuthStateChanged),
+// que es lo que prueban los tests de detección de usuario.
+const mockLoginViaServer = jest.fn();
+const mockFetchSession = jest.fn();
+const mockLogoutViaServer = jest.fn();
+
+jest.mock('@/lib/auth-client', () => ({
+  loginViaServer: (...args: unknown[]) => mockLoginViaServer(...args),
+  fetchSession: (...args: unknown[]) => mockFetchSession(...args),
+  logoutViaServer: (...args: unknown[]) => mockLogoutViaServer(...args),
+}));
+
 function wrapper({ children }: { children: React.ReactNode }) {
   return <AuthProvider>{children}</AuthProvider>;
 }
@@ -68,6 +82,9 @@ describe('AuthContext', () => {
     mockSetDoc.mockResolvedValue(undefined);
     mockSignOut.mockResolvedValue(undefined);
     mockUpdateProfile.mockResolvedValue(undefined);
+    // Sin sesión por cookie por defecto → fallback al SDK
+    mockFetchSession.mockResolvedValue(null);
+    mockLogoutViaServer.mockResolvedValue(undefined);
   });
 
   describe('Estado inicial', () => {
@@ -193,19 +210,8 @@ describe('AuthContext', () => {
 
   describe('login', () => {
     it('debe retornar exito al hacer login correctamente', async () => {
-      mockOnAuthStateChanged.mockImplementation((_auth: unknown, callback: (user: null) => void) => {
-        callback(null);
-        return jest.fn();
-      });
-
-      mockSignInWithEmailAndPassword.mockResolvedValue({
-        user: { uid: 'user-123', email: 'test@test.com', displayName: 'Test' },
-      });
-
-      mockGetDoc.mockResolvedValue({
-        exists: () => true,
-        id: 'user-123',
-        data: () => ({ name: 'Test', email: 'test@test.com', role: 'client' }),
+      mockLoginViaServer.mockResolvedValue({
+        user: { id: 'user-123', name: 'Test', email: 'test@test.com', role: 'client' },
       });
 
       const { result } = renderHook(() => useAuth(), { wrapper });
@@ -220,18 +226,33 @@ describe('AuthContext', () => {
       });
 
       expect(loginResult!.success).toBe(true);
+      expect(mockLoginViaServer).toHaveBeenCalledWith('test@test.com', 'password123');
+      // login de cliente NO debe encender el SDK
+      expect(mockSignInWithEmailAndPassword).not.toHaveBeenCalled();
+    });
+
+    it('debe encender el SDK cliente cuando el rol es admin', async () => {
+      mockLoginViaServer.mockResolvedValue({
+        user: { id: 'admin-1', name: 'Admin', email: 'admin@test.com', role: 'admin' },
+      });
+      mockSignInWithEmailAndPassword.mockResolvedValue({
+        user: { uid: 'admin-1', email: 'admin@test.com' },
+      });
+
+      const { result } = renderHook(() => useAuth(), { wrapper });
+      await waitFor(() => expect(result.current.isLoaded).toBe(true));
+
+      let loginResult: { success: boolean; error?: string };
+      await act(async () => {
+        loginResult = await result.current.login('admin@test.com', 'secret123');
+      });
+
+      expect(loginResult!.success).toBe(true);
+      expect(mockSignInWithEmailAndPassword).toHaveBeenCalled();
     });
 
     it('debe retornar error al fallar el login con credenciales invalidas', async () => {
-      mockOnAuthStateChanged.mockImplementation((_auth: unknown, callback: (user: null) => void) => {
-        callback(null);
-        return jest.fn();
-      });
-
-      mockSignInWithEmailAndPassword.mockRejectedValue({
-        code: 'auth/invalid-credential',
-        message: 'Invalid credential',
-      });
+      mockLoginViaServer.mockResolvedValue({ error: 'Credenciales inválidas' });
 
       const { result } = renderHook(() => useAuth(), { wrapper });
 
@@ -249,14 +270,7 @@ describe('AuthContext', () => {
     });
 
     it('debe retornar error cuando el usuario no existe', async () => {
-      mockOnAuthStateChanged.mockImplementation((_auth: unknown, callback: (user: null) => void) => {
-        callback(null);
-        return jest.fn();
-      });
-
-      mockSignInWithEmailAndPassword.mockRejectedValue({
-        code: 'auth/user-not-found',
-      });
+      mockLoginViaServer.mockResolvedValue({ error: 'Usuario no encontrado' });
 
       const { result } = renderHook(() => useAuth(), { wrapper });
 
@@ -273,15 +287,8 @@ describe('AuthContext', () => {
       expect(loginResult!.error).toBe('Usuario no encontrado');
     });
 
-    it('debe retornar error generico para codigos de error desconocidos', async () => {
-      mockOnAuthStateChanged.mockImplementation((_auth: unknown, callback: (user: null) => void) => {
-        callback(null);
-        return jest.fn();
-      });
-
-      mockSignInWithEmailAndPassword.mockRejectedValue({
-        code: 'auth/unknown-error',
-      });
+    it('debe retornar error generico si el cliente server lanza', async () => {
+      mockLoginViaServer.mockRejectedValue(new Error('Network down'));
 
       const { result } = renderHook(() => useAuth(), { wrapper });
 

@@ -12,6 +12,7 @@ import {
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
+import { loginViaServer, fetchSession, logoutViaServer } from '@/lib/auth-client';
 
 // Email validation regex
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -50,6 +51,8 @@ interface AuthState {
 
 type AuthAction =
   | { type: 'SET_USER'; payload: { user: User | null; firebaseUser: FirebaseUser | null } }
+  | { type: 'SET_PROFILE'; payload: { user: User | null } }
+  | { type: 'SET_FIREBASE_USER'; payload: { firebaseUser: FirebaseUser | null } }
   | { type: 'SET_LOADED' }
   | { type: 'LOGOUT' }
   | { type: 'UPDATE_USER'; payload: Partial<User> };
@@ -104,6 +107,24 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
         firebaseUser: action.payload.firebaseUser,
         isLoaded: true,
         isAuthenticated: action.payload.user !== null
+      };
+
+    // Hidrata SOLO el perfil (desde la cookie de sesión server-side). No
+    // toca firebaseUser — lo aporta aparte el SDK (para Firestore admin).
+    case 'SET_PROFILE':
+      return {
+        ...state,
+        user: action.payload.user,
+        isLoaded: true,
+        isAuthenticated: action.payload.user !== null
+      };
+
+    // Mantiene la referencia al usuario del SDK cliente sin pisar `user`
+    // (que es la fuente de verdad de la UI, venida de la cookie).
+    case 'SET_FIREBASE_USER':
+      return {
+        ...state,
+        firebaseUser: action.payload.firebaseUser
       };
 
     case 'SET_LOADED':
@@ -166,87 +187,90 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Listen to Firebase Auth state changes
+  // Hidratación del estado de auth.
+  //
+  // Cookie-first → SDK-fallback: primero intentamos la sesión server-side
+  // (cookie httpOnly). Esto es lo que hace funcionar a los gestores en Cuba,
+  // donde el SDK cliente no puede hablar con Google. Si no hay sesión por
+  // cookie, caemos al `onAuthStateChanged` del SDK (admins ya logueados,
+  // compatibilidad hacia atrás).
   useEffect(() => {
-    // Guard: If Firebase is not initialized, mark as loaded with no user
-    if (!auth) {
-      dispatch({ type: 'SET_LOADED' });
-      return;
-    }
+    let cancelled = false;
+    let unsubscribe: () => void = () => {};
 
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        // User is signed in, get their profile from Firestore
-        const userProfile = await getUserProfile(firebaseUser.uid);
+    const init = async () => {
+      // 1) Sesión por cookie (server-side)
+      try {
+        const sessionUser = await fetchSession();
+        if (cancelled) return;
+        if (sessionUser) {
+          dispatch({ type: 'SET_PROFILE', payload: { user: sessionUser } });
+          // Suscribimos al SDK solo para poblar firebaseUser (lo usan los
+          // flujos admin de Firestore / getIdToken), sin pisar `user`.
+          if (auth) {
+            unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+              if (!cancelled) dispatch({ type: 'SET_FIREBASE_USER', payload: { firebaseUser } });
+            });
+          }
+          return;
+        }
+      } catch {
+        // Sin sesión por cookie → fallback al SDK
+      }
 
-        if (userProfile) {
+      // 2) Fallback: SDK cliente
+      if (!auth) {
+        dispatch({ type: 'SET_LOADED' });
+        return;
+      }
+      unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+        if (cancelled) return;
+        if (firebaseUser) {
+          const userProfile = await getUserProfile(firebaseUser.uid);
           dispatch({
             type: 'SET_USER',
-            payload: { user: userProfile, firebaseUser }
+            payload: { user: userProfile, firebaseUser: userProfile ? firebaseUser : null },
           });
         } else {
-          // User exists in Auth but not in Firestore
-          dispatch({
-            type: 'SET_USER',
-            payload: { user: null, firebaseUser: null }
-          });
+          dispatch({ type: 'SET_USER', payload: { user: null, firebaseUser: null } });
         }
-      } else {
-        // User is signed out
-        dispatch({
-          type: 'SET_USER',
-          payload: { user: null, firebaseUser: null }
-        });
-      }
-    });
+      });
+    };
 
-    return () => unsubscribe();
+    init();
+
+    return () => {
+      cancelled = true;
+      unsubscribe();
+    };
   }, [getUserProfile]);
 
-  // Login
+  // Login — server-side vía /api/auth/login (ver src/lib/auth-client.ts).
+  // Funciona desde Cuba porque el navegador solo habla con nuestro dominio;
+  // el servidor (Vercel → Google) hace el signIn por REST y setea la cookie.
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
-    if (!auth || !db) {
-      return { success: false, error: 'Firebase no está inicializado' };
-    }
-
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      let userProfile = await getUserProfile(userCredential.user.uid);
+      const result = await loginViaServer(email, password);
+      if ('error' in result) {
+        return { success: false, error: result.error };
+      }
 
-      // If user exists in Auth but not in Firestore, create the profile
-      if (!userProfile) {
-        const newProfile: Omit<User, 'id'> = {
-          name: userCredential.user.displayName || email.split('@')[0],
-          email: userCredential.user.email || email,
-          role: 'client',
-          createdAt: new Date(),
-        };
+      const loggedUser = result.user;
+      dispatch({ type: 'SET_PROFILE', payload: { user: loggedUser } });
 
-        await setDoc(doc(db, USERS_COLLECTION, userCredential.user.uid), newProfile);
-        userProfile = { id: userCredential.user.uid, ...newProfile };
-
-        dispatch({
-          type: 'SET_USER',
-          payload: { user: userProfile, firebaseUser: userCredential.user }
-        });
+      // El panel admin usa el SDK cliente para Firestore; lo encendemos
+      // también para los admin (que no están en Cuba, así que el SDK conecta).
+      if (loggedUser.role === 'admin' && auth) {
+        try {
+          await signInWithEmailAndPassword(auth, email, password);
+        } catch {
+          // No bloqueante para el login en sí.
+        }
       }
 
       return { success: true };
-    } catch (error: unknown) {
-      const firebaseError = error as { code?: string; message?: string };
-
-      // Map Firebase error codes to Spanish messages
-      const errorMessages: Record<string, string> = {
-        'auth/user-not-found': 'Usuario no encontrado',
-        'auth/wrong-password': 'Contraseña incorrecta',
-        'auth/invalid-email': 'Email inválido',
-        'auth/user-disabled': 'Usuario deshabilitado',
-        'auth/too-many-requests': 'Demasiados intentos. Intenta más tarde',
-        'auth/invalid-credential': 'Credenciales inválidas',
-      };
-
-      const errorMessage = errorMessages[firebaseError.code || ''] || 'Error al iniciar sesión';
-      return { success: false, error: errorMessage };
+    } catch {
+      return { success: false, error: 'Error al iniciar sesión' };
     }
   };
 
@@ -341,16 +365,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // Logout
+  // Logout — limpia la sesión server (cookie httpOnly) y el SDK cliente.
   const logout = async () => {
-    if (!auth) return;
-
-    try {
-      await signOut(auth);
-      dispatch({ type: 'LOGOUT' });
-    } catch {
-      // Logout failed silently
+    await logoutViaServer();
+    if (auth) {
+      try {
+        await signOut(auth);
+      } catch {
+        // Logout del SDK falló silenciosamente — la cookie ya se limpió.
+      }
     }
+    dispatch({ type: 'LOGOUT' });
   };
 
   // Update user profile

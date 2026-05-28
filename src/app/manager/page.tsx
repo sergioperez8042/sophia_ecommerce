@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@/store';
-import { GestorService, OrderService } from '@/lib/firestore-services';
+import { fetchManagerData, updateManagerOrderStatus, changeManagerPassword } from '@/lib/auth-client';
 import { IGestor, IOrder, ORDER_STATUSES, OrderStatus } from '@/entities/all';
 import {
   LogOut,
@@ -28,8 +28,6 @@ import {
 import Image from 'next/image';
 import { m, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
-import { updatePassword } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
 import Link from 'next/link';
 
 const STATUS_CONFIG: Record<OrderStatus, { icon: typeof Package; color: string; bg: string }> = {
@@ -62,46 +60,43 @@ export default function GestorDashboard() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [changingPassword, setChangingPassword] = useState(false);
 
-  const loadGestorData = useCallback(async () => {
-    if (!user?.gestorId) {
-      setLoading(false);
-      return;
-    }
+  // Carga inicial: gestor + pedidos en una sola llamada server-side
+  // (/api/manager/orders). Funciona desde Cuba — el navegador solo habla
+  // con nuestro dominio.
+  const loadData = useCallback(async () => {
     try {
-      const data = await GestorService.getById(user.gestorId);
-      setGestor(data);
-    } catch {
-      // Error loading gestor data
+      const { gestor: g, orders: o } = await fetchManagerData();
+      setGestor(g);
+      setOrders(o);
+    } catch (err) {
+      console.error('Error loading manager data:', err);
+      toast.error('Error al cargar datos. Reintenta.');
     } finally {
       setLoading(false);
     }
-  }, [user?.gestorId]);
+  }, []);
 
-  const loadOrders = useCallback(async () => {
-    if (!gestor?.id) return;
+  // Solo refresca los pedidos (botón refresh).
+  const refreshOrders = useCallback(async () => {
     setOrdersLoading(true);
     try {
-      const data = await OrderService.getByGestorId(gestor.id);
-      setOrders(data);
+      const { orders: o } = await fetchManagerData();
+      setOrders(o);
     } catch (err) {
       console.error('Error loading orders:', err);
       toast.error('Error al cargar pedidos. Reintenta.');
     } finally {
       setOrdersLoading(false);
     }
-  }, [gestor?.id]);
+  }, []);
 
   useEffect(() => {
-    loadGestorData();
-  }, [loadGestorData]);
-
-  useEffect(() => {
-    if (gestor) loadOrders();
-  }, [gestor, loadOrders]);
+    loadData();
+  }, [loadData]);
 
   const handleStatusChange = async (orderId: string, newStatus: OrderStatus) => {
     try {
-      await OrderService.updateStatus(orderId, newStatus);
+      await updateManagerOrderStatus(orderId, newStatus);
 
       // Find the order to get customer info for email
       const order = orders.find((o) => o.id === orderId);
@@ -152,20 +147,13 @@ export default function GestorDashboard() {
     }
     setChangingPassword(true);
     try {
-      const currentUser = auth?.currentUser;
-      if (!currentUser) throw new Error('No hay sesión activa');
-      await updatePassword(currentUser, newPassword);
+      await changeManagerPassword(newPassword);
       toast.success('Contraseña actualizada correctamente');
       setNewPassword('');
       setConfirmPassword('');
       setShowPasswordSection(false);
     } catch (err) {
-      const error = err as { code?: string };
-      if (error.code === 'auth/requires-recent-login') {
-        toast.error('Por seguridad, cierra sesión y vuelve a entrar antes de cambiar la contraseña');
-      } else {
-        toast.error('Error al cambiar la contraseña');
-      }
+      toast.error(err instanceof Error ? err.message : 'Error al cambiar la contraseña');
     } finally {
       setChangingPassword(false);
     }
@@ -370,7 +358,7 @@ export default function GestorDashboard() {
               Pedidos
             </h2>
             <button
-              onClick={loadOrders}
+              onClick={refreshOrders}
               disabled={ordersLoading}
               className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
             >
