@@ -5,7 +5,7 @@ import { useAuth } from '@/store';
 import { GestorService, GestorAccountService } from '@/lib/firestore-services';
 import { IGestor, GESTOR_PERMISSIONS, GestorPermission, DEFAULT_GESTOR_PERMISSIONS } from '@/entities/all';
 import { CUBA_PROVINCES } from '@/data/cuba-locations';
-import { getConsejos, requiresConsejoPopular } from '@/data/localities';
+import { getConsejos, requiresConsejoPopular, normalizeForMatch } from '@/data/localities';
 import {
   Users,
   Plus,
@@ -283,9 +283,19 @@ export default function GestoresAdminPage() {
 
       // Filtrar consejos: solo guardar los que corresponden a municipios
       // todavía seleccionados (evita orphans si admin deseleccionó un muni
-      // después de marcar sus consejos)
+      // después de marcar sus consejos).
+      //
+      // IMPORTANTE: comparación NORMALIZADA (no exact-match). Los consejos
+      // cargados de Firestore traen el `municipality` con el string del seed,
+      // mientras `selectedMunicipalities` viene de CUBA_PROVINCES — si ambas
+      // fuentes difieren en un acento/espacio, el exact-match descartaba
+      // SILENCIOSAMENTE consejos válidos al guardar (un gestor perdía su
+      // cobertura sin avisar). Normalizar evita ese class de bug.
+      const selectedMunisNorm = new Set(
+        selectedMunicipalities.map(normalizeForMatch),
+      );
       const cleanConsejos = selectedConsejos.filter((c) =>
-        selectedMunicipalitiesSet.has(c.municipality),
+        selectedMunisNorm.has(normalizeForMatch(c.municipality)),
       );
 
       const gestorData = {
@@ -294,7 +304,10 @@ export default function GestoresAdminPage() {
         provinces,
         municipalities: selectedMunicipalities,
         consejos: cleanConsejos,
-        active: true,
+        // En edición preservamos el estado activo/inactivo actual (antes
+        // se forzaba `true`, así que editar un gestor desactivado lo
+        // reactivaba sin querer). En creación nace activo.
+        active: editingGestor ? (editingGestor.active ?? true) : true,
         permissions,
         ...(photoUrl ? { photoUrl } : {}),
         ...(gestorEmail ? { email: gestorEmail.trim().toLowerCase() } : {}),
