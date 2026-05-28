@@ -108,8 +108,11 @@ describe('Header', () => {
       const inicioLinks = screen.getAllByText('Inicio');
       expect(inicioLinks[0].closest('a')).toHaveAttribute('href', '/');
 
+      // "Productos" para usuarios NO admin apunta a la home (que ES el
+      // catálogo desde que se eliminó la vista /products duplicada). Para
+      // admin apuntaría a /admin/products — pero este render no tiene user.
       const productosLinks = screen.getAllByText('Productos');
-      expect(productosLinks[0].closest('a')).toHaveAttribute('href', '/products');
+      expect(productosLinks[0].closest('a')).toHaveAttribute('href', '/');
     });
   });
 
