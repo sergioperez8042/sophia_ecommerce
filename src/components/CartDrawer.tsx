@@ -6,7 +6,7 @@ import { m, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/store/CartContext';
 import { useLocation } from '@/store/LocationContext';
 import { useTheme } from '@/store/ThemeContext';
-import { OrderService } from '@/lib/firestore-services';
+import { createOrderViaServer } from '@/lib/order-client';
 import { buildOrderMessage } from '@/lib/whatsapp-message';
 import { sendOrderViaWhatsApp, generateOrderFileName } from '@/lib/order-share';
 import { useGestorByLocation } from '@/hooks/useGestorByLocation';
@@ -261,7 +261,14 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
         }),
     });
 
-  // Save order to Firestore
+  // Guarda el pedido server-side (Firestore vía /api/orders).
+  //
+  // Best-effort y SIEMPRE en background (ver handlers): la persistencia no
+  // debe bloquear el envío por WhatsApp — que es el canal real del pedido y
+  // funciona desde Cuba. Antes esto llamaba a OrderService.create (SDK
+  // cliente) y se colgaba en Cuba contra *.googleapis.com, dejando el botón
+  // en "Enviando…" para siempre. No mostramos toast de error: el cliente ya
+  // envió su pedido por WhatsApp.
   const saveOrder = async (): Promise<void> => {
     const orderItems: IOrderItem[] = items.map((item) => ({
       productId: item.product.id,
@@ -272,11 +279,11 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     }));
 
     try {
-      const order = await OrderService.create({
+      const result = await createOrderViaServer({
         items: orderItems,
         subtotal,
-        province: location?.province || 'Sin provincia',
-        municipality: location?.municipality || 'Sin municipio',
+        province: location?.province,
+        municipality: location?.municipality,
         gestorId: gestor?.id,
         gestorName: gestor?.name,
         customerName: customerName.trim(),
@@ -284,10 +291,10 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
         customerPhone: customerPhone.trim(),
         notes: orderNotes.trim(),
       });
-      console.log('Order saved:', order.orderNumber);
+      if (result.success) console.log('Order saved:', result.orderNumber);
+      else console.warn('Order not persisted (best-effort):', result.error);
     } catch (err) {
       console.error('Error saving order:', err);
-      toast.error('No se pudo guardar el pedido en el sistema');
     }
   };
 
@@ -304,13 +311,12 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
     setIsSending(true);
     try {
-      // Save order to database
-      await saveOrder();
-
       const pdfBlob = await generateOrderPDF();
       const whatsappNumber = gestor ? gestor.whatsapp : WHATSAPP_GENERAL;
 
       if (gestor) {
+        // Persistencia en background — NUNCA bloquea el envío (clave en Cuba).
+        void saveOrder();
         await sendOrderPDF(pdfBlob, whatsappNumber);
         clearCart();
         setShowCheckout(false);
@@ -322,6 +328,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
       } else if (location?.municipality) {
         setNoGestorMessage(true);
       } else {
+        void saveOrder();
         await sendOrderPDF(pdfBlob, WHATSAPP_GENERAL);
         clearCart();
         setShowCheckout(false);
@@ -337,8 +344,8 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const handleFallbackWhatsApp = async () => {
     setIsSending(true);
     try {
-      await saveOrder();
       const pdfBlob = await generateOrderPDF();
+      void saveOrder();
       await sendOrderPDF(pdfBlob, WHATSAPP_GENERAL);
       setNoGestorMessage(false);
       clearCart();
