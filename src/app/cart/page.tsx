@@ -9,6 +9,7 @@ import Link from "next/link";
 import Breadcrumb from "@/components/ui/breadcrumb";
 import LocationPopup from "@/components/LocationPopup";
 import { buildOrderMessage } from "@/lib/whatsapp-message";
+import { generateOrderPdf } from "@/lib/order-pdf";
 import { sendOrderViaWhatsApp, generateOrderFileName } from "@/lib/order-share";
 import { useGestorByLocation } from "@/hooks/useGestorByLocation";
 
@@ -34,146 +35,25 @@ export default function CartPage() {
 
     const formatPrice = (price: number) => `$${price.toFixed(2)}`;
 
-    // Generate minimalist branded PDF
-    const generateOrderPDF = async (): Promise<Blob> => {
-        const { jsPDF } = await import('jspdf');
-        const doc = new jsPDF();
-        const pw = doc.internal.pageSize.getWidth();
-        const margin = 25;
-        const contentWidth = pw - margin * 2;
-
-        // Background
-        doc.setFillColor(254, 252, 247);
-        doc.rect(0, 0, pw, doc.internal.pageSize.getHeight(), 'F');
-
-        // Top accent line
-        doc.setFillColor(80, 90, 74);
-        doc.rect(0, 0, pw, 3, 'F');
-
-        // Brand name
-        let y = 30;
-        doc.setTextColor(80, 90, 74);
-        doc.setFontSize(28);
-        doc.setFont('helvetica', 'normal');
-        doc.text('Sophia', margin, y);
-
-        doc.setFontSize(9);
-        doc.setTextColor(160, 152, 137);
-        doc.text('Sophia', margin, y + 8);
-
-        // Date
-        doc.setFontSize(9);
-        doc.setTextColor(160, 152, 137);
-        const dateStr = new Date().toLocaleDateString('es-ES', {
-            day: '2-digit',
-            month: 'long',
-            year: 'numeric',
+    // PDF del pedido — diseño profesional de marca centralizado en
+    // src/lib/order-pdf.ts (compartido con el CartDrawer).
+    const buildOrderPdf = () =>
+        generateOrderPdf({
+            items: items.map((i) => ({
+                name: i.product.name,
+                price: i.product.price,
+                quantity: i.quantity,
+            })),
+            subtotal,
+            province: location?.province,
+            municipality: location?.municipality,
+            gestor,
         });
-        doc.text(dateStr, pw - margin, y, { align: 'right' });
-
-        // Separator
-        y += 18;
-        doc.setDrawColor(196, 181, 144);
-        doc.setLineWidth(0.3);
-        doc.line(margin, y, pw - margin, y);
-
-        // Location
-        y += 12;
-        if (location) {
-            doc.setFontSize(9);
-            doc.setTextColor(120, 120, 120);
-            doc.text(`Entrega: ${location.municipality}, ${location.province}`, margin, y);
-            y += 10;
-        }
-
-        // Items header
-        y += 2;
-        doc.setFontSize(8);
-        doc.setTextColor(160, 152, 137);
-        doc.text('PRODUCTO', margin, y);
-        doc.text('CANT.', margin + contentWidth * 0.6, y);
-        doc.text('PRECIO', margin + contentWidth * 0.75, y);
-        doc.text('SUBTOTAL', pw - margin, y, { align: 'right' });
-
-        y += 4;
-        doc.setDrawColor(230, 226, 219);
-        doc.setLineWidth(0.2);
-        doc.line(margin, y, pw - margin, y);
-        y += 8;
-
-        // Items
-        doc.setTextColor(60, 60, 60);
-        items.forEach((item) => {
-            if (y > 265) {
-                doc.addPage();
-                doc.setFillColor(254, 252, 247);
-                doc.rect(0, 0, pw, doc.internal.pageSize.getHeight(), 'F');
-                y = 25;
-            }
-            const itemSub = item.product.price * item.quantity;
-            doc.setFontSize(10);
-            doc.setFont('helvetica', 'normal');
-            doc.text(item.product.name.substring(0, 35), margin, y);
-            doc.setFontSize(9);
-            doc.setTextColor(120, 120, 120);
-            doc.text(String(item.quantity), margin + contentWidth * 0.63, y);
-            doc.text(formatPrice(item.product.price), margin + contentWidth * 0.75, y);
-            doc.setTextColor(80, 90, 74);
-            doc.text(formatPrice(itemSub), pw - margin, y, { align: 'right' });
-
-            y += 5;
-            doc.setDrawColor(240, 237, 230);
-            doc.setLineWidth(0.1);
-            doc.line(margin, y, pw - margin, y);
-            y += 8;
-            doc.setTextColor(60, 60, 60);
-        });
-
-        // Total
-        y += 4;
-        doc.setDrawColor(196, 181, 144);
-        doc.setLineWidth(0.4);
-        doc.line(margin + contentWidth * 0.5, y, pw - margin, y);
-        y += 12;
-
-        doc.setFontSize(10);
-        doc.setTextColor(120, 120, 120);
-        doc.text('Total productos', margin + contentWidth * 0.55, y);
-
-        doc.setFontSize(16);
-        doc.setTextColor(80, 90, 74);
-        doc.setFont('helvetica', 'bold');
-        doc.text(formatPrice(subtotal), pw - margin, y, { align: 'right' });
-
-        // Nota de envío: no se incluye en el total, se gestiona con el gestor
-        y += 10;
-        doc.setFontSize(8);
-        doc.setFont('helvetica', 'italic');
-        doc.setTextColor(140, 140, 140);
-        const shippingNote = gestor
-            ? `Este total cubre solo los productos. La mensajeria se gestiona directamente con ${gestor.name}.`
-            : 'Este total cubre solo los productos. La mensajeria se gestiona directamente con tu gestor de zona.';
-        const wrappedNote = doc.splitTextToSize(shippingNote, contentWidth);
-        doc.text(wrappedNote, margin, y);
-        y += wrappedNote.length * 4;
-
-        // Footer
-        const footerY = doc.internal.pageSize.getHeight() - 15;
-        doc.setDrawColor(230, 226, 219);
-        doc.setLineWidth(0.2);
-        doc.line(margin, footerY - 8, pw - margin, footerY - 8);
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(7);
-        doc.setTextColor(180, 175, 165);
-        doc.text('Sophia', pw / 2, footerY, { align: 'center' });
-
-        return doc.output('blob');
-    };
 
     const handleWhatsAppOrder = async () => {
         setIsSending(true);
         try {
-            const pdfBlob = await generateOrderPDF();
+            const pdfBlob = await buildOrderPdf();
             const phone = gestor ? gestor.whatsapp : WHATSAPP_GENERAL;
             const message = buildOrderMessage({
                 gestorName: gestor?.name,
