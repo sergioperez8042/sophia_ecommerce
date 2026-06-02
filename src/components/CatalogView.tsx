@@ -211,7 +211,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                                 whileHover={{ scale: 1.1, y: -3 }}
                             >
                                 <m.div
-                                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center ${isDark ? 'bg-[#C9A96E]/10' : 'bg-[#2E4A3A]/8'}`}
+                                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center ${isDark ? 'bg-[#274034] ring-1 ring-inset ring-[#36473B]' : 'bg-[#2E4A3A]/8'}`}
                                     animate={{ y: [0, -3, 0] }}
                                     transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.4, ease: "easeInOut" }}
                                 >
