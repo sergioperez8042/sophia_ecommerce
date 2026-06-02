@@ -81,7 +81,7 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
     id: 'default-bienvenida',
     name: 'Bienvenida',
     subject: 'Bienvenida a Sophia',
-    content: `<div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #1a1d19; color: #e8e0d0; padding: 40px;">
+    content: `<div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #15241B; color: #e8e0d0; padding: 40px;">
   <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #C9A96E; padding-bottom: 20px;">
     <h1 style="color: #C9A96E; font-size: 28px; margin: 0;">Sophia</h1>
     <p style="color: #C9A96E; font-size: 13px; margin: 5px 0 0; letter-spacing: 2px;">COSMETICA BOTANICA</p>
@@ -98,13 +98,13 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
     <li>Novedades y lanzamientos exclusivos</li>
     <li>Ofertas especiales solo para suscriptoras</li>
   </ul>
-  <div style="background: #2a2d25; border: 1px solid #C9A96E; border-radius: 12px; padding: 25px; text-align: center; margin: 30px 0;">
+  <div style="background: #213529; border: 1px solid #C9A96E; border-radius: 12px; padding: 25px; text-align: center; margin: 30px 0;">
     <p style="margin: 0 0 8px; color: #C9A96E; font-size: 14px;">Tu codigo de descuento de bienvenida:</p>
     <p style="margin: 0; font-size: 32px; font-weight: bold; color: #C9A96E; letter-spacing: 4px;">BIENVENIDA10</p>
     <p style="margin: 10px 0 0; color: #a09880; font-size: 13px;">10% de descuento en tu primer pedido</p>
   </div>
   <div style="text-align: center; margin-top: 30px;">
-    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C9A96E; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Explorar productos</a>
+    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C9A96E; color: #15241B; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Explorar productos</a>
   </div>
   <p style="color: #a09880; font-size: 12px; text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
     Sophia
@@ -116,7 +116,7 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
     id: 'default-novedades',
     name: 'Novedades de temporada',
     subject: 'Novedades de temporada - Sophia',
-    content: `<div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #1a1d19; color: #e8e0d0; padding: 40px;">
+    content: `<div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #15241B; color: #e8e0d0; padding: 40px;">
   <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #C9A96E; padding-bottom: 20px;">
     <h1 style="color: #C9A96E; font-size: 28px; margin: 0;">Sophia</h1>
     <p style="color: #C9A96E; font-size: 13px; margin: 5px 0 0; letter-spacing: 2px;">COSMETICA BOTANICA</p>
@@ -125,14 +125,14 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
   <p style="line-height: 1.8; color: #d4cdc0; font-size: 15px;">
     Descubre los nuevos productos que hemos preparado para ti esta temporada. Formulaciones naturales inspiradas en la botánica para el cuidado de tu piel.
   </p>
-  <div style="background: #2a2d25; border-radius: 12px; padding: 25px; margin: 25px 0;">
+  <div style="background: #213529; border-radius: 12px; padding: 25px; margin: 25px 0;">
     <h3 style="color: #C9A96E; font-size: 18px; margin: 0 0 15px;">Producto destacado</h3>
     <p style="color: #d4cdc0; font-size: 15px; line-height: 1.7; margin: 0;">
       [Nombre del producto] - [Descripcion breve del producto y sus beneficios principales para la piel]
     </p>
     <p style="color: #C9A96E; font-size: 18px; font-weight: bold; margin: 15px 0 0;">$XX.XX</p>
   </div>
-  <div style="background: #2a2d25; border-radius: 12px; padding: 25px; margin: 25px 0;">
+  <div style="background: #213529; border-radius: 12px; padding: 25px; margin: 25px 0;">
     <h3 style="color: #C9A96E; font-size: 18px; margin: 0 0 15px;">Tambien te puede interesar</h3>
     <p style="color: #d4cdc0; font-size: 15px; line-height: 1.7; margin: 0;">
       [Nombre del producto] - [Descripcion breve]
@@ -140,7 +140,7 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
     <p style="color: #C9A96E; font-size: 18px; font-weight: bold; margin: 15px 0 0;">$XX.XX</p>
   </div>
   <div style="text-align: center; margin-top: 30px;">
-    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C9A96E; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Ver todos los productos</a>
+    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C9A96E; color: #15241B; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Ver todos los productos</a>
   </div>
   <p style="color: #a09880; font-size: 12px; text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
     Sophia
@@ -152,7 +152,7 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
     id: 'default-promocion',
     name: 'Promocion especial',
     subject: 'Oferta exclusiva para ti - Sophia',
-    content: `<div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #1a1d19; color: #e8e0d0; padding: 40px;">
+    content: `<div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #15241B; color: #e8e0d0; padding: 40px;">
   <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #C9A96E; padding-bottom: 20px;">
     <h1 style="color: #C9A96E; font-size: 28px; margin: 0;">Sophia</h1>
     <p style="color: #C9A96E; font-size: 13px; margin: 5px 0 0; letter-spacing: 2px;">COSMETICA BOTANICA</p>
@@ -165,13 +165,13 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
   <p style="line-height: 1.8; color: #d4cdc0; font-size: 15px; text-align: center;">
     Solo por tiempo limitado. Aprovecha esta oportunidad para probar nuestros productos mas vendidos con un descuento especial.
   </p>
-  <div style="background: #2a2d25; border: 2px solid #C9A96E; border-radius: 12px; padding: 25px; text-align: center; margin: 30px 0;">
+  <div style="background: #213529; border: 2px solid #C9A96E; border-radius: 12px; padding: 25px; text-align: center; margin: 30px 0;">
     <p style="margin: 0 0 8px; color: #C9A96E; font-size: 14px;">Usa el codigo:</p>
     <p style="margin: 0; font-size: 32px; font-weight: bold; color: #C9A96E; letter-spacing: 4px;">CODIGOXX</p>
     <p style="margin: 10px 0 0; color: #a09880; font-size: 13px;">Valido hasta [fecha]</p>
   </div>
   <div style="text-align: center; margin-top: 30px;">
-    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C9A96E; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Comprar ahora</a>
+    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C9A96E; color: #15241B; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Comprar ahora</a>
   </div>
   <p style="color: #a09880; font-size: 12px; text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
     Sophia
@@ -183,7 +183,7 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
     id: 'default-tips',
     name: 'Tips de cuidado',
     subject: 'Consejos para el cuidado de tu piel - Sophia',
-    content: `<div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #1a1d19; color: #e8e0d0; padding: 40px;">
+    content: `<div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #15241B; color: #e8e0d0; padding: 40px;">
   <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #C9A96E; padding-bottom: 20px;">
     <h1 style="color: #C9A96E; font-size: 28px; margin: 0;">Sophia</h1>
     <p style="color: #C9A96E; font-size: 13px; margin: 5px 0 0; letter-spacing: 2px;">COSMETICA BOTANICA</p>
@@ -192,26 +192,26 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
   <p style="line-height: 1.8; color: #d4cdc0; font-size: 15px;">
     Tu piel merece lo mejor. Aqui te compartimos algunos consejos para mantenerla radiante con ingredientes naturales.
   </p>
-  <div style="background: #2a2d25; border-left: 3px solid #C9A96E; padding: 20px 25px; margin: 25px 0; border-radius: 0 12px 12px 0;">
+  <div style="background: #213529; border-left: 3px solid #C9A96E; padding: 20px 25px; margin: 25px 0; border-radius: 0 12px 12px 0;">
     <h3 style="color: #C9A96E; font-size: 16px; margin: 0 0 10px;">1. [Titulo del consejo]</h3>
     <p style="color: #d4cdc0; font-size: 14px; line-height: 1.7; margin: 0;">
       [Descripcion del consejo con detalles practicos sobre como aplicarlo en la rutina diaria]
     </p>
   </div>
-  <div style="background: #2a2d25; border-left: 3px solid #C9A96E; padding: 20px 25px; margin: 25px 0; border-radius: 0 12px 12px 0;">
+  <div style="background: #213529; border-left: 3px solid #C9A96E; padding: 20px 25px; margin: 25px 0; border-radius: 0 12px 12px 0;">
     <h3 style="color: #C9A96E; font-size: 16px; margin: 0 0 10px;">2. [Titulo del consejo]</h3>
     <p style="color: #d4cdc0; font-size: 14px; line-height: 1.7; margin: 0;">
       [Descripcion del consejo con detalles practicos sobre como aplicarlo en la rutina diaria]
     </p>
   </div>
-  <div style="background: #2a2d25; border-left: 3px solid #C9A96E; padding: 20px 25px; margin: 25px 0; border-radius: 0 12px 12px 0;">
+  <div style="background: #213529; border-left: 3px solid #C9A96E; padding: 20px 25px; margin: 25px 0; border-radius: 0 12px 12px 0;">
     <h3 style="color: #C9A96E; font-size: 16px; margin: 0 0 10px;">3. [Titulo del consejo]</h3>
     <p style="color: #d4cdc0; font-size: 14px; line-height: 1.7; margin: 0;">
       [Descripcion del consejo con detalles practicos sobre como aplicarlo en la rutina diaria]
     </p>
   </div>
   <div style="text-align: center; margin-top: 30px;">
-    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C9A96E; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Descubrir productos</a>
+    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C9A96E; color: #15241B; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Descubrir productos</a>
   </div>
   <p style="color: #a09880; font-size: 12px; text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
     Sophia
@@ -223,7 +223,7 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
     id: 'default-restock',
     name: 'Producto de vuelta',
     subject: 'De vuelta en stock - Sophia',
-    content: `<div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #1a1d19; color: #e8e0d0; padding: 40px;">
+    content: `<div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #15241B; color: #e8e0d0; padding: 40px;">
   <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #C9A96E; padding-bottom: 20px;">
     <h1 style="color: #C9A96E; font-size: 28px; margin: 0;">Sophia</h1>
     <p style="color: #C9A96E; font-size: 13px; margin: 5px 0 0; letter-spacing: 2px;">COSMETICA BOTANICA</p>
@@ -232,7 +232,7 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
   <p style="line-height: 1.8; color: #d4cdc0; font-size: 15px; text-align: center;">
     El producto que tanto esperabas ya esta disponible otra vez. No dejes pasar esta oportunidad, las unidades son limitadas.
   </p>
-  <div style="background: #2a2d25; border: 1px solid #C9A96E; border-radius: 12px; padding: 30px; text-align: center; margin: 30px 0;">
+  <div style="background: #213529; border: 1px solid #C9A96E; border-radius: 12px; padding: 30px; text-align: center; margin: 30px 0;">
     <p style="color: #a09880; font-size: 13px; margin: 0 0 5px;">DISPONIBLE AHORA</p>
     <h3 style="color: #C9A96E; font-size: 22px; margin: 0 0 10px;">[Nombre del producto]</h3>
     <p style="color: #d4cdc0; font-size: 14px; line-height: 1.7; margin: 0 0 15px;">
@@ -241,7 +241,7 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
     <p style="color: #C9A96E; font-size: 22px; font-weight: bold; margin: 0;">$XX.XX</p>
   </div>
   <div style="text-align: center; margin-top: 30px;">
-    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C9A96E; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Comprar antes de que se agote</a>
+    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C9A96E; color: #15241B; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Comprar antes de que se agote</a>
   </div>
   <p style="color: #a09880; font-size: 12px; text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
     Sophia
@@ -281,7 +281,7 @@ const FONT_SIZES = [
 
 const PRESET_COLORS = [
   '#000000', '#333333', '#666666', '#999999', '#ffffff',
-  '#C9A96E', '#1a1d19', '#2a2d25', '#d4cdc0', '#a09880',
+  '#C9A96E', '#15241B', '#213529', '#d4cdc0', '#a09880',
   '#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#3498db',
   '#9b59b6', '#1abc9c', '#e91e63', '#795548', '#607d8b',
 ];

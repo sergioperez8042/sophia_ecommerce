@@ -33,7 +33,7 @@ export default function BrandLogo({ size = 'md', showText = true, linkTo, animat
         transition={{ delay: 0.1, type: "spring", stiffness: 200, damping: 20 }}
       >
         <Image
-          src="/images/sophia_logo_nuevo.jpeg"
+          src="/images/sophia_logo_v2.jpeg"
           alt="Sophia"
           fill
           sizes="80px"

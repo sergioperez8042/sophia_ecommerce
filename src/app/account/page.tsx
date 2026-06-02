@@ -172,7 +172,7 @@ export default function MiCuentaPage() {
 
   if (!isLoaded) {
     return (
-      <div className={`min-h-screen flex items-center justify-center ${isDark ? 'bg-[#1a1d19]' : 'bg-[#FEFCF7]'}`}>
+      <div className={`min-h-screen flex items-center justify-center ${isDark ? 'bg-[#15241B]' : 'bg-[#FEFCF7]'}`}>
         <Loader2 className={`w-8 h-8 animate-spin ${isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]'}`} />
       </div>
     );
@@ -192,9 +192,9 @@ export default function MiCuentaPage() {
     .reduce((sum, o) => sum + o.subtotal, 0);
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${isDark ? 'bg-[#1a1d19]' : 'bg-[#FEFCF7]'}`}>
+    <div className={`min-h-screen transition-colors duration-300 ${isDark ? 'bg-[#15241B]' : 'bg-[#FEFCF7]'}`}>
       {/* Header */}
-      <header className={`sticky top-0 z-40 backdrop-blur-xl border-b transition-colors duration-300 ${isDark ? 'bg-[#1a1d19]/95 border-[#C9A96E]/15' : 'bg-white/80 border-[#2E4A3A]/10'}`}>
+      <header className={`sticky top-0 z-40 backdrop-blur-xl border-b transition-colors duration-300 ${isDark ? 'bg-[#15241B]/95 border-[#C9A96E]/15' : 'bg-white/80 border-[#2E4A3A]/10'}`}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
@@ -219,7 +219,7 @@ export default function MiCuentaPage() {
         <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`rounded-2xl p-6 mb-6 ${isDark ? 'bg-[#232820] border border-[#C9A96E]/15' : 'bg-white border border-[#2E4A3A]/10'}`}
+          className={`rounded-2xl p-6 mb-6 ${isDark ? 'bg-[#1C2E23] border border-[#C9A96E]/15' : 'bg-white border border-[#2E4A3A]/10'}`}
         >
           <div className="flex items-center gap-4">
             {/* Avatar clickable. Si el usuario tiene foto, la mostramos;
@@ -277,7 +277,7 @@ export default function MiCuentaPage() {
         </m.div>
 
         {/* Tabs */}
-        <div className={`flex gap-1 p-1 rounded-xl mb-6 ${isDark ? 'bg-[#232820]' : 'bg-[#2E4A3A]/12'}`}>
+        <div className={`flex gap-1 p-1 rounded-xl mb-6 ${isDark ? 'bg-[#1C2E23]' : 'bg-[#2E4A3A]/12'}`}>
           {tabs.map(tab => (
             <button
               key={tab.id}
@@ -341,7 +341,7 @@ export default function MiCuentaPage() {
                         key={order.id}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className={`rounded-xl p-4 ${isDark ? 'bg-[#232820] border border-[#C9A96E]/10' : 'bg-white border border-[#2E4A3A]/10'}`}
+                        className={`rounded-xl p-4 ${isDark ? 'bg-[#1C2E23] border border-[#C9A96E]/10' : 'bg-white border border-[#2E4A3A]/10'}`}
                       >
                         <div className="flex items-start justify-between mb-3">
                           <div>
@@ -405,7 +405,7 @@ export default function MiCuentaPage() {
                         key={review.id}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className={`rounded-xl p-4 ${isDark ? 'bg-[#232820] border border-[#C9A96E]/10' : 'bg-white border border-[#2E4A3A]/10'}`}
+                        className={`rounded-xl p-4 ${isDark ? 'bg-[#1C2E23] border border-[#C9A96E]/10' : 'bg-white border border-[#2E4A3A]/10'}`}
                       >
                         <div className="flex items-start justify-between mb-2">
                           <Link
@@ -426,7 +426,7 @@ export default function MiCuentaPage() {
                                 i < review.rating
                                   ? 'text-[#C9A96E] fill-[#C9A96E]'
                                   : isDark
-                                    ? 'text-[#3a3d36] fill-[#3a3d36]'
+                                    ? 'text-[#36473B] fill-[#36473B]'
                                     : 'text-gray-200 fill-gray-200'
                               }`}
                             />
@@ -453,7 +453,7 @@ export default function MiCuentaPage() {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className={`rounded-xl p-5 ${isDark ? 'bg-[#232820] border border-[#C9A96E]/10' : 'bg-white border border-[#2E4A3A]/10'}`}>
+                <div className={`rounded-xl p-5 ${isDark ? 'bg-[#1C2E23] border border-[#C9A96E]/10' : 'bg-white border border-[#2E4A3A]/10'}`}>
                   <div className="flex items-center justify-between mb-5">
                     <h3 className={`text-sm font-semibold uppercase tracking-wider ${isDark ? 'text-[#C9A96E]/60' : 'text-[#2E4A3A]/75'}`}>
                       Datos personales
@@ -496,7 +496,7 @@ export default function MiCuentaPage() {
                             type="text"
                             value={profileForm.name}
                             onChange={(e) => setProfileForm(prev => ({ ...prev, name: e.target.value }))}
-                            className={`w-full px-3 py-2 rounded-lg text-sm border focus:outline-none ${isDark ? 'bg-[#1a1d19] border-[#C9A96E]/20 text-white focus:border-[#C9A96E]/40' : 'bg-[#FEFCF7] border-[#2E4A3A]/15 text-[#333] focus:border-[#2E4A3A]/30'}`}
+                            className={`w-full px-3 py-2 rounded-lg text-sm border focus:outline-none ${isDark ? 'bg-[#15241B] border-[#C9A96E]/20 text-white focus:border-[#C9A96E]/40' : 'bg-[#FEFCF7] border-[#2E4A3A]/15 text-[#333] focus:border-[#2E4A3A]/30'}`}
                           />
                         ) : (
                           <p className={`text-sm ${isDark ? 'text-white' : 'text-[#333]'}`}>{user.name}</p>
@@ -524,7 +524,7 @@ export default function MiCuentaPage() {
                             value={profileForm.phone}
                             onChange={(e) => setProfileForm(prev => ({ ...prev, phone: e.target.value }))}
                             placeholder="Ej: 612 345 678"
-                            className={`w-full px-3 py-2 rounded-lg text-sm border focus:outline-none ${isDark ? 'bg-[#1a1d19] border-[#C9A96E]/20 text-white placeholder-[#C9A96E]/20 focus:border-[#C9A96E]/40' : 'bg-[#FEFCF7] border-[#2E4A3A]/15 text-[#333] placeholder-[#2E4A3A]/20 focus:border-[#2E4A3A]/30'}`}
+                            className={`w-full px-3 py-2 rounded-lg text-sm border focus:outline-none ${isDark ? 'bg-[#15241B] border-[#C9A96E]/20 text-white placeholder-[#C9A96E]/20 focus:border-[#C9A96E]/40' : 'bg-[#FEFCF7] border-[#2E4A3A]/15 text-[#333] placeholder-[#2E4A3A]/20 focus:border-[#2E4A3A]/30'}`}
                           />
                         ) : (
                           <p className={`text-sm ${isDark ? 'text-white' : 'text-[#333]'}`}>{user.phone || '—'}</p>
@@ -543,7 +543,7 @@ export default function MiCuentaPage() {
                             value={profileForm.address}
                             onChange={(e) => setProfileForm(prev => ({ ...prev, address: e.target.value }))}
                             placeholder="Tu dirección de envío"
-                            className={`w-full px-3 py-2 rounded-lg text-sm border focus:outline-none ${isDark ? 'bg-[#1a1d19] border-[#C9A96E]/20 text-white placeholder-[#C9A96E]/20 focus:border-[#C9A96E]/40' : 'bg-[#FEFCF7] border-[#2E4A3A]/15 text-[#333] placeholder-[#2E4A3A]/20 focus:border-[#2E4A3A]/30'}`}
+                            className={`w-full px-3 py-2 rounded-lg text-sm border focus:outline-none ${isDark ? 'bg-[#15241B] border-[#C9A96E]/20 text-white placeholder-[#C9A96E]/20 focus:border-[#C9A96E]/40' : 'bg-[#FEFCF7] border-[#2E4A3A]/15 text-[#333] placeholder-[#2E4A3A]/20 focus:border-[#2E4A3A]/30'}`}
                           />
                         ) : (
                           <p className={`text-sm ${isDark ? 'text-white' : 'text-[#333]'}`}>{user.address || '—'}</p>
@@ -562,7 +562,7 @@ export default function MiCuentaPage() {
                             value={profileForm.city}
                             onChange={(e) => setProfileForm(prev => ({ ...prev, city: e.target.value }))}
                             placeholder="Tu ciudad"
-                            className={`w-full px-3 py-2 rounded-lg text-sm border focus:outline-none ${isDark ? 'bg-[#1a1d19] border-[#C9A96E]/20 text-white placeholder-[#C9A96E]/20 focus:border-[#C9A96E]/40' : 'bg-[#FEFCF7] border-[#2E4A3A]/15 text-[#333] placeholder-[#2E4A3A]/20 focus:border-[#2E4A3A]/30'}`}
+                            className={`w-full px-3 py-2 rounded-lg text-sm border focus:outline-none ${isDark ? 'bg-[#15241B] border-[#C9A96E]/20 text-white placeholder-[#C9A96E]/20 focus:border-[#C9A96E]/40' : 'bg-[#FEFCF7] border-[#2E4A3A]/15 text-[#333] placeholder-[#2E4A3A]/20 focus:border-[#2E4A3A]/30'}`}
                           />
                         ) : (
                           <p className={`text-sm ${isDark ? 'text-white' : 'text-[#333]'}`}>{user.city || '—'}</p>

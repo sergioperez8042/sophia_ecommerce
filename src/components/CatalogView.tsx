@@ -140,7 +140,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
 
 
     return (
-        <div className={`min-h-screen transition-colors duration-300 ${isDark ? 'bg-[#1a1d19]' : 'bg-[#FEFCF7]'}`}>
+        <div className={`min-h-screen transition-colors duration-300 ${isDark ? 'bg-[#15241B]' : 'bg-[#FEFCF7]'}`}>
             {/* Header */}
             <CatalogHeader />
 
@@ -193,7 +193,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
             </section>
 
             {/* Sellos de Calidad */}
-            <section className={`border-b transition-colors duration-300 ${isDark ? 'bg-[#22261f] border-[#C9A96E]/10' : 'bg-white border-[#2E4A3A]/10'}`}>
+            <section className={`border-b transition-colors duration-300 ${isDark ? 'bg-[#15241B] border-[#C9A96E]/10' : 'bg-white border-[#2E4A3A]/10'}`}>
                 <div className="max-w-7xl mx-auto px-4 py-4">
                     <div className="flex items-center justify-center gap-4 sm:gap-10">
                         {[
@@ -238,7 +238,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                             aria-label="Buscar productos"
                             className={`w-full pl-10 pr-4 py-2 rounded-full text-sm focus:outline-none transition-all ${
                                 isDark
-                                    ? 'bg-[#22261f] text-[#e8e4dc] placeholder-[#7a7568] focus:ring-1 focus:ring-[#C9A96E]/30'
+                                    ? 'bg-[#15241B] text-[#e8e4dc] placeholder-[#7a7568] focus:ring-1 focus:ring-[#C9A96E]/30'
                                     : 'bg-[#f5f3ef] text-gray-900 placeholder-[#999] focus:ring-1 focus:ring-[#2E4A3A]/20'
                             }`}
                         />
@@ -347,7 +347,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                                             className="object-cover transition-transform duration-500 group-hover:scale-110"
                                         />
                                     ) : (
-                                        <div className={`w-full h-full ${isDark ? 'bg-[#22261f]' : 'bg-[#F0EDE6]'}`} />
+                                        <div className={`w-full h-full ${isDark ? 'bg-[#15241B]' : 'bg-[#F0EDE6]'}`} />
                                     )}
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
                                     {/* Contenedor de altura FIJA con el título centrado
@@ -469,7 +469,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                         <div className="flex items-center gap-2.5 mb-3">
                             <div className="relative w-9 h-9 rounded-lg overflow-hidden ring-1 ring-white/15 flex-shrink-0">
                                 <Image
-                                    src="/images/sophia_logo_nuevo.jpeg"
+                                    src="/images/sophia_logo_v2.jpeg"
                                     alt="Sophia"
                                     fill
                                     sizes="36px"
@@ -605,7 +605,7 @@ function ProductCard({
     if (viewMode === "grid") {
         return (
             <m.div
-                className={`rounded-2xl overflow-hidden shadow-sm ${isDark ? 'bg-[#22261f]' : 'bg-white'}`}
+                className={`rounded-2xl overflow-hidden shadow-sm ${isDark ? 'bg-[#15241B]' : 'bg-white'}`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05, duration: 0.4 }}
@@ -675,7 +675,7 @@ function ProductCard({
                                 onClick={handleAddToCart}
                                 className={`p-1.5 rounded-full transition-all ${
                                     addedToCart
-                                        ? 'bg-[#C9A96E] text-[#1a1d19] scale-110'
+                                        ? 'bg-[#C9A96E] text-[#15241B] scale-110'
                                         : 'bg-[#2E4A3A] text-white hover:bg-[#26402F]'
                                 }`}
                             >
@@ -696,7 +696,7 @@ function ProductCard({
 
     return (
         <m.div
-            className={`rounded-2xl overflow-hidden shadow-sm flex ${isDark ? 'bg-[#22261f]' : 'bg-white'}`}
+            className={`rounded-2xl overflow-hidden shadow-sm flex ${isDark ? 'bg-[#15241B]' : 'bg-white'}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.05, duration: 0.4 }}
@@ -767,7 +767,7 @@ function ProductCard({
                             onClick={handleAddToCart}
                             className={`px-3 py-1.5 rounded-full text-sm flex items-center gap-1.5 transition-all ${
                                 addedToCart
-                                    ? 'bg-[#C9A96E] text-[#1a1d19]'
+                                    ? 'bg-[#C9A96E] text-[#15241B]'
                                     : 'bg-[#2E4A3A] text-white hover:bg-[#26402F]'
                             }`}
                         >

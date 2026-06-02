@@ -123,7 +123,7 @@ export default function NewsletterPopup() {
                 exit={{ opacity: 0, scale: 0.95, y: 10 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="bg-[#1a1d19] border border-[#C9A96E]/20 rounded-2xl p-6 sm:p-8 relative shadow-2xl">
+                <div className="bg-[#15241B] border border-[#C9A96E]/20 rounded-2xl p-6 sm:p-8 relative shadow-2xl">
                   {/* Close button */}
                   <Dialog.Close asChild>
                     <button
@@ -167,7 +167,7 @@ export default function NewsletterPopup() {
                         <button
                           type="submit"
                           disabled={isSubmitting}
-                          className="w-full bg-[#C9A96E] hover:bg-[#b5a680] text-[#1a1d19] py-3 rounded-xl text-sm font-semibold transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                          className="w-full bg-[#C9A96E] hover:bg-[#b5a680] text-[#15241B] py-3 rounded-xl text-sm font-semibold transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                         >
                           {isSubmitting ? (
                             <Loader2 className="w-4 h-4 animate-spin" />
@@ -193,7 +193,7 @@ export default function NewsletterPopup() {
                       <p className="text-sm text-[#d4cdc0]/80 mb-4">
                         Tu código de descuento:
                       </p>
-                      <div className="bg-[#2a2d25] border border-[#C9A96E]/30 rounded-xl py-3 px-6 inline-block">
+                      <div className="bg-[#213529] border border-[#C9A96E]/30 rounded-xl py-3 px-6 inline-block">
                         <span className="text-2xl font-bold text-[#C9A96E] tracking-widest">BIENVENIDA10</span>
                       </div>
                       <p className="text-xs text-[#C9A96E]/60 mt-4">10% de descuento en tu primer pedido</p>

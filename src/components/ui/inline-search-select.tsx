@@ -93,7 +93,7 @@ export function InlineSearchSelect({
   const inputFocus = isDark
     ? "focus:border-[#C9A96E]/50"
     : "focus:border-[#2E4A3A]/40";
-  const dropdownBg = isDark ? "bg-[#22261f]" : "bg-white";
+  const dropdownBg = isDark ? "bg-[#15241B]" : "bg-white";
   const dropdownBorder = isDark ? "border-[#C9A96E]/20" : "border-gray-200";
   const emptyText = isDark ? "text-[#C9A96E]/50" : "text-gray-400";
   const optionHover = isDark

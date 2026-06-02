@@ -94,7 +94,7 @@ export default function CartPage() {
 
     if (items.length === 0) {
         return (
-            <div className="min-h-screen bg-[#FEFCF7] dark:bg-[#1a1d19] pt-20">
+            <div className="min-h-screen bg-[#FEFCF7] dark:bg-[#15241B] pt-20">
                 <div className="max-w-xl mx-auto px-6 pb-16">
                     <Breadcrumb items={[{ label: 'Carrito' }]} />
                     <m.div
@@ -112,7 +112,7 @@ export default function CartPage() {
                         </p>
                         <Link
                             href="/"
-                            className="inline-block border border-[#2E4A3A] dark:border-[#C9A96E] text-[#2E4A3A] dark:text-[#C9A96E] px-10 py-3.5 text-[13px] font-medium tracking-[0.08em] uppercase hover:bg-[#2E4A3A] hover:text-white dark:hover:bg-[#C9A96E] dark:hover:text-[#1a1d19] transition-all duration-300"
+                            className="inline-block border border-[#2E4A3A] dark:border-[#C9A96E] text-[#2E4A3A] dark:text-[#C9A96E] px-10 py-3.5 text-[13px] font-medium tracking-[0.08em] uppercase hover:bg-[#2E4A3A] hover:text-white dark:hover:bg-[#C9A96E] dark:hover:text-[#15241B] transition-all duration-300"
                         >
                             Ver Productos
                         </Link>
@@ -123,7 +123,7 @@ export default function CartPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#FEFCF7] dark:bg-[#1a1d19] pt-20">
+        <div className="min-h-screen bg-[#FEFCF7] dark:bg-[#15241B] pt-20">
             <div className="max-w-[1200px] mx-auto px-6 lg:px-10 pb-8 sm:pb-14">
                 <Breadcrumb items={[{ label: 'Carrito' }]} />
 
@@ -142,7 +142,7 @@ export default function CartPage() {
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
                         {/* Items */}
                         <div className="lg:col-span-7">
-                            <div className="border-t border-[#E8E4DD] dark:border-[#3a3d36]">
+                            <div className="border-t border-[#E8E4DD] dark:border-[#36473B]">
                                 <AnimatePresence mode="popLayout">
                                     {items.map((item) => (
                                         <m.div
@@ -151,11 +151,11 @@ export default function CartPage() {
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
                                             exit={{ opacity: 0, height: 0, marginTop: 0, paddingTop: 0, paddingBottom: 0, transition: { duration: 0.3 } }}
-                                            className="border-b border-[#E8E4DD] dark:border-[#3a3d36] py-8"
+                                            className="border-b border-[#E8E4DD] dark:border-[#36473B] py-8"
                                         >
                                             <div className="flex gap-6 sm:gap-8">
                                                 <Link href={`/products/${item.product.id}`} className="shrink-0">
-                                                    <div className="relative w-[110px] h-[140px] sm:w-[130px] sm:h-[160px] overflow-hidden bg-[#F0EDE6] dark:bg-[#2a2d27] group">
+                                                    <div className="relative w-[110px] h-[140px] sm:w-[130px] sm:h-[160px] overflow-hidden bg-[#F0EDE6] dark:bg-[#213529] group">
                                                         <ProductImage
                                                             src={item.product.image}
                                                             alt={item.product.name}

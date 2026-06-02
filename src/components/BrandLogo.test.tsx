@@ -46,7 +46,7 @@ describe('BrandLogo', () => {
     it('muestra la imagen del logo', () => {
       render(<BrandLogo />);
       const img = screen.getByAltText('Sophia');
-      expect(img).toHaveAttribute('src', '/images/sophia_logo_nuevo.jpeg');
+      expect(img).toHaveAttribute('src', '/images/sophia_logo_v2.jpeg');
     });
   });
 

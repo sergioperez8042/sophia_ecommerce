@@ -70,7 +70,7 @@ async function loadBrandLogo(): Promise<{ dataUrl: string; ratio: number } | nul
         }
       };
       img.onerror = () => resolve(null);
-      img.src = '/images/sophia_logo_nuevo.jpeg';
+      img.src = '/images/sophia_logo_v2.jpeg';
     } catch {
       resolve(null);
     }

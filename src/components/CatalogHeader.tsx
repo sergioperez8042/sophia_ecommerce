@@ -65,7 +65,7 @@ export default function CatalogHeader({ showBackButton = false }: CatalogHeaderP
     return (
         <>
             <header
-                className={`sticky top-0 z-40 backdrop-blur-xl border-b transition-colors duration-300 ${isDark ? 'bg-[#1a1d19]/95 border-[#C9A96E]/15' : 'bg-white/80 border-[#2E4A3A]/10'}`}
+                className={`sticky top-0 z-40 backdrop-blur-xl border-b transition-colors duration-300 ${isDark ? 'bg-[#15241B]/95 border-[#C9A96E]/15' : 'bg-white/80 border-[#2E4A3A]/10'}`}
             >
                 <div className="max-w-7xl mx-auto px-3 sm:px-6">
                     <div className="flex items-center justify-between gap-2 h-14 sm:h-20">
@@ -82,7 +82,7 @@ export default function CatalogHeader({ showBackButton = false }: CatalogHeaderP
                             <Link href="/" className="flex items-center gap-2 sm:gap-3 min-w-0">
                                 <div className="relative w-10 h-10 sm:w-14 sm:h-14 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#2E4A3A]/15 flex-shrink-0">
                                     <Image
-                                        src="/images/sophia_logo_nuevo.jpeg"
+                                        src="/images/sophia_logo_v2.jpeg"
                                         alt="Sophia"
                                         fill
                                         sizes="(min-width: 640px) 56px, 40px"
@@ -125,7 +125,7 @@ export default function CatalogHeader({ showBackButton = false }: CatalogHeaderP
                                 >
                                     <Heart className="w-4 h-4" />
                                     {wishlistCount > 0 && (
-                                        <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-[#C9A96E] text-[#1a1d19] text-[10px] font-bold rounded-full flex items-center justify-center">
+                                        <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-[#C9A96E] text-[#15241B] text-[10px] font-bold rounded-full flex items-center justify-center">
                                             {wishlistCount > 9 ? '9+' : wishlistCount}
                                         </span>
                                     )}
@@ -139,7 +139,7 @@ export default function CatalogHeader({ showBackButton = false }: CatalogHeaderP
                             >
                                 <ShoppingBag className="w-4 h-4" />
                                 {totalItems > 0 && (
-                                    <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-[#C9A96E] text-[#1a1d19] text-[10px] font-bold rounded-full flex items-center justify-center">
+                                    <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-[#C9A96E] text-[#15241B] text-[10px] font-bold rounded-full flex items-center justify-center">
                                         {totalItems}
                                     </span>
                                 )}
@@ -176,7 +176,7 @@ export default function CatalogHeader({ showBackButton = false }: CatalogHeaderP
                                                 animate={{ opacity: 1, scale: 1, y: 0 }}
                                                 exit={{ opacity: 0, scale: 0.95, y: -5 }}
                                                 transition={{ duration: 0.15 }}
-                                                className={`absolute right-0 mt-2 w-56 rounded-xl shadow-lg border overflow-hidden z-50 ${isDark ? 'bg-[#232820] border-[#C9A96E]/15' : 'bg-white border-[#2E4A3A]/10'}`}
+                                                className={`absolute right-0 mt-2 w-56 rounded-xl shadow-lg border overflow-hidden z-50 ${isDark ? 'bg-[#1C2E23] border-[#C9A96E]/15' : 'bg-white border-[#2E4A3A]/10'}`}
                                             >
                                                 <div className={`px-4 py-3 border-b ${isDark ? 'border-[#C9A96E]/10' : 'border-[#2E4A3A]/5'}`}>
                                                     <p className={`text-sm font-medium truncate ${isDark ? 'text-white' : 'text-[#333]'}`}>{user.name}</p>

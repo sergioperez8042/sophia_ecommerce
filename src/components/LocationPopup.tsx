@@ -221,12 +221,12 @@ export default function LocationPopup({ open, onOpenChange }: LocationPopupProps
   // Theme-aware colors (los selectores de provincia/municipio/consejo viven
   // ahora en InlineSearchSelect; aquí quedan solo los colores del modal
   // wrapper y los banners de status)
-  const bg = isDark ? 'bg-[#1a1d19]' : 'bg-white';
+  const bg = isDark ? 'bg-[#15241B]' : 'bg-white';
   const border = isDark ? 'border-[#C9A96E]/20' : 'border-[#2E4A3A]/15';
   const accent = isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]';
   const accentBg = isDark ? 'bg-[#C9A96E]/10' : 'bg-[#2E4A3A]/10';
   const textSecondary = isDark ? 'text-[#d4cdc0]/80' : 'text-gray-500';
-  const btnBg = isDark ? 'bg-[#C9A96E] hover:bg-[#b5a680] text-[#1a1d19]' : 'bg-[#2E4A3A] hover:bg-[#26402F] text-white';
+  const btnBg = isDark ? 'bg-[#C9A96E] hover:bg-[#b5a680] text-[#15241B]' : 'bg-[#2E4A3A] hover:bg-[#26402F] text-white';
   // Colores del feedback de gestor (success verde, warning ámbar)
   const successBg = isDark ? 'bg-green-500/10' : 'bg-green-50';
   const successBorder = isDark ? 'border-green-500/30' : 'border-green-200';

@@ -138,7 +138,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
     };
 
     return (
-        <div className={`min-h-screen transition-colors duration-300 ${isDark ? 'bg-[#1a1d19]' : 'bg-[#FEFCF7]'}`}>
+        <div className={`min-h-screen transition-colors duration-300 ${isDark ? 'bg-[#15241B]' : 'bg-[#FEFCF7]'}`}>
             {/* Header */}
             <CatalogHeader showBackButton />
 
@@ -159,7 +159,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                 className="object-cover"
                             />
                         ) : (
-                            <div className={`w-full h-full flex items-center justify-center ${isDark ? 'bg-[#22261f]' : 'bg-[#F0EDE6]'}`}>
+                            <div className={`w-full h-full flex items-center justify-center ${isDark ? 'bg-[#15241B]' : 'bg-[#F0EDE6]'}`}>
                                 <span className={`text-sm ${isDark ? 'text-[#7a7568]' : 'text-[#999]'}`}>Sin imagen</span>
                             </div>
                         )}
@@ -218,7 +218,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                     <span
                                         key={tag}
                                         className={`text-[12px] px-3 py-1.5 rounded-lg ${
-                                            isDark ? 'bg-[#2a2d26] text-[#a09889]' : 'bg-[#F5F1E8] text-[#666]'
+                                            isDark ? 'bg-[#213529] text-[#a09889]' : 'bg-[#F5F1E8] text-[#666]'
                                         }`}
                                     >
                                         {tag}
@@ -250,7 +250,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                         <span
                                             key={ingredient}
                                             className={`text-[12px] px-3 py-1.5 rounded-lg ${
-                                                isDark ? 'bg-[#2a2d26] text-[#a09889]' : 'bg-[#F5F1E8] text-[#666]'
+                                                isDark ? 'bg-[#213529] text-[#a09889]' : 'bg-[#F5F1E8] text-[#666]'
                                             }`}
                                         >
                                             {ingredient}
@@ -283,7 +283,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                 onClick={handleAddToCart}
                                 className={`w-full py-4 rounded-xl text-base font-medium flex items-center justify-center gap-3 transition-all shadow-md mb-6 ${
                                     addedToCart
-                                        ? 'bg-[#C9A96E] text-[#1a1d19]'
+                                        ? 'bg-[#C9A96E] text-[#15241B]'
                                         : 'bg-[#2E4A3A] text-white hover:bg-[#26402F]'
                                 }`}
                                 whileHover={{ scale: 1.02 }}
@@ -319,7 +319,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
             <div ref={reviewsRef} className="max-w-5xl mx-auto px-4 sm:px-6 pb-10 scroll-mt-24">
                 <button
                     onClick={() => setShowReviews(!showReviews)}
-                    className={`w-full flex items-center justify-between py-4 border-t transition-colors ${isDark ? 'border-[#3a3d36] text-[#e8e4dc]' : 'border-[#E8E4DD] text-gray-900'}`}
+                    className={`w-full flex items-center justify-between py-4 border-t transition-colors ${isDark ? 'border-[#36473B] text-[#e8e4dc]' : 'border-[#E8E4DD] text-gray-900'}`}
                 >
                     <span className="text-sm font-medium uppercase tracking-[0.08em]">
                         Reseñas ({reviews.length})
@@ -346,7 +346,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                 <div className="space-y-8 pb-8">
                                     {/* Rating summary */}
                                     {reviews.length > 0 && (
-                                        <div className={`flex items-start gap-8 pb-8 border-b ${isDark ? 'border-[#3a3d36]' : 'border-[#E8E4DD]'}`}>
+                                        <div className={`flex items-start gap-8 pb-8 border-b ${isDark ? 'border-[#36473B]' : 'border-[#E8E4DD]'}`}>
                                             <div className="text-center">
                                                 <div className={`text-[42px] font-light leading-none ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>
                                                     {(reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)}
@@ -375,7 +375,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                                         <div key={stars} className="flex items-center gap-2">
                                                             <span className={`text-[12px] w-3 text-right ${isDark ? 'text-[#8a8273]' : 'text-[#999]'}`}>{stars}</span>
                                                             <Star className="h-3 w-3 text-[#C9A96E] fill-[#C9A96E]" />
-                                                            <div className={`flex-1 h-[6px] rounded-full overflow-hidden ${isDark ? 'bg-[#3a3d36]' : 'bg-[#E8E4DD]'}`}>
+                                                            <div className={`flex-1 h-[6px] rounded-full overflow-hidden ${isDark ? 'bg-[#36473B]' : 'bg-[#E8E4DD]'}`}>
                                                                 <div className="h-full bg-[#C9A96E] rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
                                                             </div>
                                                             <span className={`text-[11px] w-6 text-right ${isDark ? 'text-[#6a6359]' : 'text-[#BBB]'}`}>{count}</span>
@@ -388,7 +388,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
 
                                     {/* Write review form */}
                                     {isAuthenticated && !userReview ? (
-                                        <div className={`pb-8 border-b ${isDark ? 'border-[#3a3d36]' : 'border-[#E8E4DD]'}`}>
+                                        <div className={`pb-8 border-b ${isDark ? 'border-[#36473B]' : 'border-[#E8E4DD]'}`}>
                                             <h3 className={`text-[13px] uppercase tracking-[0.08em] font-medium mb-4 ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>
                                                 Escribe tu reseña
                                             </h3>
@@ -423,7 +423,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                                 rows={3}
                                                 className={`w-full border rounded-xl px-4 py-3 text-[14px] bg-transparent focus:outline-none transition-colors resize-none ${
                                                     isDark
-                                                        ? 'border-[#3a3d36] text-[#e8e4dc] placeholder-[#6a6359] focus:border-[#C9A96E]'
+                                                        ? 'border-[#36473B] text-[#e8e4dc] placeholder-[#6a6359] focus:border-[#C9A96E]'
                                                         : 'border-[#D5D0C8] text-gray-900 placeholder-[#BBB] focus:border-[#2E4A3A]'
                                                 }`}
                                             />
@@ -445,7 +445,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                             </div>
                                         </div>
                                     ) : !isAuthenticated ? (
-                                        <div className={`pb-8 border-b text-center py-6 ${isDark ? 'border-[#3a3d36]' : 'border-[#E8E4DD]'}`}>
+                                        <div className={`pb-8 border-b text-center py-6 ${isDark ? 'border-[#36473B]' : 'border-[#E8E4DD]'}`}>
                                             <p className={`text-[14px] mb-3 ${isDark ? 'text-[#8a8273]' : 'text-[#999]'}`}>
                                                 Inicia sesión para dejar una reseña
                                             </p>
@@ -453,7 +453,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                                 href="/auth"
                                                 className={`inline-block px-6 py-2.5 text-[12px] font-medium tracking-[0.08em] uppercase rounded-xl border transition-all ${
                                                     isDark
-                                                        ? 'border-[#C9A96E] text-[#C9A96E] hover:bg-[#C9A96E] hover:text-[#1a1d19]'
+                                                        ? 'border-[#C9A96E] text-[#C9A96E] hover:bg-[#C9A96E] hover:text-[#15241B]'
                                                         : 'border-[#2E4A3A] text-[#2E4A3A] hover:bg-[#2E4A3A] hover:text-white'
                                                 }`}
                                             >
@@ -468,7 +468,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                             {reviews.map((review) => (
                                                 <div
                                                     key={review.id}
-                                                    className={`pb-5 border-b last:border-0 ${isDark ? 'border-[#3a3d36]' : 'border-[#E8E4DD]'}`}
+                                                    className={`pb-5 border-b last:border-0 ${isDark ? 'border-[#36473B]' : 'border-[#E8E4DD]'}`}
                                                 >
                                                     <div className="flex items-start gap-3">
                                                         <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${isDark ? 'bg-[#2E4A3A]/20' : 'bg-[#2E4A3A]/10'}`}>

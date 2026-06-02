@@ -16,10 +16,10 @@
 
 /* Dark mode variables - olive/sage tones matching brand */
 .dark {
-  --background: #1a1d19;
+  --background: #15241B;
   --foreground: #e8e4dc;
-  --warm-beige: #22261f;
-  --cream-white: #1a1d19;
+  --warm-beige: #15241B;
+  --cream-white: #15241B;
   --text-muted: #b8b0a2;
 }
 

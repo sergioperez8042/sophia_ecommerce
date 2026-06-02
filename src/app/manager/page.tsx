@@ -214,13 +214,13 @@ export default function GestorDashboard() {
   return (
     <div className="min-h-screen bg-gray-50/50 dark:bg-gray-900">
       {/* Header — identical to admin Header style */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-[#1a1d19]/95 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 shadow-sm dark:shadow-none">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-[#15241B]/95 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 shadow-sm dark:shadow-none">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 sm:h-16">
             <Link href="/manager" className="flex items-center gap-2">
               <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#2E4A3A]/15 flex-shrink-0">
                 <Image
-                  src="/images/sophia_logo_nuevo.jpeg"
+                  src="/images/sophia_logo_v2.jpeg"
                   alt="Sophia"
                   fill
                   sizes="40px"

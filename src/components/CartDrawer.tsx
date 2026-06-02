@@ -227,7 +227,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           {/* Drawer */}
           <m.div
             className={`fixed inset-y-0 right-0 w-full max-w-md z-50 flex flex-col shadow-2xl ${
-              isDark ? 'bg-[#1a1d19]' : 'bg-[#FEFCF7]'
+              isDark ? 'bg-[#15241B]' : 'bg-[#FEFCF7]'
             }`}
             style={{ height: '100dvh' }}
             initial={{ x: '100%' }}
@@ -270,7 +270,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     <div
                       key={item.product.id}
                       className={`flex gap-3 p-3 rounded-xl ${
-                        isDark ? 'bg-[#22261f]' : 'bg-[#F5F1E8]/50'
+                        isDark ? 'bg-[#15241B]' : 'bg-[#F5F1E8]/50'
                       }`}
                     >
                       {/* Image */}
@@ -439,7 +439,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 {/* Checkout form - appears when user clicks the button */}
                 {showCheckout && (
                   <div className={`mb-3 space-y-2 p-3 rounded-xl border ${
-                    isDark ? 'bg-[#22261f] border-[#C9A96E]/15' : 'bg-[#F5F1E8]/50 border-[#2E4A3A]/10'
+                    isDark ? 'bg-[#15241B] border-[#C9A96E]/15' : 'bg-[#F5F1E8]/50 border-[#2E4A3A]/10'
                   }`}>
                     <p className={`text-xs font-medium mb-2 ${isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]'}`}>
                       Datos para tu pedido
@@ -451,7 +451,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                       placeholder="Tu nombre *"
                       className={`w-full px-3 py-2 rounded-lg text-sm border ${
                         isDark
-                          ? 'bg-[#1a1d19] border-[#C9A96E]/15 text-[#e8e4dc] placeholder-[#7a7568]'
+                          ? 'bg-[#15241B] border-[#C9A96E]/15 text-[#e8e4dc] placeholder-[#7a7568]'
                           : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
                       }`}
                     />
@@ -462,7 +462,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                       placeholder="Tu email (para seguimiento)"
                       className={`w-full px-3 py-2 rounded-lg text-sm border ${
                         isDark
-                          ? 'bg-[#1a1d19] border-[#C9A96E]/15 text-[#e8e4dc] placeholder-[#7a7568]'
+                          ? 'bg-[#15241B] border-[#C9A96E]/15 text-[#e8e4dc] placeholder-[#7a7568]'
                           : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
                       }`}
                     />
@@ -473,7 +473,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                       placeholder="Tu teléfono (opcional)"
                       className={`w-full px-3 py-2 rounded-lg text-sm border ${
                         isDark
-                          ? 'bg-[#1a1d19] border-[#C9A96E]/15 text-[#e8e4dc] placeholder-[#7a7568]'
+                          ? 'bg-[#15241B] border-[#C9A96E]/15 text-[#e8e4dc] placeholder-[#7a7568]'
                           : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
                       }`}
                     />
@@ -484,7 +484,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                       placeholder="Notas (opcional)"
                       className={`w-full px-3 py-2 rounded-lg text-sm border ${
                         isDark
-                          ? 'bg-[#1a1d19] border-[#C9A96E]/15 text-[#e8e4dc] placeholder-[#7a7568]'
+                          ? 'bg-[#15241B] border-[#C9A96E]/15 text-[#e8e4dc] placeholder-[#7a7568]'
                           : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
                       }`}
                     />

@@ -78,7 +78,7 @@ export default function NewsletterFooter() {
           type="submit"
           disabled={isSubmitting}
           aria-label="Suscribirme al newsletter"
-          className="flex items-center justify-center min-h-[44px] min-w-[44px] bg-[#C9A96E] hover:bg-[#b5a680] text-[#1a1d19] px-4 py-2.5 rounded-xl transition-colors disabled:opacity-50 flex-shrink-0"
+          className="flex items-center justify-center min-h-[44px] min-w-[44px] bg-[#C9A96E] hover:bg-[#b5a680] text-[#15241B] px-4 py-2.5 rounded-xl transition-colors disabled:opacity-50 flex-shrink-0"
         >
           {isSubmitting ? (
             <Loader2 className="w-4 h-4 animate-spin" />

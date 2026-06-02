@@ -132,7 +132,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
     if (isLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-[#FEFCF7] dark:bg-[#1a1d19]">
+            <div className="min-h-screen flex items-center justify-center bg-[#FEFCF7] dark:bg-[#15241B]">
                 <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#2E4A3A] border-t-transparent" />
             </div>
         );
@@ -140,7 +140,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
     if (!product) {
         return (
-            <div className="min-h-screen bg-[#FEFCF7] dark:bg-[#1a1d19]">
+            <div className="min-h-screen bg-[#FEFCF7] dark:bg-[#15241B]">
                 <div className="max-w-xl mx-auto px-6 py-16 text-center pt-32">
                     <h1 className="text-2xl font-light text-[#333] dark:text-[#e8e4dc] mb-3">Producto no encontrado</h1>
                     <p className="text-[#999] dark:text-[#8a8273] mb-8">El producto que buscas no existe o fue eliminado.</p>
@@ -156,7 +156,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     }
 
     return (
-        <div className="min-h-screen bg-[#FEFCF7] dark:bg-[#1a1d19] pt-20">
+        <div className="min-h-screen bg-[#FEFCF7] dark:bg-[#15241B] pt-20">
             <div className="max-w-[1200px] mx-auto px-6 lg:px-10 pb-8 sm:pb-12">
                 <Breadcrumb
                     items={[
@@ -174,7 +174,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20">
                         {/* Galería */}
                         <div>
-                            <div className="relative aspect-square overflow-hidden bg-[#F0EDE6] dark:bg-[#2a2e26] group">
+                            <div className="relative aspect-square overflow-hidden bg-[#F0EDE6] dark:bg-[#213529] group">
                                 <AnimatePresence mode="wait">
                                     <m.div
                                         key={selectedImage}
@@ -196,13 +196,13 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     <>
                                         <button
                                             onClick={() => setSelectedImage((prev) => (prev - 1 + productImages.length) % productImages.length)}
-                                            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-white/80 hover:bg-white dark:bg-[#1a1d19]/80 dark:hover:bg-[#22261f] text-[#333] dark:text-[#e8e4dc] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
+                                            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-white/80 hover:bg-white dark:bg-[#15241B]/80 dark:hover:bg-[#15241B] text-[#333] dark:text-[#e8e4dc] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
                                         >
                                             <ChevronLeft className="h-5 w-5" strokeWidth={1.5} />
                                         </button>
                                         <button
                                             onClick={() => setSelectedImage((prev) => (prev + 1) % productImages.length)}
-                                            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-white/80 hover:bg-white dark:bg-[#1a1d19]/80 dark:hover:bg-[#22261f] text-[#333] dark:text-[#e8e4dc] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
+                                            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-white/80 hover:bg-white dark:bg-[#15241B]/80 dark:hover:bg-[#15241B] text-[#333] dark:text-[#e8e4dc] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
                                         >
                                             <ChevronRight className="h-5 w-5" strokeWidth={1.5} />
                                         </button>
@@ -216,7 +216,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                         <button
                                             key={index}
                                             onClick={() => setSelectedImage(index)}
-                                            className={`relative aspect-square overflow-hidden bg-[#F0EDE6] dark:bg-[#2a2e26] transition-all duration-200 ${
+                                            className={`relative aspect-square overflow-hidden bg-[#F0EDE6] dark:bg-[#213529] transition-all duration-200 ${
                                                 selectedImage === index
                                                     ? 'ring-2 ring-[#2E4A3A]'
                                                     : 'opacity-60 hover:opacity-100'
@@ -263,7 +263,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             )}
 
                             {product.usage && (
-                                <div className="mb-6 pb-6 border-b border-[#E8E4DD] dark:border-[#3a3d36]">
+                                <div className="mb-6 pb-6 border-b border-[#E8E4DD] dark:border-[#36473B]">
                                     <span className="text-[12px] uppercase tracking-[0.12em] text-[#999] dark:text-[#8a8273] block mb-2">
                                         Modo de uso
                                     </span>
@@ -299,7 +299,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             </button>
 
                             {/* Precio */}
-                            <div className="flex items-baseline gap-3 mb-8 pb-8 border-b border-[#E8E4DD] dark:border-[#3a3d36]">
+                            <div className="flex items-baseline gap-3 mb-8 pb-8 border-b border-[#E8E4DD] dark:border-[#36473B]">
                                 <span className="text-[28px] font-light text-[#333] dark:text-[#e8e4dc] tracking-tight">
                                     ${product.price.toFixed(2)}
                                 </span>
@@ -323,7 +323,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 <span className="text-[12px] uppercase tracking-[0.12em] text-[#999] dark:text-[#8a8273] block mb-3">
                                     Cantidad
                                 </span>
-                                <div className="inline-flex items-center border border-[#D5D0C8] dark:border-[#3a3d36] h-[44px]">
+                                <div className="inline-flex items-center border border-[#D5D0C8] dark:border-[#36473B] h-[44px]">
                                     <button
                                         onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
                                         className="w-[44px] h-full flex items-center justify-center text-[#999] dark:text-[#8a8273] hover:text-[#333] dark:hover:text-[#e8e4dc] transition-colors"
@@ -331,7 +331,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     >
                                         <Minus className="h-3.5 w-3.5" strokeWidth={1.5} />
                                     </button>
-                                    <span className="w-[50px] text-center text-[14px] text-[#333] dark:text-[#e8e4dc] tabular-nums select-none border-x border-[#D5D0C8] dark:border-[#3a3d36]">
+                                    <span className="w-[50px] text-center text-[14px] text-[#333] dark:text-[#e8e4dc] tabular-nums select-none border-x border-[#D5D0C8] dark:border-[#36473B]">
                                         {quantity}
                                     </span>
                                     <button
@@ -365,7 +365,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     className={`w-[52px] h-[52px] flex items-center justify-center border transition-all duration-300 ${
                                         isWishlisted
                                             ? 'border-[#2E4A3A] bg-[#2E4A3A]/5 text-[#2E4A3A]'
-                                            : 'border-[#D5D0C8] dark:border-[#3a3d36] text-[#999] dark:text-[#8a8273] hover:text-[#2E4A3A] hover:border-[#2E4A3A]'
+                                            : 'border-[#D5D0C8] dark:border-[#36473B] text-[#999] dark:text-[#8a8273] hover:text-[#2E4A3A] hover:border-[#2E4A3A]'
                                     }`}
                                 >
                                     <Heart className={`h-5 w-5 ${isWishlisted ? 'fill-current' : ''}`} strokeWidth={1.5} />
@@ -373,7 +373,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             </div>
 
                             {/* Trust */}
-                            <div className="grid grid-cols-3 gap-4 py-6 border-t border-[#E8E4DD] dark:border-[#3a3d36]">
+                            <div className="grid grid-cols-3 gap-4 py-6 border-t border-[#E8E4DD] dark:border-[#36473B]">
                                 <div className="flex flex-col items-center text-center">
                                     <Truck className="h-5 w-5 text-[#2E4A3A]/50 mb-2" strokeWidth={1.5} />
                                     <span className="text-[11px] text-[#999] dark:text-[#8a8273] tracking-[0.03em]">Envío Express</span>
@@ -391,7 +391,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     </div>
 
                     {/* Tabs de información */}
-                    <div ref={tabsRef} className="mt-20 border-t border-[#E8E4DD] dark:border-[#3a3d36] scroll-mt-24">
+                    <div ref={tabsRef} className="mt-20 border-t border-[#E8E4DD] dark:border-[#36473B] scroll-mt-24">
                         <div className="flex">
                             {[
                                 { id: 'description', label: 'Descripción' },
@@ -435,20 +435,20 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
                                     {activeTab === 'details' && (
                                         <div className="space-y-4">
-                                            <div className="flex border-b border-[#E8E4DD] dark:border-[#3a3d36] pb-4">
+                                            <div className="flex border-b border-[#E8E4DD] dark:border-[#36473B] pb-4">
                                                 <span className="text-[13px] text-[#999] dark:text-[#8a8273] w-36 uppercase tracking-[0.05em]">Categoría</span>
                                                 <span className="text-[14px] text-[#555] dark:text-[#b8b0a2]">{category?.name || 'Sin categoría'}</span>
                                             </div>
-                                            <div className="flex border-b border-[#E8E4DD] dark:border-[#3a3d36] pb-4">
+                                            <div className="flex border-b border-[#E8E4DD] dark:border-[#36473B] pb-4">
                                                 <span className="text-[13px] text-[#999] dark:text-[#8a8273] w-36 uppercase tracking-[0.05em]">Estado</span>
                                                 <span className="text-[14px] text-[#555] dark:text-[#b8b0a2]">{product.active ? 'Disponible' : 'No disponible'}</span>
                                             </div>
-                                            <div className="flex border-b border-[#E8E4DD] dark:border-[#3a3d36] pb-4">
+                                            <div className="flex border-b border-[#E8E4DD] dark:border-[#36473B] pb-4">
                                                 <span className="text-[13px] text-[#999] dark:text-[#8a8273] w-36 uppercase tracking-[0.05em]">Valoración</span>
                                                 <span className="text-[14px] text-[#555] dark:text-[#b8b0a2]">{product.rating} / 5 ({product.reviews_count} reseñas)</span>
                                             </div>
                                             {product.featured && (
-                                                <div className="flex border-b border-[#E8E4DD] dark:border-[#3a3d36] pb-4">
+                                                <div className="flex border-b border-[#E8E4DD] dark:border-[#36473B] pb-4">
                                                     <span className="text-[13px] text-[#999] dark:text-[#8a8273] w-36 uppercase tracking-[0.05em]">Destacado</span>
                                                     <span className="text-[14px] text-[#2E4A3A]">Producto destacado</span>
                                                 </div>
@@ -466,7 +466,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                 <div className="space-y-10">
                                                     {/* Rating summary */}
                                                     {reviews.length > 0 && (
-                                                        <div className="flex items-start gap-10 pb-10 border-b border-[#E8E4DD] dark:border-[#3a3d36]">
+                                                        <div className="flex items-start gap-10 pb-10 border-b border-[#E8E4DD] dark:border-[#36473B]">
                                                             <div className="text-center">
                                                                 <div className="text-[48px] font-light text-[#333] dark:text-[#e8e4dc] leading-none">
                                                                     {product.rating.toFixed(1)}
@@ -495,7 +495,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                                         <div key={stars} className="flex items-center gap-2">
                                                                             <span className="text-[12px] text-[#999] dark:text-[#8a8273] w-3 text-right">{stars}</span>
                                                                             <Star className="h-3 w-3 text-[#C9A96E] fill-[#C9A96E]" />
-                                                                            <div className="flex-1 h-[6px] bg-[#E8E4DD] dark:bg-[#3a3d36] rounded-full overflow-hidden">
+                                                                            <div className="flex-1 h-[6px] bg-[#E8E4DD] dark:bg-[#36473B] rounded-full overflow-hidden">
                                                                                 <div
                                                                                     className="h-full bg-[#C9A96E] rounded-full transition-all duration-500"
                                                                                     style={{ width: `${pct}%` }}
@@ -511,7 +511,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
                                                     {/* Write review form */}
                                                     {isAuthenticated && !userReview ? (
-                                                        <div className="pb-10 border-b border-[#E8E4DD] dark:border-[#3a3d36]">
+                                                        <div className="pb-10 border-b border-[#E8E4DD] dark:border-[#36473B]">
                                                             <h3 className="text-[13px] uppercase tracking-[0.08em] text-[#333] dark:text-[#e8e4dc] font-medium mb-4">
                                                                 Escribe tu reseña
                                                             </h3>
@@ -544,7 +544,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                                 onChange={(e) => setReviewComment(e.target.value)}
                                                                 placeholder="Cuéntanos tu experiencia con este producto..."
                                                                 rows={3}
-                                                                className="w-full border border-[#D5D0C8] dark:border-[#3a3d36] bg-transparent text-[14px] text-[#333] dark:text-[#e8e4dc] placeholder-[#BBB] dark:placeholder-[#6a6359] px-4 py-3 focus:outline-none focus:border-[#2E4A3A] transition-colors resize-none"
+                                                                className="w-full border border-[#D5D0C8] dark:border-[#36473B] bg-transparent text-[14px] text-[#333] dark:text-[#e8e4dc] placeholder-[#BBB] dark:placeholder-[#6a6359] px-4 py-3 focus:outline-none focus:border-[#2E4A3A] transition-colors resize-none"
                                                             />
                                                             <div className="flex items-center justify-between mt-3">
                                                                 {isVerifiedPurchase && (
@@ -564,7 +564,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                             </div>
                                                         </div>
                                                     ) : !isAuthenticated ? (
-                                                        <div className="pb-10 border-b border-[#E8E4DD] dark:border-[#3a3d36] text-center py-8">
+                                                        <div className="pb-10 border-b border-[#E8E4DD] dark:border-[#36473B] text-center py-8">
                                                             <p className="text-[14px] text-[#999] dark:text-[#8a8273] mb-3">
                                                                 Inicia sesión para dejar una reseña
                                                             </p>
@@ -583,7 +583,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                             {reviews.map((review) => (
                                                                 <div
                                                                     key={review.id}
-                                                                    className="pb-6 border-b border-[#E8E4DD] dark:border-[#3a3d36] last:border-0"
+                                                                    className="pb-6 border-b border-[#E8E4DD] dark:border-[#36473B] last:border-0"
                                                                 >
                                                                     <div className="flex items-start gap-3">
                                                                         <div className="w-8 h-8 rounded-full bg-[#2E4A3A]/10 dark:bg-[#2E4A3A]/20 flex items-center justify-center flex-shrink-0">
