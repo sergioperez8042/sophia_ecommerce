@@ -101,7 +101,7 @@ export default function CatalogHeader({ showBackButton = false }: CatalogHeaderP
                                 desktop ícono + texto truncado. */}
                             <button
                                 onClick={() => setIsLocationOpen(true)}
-                                className={`flex items-center justify-center sm:justify-start gap-1.5 h-10 w-10 sm:w-auto sm:px-3 sm:py-2 sm:h-auto sm:min-h-[40px] rounded-xl transition-colors sm:max-w-[200px] ${isDark ? 'bg-[#C9A96E]/15 text-[#C9A96E] hover:bg-[#C9A96E]/25' : 'bg-[#2E4A3A]/10 text-[#2E4A3A] hover:bg-[#2E4A3A]/20'}`}
+                                className={`flex items-center justify-center sm:justify-start gap-1.5 h-10 w-10 sm:w-auto sm:px-3 sm:py-2 sm:h-auto sm:min-h-[40px] rounded-xl transition-colors sm:max-w-[200px] ${isDark ? 'bg-[#C9A96E]/20 text-[#C9A96E] ring-1 ring-inset ring-[#C9A96E]/30 hover:bg-[#C9A96E]/30' : 'bg-[#2E4A3A]/10 text-[#2E4A3A] hover:bg-[#2E4A3A]/20'}`}
                                 aria-label={`Cambiar ubicación (actual: ${locationLabel})`}
                                 title={locationLabel}
                             >
@@ -113,7 +113,7 @@ export default function CatalogHeader({ showBackButton = false }: CatalogHeaderP
 
                             <button
                                 onClick={toggleTheme}
-                                className={`flex items-center justify-center h-10 w-10 rounded-xl transition-colors ${isDark ? 'bg-[#C9A96E]/15 text-[#C9A96E] hover:bg-[#C9A96E]/25' : 'bg-[#2E4A3A]/10 text-[#2E4A3A] hover:bg-[#2E4A3A]/20'}`}
+                                className={`flex items-center justify-center h-10 w-10 rounded-xl transition-colors ${isDark ? 'bg-[#C9A96E]/20 text-[#C9A96E] ring-1 ring-inset ring-[#C9A96E]/30 hover:bg-[#C9A96E]/30' : 'bg-[#2E4A3A]/10 text-[#2E4A3A] hover:bg-[#2E4A3A]/20'}`}
                                 aria-label={isDark ? 'Modo claro' : 'Modo oscuro'}
                             >
                                 {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
@@ -121,7 +121,7 @@ export default function CatalogHeader({ showBackButton = false }: CatalogHeaderP
 
                             <Link href="/wishlist">
                                 <div
-                                    className={`relative flex items-center justify-center h-10 w-10 rounded-xl transition-colors ${isDark ? 'bg-[#C9A96E]/15 text-[#C9A96E] hover:bg-[#C9A96E]/25' : 'bg-[#2E4A3A]/10 text-[#2E4A3A] hover:bg-[#2E4A3A]/20'}`}
+                                    className={`relative flex items-center justify-center h-10 w-10 rounded-xl transition-colors ${isDark ? 'bg-[#C9A96E]/20 text-[#C9A96E] ring-1 ring-inset ring-[#C9A96E]/30 hover:bg-[#C9A96E]/30' : 'bg-[#2E4A3A]/10 text-[#2E4A3A] hover:bg-[#2E4A3A]/20'}`}
                                 >
                                     <Heart className="w-4 h-4" />
                                     {wishlistCount > 0 && (
@@ -134,7 +134,7 @@ export default function CatalogHeader({ showBackButton = false }: CatalogHeaderP
 
                             <button
                                 onClick={() => setIsCartOpen(true)}
-                                className={`relative flex items-center justify-center h-10 w-10 rounded-xl transition-colors ${isDark ? 'bg-[#C9A96E]/15 text-[#C9A96E] hover:bg-[#C9A96E]/25' : 'bg-[#2E4A3A]/10 text-[#2E4A3A] hover:bg-[#2E4A3A]/20'}`}
+                                className={`relative flex items-center justify-center h-10 w-10 rounded-xl transition-colors ${isDark ? 'bg-[#C9A96E]/20 text-[#C9A96E] ring-1 ring-inset ring-[#C9A96E]/30 hover:bg-[#C9A96E]/30' : 'bg-[#2E4A3A]/10 text-[#2E4A3A] hover:bg-[#2E4A3A]/20'}`}
                                 aria-label="Carrito"
                             >
                                 <ShoppingBag className="w-4 h-4" />

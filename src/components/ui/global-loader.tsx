@@ -28,7 +28,7 @@ export default function GlobalLoader() {
             aria-busy={isLoading}
         >
             <div
-                className={`h-full bg-gradient-to-r from-[#2E4A3A] via-[#7a8a72] to-[#2E4A3A] shadow-[0_0_8px_rgba(80,90,74,0.5)] ${
+                className={`h-full bg-gradient-to-r from-[#2E4A3A] via-[#7a8a72] to-[#2E4A3A] shadow-[0_0_8px_rgba(46, 74, 58,0.5)] ${
                     isLoading ? 'animate-loading-bar' : 'w-full opacity-0 transition-opacity duration-300'
                 }`}
             />

@@ -107,7 +107,7 @@ export default function CheckoutPage() {
     // Generar PDF profesional
     const generateOrderPDF = (orderNum: string, cartItems: typeof items, cartSubtotal: number, cartShipping: number, cartTotal: number) => {
         const doc = new jsPDF();
-        const primaryColor: [number, number, number] = [80, 90, 74]; // #2E4A3A
+        const primaryColor: [number, number, number] = [46, 74, 58]; // #2E4A3A
         const secondaryColor: [number, number, number] = [65, 74, 60]; // #26402F
         const lightBg: [number, number, number] = [254, 252, 247]; // #FEFCF7
 

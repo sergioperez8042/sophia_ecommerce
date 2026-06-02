@@ -30,7 +30,7 @@
 .product-card {
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(80, 90, 74, 0.15);
+  border: 1px solid rgba(46, 74, 58, 0.15);
 }
 
 .dark .product-card {
@@ -41,7 +41,7 @@
 .nav-glass {
   background: rgba(254, 252, 247, 0.95);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(80, 90, 74, 0.15);
+  border-bottom: 1px solid rgba(46, 74, 58, 0.15);
 }
 
 .dark .nav-glass {
