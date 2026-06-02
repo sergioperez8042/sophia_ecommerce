@@ -82,7 +82,7 @@ function CategoryTreeItem({
         <div>
             <div
                 className={`bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow ${
-                    level > 0 ? 'ml-4 sm:ml-8 border-l-4 border-l-[#505A4A]/20' : ''
+                    level > 0 ? 'ml-4 sm:ml-8 border-l-4 border-l-[#2E4A3A]/20' : ''
                 }`}
             >
                 <div className="flex gap-3 p-3 sm:p-4">
@@ -91,7 +91,7 @@ function CategoryTreeItem({
                         {hasChildren ? (
                             <button
                                 onClick={() => toggleExpand(category.id)}
-                                className="p-1.5 rounded-lg hover:bg-[#505A4A]/10 transition-colors text-[#505A4A] dark:text-[#b8b0a2] flex-shrink-0"
+                                className="p-1.5 rounded-lg hover:bg-[#2E4A3A]/10 transition-colors text-[#2E4A3A] dark:text-[#b8b0a2] flex-shrink-0"
                                 aria-label={isExpanded ? 'Colapsar subcategorías' : 'Expandir subcategorías'}
                                 title={isExpanded ? 'Colapsar subcategorías' : 'Expandir subcategorías'}
                             >
@@ -154,7 +154,7 @@ function CategoryTreeItem({
                                     /* Subcategoría con productos: link clickeable */
                                     <Link
                                         href={`/admin/products?category=${category.id}`}
-                                        className="whitespace-nowrap inline-flex items-center gap-1 px-2 py-1 -mx-1 -my-1 rounded-md text-[#505A4A] dark:text-[#b8b0a2] hover:bg-[#505A4A]/10 font-medium transition-colors"
+                                        className="whitespace-nowrap inline-flex items-center gap-1 px-2 py-1 -mx-1 -my-1 rounded-md text-[#2E4A3A] dark:text-[#b8b0a2] hover:bg-[#2E4A3A]/10 font-medium transition-colors"
                                         title="Ver productos"
                                     >
                                         {category.product_count} productos
@@ -189,7 +189,7 @@ function CategoryTreeItem({
                                     <>
                                         <button
                                             onClick={() => onAddSubcategory(category.id)}
-                                            className="p-1.5 rounded-lg text-gray-400 hover:text-[#505A4A] hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                            className="p-1.5 rounded-lg text-gray-400 hover:text-[#2E4A3A] hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                                             title="Agregar subcategoría"
                                         >
                                             <FolderPlus className="w-4 h-4" />
@@ -207,7 +207,7 @@ function CategoryTreeItem({
                                         </button>
                                         <button
                                             onClick={() => onEdit(category)}
-                                            className="p-1.5 rounded-lg text-[#505A4A] hover:bg-[#505A4A]/10 transition-colors"
+                                            className="p-1.5 rounded-lg text-[#2E4A3A] hover:bg-[#2E4A3A]/10 transition-colors"
                                             title="Editar"
                                         >
                                             <Pencil className="w-4 h-4" />
@@ -333,7 +333,7 @@ export default function AdminCategoriesPage() {
     if (!isLoaded || isLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-                <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#505A4A] border-t-transparent" />
+                <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#2E4A3A] border-t-transparent" />
             </div>
         );
     }
@@ -502,7 +502,7 @@ export default function AdminCategoriesPage() {
                         </div>
                         <button
                             onClick={() => handleCreate()}
-                            className="flex items-center gap-2 bg-[#505A4A] text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-sm font-medium hover:bg-[#414A3C] transition-colors shadow-sm"
+                            className="flex items-center gap-2 bg-[#2E4A3A] text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-sm font-medium hover:bg-[#26402F] transition-colors shadow-sm"
                         >
                             <Plus className="w-4 h-4" />
                             <span className="hidden sm:inline">Nueva Categoría</span>
@@ -534,7 +534,7 @@ export default function AdminCategoriesPage() {
                                 <p className="text-gray-500 dark:text-gray-400 font-medium">No hay categorías creadas</p>
                                 <button
                                     onClick={() => handleCreate()}
-                                    className="text-sm text-[#505A4A] font-medium mt-2 hover:underline"
+                                    className="text-sm text-[#2E4A3A] font-medium mt-2 hover:underline"
                                 >
                                     Crear la primera categoría
                                 </button>
@@ -614,7 +614,7 @@ export default function AdminCategoriesPage() {
                             {parentBreadcrumb.map((p, i) => (
                                 <span key={p.id} className="flex items-center gap-1">
                                     {i > 0 && <ChevronRight className="w-3 h-3" />}
-                                    <span className="font-medium text-[#505A4A]">{p.name}</span>
+                                    <span className="font-medium text-[#2E4A3A]">{p.name}</span>
                                 </span>
                             ))}
                         </div>
@@ -660,14 +660,14 @@ export default function AdminCategoriesPage() {
                                 const file = e.target.files?.[0];
                                 if (file) handleFileUpload(file);
                             }}
-                            className="w-full text-sm text-gray-700 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-[#505A4A] file:text-white hover:file:bg-[#414A3C] file:cursor-pointer cursor-pointer"
+                            className="w-full text-sm text-gray-700 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-[#2E4A3A] file:text-white hover:file:bg-[#26402F] file:cursor-pointer cursor-pointer"
                             disabled={isUploading}
                         />
 
                         {isUploading && (
                             <div className="mt-3">
                                 <div className="h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                    <div className="h-full bg-[#505A4A] transition-all duration-300 rounded-full" style={{ width: `${uploadProgress}%` }} />
+                                    <div className="h-full bg-[#2E4A3A] transition-all duration-300 rounded-full" style={{ width: `${uploadProgress}%` }} />
                                 </div>
                                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Subiendo... {Math.round(uploadProgress)}%</p>
                             </div>
@@ -695,7 +695,7 @@ export default function AdminCategoriesPage() {
                                 type="text"
                                 {...register('name')}
                                 placeholder={formParentId ? 'Ej: Cremas Hidratantes' : 'Ej: Cuidado Facial'}
-                                className={`w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border ${errors.name ? 'border-red-400 bg-red-50/30' : 'border-gray-200 dark:border-gray-700'} rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white dark:focus:bg-gray-700 transition-all`}
+                                className={`w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border ${errors.name ? 'border-red-400 bg-red-50/30' : 'border-gray-200 dark:border-gray-700'} rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#2E4A3A]/30 focus:border-[#2E4A3A] focus:bg-white dark:focus:bg-gray-700 transition-all`}
                             />
                             {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>}
                         </div>
@@ -707,7 +707,7 @@ export default function AdminCategoriesPage() {
                                 {...register('description')}
                                 placeholder="Breve descripción..."
                                 rows={3}
-                                className="w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white dark:focus:bg-gray-700 transition-all resize-none"
+                                className="w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#2E4A3A]/30 focus:border-[#2E4A3A] focus:bg-white dark:focus:bg-gray-700 transition-all resize-none"
                             />
                         </div>
 
@@ -738,7 +738,7 @@ export default function AdminCategoriesPage() {
                                 value={formSortOrder}
                                 onChange={(e) => setValue('sort_order', parseInt(e.target.value) || 0)}
                                 min="0"
-                                className="w-24 px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white dark:focus:bg-gray-700 transition-all"
+                                className="w-24 px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#2E4A3A]/30 focus:border-[#2E4A3A] focus:bg-white dark:focus:bg-gray-700 transition-all"
                             />
                             <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Número más bajo aparece primero</p>
                         </div>
@@ -765,7 +765,7 @@ export default function AdminCategoriesPage() {
                             <button
                                 type="button"
                                 onClick={() => setValue('active', !formActive)}
-                                className={`relative w-11 h-6 rounded-full transition-colors ${formActive ? 'bg-[#505A4A]' : 'bg-gray-300 dark:bg-gray-600'}`}
+                                className={`relative w-11 h-6 rounded-full transition-colors ${formActive ? 'bg-[#2E4A3A]' : 'bg-gray-300 dark:bg-gray-600'}`}
                             >
                                 <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${formActive ? 'left-[22px]' : 'left-0.5'}`} />
                             </button>
@@ -777,7 +777,7 @@ export default function AdminCategoriesPage() {
                         <button
                             type="submit"
                             disabled={isSaving}
-                            className="flex-1 flex items-center justify-center gap-2 bg-[#505A4A] text-white py-3 rounded-xl text-sm font-semibold hover:bg-[#414A3C] disabled:opacity-50 transition-colors shadow-sm"
+                            className="flex-1 flex items-center justify-center gap-2 bg-[#2E4A3A] text-white py-3 rounded-xl text-sm font-semibold hover:bg-[#26402F] disabled:opacity-50 transition-colors shadow-sm"
                         >
                             {isSaving ? (
                                 <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />

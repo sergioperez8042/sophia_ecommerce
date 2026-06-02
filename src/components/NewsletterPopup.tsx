@@ -123,12 +123,12 @@ export default function NewsletterPopup() {
                 exit={{ opacity: 0, scale: 0.95, y: 10 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="bg-[#1a1d19] border border-[#C4B590]/20 rounded-2xl p-6 sm:p-8 relative shadow-2xl">
+                <div className="bg-[#1a1d19] border border-[#C9A96E]/20 rounded-2xl p-6 sm:p-8 relative shadow-2xl">
                   {/* Close button */}
                   <Dialog.Close asChild>
                     <button
                       onClick={handleDismiss}
-                      className="absolute top-4 right-4 text-[#C4B590]/50 hover:text-[#C4B590] transition-colors"
+                      className="absolute top-4 right-4 text-[#C9A96E]/50 hover:text-[#C9A96E] transition-colors"
                     >
                       <X className="w-5 h-5" />
                     </button>
@@ -137,12 +137,12 @@ export default function NewsletterPopup() {
                   {!isSuccess ? (
                     <>
                       {/* Icon */}
-                      <div className="w-12 h-12 rounded-xl bg-[#C4B590]/10 flex items-center justify-center mb-4">
-                        <Sparkles className="w-6 h-6 text-[#C4B590]" />
+                      <div className="w-12 h-12 rounded-xl bg-[#C9A96E]/10 flex items-center justify-center mb-4">
+                        <Sparkles className="w-6 h-6 text-[#C9A96E]" />
                       </div>
 
                       {/* Title */}
-                      <Dialog.Title className="text-xl font-semibold text-[#C4B590] mb-2">
+                      <Dialog.Title className="text-xl font-semibold text-[#C9A96E] mb-2">
                         10% de descuento en tu primer pedido
                       </Dialog.Title>
                       <Dialog.Description className="text-sm text-[#d4cdc0]/80 mb-6 leading-relaxed">
@@ -153,21 +153,21 @@ export default function NewsletterPopup() {
                       {/* Form */}
                       <form onSubmit={handleSubmit} className="space-y-3">
                         <div className="relative">
-                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C4B590]/40" />
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C9A96E]/40" />
                           <input
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="Tu email"
                             required
-                            className="w-full pl-10 pr-4 py-3 bg-white/5 border border-[#C4B590]/20 rounded-xl text-[#e8e0d0] placeholder-[#C4B590]/30 text-sm focus:outline-none focus:border-[#C4B590]/50"
+                            className="w-full pl-10 pr-4 py-3 bg-white/5 border border-[#C9A96E]/20 rounded-xl text-[#e8e0d0] placeholder-[#C9A96E]/30 text-sm focus:outline-none focus:border-[#C9A96E]/50"
                           />
                         </div>
                         {error && <p className="text-xs text-red-400">{error}</p>}
                         <button
                           type="submit"
                           disabled={isSubmitting}
-                          className="w-full bg-[#C4B590] hover:bg-[#b5a680] text-[#1a1d19] py-3 rounded-xl text-sm font-semibold transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                          className="w-full bg-[#C9A96E] hover:bg-[#b5a680] text-[#1a1d19] py-3 rounded-xl text-sm font-semibold transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                         >
                           {isSubmitting ? (
                             <Loader2 className="w-4 h-4 animate-spin" />
@@ -177,26 +177,26 @@ export default function NewsletterPopup() {
                         </button>
                       </form>
 
-                      <p className="text-xs text-[#C4B590]/60 text-center mt-4">
+                      <p className="text-xs text-[#C9A96E]/60 text-center mt-4">
                         Sin spam. Solo lo mejor para tu piel.
                       </p>
                     </>
                   ) : (
                     /* Success state */
                     <div className="text-center py-4">
-                      <div className="w-14 h-14 rounded-full bg-[#C4B590]/10 flex items-center justify-center mx-auto mb-4">
-                        <Sparkles className="w-7 h-7 text-[#C4B590]" />
+                      <div className="w-14 h-14 rounded-full bg-[#C9A96E]/10 flex items-center justify-center mx-auto mb-4">
+                        <Sparkles className="w-7 h-7 text-[#C9A96E]" />
                       </div>
-                      <Dialog.Title className="text-xl font-semibold text-[#C4B590] mb-2">
+                      <Dialog.Title className="text-xl font-semibold text-[#C9A96E] mb-2">
                         ¡Listo! Revisa tu email 🌿
                       </Dialog.Title>
                       <p className="text-sm text-[#d4cdc0]/80 mb-4">
                         Tu código de descuento:
                       </p>
-                      <div className="bg-[#2a2d25] border border-[#C4B590]/30 rounded-xl py-3 px-6 inline-block">
-                        <span className="text-2xl font-bold text-[#C4B590] tracking-widest">BIENVENIDA10</span>
+                      <div className="bg-[#2a2d25] border border-[#C9A96E]/30 rounded-xl py-3 px-6 inline-block">
+                        <span className="text-2xl font-bold text-[#C9A96E] tracking-widest">BIENVENIDA10</span>
                       </div>
-                      <p className="text-xs text-[#C4B590]/60 mt-4">10% de descuento en tu primer pedido</p>
+                      <p className="text-xs text-[#C9A96E]/60 mt-4">10% de descuento en tu primer pedido</p>
                     </div>
                   )}
                 </div>

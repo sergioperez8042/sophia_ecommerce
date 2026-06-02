@@ -27,7 +27,7 @@ export default function AdminSetupPage() {
   if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#505A4A] border-t-transparent" />
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#2E4A3A] border-t-transparent" />
       </div>
     );
   }
@@ -41,7 +41,7 @@ export default function AdminSetupPage() {
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
         <Link
           href="/admin"
-          className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-[#505A4A] transition-colors mb-6"
+          className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-[#2E4A3A] transition-colors mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
           Volver al panel
@@ -73,8 +73,8 @@ export default function AdminSetupPage() {
           {/* Catalog Config */}
           <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
             <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#505A4A]/10 flex items-center justify-center">
-                <LayoutGrid className="w-4 h-4 text-[#505A4A]" />
+              <div className="w-8 h-8 rounded-lg bg-[#2E4A3A]/10 flex items-center justify-center">
+                <LayoutGrid className="w-4 h-4 text-[#2E4A3A]" />
               </div>
               <div>
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Catálogo</h3>
@@ -95,7 +95,7 @@ export default function AdminSetupPage() {
                     await setGroupByCategory(!groupByCategory);
                     setSavingConfig(false);
                   }}
-                  className={`relative w-11 h-6 rounded-full transition-colors disabled:opacity-50 ${groupByCategory ? 'bg-[#505A4A]' : 'bg-gray-300 dark:bg-gray-600'}`}
+                  className={`relative w-11 h-6 rounded-full transition-colors disabled:opacity-50 ${groupByCategory ? 'bg-[#2E4A3A]' : 'bg-gray-300 dark:bg-gray-600'}`}
                 >
                   <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${groupByCategory ? 'left-[22px]' : 'left-0.5'}`} />
                 </button>
@@ -104,7 +104,7 @@ export default function AdminSetupPage() {
           </div>
 
           {/* Quick Links */}
-          <div className="bg-[#505A4A] rounded-xl shadow-sm">
+          <div className="bg-[#2E4A3A] rounded-xl shadow-sm">
             <div className="p-5 sm:p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center">
@@ -118,7 +118,7 @@ export default function AdminSetupPage() {
               <div className="flex flex-col sm:flex-row gap-2">
                 <Link
                   href="/admin/products"
-                  className="inline-flex items-center justify-center gap-2 bg-white hover:bg-gray-50 dark:hover:bg-gray-100 text-[#505A4A] px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                  className="inline-flex items-center justify-center gap-2 bg-white hover:bg-gray-50 dark:hover:bg-gray-100 text-[#2E4A3A] px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                 >
                   Gestionar Productos
                 </Link>

@@ -140,7 +140,7 @@ export default function EstadisticasPage() {
   if (!isLoaded || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#505A4A] border-t-transparent" />
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#2E4A3A] border-t-transparent" />
       </div>
     );
   }
@@ -154,7 +154,7 @@ export default function EstadisticasPage() {
         <div className="mb-8">
           <Link
             href="/admin"
-            className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-[#505A4A] dark:hover:text-gray-300 mb-4 transition-colors"
+            className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-[#2E4A3A] dark:hover:text-gray-300 mb-4 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Admin
@@ -174,8 +174,8 @@ export default function EstadisticasPage() {
                 <p className="text-2xl font-semibold text-gray-900 dark:text-white mt-2">{fmt(globalStats.monthSales)}</p>
                 <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">{globalStats.monthOrders} pedidos</p>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-[#505A4A]/10 flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-[#505A4A]" />
+              <div className="w-10 h-10 rounded-lg bg-[#2E4A3A]/10 flex items-center justify-center">
+                <TrendingUp className="w-5 h-5 text-[#2E4A3A]" />
               </div>
             </div>
           </div>
@@ -187,8 +187,8 @@ export default function EstadisticasPage() {
                 <p className="text-2xl font-semibold text-gray-900 dark:text-white mt-2">{fmt(globalStats.pendingAmount)}</p>
                 <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">{globalStats.pending + globalStats.inTransit} en proceso</p>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-[#505A4A]/10 flex items-center justify-center">
-                <Clock className="w-5 h-5 text-[#505A4A]" />
+              <div className="w-10 h-10 rounded-lg bg-[#2E4A3A]/10 flex items-center justify-center">
+                <Clock className="w-5 h-5 text-[#2E4A3A]" />
               </div>
             </div>
           </div>
@@ -200,8 +200,8 @@ export default function EstadisticasPage() {
                 <p className="text-2xl font-semibold text-gray-900 dark:text-white mt-2">{fmt(globalStats.collected)}</p>
                 <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">{globalStats.delivered} entregados</p>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-[#505A4A]/10 flex items-center justify-center">
-                <DollarSign className="w-5 h-5 text-[#505A4A]" />
+              <div className="w-10 h-10 rounded-lg bg-[#2E4A3A]/10 flex items-center justify-center">
+                <DollarSign className="w-5 h-5 text-[#2E4A3A]" />
               </div>
             </div>
           </div>
@@ -213,8 +213,8 @@ export default function EstadisticasPage() {
                 <p className="text-2xl font-semibold text-gray-900 dark:text-white mt-2">{globalStats.activeGestores}</p>
                 <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">{globalStats.totalGestores} registrados</p>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-[#505A4A]/10 flex items-center justify-center">
-                <Users className="w-5 h-5 text-[#505A4A]" />
+              <div className="w-10 h-10 rounded-lg bg-[#2E4A3A]/10 flex items-center justify-center">
+                <Users className="w-5 h-5 text-[#2E4A3A]" />
               </div>
             </div>
           </div>
@@ -249,7 +249,7 @@ export default function EstadisticasPage() {
         <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 mb-6">
           <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-gray-700">
             <h2 className="text-base font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-              <Users className="w-4.5 h-4.5 text-[#505A4A] dark:text-gray-400" />
+              <Users className="w-4.5 h-4.5 text-[#2E4A3A] dark:text-gray-400" />
               Rendimiento por Gestor
             </h2>
             <div className="flex items-center gap-1">
@@ -264,7 +264,7 @@ export default function EstadisticasPage() {
                   onClick={() => setSortBy(opt.key)}
                   className={`text-[10px] px-2.5 py-1 rounded-lg font-medium transition-colors ${
                     sortBy === opt.key
-                      ? 'bg-[#505A4A] text-white'
+                      ? 'bg-[#2E4A3A] text-white'
                       : 'text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700'
                   }`}
                 >
@@ -293,7 +293,7 @@ export default function EstadisticasPage() {
                     >
                       {/* Rank + Avatar */}
                       <div className="flex items-center gap-3 flex-shrink-0">
-                        <span className={`text-xs font-bold w-5 text-center ${topSeller ? 'text-[#505A4A]' : 'text-gray-300 dark:text-gray-600'}`}>
+                        <span className={`text-xs font-bold w-5 text-center ${topSeller ? 'text-[#2E4A3A]' : 'text-gray-300 dark:text-gray-600'}`}>
                           {index + 1}
                         </span>
                         {stat.gestor.photoUrl ? (
@@ -301,7 +301,7 @@ export default function EstadisticasPage() {
                             <Image src={stat.gestor.photoUrl} alt={stat.gestor.name} width={36} height={36} className="w-full h-full object-cover" />
                           </div>
                         ) : (
-                          <div className="w-9 h-9 rounded-full bg-[#505A4A]/10 flex items-center justify-center text-[#505A4A] text-xs font-semibold flex-shrink-0">
+                          <div className="w-9 h-9 rounded-full bg-[#2E4A3A]/10 flex items-center justify-center text-[#2E4A3A] text-xs font-semibold flex-shrink-0">
                             {stat.gestor.name.charAt(0).toUpperCase()}
                           </div>
                         )}
@@ -334,7 +334,7 @@ export default function EstadisticasPage() {
                         </div>
                         <div className="text-right">
                           <p className="text-[10px] text-gray-400 dark:text-gray-500 uppercase">Por cobrar</p>
-                          <p className={`text-sm font-semibold ${stat.pending > 0 ? 'text-[#505A4A]' : 'text-gray-400 dark:text-gray-500'}`}>
+                          <p className={`text-sm font-semibold ${stat.pending > 0 ? 'text-[#2E4A3A]' : 'text-gray-400 dark:text-gray-500'}`}>
                             {fmt(stat.pending)}
                           </p>
                         </div>
@@ -384,7 +384,7 @@ export default function EstadisticasPage() {
                               </div>
                               <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3">
                                 <p className="text-[10px] text-gray-400 dark:text-gray-500 uppercase tracking-wide">Por Cobrar</p>
-                                <p className={`text-lg font-bold mt-1 ${stat.pending > 0 ? 'text-[#505A4A]' : 'text-gray-400 dark:text-gray-500'}`}>
+                                <p className={`text-lg font-bold mt-1 ${stat.pending > 0 ? 'text-[#2E4A3A]' : 'text-gray-400 dark:text-gray-500'}`}>
                                   {fmt(stat.pending)}
                                 </p>
                               </div>
@@ -393,15 +393,15 @@ export default function EstadisticasPage() {
                             {/* Order status breakdown */}
                             <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
                               <span className="flex items-center gap-1">
-                                <Clock className="w-3 h-3 text-[#505A4A]" />
+                                <Clock className="w-3 h-3 text-[#2E4A3A]" />
                                 {stat.pendingCount} pendientes
                               </span>
                               <span className="flex items-center gap-1">
-                                <Truck className="w-3 h-3 text-[#505A4A]" />
+                                <Truck className="w-3 h-3 text-[#2E4A3A]" />
                                 {stat.inTransitCount} en camino
                               </span>
                               <span className="flex items-center gap-1">
-                                <CheckCircle2 className="w-3 h-3 text-[#505A4A]" />
+                                <CheckCircle2 className="w-3 h-3 text-[#2E4A3A]" />
                                 {stat.deliveredCount} entregados
                               </span>
                               {stat.cancelledCount > 0 && (
@@ -422,7 +422,7 @@ export default function EstadisticasPage() {
                                       <div className="flex items-center gap-2">
                                         <span className="font-mono font-medium text-gray-700 dark:text-gray-300">{order.orderNumber}</span>
                                         <span className={`text-[9px] px-1.5 py-0.5 rounded font-medium ${
-                                          order.status === 'cancelled' ? 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400' : 'bg-[#505A4A]/10 text-[#505A4A]'
+                                          order.status === 'cancelled' ? 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400' : 'bg-[#2E4A3A]/10 text-[#2E4A3A]'
                                         }`}>
                                           {ORDER_STATUSES[order.status]}
                                         </span>

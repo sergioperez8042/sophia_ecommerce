@@ -75,7 +75,7 @@ export default function CheckoutPage() {
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">Tu carrito está vacío</h2>
                         <p className="text-gray-600 mb-8">Añade productos antes de proceder al checkout.</p>
                         <Link href="/products">
-                            <Button className="bg-[#505A4A] hover:bg-[#414A3C] text-white">
+                            <Button className="bg-[#2E4A3A] hover:bg-[#26402F] text-white">
                                 Ver Productos
                             </Button>
                         </Link>
@@ -107,8 +107,8 @@ export default function CheckoutPage() {
     // Generar PDF profesional
     const generateOrderPDF = (orderNum: string, cartItems: typeof items, cartSubtotal: number, cartShipping: number, cartTotal: number) => {
         const doc = new jsPDF();
-        const primaryColor: [number, number, number] = [80, 90, 74]; // #505A4A
-        const secondaryColor: [number, number, number] = [65, 74, 60]; // #414A3C
+        const primaryColor: [number, number, number] = [80, 90, 74]; // #2E4A3A
+        const secondaryColor: [number, number, number] = [65, 74, 60]; // #26402F
         const lightBg: [number, number, number] = [254, 252, 247]; // #FEFCF7
 
         // Header con fondo verde
@@ -477,18 +477,18 @@ export default function CheckoutPage() {
 
                                 return (
                                     <div key={step.id} className="flex items-center">
-                                        <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all ${isActive ? 'bg-[#505A4A] border-[#505A4A] text-white' :
-                                                isCompleted ? 'bg-[#505A4A]/10 border-[#505A4A] text-[#505A4A]' :
+                                        <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all ${isActive ? 'bg-[#2E4A3A] border-[#2E4A3A] text-white' :
+                                                isCompleted ? 'bg-[#2E4A3A]/10 border-[#2E4A3A] text-[#2E4A3A]' :
                                                     'bg-gray-100 border-gray-300 text-gray-500'
                                             }`}>
                                             {isCompleted ? <CheckCircle className="w-5 h-5" /> : <Icon className="w-5 h-5" />}
                                         </div>
-                                        <span className={`ml-2 font-medium hidden sm:block ${isActive ? 'text-[#505A4A]' : 'text-gray-500'
+                                        <span className={`ml-2 font-medium hidden sm:block ${isActive ? 'text-[#2E4A3A]' : 'text-gray-500'
                                             }`}>
                                             {step.label}
                                         </span>
                                         {index < steps.length - 1 && (
-                                            <div className={`w-8 md:w-16 h-0.5 ml-4 ${isCompleted ? 'bg-[#505A4A]' : 'bg-gray-300'
+                                            <div className={`w-8 md:w-16 h-0.5 ml-4 ${isCompleted ? 'bg-[#2E4A3A]' : 'bg-gray-300'
                                                 }`} />
                                         )}
                                     </div>
@@ -513,7 +513,7 @@ export default function CheckoutPage() {
                                     <Card className="shadow-lg border-0">
                                         <CardContent className="p-6">
                                             <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                                                <MapPin className="w-6 h-6 text-[#505A4A]" />
+                                                <MapPin className="w-6 h-6 text-[#2E4A3A]" />
                                                 Información de Envío
                                             </h2>
 
@@ -629,7 +629,7 @@ export default function CheckoutPage() {
                                                 <Button
                                                     onClick={handleSubmitOrder}
                                                     disabled={isProcessing}
-                                                    className="bg-[#505A4A] hover:bg-[#414A3C] text-white min-w-[180px]"
+                                                    className="bg-[#2E4A3A] hover:bg-[#26402F] text-white min-w-[180px]"
                                                 >
                                                     {isProcessing ? (
                                                         <span className="flex items-center gap-2">
@@ -662,9 +662,9 @@ export default function CheckoutPage() {
                                                 initial={{ scale: 0.95 }}
                                                 animate={{ scale: 1 }}
                                                 transition={{ type: "spring", duration: 0.5 }}
-                                                className="w-20 h-20 bg-[#505A4A]/10 rounded-full flex items-center justify-center mx-auto mb-6"
+                                                className="w-20 h-20 bg-[#2E4A3A]/10 rounded-full flex items-center justify-center mx-auto mb-6"
                                             >
-                                                <CheckCircle className="w-10 h-10 text-[#505A4A]" />
+                                                <CheckCircle className="w-10 h-10 text-[#2E4A3A]" />
                                             </m.div>
 
                                             <h2 className="text-3xl font-bold text-gray-900 mb-2">
@@ -676,7 +676,7 @@ export default function CheckoutPage() {
 
                                             <div className="bg-gray-50 rounded-lg p-4 mb-6">
                                                 <p className="text-sm text-gray-500">Número de pedido</p>
-                                                <p className="text-2xl font-bold text-[#505A4A]">{orderNumber}</p>
+                                                <p className="text-2xl font-bold text-[#2E4A3A]">{orderNumber}</p>
                                             </div>
 
                                             <div className="text-left bg-[#FEFCF7] rounded-lg p-4 mb-6">
@@ -694,7 +694,7 @@ export default function CheckoutPage() {
                                                 <div className="mb-6">
                                                     <Button
                                                         onClick={downloadPDF}
-                                                        className="bg-[#505A4A] hover:bg-[#414A3C] text-white gap-2 w-full sm:w-auto"
+                                                        className="bg-[#2E4A3A] hover:bg-[#26402F] text-white gap-2 w-full sm:w-auto"
                                                     >
                                                         <Download className="w-4 h-4" />
                                                         Descargar Factura PDF
@@ -704,7 +704,7 @@ export default function CheckoutPage() {
 
                                             <div className="flex flex-col sm:flex-row gap-4 justify-center">
                                                 <Link href="/products">
-                                                    <Button className="bg-[#505A4A] hover:bg-[#414A3C] text-white w-full sm:w-auto">
+                                                    <Button className="bg-[#2E4A3A] hover:bg-[#26402F] text-white w-full sm:w-auto">
                                                         Seguir comprando
                                                     </Button>
                                                 </Link>
@@ -737,7 +737,7 @@ export default function CheckoutPage() {
                                                         alt={item.product.name}
                                                         className="object-cover"
                                                     />
-                                                    <span className="absolute -top-1 -right-1 bg-[#505A4A] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                                                    <span className="absolute -top-1 -right-1 bg-[#2E4A3A] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
                                                         {item.quantity}
                                                     </span>
                                                 </div>
@@ -763,13 +763,13 @@ export default function CheckoutPage() {
                                         </div>
                                         <div className="flex justify-between text-sm">
                                             <span className="text-gray-700 font-medium">Envío</span>
-                                            <span className={shipping === 0 ? 'text-[#505A4A] font-semibold' : 'text-gray-900 font-semibold'}>
+                                            <span className={shipping === 0 ? 'text-[#2E4A3A] font-semibold' : 'text-gray-900 font-semibold'}>
                                                 {shipping === 0 ? 'Gratis' : `$${shipping.toFixed(2)}`}
                                             </span>
                                         </div>
                                         <div className="flex justify-between text-lg font-bold pt-2 border-t">
                                             <span className="text-gray-900">Total</span>
-                                            <span className="text-[#505A4A]">${total.toFixed(2)}</span>
+                                            <span className="text-[#2E4A3A]">${total.toFixed(2)}</span>
                                         </div>
                                     </div>
 
@@ -783,13 +783,13 @@ export default function CheckoutPage() {
 
                                     {/* Manager Discount Badge */}
                                     {isManager && (
-                                        <div className="mt-4 bg-gradient-to-r from-[#505A4A]/10 to-[#414A3C]/10 rounded-lg p-4 border border-[#505A4A]/20">
+                                        <div className="mt-4 bg-gradient-to-r from-[#2E4A3A]/10 to-[#26402F]/10 rounded-lg p-4 border border-[#2E4A3A]/20">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-full bg-[#505A4A] flex items-center justify-center text-white">
+                                                <div className="w-10 h-10 rounded-full bg-[#2E4A3A] flex items-center justify-center text-white">
                                                     <Percent className="w-5 h-5" />
                                                 </div>
                                                 <div className="flex-1">
-                                                    <p className="text-xs text-[#505A4A] font-medium">Precio de Gestor Aplicado</p>
+                                                    <p className="text-xs text-[#2E4A3A] font-medium">Precio de Gestor Aplicado</p>
                                                     <p className="text-sm font-bold text-gray-900">30% de descuento</p>
                                                     <p className="text-xs text-gray-600">{user?.name} • {user?.managerCode}</p>
                                                 </div>
@@ -799,13 +799,13 @@ export default function CheckoutPage() {
 
                                     {/* Show user info if authenticated */}
                                     {isAuthenticated && user && !isManager && (
-                                        <div className="mt-4 bg-gradient-to-r from-[#505A4A]/10 to-[#414A3C]/10 rounded-lg p-4 border border-[#505A4A]/20">
+                                        <div className="mt-4 bg-gradient-to-r from-[#2E4A3A]/10 to-[#26402F]/10 rounded-lg p-4 border border-[#2E4A3A]/20">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-full bg-[#505A4A] flex items-center justify-center text-white font-bold text-sm">
+                                                <div className="w-10 h-10 rounded-full bg-[#2E4A3A] flex items-center justify-center text-white font-bold text-sm">
                                                     {user.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                                                 </div>
                                                 <div className="flex-1">
-                                                    <p className="text-xs text-[#505A4A] font-medium">Cliente</p>
+                                                    <p className="text-xs text-[#2E4A3A] font-medium">Cliente</p>
                                                     <p className="text-sm font-bold text-gray-900">{user.name}</p>
                                                     <p className="text-xs text-gray-600">{user.email}</p>
                                                 </div>

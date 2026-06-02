@@ -37,7 +37,7 @@ export default function WishlistPage() {
     if (!isLoaded || productsLoading) {
         return (
             <div className={`min-h-screen flex items-center justify-center transition-colors duration-300 ${isDark ? 'bg-[#1a1d19]' : 'bg-gray-50'}`}>
-                <div className={`animate-spin rounded-full h-8 w-8 border-2 border-t-transparent ${isDark ? 'border-[#C4B590]' : 'border-[#505A4A]'}`} />
+                <div className={`animate-spin rounded-full h-8 w-8 border-2 border-t-transparent ${isDark ? 'border-[#C9A96E]' : 'border-[#2E4A3A]'}`} />
             </div>
         );
     }
@@ -56,11 +56,11 @@ export default function WishlistPage() {
                         className="text-center py-16"
                     >
                         <div className="max-w-md mx-auto">
-                            <Heart className={`h-24 w-24 mx-auto mb-6 ${isDark ? 'text-[#C4B590]/40' : 'text-[#505A4A]/40'}`} />
+                            <Heart className={`h-24 w-24 mx-auto mb-6 ${isDark ? 'text-[#C9A96E]/40' : 'text-[#2E4A3A]/40'}`} />
                             <h2 className={`text-3xl font-bold mb-4 ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>Tu lista de favoritos está vacía</h2>
                             <p className={`mb-8 text-lg font-medium ${isDark ? 'text-[#b8b0a2]' : 'text-gray-700'}`}>Explora nuestros productos y guarda tus favoritos aquí.</p>
                             <Link href="/products">
-                                <Button className={`font-bold px-8 py-3 text-lg shadow-lg ${isDark ? 'bg-[#C4B590] hover:bg-[#b3a47e] text-[#1a1d19]' : 'bg-[#505A4A] hover:bg-[#414A3C] text-white'}`}>
+                                <Button className={`font-bold px-8 py-3 text-lg shadow-lg ${isDark ? 'bg-[#C9A96E] hover:bg-[#b3a47e] text-[#1a1d19]' : 'bg-[#2E4A3A] hover:bg-[#26402F] text-white'}`}>
                                     Explorar Productos
                                 </Button>
                             </Link>
@@ -89,7 +89,7 @@ export default function WishlistPage() {
                             <CardContent className="p-6">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-4">
-                                        <Heart className={`h-8 w-8 ${isDark ? 'text-[#C4B590] fill-[#C4B590]' : 'text-[#505A4A] fill-[#505A4A]'}`} />
+                                        <Heart className={`h-8 w-8 ${isDark ? 'text-[#C9A96E] fill-[#C9A96E]' : 'text-[#2E4A3A] fill-[#2E4A3A]'}`} />
                                         <div>
                                             <h1 className={`text-3xl font-bold ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>Mis Favoritos</h1>
                                             <p className={`font-medium ${isDark ? 'text-[#b8b0a2]' : 'text-gray-700'}`}>
@@ -97,7 +97,7 @@ export default function WishlistPage() {
                                             </p>
                                         </div>
                                     </div>
-                                    <Badge variant="secondary" className={`font-bold text-lg px-4 py-2 ${isDark ? 'bg-[#C4B590]/15 text-[#C4B590]' : 'bg-[#505A4A]/10 text-[#505A4A]'}`}>
+                                    <Badge variant="secondary" className={`font-bold text-lg px-4 py-2 ${isDark ? 'bg-[#C9A96E]/15 text-[#C9A96E]' : 'bg-[#2E4A3A]/10 text-[#2E4A3A]'}`}>
                                         {wishlistItems.length} productos
                                     </Badge>
                                 </div>
@@ -124,7 +124,7 @@ export default function WishlistPage() {
                                             {/* Botón eliminar */}
                                             <m.button
                                                 onClick={() => removeFromWishlist(product.id)}
-                                                className={`absolute top-3 right-3 z-10 rounded-full p-2 shadow-md transition-all duration-200 ${isDark ? 'bg-[#1a1d19]/90 hover:bg-[#1a1d19] text-[#b8b0a2] hover:text-[#C4B590]' : 'bg-white/90 hover:bg-white text-gray-600 hover:text-[#505A4A]'}`}
+                                                className={`absolute top-3 right-3 z-10 rounded-full p-2 shadow-md transition-all duration-200 ${isDark ? 'bg-[#1a1d19]/90 hover:bg-[#1a1d19] text-[#b8b0a2] hover:text-[#C9A96E]' : 'bg-white/90 hover:bg-white text-gray-600 hover:text-[#2E4A3A]'}`}
                                                 whileHover={{ scale: 1.1 }}
                                                 whileTap={{ scale: 0.9 }}
                                                 title="Eliminar producto"
@@ -144,7 +144,7 @@ export default function WishlistPage() {
                                             {/* Información del producto */}
                                             <div className="p-6 flex-1 flex flex-col">
                                                 <Link href={`/products/${product.id}`} className="mb-2 block">
-                                                    <h3 className={`text-xl font-bold transition-colors line-clamp-1 ${isDark ? 'text-[#C4B590] hover:text-[#dbcca0]' : 'text-[#505A4A] hover:text-[#414A3C]'}`}>
+                                                    <h3 className={`text-xl font-bold transition-colors line-clamp-1 ${isDark ? 'text-[#C9A96E] hover:text-[#dbcca0]' : 'text-[#2E4A3A] hover:text-[#26402F]'}`}>
                                                         {product.name}
                                                     </h3>
                                                 </Link>
@@ -156,12 +156,12 @@ export default function WishlistPage() {
                                                 <div className="mt-auto">
                                                     {/* Precio */}
                                                     <div className="flex items-center justify-between mb-4">
-                                                        <span className={`text-2xl font-bold ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>${product.price.toFixed(2)}</span>
+                                                        <span className={`text-2xl font-bold ${isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]'}`}>${product.price.toFixed(2)}</span>
                                                         <Badge
                                                             variant="secondary"
                                                             className={`font-semibold ${
                                                                 product.active
-                                                                    ? (isDark ? 'bg-[#C4B590]/15 text-[#C4B590]' : 'bg-[#505A4A]/10 text-[#505A4A]')
+                                                                    ? (isDark ? 'bg-[#C9A96E]/15 text-[#C9A96E]' : 'bg-[#2E4A3A]/10 text-[#2E4A3A]')
                                                                     : (isDark ? 'bg-red-500/20 text-red-300' : 'bg-red-100 text-red-800')
                                                             }`}
                                                         >
@@ -173,7 +173,7 @@ export default function WishlistPage() {
                                                     <div className="flex flex-col gap-2">
                                                         <Button
                                                             onClick={() => addToCart(product)}
-                                                            className={`w-full font-bold ${isDark ? 'bg-[#C4B590] hover:bg-[#b3a47e] text-[#1a1d19]' : 'bg-[#505A4A] hover:bg-[#414A3C] text-white'}`}
+                                                            className={`w-full font-bold ${isDark ? 'bg-[#C9A96E] hover:bg-[#b3a47e] text-[#1a1d19]' : 'bg-[#2E4A3A] hover:bg-[#26402F] text-white'}`}
                                                             disabled={!product.active}
                                                         >
                                                             <ShoppingBag className="h-4 w-4 mr-2" />
@@ -182,7 +182,7 @@ export default function WishlistPage() {
                                                         <Link href={`/products/${product.id}`} className="w-full">
                                                             <Button
                                                                 variant="outline"
-                                                                className={`w-full ${isDark ? 'border-[#C4B590] text-[#C4B590] hover:bg-[#C4B590] hover:text-[#1a1d19]' : 'border-[#505A4A] text-[#505A4A] hover:bg-[#505A4A] hover:text-white'}`}
+                                                                className={`w-full ${isDark ? 'border-[#C9A96E] text-[#C9A96E] hover:bg-[#C9A96E] hover:text-[#1a1d19]' : 'border-[#2E4A3A] text-[#2E4A3A] hover:bg-[#2E4A3A] hover:text-white'}`}
                                                             >
                                                                 <Eye className="h-4 w-4 mr-2" />
                                                                 Ver Detalles
@@ -201,7 +201,7 @@ export default function WishlistPage() {
                     {/* Footer Actions */}
                     <m.div variants={itemVariants} className="mt-12 text-center">
                         <Link href="/products">
-                            <Button variant="outline" className={`font-bold px-8 py-3 text-lg ${isDark ? 'border-[#C4B590] text-[#C4B590] hover:bg-[#C4B590] hover:text-[#1a1d19]' : 'border-[#505A4A] text-[#505A4A] hover:bg-[#505A4A] hover:text-white'}`}>
+                            <Button variant="outline" className={`font-bold px-8 py-3 text-lg ${isDark ? 'border-[#C9A96E] text-[#C9A96E] hover:bg-[#C9A96E] hover:text-[#1a1d19]' : 'border-[#2E4A3A] text-[#2E4A3A] hover:bg-[#2E4A3A] hover:text-white'}`}>
                                 <ArrowLeft className="h-5 w-5 mr-2" />
                                 Seguir Explorando
                             </Button>

@@ -88,8 +88,8 @@ export function PhoneInput({
           gap: 0.5rem;
         }
         .phone-input-wrapper :global(.PhoneInput:focus-within) {
-          outline: 2px solid rgb(80 90 74 / 0.3); /* #505A4A/30 */
-          border-color: rgb(80 90 74); /* #505A4A */
+          outline: 2px solid rgb(80 90 74 / 0.3); /* #2E4A3A/30 */
+          border-color: rgb(80 90 74); /* #2E4A3A */
           outline-offset: -1px;
         }
         :global(.dark) .phone-input-wrapper :global(.PhoneInput) {
@@ -98,8 +98,8 @@ export function PhoneInput({
           color: rgb(255 255 255); /* white */
         }
         :global(.dark) .phone-input-wrapper :global(.PhoneInput:focus-within) {
-          outline-color: rgb(196 181 144 / 0.3); /* #C4B590/30 */
-          border-color: rgb(196 181 144); /* #C4B590 */
+          outline-color: rgb(196 181 144 / 0.3); /* #C9A96E/30 */
+          border-color: rgb(196 181 144); /* #C9A96E */
         }
         .phone-input-wrapper :global(.PhoneInputCountry) {
           display: flex;

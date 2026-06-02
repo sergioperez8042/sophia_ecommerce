@@ -489,7 +489,7 @@ export default function GestoresAdminPage() {
   if (!isLoaded || !isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#505A4A] border-t-transparent" />
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#2E4A3A] border-t-transparent" />
       </div>
     );
   }
@@ -520,7 +520,7 @@ export default function GestoresAdminPage() {
               if (editingId) resetForm();
               setShowForm(!showForm);
             }}
-            className="flex items-center gap-2 bg-[#505A4A] text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-[#414A3C] transition-colors"
+            className="flex items-center gap-2 bg-[#2E4A3A] text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-[#26402F] transition-colors"
           >
             <Plus className="w-4 h-4" />
             Nuevo Gestor
@@ -544,13 +544,13 @@ export default function GestoresAdminPage() {
               <label className="relative cursor-pointer group">
                 <div className={`w-16 h-16 rounded-full flex items-center justify-center overflow-hidden border-2 border-dashed transition-colors ${
                   photoPreview
-                    ? 'border-[#505A4A]/30'
-                    : 'border-gray-300 dark:border-gray-600 group-hover:border-[#505A4A]'
+                    ? 'border-[#2E4A3A]/30'
+                    : 'border-gray-300 dark:border-gray-600 group-hover:border-[#2E4A3A]'
                 }`}>
                   {photoPreview ? (
                     <Image src={photoPreview} alt="Preview" width={64} height={64} className="w-full h-full object-cover" />
                   ) : (
-                    <Camera className="w-5 h-5 text-gray-400 group-hover:text-[#505A4A] transition-colors" />
+                    <Camera className="w-5 h-5 text-gray-400 group-hover:text-[#2E4A3A] transition-colors" />
                   )}
                 </div>
                 {/* Overlay con icono cámara cuando ya hay foto cargada:
@@ -699,7 +699,7 @@ export default function GestoresAdminPage() {
                           type="checkbox"
                           checked={createAccount}
                           onChange={(e) => setCreateAccount(e.target.checked)}
-                          className="rounded border-gray-300 text-[#505A4A] focus:ring-[#505A4A]"
+                          className="rounded border-gray-300 text-[#2E4A3A] focus:ring-[#2E4A3A]"
                         />
                         <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
                           {editingId ? 'Crear cuenta de acceso para este gestor' : 'Crear cuenta de acceso al portal de gestor'}
@@ -731,7 +731,7 @@ export default function GestoresAdminPage() {
                             <button
                               type="button"
                               onClick={generatePassword}
-                              className="text-[#505A4A] hover:underline normal-case tracking-normal"
+                              className="text-[#2E4A3A] hover:underline normal-case tracking-normal"
                             >
                               Generar
                             </button>
@@ -772,7 +772,7 @@ export default function GestoresAdminPage() {
                       key={key}
                       className={`flex items-center gap-2 px-3 py-2.5 rounded-lg border cursor-pointer transition-colors ${
                         permissions.includes(key)
-                          ? 'border-[#505A4A]/30 bg-[#505A4A]/5 dark:border-[#C4B590]/30 dark:bg-[#C4B590]/5'
+                          ? 'border-[#2E4A3A]/30 bg-[#2E4A3A]/5 dark:border-[#C9A96E]/30 dark:bg-[#C9A96E]/5'
                           : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
                       }`}
                     >
@@ -786,11 +786,11 @@ export default function GestoresAdminPage() {
                               : [...prev, key]
                           );
                         }}
-                        className="rounded border-gray-300 text-[#505A4A] focus:ring-[#505A4A]"
+                        className="rounded border-gray-300 text-[#2E4A3A] focus:ring-[#2E4A3A]"
                       />
                       <span className={`text-xs font-medium ${
                         permissions.includes(key)
-                          ? 'text-[#505A4A] dark:text-[#C4B590]'
+                          ? 'text-[#2E4A3A] dark:text-[#C9A96E]'
                           : 'text-gray-600 dark:text-gray-400'
                       }`}>
                         {label}
@@ -802,7 +802,7 @@ export default function GestoresAdminPage() {
                   <button
                     type="button"
                     onClick={() => setPermissions(Object.keys(GESTOR_PERMISSIONS) as GestorPermission[])}
-                    className="text-[10px] text-[#505A4A] dark:text-[#C4B590] hover:underline"
+                    className="text-[10px] text-[#2E4A3A] dark:text-[#C9A96E] hover:underline"
                   >
                     Seleccionar todos
                   </button>
@@ -894,7 +894,7 @@ export default function GestoresAdminPage() {
                                 type="checkbox"
                                 checked={isConsejoSelected(muni, consejo)}
                                 onChange={() => toggleConsejo(muni, consejo)}
-                                className="rounded border-gray-300 text-[#505A4A] focus:ring-[#505A4A]"
+                                className="rounded border-gray-300 text-[#2E4A3A] focus:ring-[#2E4A3A]"
                               />
                               <span className="text-sm text-gray-700 dark:text-gray-300">
                                 {consejo}
@@ -913,7 +913,7 @@ export default function GestoresAdminPage() {
               <button
                 onClick={handleSave}
                 disabled={saving || uploadingPhoto || !name || !whatsapp || provinces.length === 0 || selectedMunicipalities.length === 0}
-                className="flex items-center gap-2 bg-[#505A4A] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#414A3C] transition-colors disabled:opacity-50"
+                className="flex items-center gap-2 bg-[#2E4A3A] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#26402F] transition-colors disabled:opacity-50"
               >
                 {saving || uploadingPhoto ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                 {uploadingPhoto ? 'Subiendo foto...' : saving ? 'Guardando...' : 'Guardar'}
@@ -975,7 +975,7 @@ export default function GestoresAdminPage() {
                         ) : (
                           <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0 ${
                             gestor.active
-                              ? 'bg-[#505A4A] text-white'
+                              ? 'bg-[#2E4A3A] text-white'
                               : 'bg-gray-200 dark:bg-gray-600 text-gray-500 dark:text-gray-400'
                           }`}>
                             {gestor.name.charAt(0)}
@@ -987,7 +987,7 @@ export default function GestoresAdminPage() {
                           </h3>
                           <span className={`text-[10px] font-medium ${
                             gestor.active
-                              ? 'text-[#505A4A] dark:text-[#C4B590]'
+                              ? 'text-[#2E4A3A] dark:text-[#C9A96E]'
                               : 'text-gray-400'
                           }`}>
                             {gestor.active ? 'Activo' : 'Inactivo'}
@@ -997,7 +997,7 @@ export default function GestoresAdminPage() {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleEdit(gestor)}
-                          className="p-1.5 rounded-lg text-gray-400 dark:text-gray-500 hover:text-[#505A4A] hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                          className="p-1.5 rounded-lg text-gray-400 dark:text-gray-500 hover:text-[#2E4A3A] hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                           title="Editar"
                         >
                           <Pencil className="w-4 h-4" />
@@ -1029,7 +1029,7 @@ export default function GestoresAdminPage() {
                     <div className="flex flex-col gap-1 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-1 text-xs text-gray-500 dark:text-gray-400 mb-2 pl-12">
                       <a
                         href={`tel:+${gestor.whatsapp}`}
-                        className="flex items-center gap-1.5 hover:text-[#505A4A] dark:hover:text-[#C4B590] hover:underline transition-colors"
+                        className="flex items-center gap-1.5 hover:text-[#2E4A3A] dark:hover:text-[#C9A96E] hover:underline transition-colors"
                       >
                         <Phone className="w-3.5 h-3.5" />
                         +{gestor.whatsapp}
@@ -1042,7 +1042,7 @@ export default function GestoresAdminPage() {
                       {gestor.email && (
                         <a
                           href={`mailto:${gestor.email}`}
-                          className="flex items-center gap-1.5 hover:text-[#505A4A] dark:hover:text-[#C4B590] hover:underline transition-colors"
+                          className="flex items-center gap-1.5 hover:text-[#2E4A3A] dark:hover:text-[#C9A96E] hover:underline transition-colors"
                         >
                           <Mail className="w-3.5 h-3.5" />
                           {gestor.email}
@@ -1071,7 +1071,7 @@ export default function GestoresAdminPage() {
                       {gestor.municipalities.map((m) => (
                         <span
                           key={m}
-                          className="text-[11px] px-2.5 py-1 rounded-lg bg-[#F5F1E8] text-[#505A4A] dark:bg-[#C4B590]/10 dark:text-[#C4B590]"
+                          className="text-[11px] px-2.5 py-1 rounded-lg bg-[#F5F1E8] text-[#2E4A3A] dark:bg-[#C9A96E]/10 dark:text-[#C9A96E]"
                         >
                           {m}
                         </span>

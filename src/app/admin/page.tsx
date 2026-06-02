@@ -29,7 +29,7 @@ export default function AdminPage() {
   if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#505A4A] border-t-transparent" />
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#2E4A3A] border-t-transparent" />
       </div>
     );
   }
@@ -55,11 +55,11 @@ export default function AdminPage() {
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-          <Link href="/admin/managers" className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 hover:border-[#505A4A]/30 transition-colors group">
+          <Link href="/admin/managers" className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 hover:border-[#2E4A3A]/30 transition-colors group">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Gestores</p>
-                <p className="text-sm font-medium text-[#505A4A] mt-2 flex items-center gap-1 group-hover:gap-2 transition-all">
+                <p className="text-sm font-medium text-[#2E4A3A] mt-2 flex items-center gap-1 group-hover:gap-2 transition-all">
                   Gestionar <ArrowRight className="w-3.5 h-3.5" />
                 </p>
               </div>
@@ -69,11 +69,11 @@ export default function AdminPage() {
             </div>
           </Link>
 
-          <Link href="/admin/products" className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 hover:border-[#505A4A]/30 transition-colors group">
+          <Link href="/admin/products" className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 hover:border-[#2E4A3A]/30 transition-colors group">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Productos</p>
-                <p className="text-sm font-medium text-[#505A4A] mt-2 flex items-center gap-1 group-hover:gap-2 transition-all">
+                <p className="text-sm font-medium text-[#2E4A3A] mt-2 flex items-center gap-1 group-hover:gap-2 transition-all">
                   Ver todos <ArrowRight className="w-3.5 h-3.5" />
                 </p>
               </div>
@@ -83,11 +83,11 @@ export default function AdminPage() {
             </div>
           </Link>
 
-          <Link href="/admin/setup" className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 hover:border-[#505A4A]/30 transition-colors group">
+          <Link href="/admin/setup" className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 hover:border-[#2E4A3A]/30 transition-colors group">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Config</p>
-                <p className="text-sm font-medium text-[#505A4A] mt-2 flex items-center gap-1 group-hover:gap-2 transition-all">
+                <p className="text-sm font-medium text-[#2E4A3A] mt-2 flex items-center gap-1 group-hover:gap-2 transition-all">
                   Setup <ArrowRight className="w-3.5 h-3.5" />
                 </p>
               </div>
@@ -97,11 +97,11 @@ export default function AdminPage() {
             </div>
           </Link>
 
-          <Link href="/admin/statistics" className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 hover:border-[#505A4A]/30 transition-colors group">
+          <Link href="/admin/statistics" className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 hover:border-[#2E4A3A]/30 transition-colors group">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Estadísticas</p>
-                <p className="text-sm font-medium text-[#505A4A] mt-2 flex items-center gap-1 group-hover:gap-2 transition-all">
+                <p className="text-sm font-medium text-[#2E4A3A] mt-2 flex items-center gap-1 group-hover:gap-2 transition-all">
                   Ver datos <ArrowRight className="w-3.5 h-3.5" />
                 </p>
               </div>
@@ -118,12 +118,12 @@ export default function AdminPage() {
             <Link
               key={action.href}
               href={action.href}
-              className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 hover:border-[#505A4A]/30 transition-colors group"
+              className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 hover:border-[#2E4A3A]/30 transition-colors group"
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
                   <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{action.label}</p>
-                  <p className="text-sm font-medium text-[#505A4A] mt-2 flex items-center gap-1 group-hover:gap-2 transition-all">
+                  <p className="text-sm font-medium text-[#2E4A3A] mt-2 flex items-center gap-1 group-hover:gap-2 transition-all">
                     {action.desc} <ArrowRight className="w-3.5 h-3.5 flex-shrink-0" />
                   </p>
                 </div>

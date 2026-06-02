@@ -44,7 +44,7 @@ export default function Pagination({
                             onClick={() => go(p)}
                             className={`w-8 h-8 rounded-lg text-xs font-medium transition-colors ${
                                 p === currentPage
-                                    ? 'bg-[#505A4A] text-white'
+                                    ? 'bg-[#2E4A3A] text-white'
                                     : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
                             }`}
                         >

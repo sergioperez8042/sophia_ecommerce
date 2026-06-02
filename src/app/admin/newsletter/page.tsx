@@ -82,11 +82,11 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
     name: 'Bienvenida',
     subject: 'Bienvenida a Sophia',
     content: `<div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #1a1d19; color: #e8e0d0; padding: 40px;">
-  <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #C4B590; padding-bottom: 20px;">
-    <h1 style="color: #C4B590; font-size: 28px; margin: 0;">Sophia</h1>
-    <p style="color: #C4B590; font-size: 13px; margin: 5px 0 0; letter-spacing: 2px;">COSMETICA BOTANICA</p>
+  <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #C9A96E; padding-bottom: 20px;">
+    <h1 style="color: #C9A96E; font-size: 28px; margin: 0;">Sophia</h1>
+    <p style="color: #C9A96E; font-size: 13px; margin: 5px 0 0; letter-spacing: 2px;">COSMETICA BOTANICA</p>
   </div>
-  <h2 style="color: #C4B590; font-size: 22px; text-align: center;">Bienvenida a nuestra comunidad</h2>
+  <h2 style="color: #C9A96E; font-size: 22px; text-align: center;">Bienvenida a nuestra comunidad</h2>
   <p style="line-height: 1.8; color: #d4cdc0; font-size: 15px;">
     Gracias por unirte a Sophia. Ahora formas parte de una comunidad que valora la belleza natural y el cuidado consciente de la piel.
   </p>
@@ -98,13 +98,13 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
     <li>Novedades y lanzamientos exclusivos</li>
     <li>Ofertas especiales solo para suscriptoras</li>
   </ul>
-  <div style="background: #2a2d25; border: 1px solid #C4B590; border-radius: 12px; padding: 25px; text-align: center; margin: 30px 0;">
-    <p style="margin: 0 0 8px; color: #C4B590; font-size: 14px;">Tu codigo de descuento de bienvenida:</p>
-    <p style="margin: 0; font-size: 32px; font-weight: bold; color: #C4B590; letter-spacing: 4px;">BIENVENIDA10</p>
+  <div style="background: #2a2d25; border: 1px solid #C9A96E; border-radius: 12px; padding: 25px; text-align: center; margin: 30px 0;">
+    <p style="margin: 0 0 8px; color: #C9A96E; font-size: 14px;">Tu codigo de descuento de bienvenida:</p>
+    <p style="margin: 0; font-size: 32px; font-weight: bold; color: #C9A96E; letter-spacing: 4px;">BIENVENIDA10</p>
     <p style="margin: 10px 0 0; color: #a09880; font-size: 13px;">10% de descuento en tu primer pedido</p>
   </div>
   <div style="text-align: center; margin-top: 30px;">
-    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C4B590; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Explorar productos</a>
+    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C9A96E; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Explorar productos</a>
   </div>
   <p style="color: #a09880; font-size: 12px; text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
     Sophia
@@ -117,30 +117,30 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
     name: 'Novedades de temporada',
     subject: 'Novedades de temporada - Sophia',
     content: `<div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #1a1d19; color: #e8e0d0; padding: 40px;">
-  <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #C4B590; padding-bottom: 20px;">
-    <h1 style="color: #C4B590; font-size: 28px; margin: 0;">Sophia</h1>
-    <p style="color: #C4B590; font-size: 13px; margin: 5px 0 0; letter-spacing: 2px;">COSMETICA BOTANICA</p>
+  <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #C9A96E; padding-bottom: 20px;">
+    <h1 style="color: #C9A96E; font-size: 28px; margin: 0;">Sophia</h1>
+    <p style="color: #C9A96E; font-size: 13px; margin: 5px 0 0; letter-spacing: 2px;">COSMETICA BOTANICA</p>
   </div>
-  <h2 style="color: #C4B590; font-size: 22px; text-align: center;">Novedades de temporada</h2>
+  <h2 style="color: #C9A96E; font-size: 22px; text-align: center;">Novedades de temporada</h2>
   <p style="line-height: 1.8; color: #d4cdc0; font-size: 15px;">
     Descubre los nuevos productos que hemos preparado para ti esta temporada. Formulaciones naturales inspiradas en la botánica para el cuidado de tu piel.
   </p>
   <div style="background: #2a2d25; border-radius: 12px; padding: 25px; margin: 25px 0;">
-    <h3 style="color: #C4B590; font-size: 18px; margin: 0 0 15px;">Producto destacado</h3>
+    <h3 style="color: #C9A96E; font-size: 18px; margin: 0 0 15px;">Producto destacado</h3>
     <p style="color: #d4cdc0; font-size: 15px; line-height: 1.7; margin: 0;">
       [Nombre del producto] - [Descripcion breve del producto y sus beneficios principales para la piel]
     </p>
-    <p style="color: #C4B590; font-size: 18px; font-weight: bold; margin: 15px 0 0;">$XX.XX</p>
+    <p style="color: #C9A96E; font-size: 18px; font-weight: bold; margin: 15px 0 0;">$XX.XX</p>
   </div>
   <div style="background: #2a2d25; border-radius: 12px; padding: 25px; margin: 25px 0;">
-    <h3 style="color: #C4B590; font-size: 18px; margin: 0 0 15px;">Tambien te puede interesar</h3>
+    <h3 style="color: #C9A96E; font-size: 18px; margin: 0 0 15px;">Tambien te puede interesar</h3>
     <p style="color: #d4cdc0; font-size: 15px; line-height: 1.7; margin: 0;">
       [Nombre del producto] - [Descripcion breve]
     </p>
-    <p style="color: #C4B590; font-size: 18px; font-weight: bold; margin: 15px 0 0;">$XX.XX</p>
+    <p style="color: #C9A96E; font-size: 18px; font-weight: bold; margin: 15px 0 0;">$XX.XX</p>
   </div>
   <div style="text-align: center; margin-top: 30px;">
-    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C4B590; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Ver todos los productos</a>
+    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C9A96E; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Ver todos los productos</a>
   </div>
   <p style="color: #a09880; font-size: 12px; text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
     Sophia
@@ -153,25 +153,25 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
     name: 'Promocion especial',
     subject: 'Oferta exclusiva para ti - Sophia',
     content: `<div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #1a1d19; color: #e8e0d0; padding: 40px;">
-  <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #C4B590; padding-bottom: 20px;">
-    <h1 style="color: #C4B590; font-size: 28px; margin: 0;">Sophia</h1>
-    <p style="color: #C4B590; font-size: 13px; margin: 5px 0 0; letter-spacing: 2px;">COSMETICA BOTANICA</p>
+  <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #C9A96E; padding-bottom: 20px;">
+    <h1 style="color: #C9A96E; font-size: 28px; margin: 0;">Sophia</h1>
+    <p style="color: #C9A96E; font-size: 13px; margin: 5px 0 0; letter-spacing: 2px;">COSMETICA BOTANICA</p>
   </div>
   <div style="text-align: center; margin: 30px 0;">
-    <p style="color: #C4B590; font-size: 14px; letter-spacing: 3px; margin: 0;">OFERTA EXCLUSIVA</p>
-    <h2 style="color: #C4B590; font-size: 36px; margin: 10px 0;">XX% DESCUENTO</h2>
+    <p style="color: #C9A96E; font-size: 14px; letter-spacing: 3px; margin: 0;">OFERTA EXCLUSIVA</p>
+    <h2 style="color: #C9A96E; font-size: 36px; margin: 10px 0;">XX% DESCUENTO</h2>
     <p style="color: #d4cdc0; font-size: 16px; margin: 0;">En toda nuestra línea de [categoría]</p>
   </div>
   <p style="line-height: 1.8; color: #d4cdc0; font-size: 15px; text-align: center;">
     Solo por tiempo limitado. Aprovecha esta oportunidad para probar nuestros productos mas vendidos con un descuento especial.
   </p>
-  <div style="background: #2a2d25; border: 2px solid #C4B590; border-radius: 12px; padding: 25px; text-align: center; margin: 30px 0;">
-    <p style="margin: 0 0 8px; color: #C4B590; font-size: 14px;">Usa el codigo:</p>
-    <p style="margin: 0; font-size: 32px; font-weight: bold; color: #C4B590; letter-spacing: 4px;">CODIGOXX</p>
+  <div style="background: #2a2d25; border: 2px solid #C9A96E; border-radius: 12px; padding: 25px; text-align: center; margin: 30px 0;">
+    <p style="margin: 0 0 8px; color: #C9A96E; font-size: 14px;">Usa el codigo:</p>
+    <p style="margin: 0; font-size: 32px; font-weight: bold; color: #C9A96E; letter-spacing: 4px;">CODIGOXX</p>
     <p style="margin: 10px 0 0; color: #a09880; font-size: 13px;">Valido hasta [fecha]</p>
   </div>
   <div style="text-align: center; margin-top: 30px;">
-    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C4B590; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Comprar ahora</a>
+    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C9A96E; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Comprar ahora</a>
   </div>
   <p style="color: #a09880; font-size: 12px; text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
     Sophia
@@ -184,34 +184,34 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
     name: 'Tips de cuidado',
     subject: 'Consejos para el cuidado de tu piel - Sophia',
     content: `<div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #1a1d19; color: #e8e0d0; padding: 40px;">
-  <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #C4B590; padding-bottom: 20px;">
-    <h1 style="color: #C4B590; font-size: 28px; margin: 0;">Sophia</h1>
-    <p style="color: #C4B590; font-size: 13px; margin: 5px 0 0; letter-spacing: 2px;">COSMETICA BOTANICA</p>
+  <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #C9A96E; padding-bottom: 20px;">
+    <h1 style="color: #C9A96E; font-size: 28px; margin: 0;">Sophia</h1>
+    <p style="color: #C9A96E; font-size: 13px; margin: 5px 0 0; letter-spacing: 2px;">COSMETICA BOTANICA</p>
   </div>
-  <h2 style="color: #C4B590; font-size: 22px; text-align: center;">Consejos de cuidado natural</h2>
+  <h2 style="color: #C9A96E; font-size: 22px; text-align: center;">Consejos de cuidado natural</h2>
   <p style="line-height: 1.8; color: #d4cdc0; font-size: 15px;">
     Tu piel merece lo mejor. Aqui te compartimos algunos consejos para mantenerla radiante con ingredientes naturales.
   </p>
-  <div style="background: #2a2d25; border-left: 3px solid #C4B590; padding: 20px 25px; margin: 25px 0; border-radius: 0 12px 12px 0;">
-    <h3 style="color: #C4B590; font-size: 16px; margin: 0 0 10px;">1. [Titulo del consejo]</h3>
+  <div style="background: #2a2d25; border-left: 3px solid #C9A96E; padding: 20px 25px; margin: 25px 0; border-radius: 0 12px 12px 0;">
+    <h3 style="color: #C9A96E; font-size: 16px; margin: 0 0 10px;">1. [Titulo del consejo]</h3>
     <p style="color: #d4cdc0; font-size: 14px; line-height: 1.7; margin: 0;">
       [Descripcion del consejo con detalles practicos sobre como aplicarlo en la rutina diaria]
     </p>
   </div>
-  <div style="background: #2a2d25; border-left: 3px solid #C4B590; padding: 20px 25px; margin: 25px 0; border-radius: 0 12px 12px 0;">
-    <h3 style="color: #C4B590; font-size: 16px; margin: 0 0 10px;">2. [Titulo del consejo]</h3>
+  <div style="background: #2a2d25; border-left: 3px solid #C9A96E; padding: 20px 25px; margin: 25px 0; border-radius: 0 12px 12px 0;">
+    <h3 style="color: #C9A96E; font-size: 16px; margin: 0 0 10px;">2. [Titulo del consejo]</h3>
     <p style="color: #d4cdc0; font-size: 14px; line-height: 1.7; margin: 0;">
       [Descripcion del consejo con detalles practicos sobre como aplicarlo en la rutina diaria]
     </p>
   </div>
-  <div style="background: #2a2d25; border-left: 3px solid #C4B590; padding: 20px 25px; margin: 25px 0; border-radius: 0 12px 12px 0;">
-    <h3 style="color: #C4B590; font-size: 16px; margin: 0 0 10px;">3. [Titulo del consejo]</h3>
+  <div style="background: #2a2d25; border-left: 3px solid #C9A96E; padding: 20px 25px; margin: 25px 0; border-radius: 0 12px 12px 0;">
+    <h3 style="color: #C9A96E; font-size: 16px; margin: 0 0 10px;">3. [Titulo del consejo]</h3>
     <p style="color: #d4cdc0; font-size: 14px; line-height: 1.7; margin: 0;">
       [Descripcion del consejo con detalles practicos sobre como aplicarlo en la rutina diaria]
     </p>
   </div>
   <div style="text-align: center; margin-top: 30px;">
-    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C4B590; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Descubrir productos</a>
+    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C9A96E; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Descubrir productos</a>
   </div>
   <p style="color: #a09880; font-size: 12px; text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
     Sophia
@@ -224,24 +224,24 @@ const DEFAULT_TEMPLATES: NewsletterTemplate[] = [
     name: 'Producto de vuelta',
     subject: 'De vuelta en stock - Sophia',
     content: `<div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #1a1d19; color: #e8e0d0; padding: 40px;">
-  <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #C4B590; padding-bottom: 20px;">
-    <h1 style="color: #C4B590; font-size: 28px; margin: 0;">Sophia</h1>
-    <p style="color: #C4B590; font-size: 13px; margin: 5px 0 0; letter-spacing: 2px;">COSMETICA BOTANICA</p>
+  <div style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #C9A96E; padding-bottom: 20px;">
+    <h1 style="color: #C9A96E; font-size: 28px; margin: 0;">Sophia</h1>
+    <p style="color: #C9A96E; font-size: 13px; margin: 5px 0 0; letter-spacing: 2px;">COSMETICA BOTANICA</p>
   </div>
-  <h2 style="color: #C4B590; font-size: 22px; text-align: center;">De vuelta en stock</h2>
+  <h2 style="color: #C9A96E; font-size: 22px; text-align: center;">De vuelta en stock</h2>
   <p style="line-height: 1.8; color: #d4cdc0; font-size: 15px; text-align: center;">
     El producto que tanto esperabas ya esta disponible otra vez. No dejes pasar esta oportunidad, las unidades son limitadas.
   </p>
-  <div style="background: #2a2d25; border: 1px solid #C4B590; border-radius: 12px; padding: 30px; text-align: center; margin: 30px 0;">
+  <div style="background: #2a2d25; border: 1px solid #C9A96E; border-radius: 12px; padding: 30px; text-align: center; margin: 30px 0;">
     <p style="color: #a09880; font-size: 13px; margin: 0 0 5px;">DISPONIBLE AHORA</p>
-    <h3 style="color: #C4B590; font-size: 22px; margin: 0 0 10px;">[Nombre del producto]</h3>
+    <h3 style="color: #C9A96E; font-size: 22px; margin: 0 0 10px;">[Nombre del producto]</h3>
     <p style="color: #d4cdc0; font-size: 14px; line-height: 1.7; margin: 0 0 15px;">
       [Descripcion del producto y por que es tan popular entre nuestras clientas]
     </p>
-    <p style="color: #C4B590; font-size: 22px; font-weight: bold; margin: 0;">$XX.XX</p>
+    <p style="color: #C9A96E; font-size: 22px; font-weight: bold; margin: 0;">$XX.XX</p>
   </div>
   <div style="text-align: center; margin-top: 30px;">
-    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C4B590; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Comprar antes de que se agote</a>
+    <a href="https://sophia-ecommerce.vercel.app" style="display: inline-block; background: #C9A96E; color: #1a1d19; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 15px;">Comprar antes de que se agote</a>
   </div>
   <p style="color: #a09880; font-size: 12px; text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;">
     Sophia
@@ -281,7 +281,7 @@ const FONT_SIZES = [
 
 const PRESET_COLORS = [
   '#000000', '#333333', '#666666', '#999999', '#ffffff',
-  '#C4B590', '#1a1d19', '#2a2d25', '#d4cdc0', '#a09880',
+  '#C9A96E', '#1a1d19', '#2a2d25', '#d4cdc0', '#a09880',
   '#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#3498db',
   '#9b59b6', '#1abc9c', '#e91e63', '#795548', '#607d8b',
 ];
@@ -488,12 +488,12 @@ function VisualEditor({ content, onChange, getIdToken, bgColor, onBgColorChange 
 
   const btnBase = "p-1.5 rounded transition-colors";
   const btnInactive = "hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400";
-  const btnActive = "bg-[#505A4A] text-white dark:bg-[#C4B590] dark:text-gray-900";
+  const btnActive = "bg-[#2E4A3A] text-white dark:bg-[#C9A96E] dark:text-gray-900";
   const toolbarBtn = (active: boolean) => `${btnBase} ${active ? btnActive : btnInactive}`;
   const divider = <div className="w-px h-5 bg-gray-200 dark:bg-gray-700 mx-1" />;
 
   return (
-    <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden focus-within:border-[#505A4A]">
+    <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden focus-within:border-[#2E4A3A]">
       {/* Toolbar Row 1: Text formatting */}
       <div className="flex items-center gap-0.5 px-2 py-1.5 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex-wrap" onMouseDown={(e) => { if ((e.target as HTMLElement).tagName !== 'INPUT') e.preventDefault(); }}>
         {/* Undo / Redo */}
@@ -1042,7 +1042,7 @@ export default function NewsletterAdminPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
           <Link
             href="/admin"
-            className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-[#505A4A] transition-colors mb-6"
+            className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-[#2E4A3A] transition-colors mb-6"
           >
             <ArrowLeft className="w-4 h-4" />
             Volver al panel
@@ -1065,7 +1065,7 @@ export default function NewsletterAdminPage() {
                 onClick={() => setActiveTab(tab.key)}
                 className={`flex items-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
                   activeTab === tab.key
-                    ? 'bg-[#505A4A] text-white shadow-sm'
+                    ? 'bg-[#2E4A3A] text-white shadow-sm'
                     : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
                 }`}
               >
@@ -1122,12 +1122,12 @@ export default function NewsletterAdminPage() {
                     placeholder="Buscar por email o nombre..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#505A4A] text-gray-900 dark:text-gray-100 dark:bg-gray-800 dark:border-gray-700 placeholder-gray-400 dark:placeholder-gray-500"
+                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2E4A3A] text-gray-900 dark:text-gray-100 dark:bg-gray-800 dark:border-gray-700 placeholder-gray-400 dark:placeholder-gray-500"
                   />
                 </div>
                 <button
                   onClick={() => setShowAddForm(!showAddForm)}
-                  className="flex items-center gap-2 bg-[#505A4A] hover:bg-[#414A3C] text-white px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                  className="flex items-center gap-2 bg-[#2E4A3A] hover:bg-[#26402F] text-white px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
                 >
                   {showAddForm ? <X className="w-4 h-4" /> : <UserPlus className="w-4 h-4" />}
                   {showAddForm ? 'Cancelar' : 'Añadir'}
@@ -1142,19 +1142,19 @@ export default function NewsletterAdminPage() {
                     placeholder="Email *"
                     value={newEmail}
                     onChange={(e) => setNewEmail(e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#505A4A] text-gray-900 dark:text-gray-100 dark:bg-gray-800 dark:border-gray-700 placeholder-gray-400 dark:placeholder-gray-500"
+                    className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2E4A3A] text-gray-900 dark:text-gray-100 dark:bg-gray-800 dark:border-gray-700 placeholder-gray-400 dark:placeholder-gray-500"
                   />
                   <input
                     type="text"
                     placeholder="Nombre (opcional)"
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#505A4A] text-gray-900 dark:text-gray-100 dark:bg-gray-800 dark:border-gray-700 placeholder-gray-400 dark:placeholder-gray-500"
+                    className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2E4A3A] text-gray-900 dark:text-gray-100 dark:bg-gray-800 dark:border-gray-700 placeholder-gray-400 dark:placeholder-gray-500"
                   />
                   <button
                     onClick={handleAddSubscriber}
                     disabled={addingSubscriber || !newEmail.trim()}
-                    className="flex items-center gap-2 bg-[#505A4A] hover:bg-[#414A3C] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+                    className="flex items-center gap-2 bg-[#2E4A3A] hover:bg-[#26402F] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
                   >
                     {addingSubscriber ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
                     Guardar
@@ -1182,7 +1182,7 @@ export default function NewsletterAdminPage() {
                       <div key={sub.id} className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800">
                         {/* Avatar */}
                         <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-medium flex-shrink-0 ${
-                          sub.active ? 'bg-[#505A4A] text-white' : 'bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400'
+                          sub.active ? 'bg-[#2E4A3A] text-white' : 'bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400'
                         }`}>
                           {(sub.name || sub.email)[0].toUpperCase()}
                         </div>
@@ -1262,7 +1262,7 @@ export default function NewsletterAdminPage() {
                   </h4>
                   <button
                     onClick={() => setShowSaveTemplate(!showSaveTemplate)}
-                    className="flex items-center gap-1.5 text-xs text-[#505A4A] hover:text-[#414A3C] dark:text-[#8B9A7B] dark:hover:text-[#A0B090] font-medium transition-colors"
+                    className="flex items-center gap-1.5 text-xs text-[#2E4A3A] hover:text-[#26402F] dark:text-[#8B9A7B] dark:hover:text-[#A0B090] font-medium transition-colors"
                   >
                     <Save className="w-3.5 h-3.5" />
                     Guardar como plantilla
@@ -1277,12 +1277,12 @@ export default function NewsletterAdminPage() {
                       value={newTemplateName}
                       onChange={(e) => setNewTemplateName(e.target.value)}
                       placeholder="Nombre de la plantilla..."
-                      className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#505A4A] text-gray-900 dark:text-gray-100 dark:bg-gray-800 dark:border-gray-700 placeholder-gray-400 dark:placeholder-gray-500"
+                      className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2E4A3A] text-gray-900 dark:text-gray-100 dark:bg-gray-800 dark:border-gray-700 placeholder-gray-400 dark:placeholder-gray-500"
                       onKeyDown={(e) => e.key === 'Enter' && handleSaveTemplate()}
                     />
                     <button
                       onClick={handleSaveTemplate}
-                      className="flex items-center gap-1.5 bg-[#505A4A] hover:bg-[#414A3C] text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                      className="flex items-center gap-1.5 bg-[#2E4A3A] hover:bg-[#26402F] text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
                     >
                       <Save className="w-3.5 h-3.5" />
                       Guardar
@@ -1300,7 +1300,7 @@ export default function NewsletterAdminPage() {
                 <div className="relative">
                   <button
                     onClick={() => setShowTemplateDropdown(!showTemplateDropdown)}
-                    className="w-full flex items-center justify-between px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-gray-100 dark:bg-gray-800 hover:border-[#505A4A] transition-colors"
+                    className="w-full flex items-center justify-between px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-gray-100 dark:bg-gray-800 hover:border-[#2E4A3A] transition-colors"
                   >
                     <span className={templates.length === 0 ? 'text-gray-400 dark:text-gray-500' : ''}>
                       {selectedTemplateId
@@ -1356,7 +1356,7 @@ export default function NewsletterAdminPage() {
                       value={subject}
                       onChange={(e) => setSubject(e.target.value)}
                       placeholder="Ej: Novedades de primavera"
-                      className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#505A4A] text-gray-900 dark:text-gray-100 dark:bg-gray-800 dark:border-gray-700 placeholder-gray-400 dark:placeholder-gray-500"
+                      className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2E4A3A] text-gray-900 dark:text-gray-100 dark:bg-gray-800 dark:border-gray-700 placeholder-gray-400 dark:placeholder-gray-500"
                     />
                   </div>
 
@@ -1369,7 +1369,7 @@ export default function NewsletterAdminPage() {
                         type="button"
                         onClick={() => setEditorMode('visual')}
                         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                          editorMode === 'visual' ? 'bg-[#505A4A] text-white' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                          editorMode === 'visual' ? 'bg-[#2E4A3A] text-white' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
                         }`}
                       >
                         <Type className="w-3.5 h-3.5" />
@@ -1379,7 +1379,7 @@ export default function NewsletterAdminPage() {
                         type="button"
                         onClick={() => setEditorMode('html')}
                         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                          editorMode === 'html' ? 'bg-[#505A4A] text-white' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                          editorMode === 'html' ? 'bg-[#2E4A3A] text-white' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
                         }`}
                       >
                         <Code className="w-3.5 h-3.5" />
@@ -1389,7 +1389,7 @@ export default function NewsletterAdminPage() {
                         type="button"
                         onClick={() => setEditorMode('preview')}
                         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                          editorMode === 'preview' ? 'bg-[#505A4A] text-white' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                          editorMode === 'preview' ? 'bg-[#2E4A3A] text-white' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
                         }`}
                       >
                         <Eye className="w-3.5 h-3.5" />
@@ -1409,7 +1409,7 @@ export default function NewsletterAdminPage() {
                         onChange={(e) => setContent(e.target.value)}
                         placeholder={'<h1>Hola!</h1>\n<p>Tenemos novedades...</p>'}
                         rows={12}
-                        className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#505A4A] font-mono text-gray-900 dark:text-gray-100 dark:bg-gray-800 dark:border-gray-700 placeholder-gray-400 dark:placeholder-gray-500"
+                        className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2E4A3A] font-mono text-gray-900 dark:text-gray-100 dark:bg-gray-800 dark:border-gray-700 placeholder-gray-400 dark:placeholder-gray-500"
                       />
                     )}
 
@@ -1443,10 +1443,10 @@ export default function NewsletterAdminPage() {
                           name="recipientMode"
                           checked={recipientMode === 'all'}
                           onChange={() => setRecipientMode('all')}
-                          className="w-4 h-4 text-[#505A4A] border-gray-300 dark:border-gray-600 focus:ring-[#505A4A]"
+                          className="w-4 h-4 text-[#2E4A3A] border-gray-300 dark:border-gray-600 focus:ring-[#2E4A3A]"
                         />
                         <span className="text-sm text-gray-700 dark:text-gray-300">
-                          Todos los activos (<span className="font-semibold text-[#505A4A]">{activeCount}</span>)
+                          Todos los activos (<span className="font-semibold text-[#2E4A3A]">{activeCount}</span>)
                         </span>
                       </label>
 
@@ -1456,12 +1456,12 @@ export default function NewsletterAdminPage() {
                           name="recipientMode"
                           checked={recipientMode === 'select'}
                           onChange={() => setRecipientMode('select')}
-                          className="w-4 h-4 text-[#505A4A] border-gray-300 dark:border-gray-600 focus:ring-[#505A4A]"
+                          className="w-4 h-4 text-[#2E4A3A] border-gray-300 dark:border-gray-600 focus:ring-[#2E4A3A]"
                         />
                         <span className="text-sm text-gray-700 dark:text-gray-300">
                           Seleccionar destinatarios
                           {recipientMode === 'select' && selectedEmails.size > 0 && (
-                            <span className="ml-1.5 text-xs bg-[#505A4A] text-white px-1.5 py-0.5 rounded-full">{selectedEmails.size}</span>
+                            <span className="ml-1.5 text-xs bg-[#2E4A3A] text-white px-1.5 py-0.5 rounded-full">{selectedEmails.size}</span>
                           )}
                         </span>
                       </label>
@@ -1477,13 +1477,13 @@ export default function NewsletterAdminPage() {
                                 placeholder="Buscar suscriptor..."
                                 value={recipientSearch}
                                 onChange={(e) => setRecipientSearch(e.target.value)}
-                                className="w-full pl-9 pr-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#505A4A] text-gray-900 dark:text-gray-100 dark:bg-gray-800 dark:border-gray-700 placeholder-gray-400 dark:placeholder-gray-500"
+                                className="w-full pl-9 pr-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2E4A3A] text-gray-900 dark:text-gray-100 dark:bg-gray-800 dark:border-gray-700 placeholder-gray-400 dark:placeholder-gray-500"
                               />
                             </div>
                             <div className="flex gap-1">
                               <button
                                 onClick={handleSelectAllVisible}
-                                className="text-xs text-[#505A4A] dark:text-[#8B9A7B] hover:bg-gray-100 dark:hover:bg-gray-700 px-2.5 py-2 rounded-lg transition-colors whitespace-nowrap"
+                                className="text-xs text-[#2E4A3A] dark:text-[#8B9A7B] hover:bg-gray-100 dark:hover:bg-gray-700 px-2.5 py-2 rounded-lg transition-colors whitespace-nowrap"
                               >
                                 Seleccionar todos
                               </button>
@@ -1515,7 +1515,7 @@ export default function NewsletterAdminPage() {
                                 >
                                   <div className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 transition-colors ${
                                     selectedEmails.has(sub.email)
-                                      ? 'bg-[#505A4A] border-[#505A4A]'
+                                      ? 'bg-[#2E4A3A] border-[#2E4A3A]'
                                       : 'border-gray-300 dark:border-gray-600'
                                   }`}>
                                     {selectedEmails.has(sub.email) && <Check className="w-3 h-3 text-white" />}
@@ -1537,7 +1537,7 @@ export default function NewsletterAdminPage() {
 
                           {selectedEmails.size > 0 && (
                             <p className="text-xs text-gray-500 dark:text-gray-400">
-                              <span className="font-semibold text-[#505A4A]">{selectedEmails.size}</span> suscriptor{selectedEmails.size !== 1 ? 'es' : ''} seleccionado{selectedEmails.size !== 1 ? 's' : ''}
+                              <span className="font-semibold text-[#2E4A3A]">{selectedEmails.size}</span> suscriptor{selectedEmails.size !== 1 ? 'es' : ''} seleccionado{selectedEmails.size !== 1 ? 's' : ''}
                             </p>
                           )}
                         </div>
@@ -1548,7 +1548,7 @@ export default function NewsletterAdminPage() {
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
                     <p className="text-sm text-gray-500 dark:text-gray-400">
                       Se enviará a{' '}
-                      <span className="font-semibold text-[#505A4A]">{sendRecipientCount}</span>{' '}
+                      <span className="font-semibold text-[#2E4A3A]">{sendRecipientCount}</span>{' '}
                       {recipientMode === 'all' ? 'suscriptores activos' : `suscriptor${sendRecipientCount !== 1 ? 'es' : ''} seleccionado${sendRecipientCount !== 1 ? 's' : ''}`}
                     </p>
 
@@ -1556,7 +1556,7 @@ export default function NewsletterAdminPage() {
                       <button
                         onClick={() => setShowConfirmSend(true)}
                         disabled={isSending || !subject.trim() || !content.trim() || sendRecipientCount === 0}
-                        className="flex items-center gap-2 bg-[#505A4A] hover:bg-[#414A3C] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+                        className="flex items-center gap-2 bg-[#2E4A3A] hover:bg-[#26402F] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
                       >
                         {isSending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                         Enviar newsletter
@@ -1584,7 +1584,7 @@ export default function NewsletterAdminPage() {
                     </button>
                     <button
                       onClick={handleSendAll}
-                      className="text-sm bg-[#505A4A] text-white px-3 py-1.5 rounded-lg hover:bg-[#414A3C]"
+                      className="text-sm bg-[#2E4A3A] text-white px-3 py-1.5 rounded-lg hover:bg-[#26402F]"
                     >
                       Sí, enviar
                     </button>

@@ -107,7 +107,7 @@ export default function CountrySelect({
           if (!isOpen) onFocus?.();
         }}
         disabled={disabled || readOnly}
-        className="flex items-center gap-1 px-1 py-0.5 rounded hover:bg-gray-100 dark:hover:bg-gray-600/50 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="flex items-center gap-1 px-1 py-0.5 rounded hover:bg-gray-100 dark:hover:bg-gray-600/50 focus:outline-none focus:ring-2 focus:ring-[#2E4A3A]/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         title={current?.label || 'Cambiar país'}
       >
         {IconComponent && (
@@ -129,7 +129,7 @@ export default function CountrySelect({
                 placeholder="Buscar país..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-8 pr-3 py-2 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-[#505A4A]/30 focus:border-[#505A4A]"
+                className="w-full pl-8 pr-3 py-2 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-[#2E4A3A]/30 focus:border-[#2E4A3A]"
               />
             </div>
           </div>
@@ -148,7 +148,7 @@ export default function CountrySelect({
                     onClick={() => select(opt.value)}
                     className={`w-full text-left px-3 py-2 text-sm flex items-center gap-2.5 transition-colors ${
                       isActive
-                        ? 'bg-[#505A4A]/8 text-[#505A4A] dark:text-[#C4B590] font-medium'
+                        ? 'bg-[#2E4A3A]/8 text-[#2E4A3A] dark:text-[#C9A96E] font-medium'
                         : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                     }`}
                   >

@@ -111,11 +111,11 @@ function ToastItem({ toast, onClose }: { toast: Toast; onClose: () => void }) {
   const config = {
     success: {
       icon: CheckCircle,
-      bgColor: 'bg-[#505A4A]/10',
-      borderColor: 'border-[#505A4A]/30',
-      iconColor: 'text-[#505A4A]',
-      titleColor: 'text-[#505A4A]',
-      messageColor: 'text-[#505A4A]/80',
+      bgColor: 'bg-[#2E4A3A]/10',
+      borderColor: 'border-[#2E4A3A]/30',
+      iconColor: 'text-[#2E4A3A]',
+      titleColor: 'text-[#2E4A3A]',
+      messageColor: 'text-[#2E4A3A]/80',
     },
     error: {
       icon: XCircle,

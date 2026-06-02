@@ -70,28 +70,28 @@ export default function AuthPage() {
           </div>
 
           <div className="bg-white rounded-2xl shadow-sm border border-[#e8e5df]/60 p-7 text-center">
-            <div className="w-14 h-14 bg-[#505A4A]/8 rounded-full flex items-center justify-center mx-auto mb-4">
-              <User className="w-7 h-7 text-[#505A4A]" />
+            <div className="w-14 h-14 bg-[#2E4A3A]/8 rounded-full flex items-center justify-center mx-auto mb-4">
+              <User className="w-7 h-7 text-[#2E4A3A]" />
             </div>
             <h2 className="text-lg font-semibold text-gray-800 mb-1">Ya tienes sesión activa</h2>
             <p className="text-sm text-gray-500 mb-1">
               Conectado como <span className="font-medium text-gray-700">{user.name}</span>
             </p>
-            <p className="text-xs text-[#505A4A]/70 mb-6">
+            <p className="text-xs text-[#2E4A3A]/70 mb-6">
               {getRoleName()} &middot; {user.email}
             </p>
 
             <div className="space-y-3">
               <button
                 onClick={() => router.push(getDashboardPath())}
-                className="w-full h-12 bg-[#505A4A] hover:bg-[#434d3e] text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+                className="w-full h-12 bg-[#2E4A3A] hover:bg-[#26402F] text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
               >
                 <LayoutDashboard className="w-[18px] h-[18px]" />
                 Ir al panel
               </button>
               <button
                 onClick={async () => { await logout(); }}
-                className="w-full h-12 border border-[#e8e5df] hover:border-[#505A4A]/40 text-gray-600 hover:text-gray-800 text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+                className="w-full h-12 border border-[#e8e5df] hover:border-[#2E4A3A]/40 text-gray-600 hover:text-gray-800 text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
               >
                 <LogOut className="w-[18px] h-[18px]" />
                 Cerrar sesión
@@ -159,8 +159,8 @@ export default function AuthPage() {
   };
 
   const inputClass = (hasError?: boolean) =>
-    `w-full h-12 pl-11 pr-4 bg-[#f8f7f4] border ${hasError ? 'border-red-400' : 'border-[#e8e5df]'} rounded-lg text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#505A4A] focus:ring-1 focus:ring-[#505A4A]/20 transition-colors`;
-  const iconClass = "absolute left-3.5 top-1/2 -translate-y-1/2 w-[18px] h-[18px] text-[#505A4A]/40";
+    `w-full h-12 pl-11 pr-4 bg-[#f8f7f4] border ${hasError ? 'border-red-400' : 'border-[#e8e5df]'} rounded-lg text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#2E4A3A] focus:ring-1 focus:ring-[#2E4A3A]/20 transition-colors`;
+  const iconClass = "absolute left-3.5 top-1/2 -translate-y-1/2 w-[18px] h-[18px] text-[#2E4A3A]/40";
 
   return (
     <div className="min-h-screen bg-[#FEFCF7] flex flex-col items-center justify-center px-4 py-12">
@@ -184,7 +184,7 @@ export default function AuthPage() {
                 onClick={() => { setMode('login'); resetAllForms(); }}
                 className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all ${
                   mode === 'login'
-                    ? 'bg-[#505A4A] text-white'
+                    ? 'bg-[#2E4A3A] text-white'
                     : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                 }`}
               >
@@ -194,7 +194,7 @@ export default function AuthPage() {
                 onClick={() => { setMode('register'); resetAllForms(); }}
                 className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all ${
                   mode === 'register'
-                    ? 'bg-[#505A4A] text-white'
+                    ? 'bg-[#2E4A3A] text-white'
                     : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                 }`}
               >
@@ -251,7 +251,7 @@ export default function AuthPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full h-12 bg-[#505A4A] hover:bg-[#434d3e] disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
+                  className="w-full h-12 bg-[#2E4A3A] hover:bg-[#26402F] disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
                 >
                   {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
                 </button>
@@ -259,7 +259,7 @@ export default function AuthPage() {
                 <button
                   type="button"
                   onClick={() => { setMode('reset'); setResetSuccess(false); }}
-                  className="w-full text-xs text-[#505A4A]/70 hover:text-[#505A4A] transition-colors pt-1"
+                  className="w-full text-xs text-[#2E4A3A]/70 hover:text-[#2E4A3A] transition-colors pt-1"
                 >
                   ¿Olvidaste tu contraseña?
                 </button>
@@ -280,7 +280,7 @@ export default function AuthPage() {
                 <button
                   type="button"
                   onClick={() => { setMode('login'); resetAllForms(); }}
-                  className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-[#505A4A] transition-colors mb-1"
+                  className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-[#2E4A3A] transition-colors mb-1"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   Volver
@@ -307,7 +307,7 @@ export default function AuthPage() {
                 </div>
 
                 {resetSuccess && (
-                  <p className="text-[#505A4A] text-xs text-center py-3 px-3 bg-[#505A4A]/5 rounded-lg">
+                  <p className="text-[#2E4A3A] text-xs text-center py-3 px-3 bg-[#2E4A3A]/5 rounded-lg">
                     Email enviado. Revisa tu bandeja de entrada.
                   </p>
                 )}
@@ -316,7 +316,7 @@ export default function AuthPage() {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full h-12 bg-[#505A4A] hover:bg-[#434d3e] disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
+                    className="w-full h-12 bg-[#2E4A3A] hover:bg-[#26402F] disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
                   >
                     {isLoading ? 'Enviando...' : 'Enviar enlace'}
                   </button>
@@ -340,10 +340,10 @@ export default function AuthPage() {
                     <button
                       type="button"
                       onClick={() => setUserType('client')}
-                      className="w-full flex items-center gap-4 p-4 border border-[#e8e5df] rounded-xl hover:border-[#505A4A]/40 hover:bg-[#505A4A]/[0.02] transition-all"
+                      className="w-full flex items-center gap-4 p-4 border border-[#e8e5df] rounded-xl hover:border-[#2E4A3A]/40 hover:bg-[#2E4A3A]/[0.02] transition-all"
                     >
-                      <div className="w-11 h-11 bg-[#505A4A]/8 rounded-full flex items-center justify-center flex-shrink-0">
-                        <ShoppingBag className="w-5 h-5 text-[#505A4A]" />
+                      <div className="w-11 h-11 bg-[#2E4A3A]/8 rounded-full flex items-center justify-center flex-shrink-0">
+                        <ShoppingBag className="w-5 h-5 text-[#2E4A3A]" />
                       </div>
                       <div className="text-left">
                         <h4 className="text-sm font-semibold text-gray-800">Cliente</h4>
@@ -354,10 +354,10 @@ export default function AuthPage() {
                     <button
                       type="button"
                       onClick={() => setUserType('manager')}
-                      className="w-full flex items-center gap-4 p-4 border border-[#e8e5df] rounded-xl hover:border-[#505A4A]/40 hover:bg-[#505A4A]/[0.02] transition-all"
+                      className="w-full flex items-center gap-4 p-4 border border-[#e8e5df] rounded-xl hover:border-[#2E4A3A]/40 hover:bg-[#2E4A3A]/[0.02] transition-all"
                     >
-                      <div className="w-11 h-11 bg-[#505A4A]/8 rounded-full flex items-center justify-center flex-shrink-0">
-                        <Briefcase className="w-5 h-5 text-[#505A4A]" />
+                      <div className="w-11 h-11 bg-[#2E4A3A]/8 rounded-full flex items-center justify-center flex-shrink-0">
+                        <Briefcase className="w-5 h-5 text-[#2E4A3A]" />
                       </div>
                       <div className="text-left">
                         <h4 className="text-sm font-semibold text-gray-800">Gestor / Distribuidor</h4>
@@ -378,12 +378,12 @@ export default function AuthPage() {
                       <button
                         type="button"
                         onClick={() => setUserType(null)}
-                        className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-[#505A4A] transition-colors"
+                        className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-[#2E4A3A] transition-colors"
                       >
                         <ArrowLeft className="w-3.5 h-3.5" />
                         Atrás
                       </button>
-                      <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-[#505A4A]/8 text-[#505A4A]">
+                      <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-[#2E4A3A]/8 text-[#2E4A3A]">
                         {userType === 'manager' ? 'Gestor' : 'Cliente'}
                       </span>
                     </div>
@@ -465,7 +465,7 @@ export default function AuthPage() {
                     <button
                       type="submit"
                       disabled={isLoading}
-                      className="w-full h-12 bg-[#505A4A] hover:bg-[#434d3e] disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
+                      className="w-full h-12 bg-[#2E4A3A] hover:bg-[#26402F] disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
                     >
                       {isLoading ? 'Registrando...' : 'Crear cuenta'}
                     </button>
@@ -479,9 +479,9 @@ export default function AuthPage() {
         {/* Footer */}
         <p className="text-center text-[11px] text-gray-400 mt-6">
           Al continuar, aceptas nuestros{' '}
-          <Link href="/terms" className="text-gray-500 hover:text-[#505A4A]">Términos</Link>
+          <Link href="/terms" className="text-gray-500 hover:text-[#2E4A3A]">Términos</Link>
           {' '}y{' '}
-          <Link href="/privacy" className="text-gray-500 hover:text-[#505A4A]">Privacidad</Link>
+          <Link href="/privacy" className="text-gray-500 hover:text-[#2E4A3A]">Privacidad</Link>
         </p>
       </m.div>
     </div>

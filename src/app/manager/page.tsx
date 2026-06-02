@@ -31,10 +31,10 @@ import { toast } from 'sonner';
 import Link from 'next/link';
 
 const STATUS_CONFIG: Record<OrderStatus, { icon: typeof Package; color: string; bg: string }> = {
-  pending: { icon: Clock, color: 'text-[#505A4A]', bg: 'bg-[#505A4A]/10' },
-  confirmed: { icon: CheckCircle2, color: 'text-[#505A4A]', bg: 'bg-[#505A4A]/10' },
-  in_transit: { icon: Truck, color: 'text-[#505A4A]', bg: 'bg-[#505A4A]/10' },
-  delivered: { icon: Package, color: 'text-[#505A4A]', bg: 'bg-[#505A4A]/10' },
+  pending: { icon: Clock, color: 'text-[#2E4A3A]', bg: 'bg-[#2E4A3A]/10' },
+  confirmed: { icon: CheckCircle2, color: 'text-[#2E4A3A]', bg: 'bg-[#2E4A3A]/10' },
+  in_transit: { icon: Truck, color: 'text-[#2E4A3A]', bg: 'bg-[#2E4A3A]/10' },
+  delivered: { icon: Package, color: 'text-[#2E4A3A]', bg: 'bg-[#2E4A3A]/10' },
   cancelled: { icon: XCircle, color: 'text-red-600', bg: 'bg-red-50' },
 };
 
@@ -162,7 +162,7 @@ export default function GestorDashboard() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#505A4A] border-t-transparent" />
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#2E4A3A] border-t-transparent" />
       </div>
     );
   }
@@ -218,7 +218,7 @@ export default function GestorDashboard() {
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 sm:h-16">
             <Link href="/manager" className="flex items-center gap-2">
-              <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#505A4A]/15 flex-shrink-0">
+              <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#2E4A3A]/15 flex-shrink-0">
                 <Image
                   src="/images/sophia_logo_nuevo.jpeg"
                   alt="Sophia"
@@ -228,11 +228,11 @@ export default function GestorDashboard() {
                   className="object-cover"
                 />
               </div>
-              <span className="text-sm sm:text-base font-semibold text-[#505A4A] leading-tight">Sophia</span>
+              <span className="text-sm sm:text-base font-semibold text-[#2E4A3A] leading-tight">Sophia</span>
             </Link>
 
             <div className="flex items-center gap-2">
-              <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-[#505A4A]/10 text-[#505A4A] dark:bg-[#505A4A]/20 dark:text-gray-300 uppercase tracking-wide">
+              <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-[#2E4A3A]/10 text-[#2E4A3A] dark:bg-[#2E4A3A]/20 dark:text-gray-300 uppercase tracking-wide">
                 Gestor
               </span>
               <button
@@ -256,7 +256,7 @@ export default function GestorDashboard() {
                 <Image src={gestor.photoUrl} alt={displayName} width={40} height={40} className="w-full h-full object-cover" />
               </div>
             ) : (
-              <div className="w-10 h-10 rounded-full bg-[#505A4A] flex items-center justify-center text-white text-sm font-semibold flex-shrink-0">
+              <div className="w-10 h-10 rounded-full bg-[#2E4A3A] flex items-center justify-center text-white text-sm font-semibold flex-shrink-0">
                 {displayName.charAt(0).toUpperCase()}
               </div>
             )}
@@ -281,8 +281,8 @@ export default function GestorDashboard() {
                 <p className="text-2xl font-semibold text-gray-900 dark:text-white mt-2">{formatCurrency(monthSales)}</p>
                 <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">{monthOrders.length} pedidos</p>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-[#505A4A]/10 flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-[#505A4A]" />
+              <div className="w-10 h-10 rounded-lg bg-[#2E4A3A]/10 flex items-center justify-center">
+                <TrendingUp className="w-5 h-5 text-[#2E4A3A]" />
               </div>
             </div>
           </div>
@@ -294,8 +294,8 @@ export default function GestorDashboard() {
                 <p className="text-2xl font-semibold text-gray-900 dark:text-white mt-2">{formatCurrency(pendingTotal)}</p>
                 <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">{pendingCount + inTransitCount} en proceso</p>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-[#505A4A]/10 flex items-center justify-center">
-                <Clock className="w-5 h-5 text-[#505A4A]" />
+              <div className="w-10 h-10 rounded-lg bg-[#2E4A3A]/10 flex items-center justify-center">
+                <Clock className="w-5 h-5 text-[#2E4A3A]" />
               </div>
             </div>
           </div>
@@ -307,8 +307,8 @@ export default function GestorDashboard() {
                 <p className="text-2xl font-semibold text-gray-900 dark:text-white mt-2">{formatCurrency(collectedTotal)}</p>
                 <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">{orders.filter((o) => o.status === 'delivered').length} entregados</p>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-[#505A4A]/10 flex items-center justify-center">
-                <DollarSign className="w-5 h-5 text-[#505A4A]" />
+              <div className="w-10 h-10 rounded-lg bg-[#2E4A3A]/10 flex items-center justify-center">
+                <DollarSign className="w-5 h-5 text-[#2E4A3A]" />
               </div>
             </div>
           </div>
@@ -320,8 +320,8 @@ export default function GestorDashboard() {
                 <p className="text-2xl font-semibold text-gray-900 dark:text-white mt-2">{formatCurrency(todaySales)}</p>
                 <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">{todayCount} pedido{todayCount !== 1 ? 's' : ''}</p>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-[#505A4A]/10 flex items-center justify-center">
-                <Package className="w-5 h-5 text-[#505A4A]" />
+              <div className="w-10 h-10 rounded-lg bg-[#2E4A3A]/10 flex items-center justify-center">
+                <Package className="w-5 h-5 text-[#2E4A3A]" />
               </div>
             </div>
           </div>
@@ -342,7 +342,7 @@ export default function GestorDashboard() {
               </span>
             </div>
             {pendingCount > 0 && (
-              <span className="text-[10px] px-2.5 py-1 rounded-full bg-[#505A4A]/10 text-[#505A4A] dark:bg-[#505A4A]/20 dark:text-gray-300 font-medium">
+              <span className="text-[10px] px-2.5 py-1 rounded-full bg-[#2E4A3A]/10 text-[#2E4A3A] dark:bg-[#2E4A3A]/20 dark:text-gray-300 font-medium">
                 {pendingCount} pendiente{pendingCount > 1 ? 's' : ''}
               </span>
             )}
@@ -354,7 +354,7 @@ export default function GestorDashboard() {
           {/* Orders header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-gray-700">
             <h2 className="text-base font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-              <Package className="w-4.5 h-4.5 text-[#505A4A] dark:text-gray-400" />
+              <Package className="w-4.5 h-4.5 text-[#2E4A3A] dark:text-gray-400" />
               Pedidos
             </h2>
             <button
@@ -372,7 +372,7 @@ export default function GestorDashboard() {
               onClick={() => setStatusFilter('all')}
               className={`text-xs px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors ${
                 statusFilter === 'all'
-                  ? 'bg-[#505A4A] text-white'
+                  ? 'bg-[#2E4A3A] text-white'
                   : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
@@ -387,7 +387,7 @@ export default function GestorDashboard() {
                   onClick={() => setStatusFilter(status)}
                   className={`text-xs px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors ${
                     statusFilter === status
-                      ? 'bg-[#505A4A] text-white'
+                      ? 'bg-[#2E4A3A] text-white'
                       : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
                   }`}
                 >
@@ -401,7 +401,7 @@ export default function GestorDashboard() {
           <div className="divide-y divide-gray-100 dark:divide-gray-700">
             {ordersLoading && orders.length === 0 ? (
               <div className="flex items-center justify-center py-12">
-                <div className="animate-spin rounded-full h-6 w-6 border-2 border-[#505A4A] border-t-transparent" />
+                <div className="animate-spin rounded-full h-6 w-6 border-2 border-[#2E4A3A] border-t-transparent" />
               </div>
             ) : filteredOrders.length === 0 ? (
               <div className="text-center py-12">
@@ -510,7 +510,7 @@ export default function GestorDashboard() {
                               {nextStatus && (
                                 <button
                                   onClick={() => handleStatusChange(order.id, nextStatus)}
-                                  className="flex items-center gap-1.5 text-xs font-medium bg-[#505A4A] text-white px-4 py-2 rounded-lg hover:bg-[#414A3C] transition-colors"
+                                  className="flex items-center gap-1.5 text-xs font-medium bg-[#2E4A3A] text-white px-4 py-2 rounded-lg hover:bg-[#26402F] transition-colors"
                                 >
                                   {STATUS_CONFIG[nextStatus].icon === Truck ? (
                                     <Truck className="w-3.5 h-3.5" />
@@ -599,7 +599,7 @@ export default function GestorDashboard() {
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
                           placeholder="Min. 6 caracteres"
-                          className="w-full px-3 py-2.5 pr-10 border border-gray-200 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-[#505A4A]/20 focus:border-[#505A4A]/30 outline-none"
+                          className="w-full px-3 py-2.5 pr-10 border border-gray-200 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-[#2E4A3A]/20 focus:border-[#2E4A3A]/30 outline-none"
                         />
                         <button
                           type="button"
@@ -617,13 +617,13 @@ export default function GestorDashboard() {
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         placeholder="Repite la contraseña"
-                        className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-[#505A4A]/20 focus:border-[#505A4A]/30 outline-none"
+                        className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-[#2E4A3A]/20 focus:border-[#2E4A3A]/30 outline-none"
                       />
                     </div>
                     <button
                       onClick={handleChangePassword}
                       disabled={changingPassword}
-                      className="flex items-center gap-2 bg-[#505A4A] text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-[#414A3C] transition-colors disabled:opacity-50"
+                      className="flex items-center gap-2 bg-[#2E4A3A] text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-[#26402F] transition-colors disabled:opacity-50"
                     >
                       {changingPassword ? <Loader2 className="w-4 h-4 animate-spin" /> : <KeyRound className="w-4 h-4" />}
                       {changingPassword ? 'Cambiando...' : 'Cambiar contraseña'}

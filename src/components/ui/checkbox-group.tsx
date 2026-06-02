@@ -31,8 +31,8 @@ export default function CheckboxGroup({ label, options, value, onChange }: Check
               onClick={() => toggle(option)}
               className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium border transition-all ${
                 selected
-                  ? 'bg-[#505A4A] text-white border-[#505A4A]'
-                  : 'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-[#505A4A]/50'
+                  ? 'bg-[#2E4A3A] text-white border-[#2E4A3A]'
+                  : 'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-[#2E4A3A]/50'
               }`}
             >
               {selected && <Check className="w-3.5 h-3.5" />}

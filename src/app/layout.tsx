@@ -110,7 +110,7 @@ export default function RootLayout({
                       classNames: {
                         toast: 'group !rounded-2xl !border !shadow-2xl !backdrop-blur-xl !bg-white/95 dark:!bg-[#1f2220]/95 !border-gray-200/60 dark:!border-[#3a3d36] !px-4 !py-3.5 !gap-3',
                         title: '!text-sm !font-semibold !text-gray-900 dark:!text-[#e8e0d0] !tracking-tight',
-                        description: '!text-xs !text-gray-500 dark:!text-[#C4B590]/70 !mt-0.5 !leading-relaxed',
+                        description: '!text-xs !text-gray-500 dark:!text-[#C9A96E]/70 !mt-0.5 !leading-relaxed',
                         success: '!bg-emerald-50/95 dark:!bg-emerald-950/40 !border-emerald-200/60 dark:!border-emerald-800/40 !text-emerald-800 dark:!text-emerald-300',
                         error: '!bg-red-50/95 dark:!bg-red-950/40 !border-red-200/60 dark:!border-red-800/40 !text-red-800 dark:!text-red-300',
                         info: '!bg-sky-50/95 dark:!bg-sky-950/40 !border-sky-200/60 dark:!border-sky-800/40',
@@ -180,7 +180,7 @@ export default function RootLayout({
                       classNames: {
                         toast: 'group !rounded-2xl !border !shadow-2xl !backdrop-blur-xl !bg-white/95 dark:!bg-[#1f2220]/95 !border-gray-200/60 dark:!border-[#3a3d36] !px-4 !py-3.5 !gap-3',
                         title: '!text-sm !font-semibold !text-gray-900 dark:!text-[#e8e0d0] !tracking-tight',
-                        description: '!text-xs !text-gray-500 dark:!text-[#C4B590]/70 !mt-0.5 !leading-relaxed',
+                        description: '!text-xs !text-gray-500 dark:!text-[#C9A96E]/70 !mt-0.5 !leading-relaxed',
                         success: '!bg-emerald-50/95 dark:!bg-emerald-950/40 !border-emerald-200/60 dark:!border-emerald-800/40 !text-emerald-800 dark:!text-emerald-300',
                         error: '!bg-red-50/95 dark:!bg-red-950/40 !border-red-200/60 dark:!border-red-800/40 !text-red-800 dark:!text-red-300',
                         info: '!bg-sky-50/95 dark:!bg-sky-950/40 !border-sky-200/60 dark:!border-sky-800/40',

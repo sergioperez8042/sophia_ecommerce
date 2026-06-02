@@ -55,7 +55,7 @@ function buildStatusEmailHtml(data: {
   const statusLabel = STATUS_LABELS[data.newStatus] || data.newStatus;
 
   const isCancelled = data.newStatus === 'cancelled';
-  const accentColor = isCancelled ? '#9B1C1C' : '#505A4A';
+  const accentColor = isCancelled ? '#9B1C1C' : '#2E4A3A';
   const accentBg = isCancelled ? '#FEF2F2' : '#F0F2ED';
 
   const itemsHtml = data.items

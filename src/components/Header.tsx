@@ -75,7 +75,7 @@ export default function Header() {
                             </button>
 
                             <Link href="/" className="hidden md:flex items-center gap-2">
-                                <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#505A4A]/15 flex-shrink-0">
+                                <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#2E4A3A]/15 flex-shrink-0">
                                     <Image
                                         src="/images/sophia_logo_nuevo.jpeg"
                                         alt="Sophia"
@@ -85,7 +85,7 @@ export default function Header() {
                                         className="object-cover"
                                     />
                                 </div>
-                                <span className="text-sm sm:text-base font-semibold text-[#505A4A] leading-tight">Sophia</span>
+                                <span className="text-sm sm:text-base font-semibold text-[#2E4A3A] leading-tight">Sophia</span>
                             </Link>
 
                         </div>
@@ -99,11 +99,11 @@ export default function Header() {
                                         key={item.name}
                                         href={item.href}
                                         className={`text-sm font-medium transition-colors relative group ${
-                                            isActive ? 'text-[#505A4A]' : 'text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-[#505A4A]'
+                                            isActive ? 'text-[#2E4A3A]' : 'text-gray-600 dark:text-gray-400 dark:text-gray-500 hover:text-[#2E4A3A]'
                                         }`}
                                     >
                                         {item.name}
-                                        <span className={`absolute inset-x-0 -bottom-1 h-0.5 bg-[#505A4A] transition-transform duration-200 ${
+                                        <span className={`absolute inset-x-0 -bottom-1 h-0.5 bg-[#2E4A3A] transition-transform duration-200 ${
                                             isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
                                         }`} />
                                     </Link>
@@ -141,7 +141,7 @@ export default function Header() {
                             >
                                 <ShoppingBag className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                                 {cartCount > 0 && (
-                                    <span className="absolute -top-0.5 -right-0.5 bg-[#505A4A] text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center font-bold">
+                                    <span className="absolute -top-0.5 -right-0.5 bg-[#2E4A3A] text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center font-bold">
                                         {cartCount > 9 ? '9+' : cartCount}
                                     </span>
                                 )}
@@ -180,7 +180,7 @@ export default function Header() {
                         {/* Logo + Brand */}
                         <div className="p-4 border-b border-gray-100 dark:border-gray-800">
                             <Link href="/" className="flex items-center gap-3" onClick={() => setIsMenuOpen(false)}>
-                                <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#505A4A]/15 flex-shrink-0">
+                                <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#2E4A3A]/15 flex-shrink-0">
                                     <Image
                                         src="/images/sophia_logo_nuevo.jpeg"
                                         alt="Sophia"
@@ -189,7 +189,7 @@ export default function Header() {
                                         className="object-cover"
                                     />
                                 </div>
-                                <span className="text-base font-semibold text-[#505A4A] dark:text-[#C4B590] leading-tight">Sophia</span>
+                                <span className="text-base font-semibold text-[#2E4A3A] dark:text-[#C9A96E] leading-tight">Sophia</span>
                             </Link>
                         </div>
 
@@ -204,12 +204,12 @@ export default function Header() {
                                         href={item.href}
                                         className={`flex items-center gap-3 px-5 py-3.5 text-sm font-medium transition-colors ${
                                             isActive
-                                                ? 'bg-[#505A4A]/8 text-[#505A4A] dark:text-[#C4B590] border-l-3 border-[#505A4A]'
+                                                ? 'bg-[#2E4A3A]/8 text-[#2E4A3A] dark:text-[#C9A96E] border-l-3 border-[#2E4A3A]'
                                                 : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50 border-l-3 border-transparent'
                                         }`}
                                         onClick={() => setIsMenuOpen(false)}
                                     >
-                                        <Icon className={`w-5 h-5 ${isActive ? 'text-[#505A4A] dark:text-[#C4B590]' : 'text-gray-400 dark:text-gray-500'}`} />
+                                        <Icon className={`w-5 h-5 ${isActive ? 'text-[#2E4A3A] dark:text-[#C9A96E]' : 'text-gray-400 dark:text-gray-500'}`} />
                                         {item.name}
                                     </Link>
                                 );
@@ -221,15 +221,15 @@ export default function Header() {
                             {/* Quick admin links */}
                             {isAuthenticated && user?.role === 'admin' && (
                                 <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-800 space-y-1">
-                                    <Link href="/admin" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:text-[#505A4A] hover:bg-[#505A4A]/5 transition-all text-sm font-medium" onClick={() => setIsMenuOpen(false)}>
+                                    <Link href="/admin" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:text-[#2E4A3A] hover:bg-[#2E4A3A]/5 transition-all text-sm font-medium" onClick={() => setIsMenuOpen(false)}>
                                         <LayoutDashboard className="w-5 h-5" />
                                         Panel Admin
                                     </Link>
-                                    <Link href="/admin/managers" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:text-[#505A4A] hover:bg-[#505A4A]/5 transition-all text-sm font-medium" onClick={() => setIsMenuOpen(false)}>
+                                    <Link href="/admin/managers" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:text-[#2E4A3A] hover:bg-[#2E4A3A]/5 transition-all text-sm font-medium" onClick={() => setIsMenuOpen(false)}>
                                         <UserCog className="w-5 h-5" />
                                         Gestores
                                     </Link>
-                                    <Link href="/admin/newsletter" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:text-[#505A4A] hover:bg-[#505A4A]/5 transition-all text-sm font-medium" onClick={() => setIsMenuOpen(false)}>
+                                    <Link href="/admin/newsletter" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:text-[#2E4A3A] hover:bg-[#2E4A3A]/5 transition-all text-sm font-medium" onClick={() => setIsMenuOpen(false)}>
                                         <Newspaper className="w-5 h-5" />
                                         Newsletter
                                     </Link>

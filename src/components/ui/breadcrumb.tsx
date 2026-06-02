@@ -20,7 +20,7 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
             transition={{ duration: 0.5 }}
         >
             {/* Home icon */}
-            <Link href="/" className="flex items-center text-gray-800 dark:text-gray-300 hover:text-[#505A4A] dark:hover:text-[#C4B590] transition-colors duration-200">
+            <Link href="/" className="flex items-center text-gray-800 dark:text-gray-300 hover:text-[#2E4A3A] dark:hover:text-[#C9A96E] transition-colors duration-200">
                 <Home className="w-4 h-4 sm:w-5 sm:h-5" />
             </Link>
 
@@ -37,12 +37,12 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
                     {item.href ? (
                         <Link
                             href={item.href}
-                            className="text-gray-800 dark:text-gray-300 hover:text-[#505A4A] dark:hover:text-[#C4B590] transition-colors duration-200 font-medium"
+                            className="text-gray-800 dark:text-gray-300 hover:text-[#2E4A3A] dark:hover:text-[#C9A96E] transition-colors duration-200 font-medium"
                         >
                             {item.label}
                         </Link>
                     ) : (
-                        <span className="text-[#505A4A] dark:text-[#C4B590] font-bold">
+                        <span className="text-[#2E4A3A] dark:text-[#C9A96E] font-bold">
                             {item.label}
                         </span>
                     )}

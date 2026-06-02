@@ -46,7 +46,7 @@ export default function CategoriesPage() {
     if (isLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#505A4A] border-t-transparent" />
+                <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#2E4A3A] border-t-transparent" />
             </div>
         );
     }
@@ -55,7 +55,7 @@ export default function CategoriesPage() {
         <div className="min-h-screen bg-gradient-to-b from-[#FEFCF7] to-[#F5F1E8] pt-20 relative overflow-hidden">
             {/* Animated background elements (Hero Gradient Style) */}
             <m.div
-                className="absolute top-20 left-10 w-32 h-32 rounded-full bg-[#505A4A]/10 blur-3xl"
+                className="absolute top-20 left-10 w-32 h-32 rounded-full bg-[#2E4A3A]/10 blur-3xl"
                 animate={{
                     scale: [1, 1.2, 1],
                     opacity: [0.3, 0.6, 0.3],
@@ -68,7 +68,7 @@ export default function CategoriesPage() {
                 }}
             />
             <m.div
-                className="absolute bottom-20 right-10 w-48 h-48 rounded-full bg-[#C4B590]/10 blur-3xl"
+                className="absolute bottom-20 right-10 w-48 h-48 rounded-full bg-[#C9A96E]/10 blur-3xl"
                 animate={{
                     scale: [1.2, 1, 1.2],
                     opacity: [0.2, 0.5, 0.2],
@@ -147,7 +147,7 @@ export default function CategoriesPage() {
                                                     {/* Overlay con contador — solo oscuro si hay imagen real */}
                                                     <div className={`absolute inset-0 transition-colors ${category.image ? 'bg-black/20 group-hover:bg-black/30' : 'bg-transparent'}`}>
                                                         <div className="absolute bottom-4 right-4">
-                                                            <Badge className="bg-white/90 text-[#505A4A] hover:bg-white shadow-sm">
+                                                            <Badge className="bg-white/90 text-[#2E4A3A] hover:bg-white shadow-sm">
                                                                 {productCount} productos
                                                             </Badge>
                                                         </div>
@@ -157,7 +157,7 @@ export default function CategoriesPage() {
                                                 {/* Información de la categoría */}
                                                 <div className="p-6 flex-1 flex flex-col justify-between">
                                                     <div>
-                                                        <h3 className="text-xl font-bold text-[#505A4A] mb-2 group-hover:text-[#414A3C] transition-colors">
+                                                        <h3 className="text-xl font-bold text-[#2E4A3A] mb-2 group-hover:text-[#26402F] transition-colors">
                                                             {category.name}
                                                         </h3>
                                                         <p className="text-gray-700 text-sm line-clamp-2">
@@ -182,7 +182,7 @@ export default function CategoriesPage() {
                                 <Button
                                     variant="outline"
                                     onClick={() => setSelectedCategory(null)}
-                                    className="border-[#505A4A] text-[#505A4A] hover:bg-[#505A4A] hover:text-white"
+                                    className="border-[#2E4A3A] text-[#2E4A3A] hover:bg-[#2E4A3A] hover:text-white"
                                 >
                                     ← Volver a Categorías
                                 </Button>
@@ -193,7 +193,7 @@ export default function CategoriesPage() {
                                         variant={viewMode === 'grid' ? 'default' : 'outline'}
                                         size="sm"
                                         onClick={() => setViewMode('grid')}
-                                        className={viewMode === 'grid' ? 'bg-[#505A4A] text-white' : 'border-[#505A4A] text-[#505A4A]'}
+                                        className={viewMode === 'grid' ? 'bg-[#2E4A3A] text-white' : 'border-[#2E4A3A] text-[#2E4A3A]'}
                                     >
                                         <Grid3X3 className="h-4 w-4" />
                                     </Button>
@@ -201,7 +201,7 @@ export default function CategoriesPage() {
                                         variant={viewMode === 'list' ? 'default' : 'outline'}
                                         size="sm"
                                         onClick={() => setViewMode('list')}
-                                        className={viewMode === 'list' ? 'bg-[#505A4A] text-white' : 'border-[#505A4A] text-[#505A4A]'}
+                                        className={viewMode === 'list' ? 'bg-[#2E4A3A] text-white' : 'border-[#2E4A3A] text-[#2E4A3A]'}
                                     >
                                         <List className="h-4 w-4" />
                                     </Button>
@@ -253,7 +253,7 @@ export default function CategoriesPage() {
                                                             <div>
                                                                 <div className="flex items-start justify-between gap-2 mb-2">
                                                                     <Link href={`/products/${product.id}`} prefetch={false} className="flex-1">
-                                                                        <h3 className="font-semibold text-lg text-gray-900 group-hover:text-[#505A4A] transition-colors line-clamp-2">
+                                                                        <h3 className="font-semibold text-lg text-gray-900 group-hover:text-[#2E4A3A] transition-colors line-clamp-2">
                                                                             {product.name}
                                                                         </h3>
                                                                     </Link>
@@ -278,7 +278,7 @@ export default function CategoriesPage() {
                                                                     {[...Array(5)].map((_, i) => (
                                                                         <Star
                                                                             key={`star-${i}`}
-                                                                            className={`w-4 h-4 ${i < Math.round(product.rating || 0) ? 'fill-[#C4B590] text-[#C4B590]' : 'text-gray-300'}`}
+                                                                            className={`w-4 h-4 ${i < Math.round(product.rating || 0) ? 'fill-[#C9A96E] text-[#C9A96E]' : 'text-gray-300'}`}
                                                                         />
                                                                     ))}
                                                                     <span className="text-sm text-gray-500 ml-2">
@@ -291,11 +291,11 @@ export default function CategoriesPage() {
                                                                 {/* Precio */}
                                                                 <div className="flex items-center justify-between mb-4">
                                                                     <div className="flex items-center gap-2">
-                                                                        <span className="text-2xl font-bold text-[#505A4A]">
+                                                                        <span className="text-2xl font-bold text-[#2E4A3A]">
                                                                             ${product.price.toFixed(2)}
                                                                         </span>
                                                                     </div>
-                                                                    <Badge variant="secondary" className="bg-[#505A4A]/10 text-[#505A4A]">
+                                                                    <Badge variant="secondary" className="bg-[#2E4A3A]/10 text-[#2E4A3A]">
                                                                         En stock
                                                                     </Badge>
                                                                 </div>
@@ -303,7 +303,7 @@ export default function CategoriesPage() {
                                                                 {/* Botón de agregar al carrito */}
                                                                 <Button
                                                                     onClick={() => addToCart(product)}
-                                                                    className="w-full bg-[#505A4A] hover:bg-[#414A3C] text-white"
+                                                                    className="w-full bg-[#2E4A3A] hover:bg-[#26402F] text-white"
                                                                 >
                                                                     <ShoppingBag className="w-4 h-4 mr-2" />
                                                                     Agregar al Carrito

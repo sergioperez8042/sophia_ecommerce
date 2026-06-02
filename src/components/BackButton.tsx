@@ -9,7 +9,7 @@ export default function BackButton() {
   return (
     <button
       onClick={() => router.back()}
-      className="inline-flex items-center gap-1.5 text-sm text-[#505A4A] hover:text-[#414A3C] transition-colors mb-8"
+      className="inline-flex items-center gap-1.5 text-sm text-[#2E4A3A] hover:text-[#26402F] transition-colors mb-8"
     >
       <ArrowLeft className="w-4 h-4" />
       Volver

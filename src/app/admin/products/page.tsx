@@ -99,7 +99,7 @@ function ProductListItem({
     onToggleSelect: () => void;
 }) {
     return (
-        <div className={`bg-white dark:bg-gray-800 rounded-xl border overflow-hidden hover:shadow-md transition-all ${isSelected ? 'border-[#505A4A] ring-1 ring-[#505A4A]/30' : 'border-gray-200 dark:border-gray-700'}`}>
+        <div className={`bg-white dark:bg-gray-800 rounded-xl border overflow-hidden hover:shadow-md transition-all ${isSelected ? 'border-[#2E4A3A] ring-1 ring-[#2E4A3A]/30' : 'border-gray-200 dark:border-gray-700'}`}>
             <div className="flex gap-3 p-3 sm:p-4">
                 {/* Checkbox */}
                 <button
@@ -108,7 +108,7 @@ function ProductListItem({
                     aria-label={isSelected ? 'Deseleccionar' : 'Seleccionar'}
                 >
                     {isSelected ? (
-                        <CheckSquare className="w-5 h-5 text-[#505A4A]" />
+                        <CheckSquare className="w-5 h-5 text-[#2E4A3A]" />
                     ) : (
                         <Square className="w-5 h-5 text-gray-300 dark:text-gray-600 hover:text-gray-400 dark:hover:text-gray-500 transition-colors" />
                     )}
@@ -121,7 +121,7 @@ function ProductListItem({
                         className="object-cover"
                     />
                     {product.featured && (
-                        <div className="absolute top-1 left-1 bg-[#C4B590] rounded-full p-1">
+                        <div className="absolute top-1 left-1 bg-[#C9A96E] rounded-full p-1">
                             <Star className="w-2.5 h-2.5 text-white fill-current" />
                         </div>
                     )}
@@ -185,8 +185,8 @@ function ProductListItem({
                                         onClick={onToggleFeatured}
                                         className={`p-1.5 rounded-lg transition-colors ${
                                             product.featured
-                                                ? 'text-[#C4B590] bg-[#C4B590]/10'
-                                                : 'text-gray-400 hover:text-[#C4B590] hover:bg-gray-100 dark:hover:bg-gray-700'
+                                                ? 'text-[#C9A96E] bg-[#C9A96E]/10'
+                                                : 'text-gray-400 hover:text-[#C9A96E] hover:bg-gray-100 dark:hover:bg-gray-700'
                                         }`}
                                         title={product.featured ? 'Quitar destacado' : 'Destacar'}
                                     >
@@ -205,7 +205,7 @@ function ProductListItem({
                                     </button>
                                     <button
                                         onClick={onEdit}
-                                        className="p-1.5 rounded-lg text-[#505A4A] hover:bg-[#505A4A]/10 transition-colors"
+                                        className="p-1.5 rounded-lg text-[#2E4A3A] hover:bg-[#2E4A3A]/10 transition-colors"
                                         title="Editar"
                                     >
                                         <Pencil className="w-4 h-4" />
@@ -271,7 +271,7 @@ function CategoryFilterDropdown({
             <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full sm:w-auto flex items-center justify-between gap-2 px-3 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-700 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] transition-all sm:min-w-[200px]"
+                className="w-full sm:w-auto flex items-center justify-between gap-2 px-3 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-700 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#2E4A3A]/30 focus:border-[#2E4A3A] transition-all sm:min-w-[200px]"
             >
                 <span className="flex items-center gap-2 truncate">
                     <Layers className="w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
@@ -292,7 +292,7 @@ function CategoryFilterDropdown({
                                 placeholder="Buscar categoría..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="w-full pl-8 pr-3 py-2 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-[#505A4A]/30 focus:border-[#505A4A] transition-all"
+                                className="w-full pl-8 pr-3 py-2 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-[#2E4A3A]/30 focus:border-[#2E4A3A] transition-all"
                             />
                         </div>
                     </div>
@@ -304,7 +304,7 @@ function CategoryFilterDropdown({
                             onClick={() => { onChange('all'); setIsOpen(false); setSearch(''); }}
                             className={`w-full text-left px-3 py-2.5 text-sm transition-colors flex items-center gap-2 ${
                                 value === 'all'
-                                    ? 'bg-[#505A4A]/8 text-[#505A4A] dark:text-[#C4B590] font-medium'
+                                    ? 'bg-[#2E4A3A]/8 text-[#2E4A3A] dark:text-[#C9A96E] font-medium'
                                     : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                             }`}
                         >
@@ -327,7 +327,7 @@ function CategoryFilterDropdown({
                                         onClick={() => { onChange(opt.id); setIsOpen(false); setSearch(''); }}
                                         className={`w-full text-left px-3 py-2.5 text-sm transition-colors flex items-center gap-2 ${
                                             isActive
-                                                ? 'bg-[#505A4A]/8 text-[#505A4A] dark:text-[#C4B590] font-medium'
+                                                ? 'bg-[#2E4A3A]/8 text-[#2E4A3A] dark:text-[#C9A96E] font-medium'
                                                 : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                                         }`}
                                         style={{ paddingLeft: `${12 + opt.depth * 16}px` }}
@@ -438,7 +438,7 @@ function AdminProductsPageInner() {
     if (!isLoaded || isLoading || categoriesLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-                <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#505A4A] border-t-transparent" />
+                <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#2E4A3A] border-t-transparent" />
             </div>
         );
     }
@@ -694,7 +694,7 @@ function AdminProductsPageInner() {
                         </div>
                         <button
                             onClick={handleCreateNew}
-                            className="flex items-center gap-2 bg-[#505A4A] text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-sm font-medium hover:bg-[#414A3C] transition-colors shadow-sm"
+                            className="flex items-center gap-2 bg-[#2E4A3A] text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-sm font-medium hover:bg-[#26402F] transition-colors shadow-sm"
                         >
                             <Plus className="w-4 h-4" />
                             <span className="hidden sm:inline">Nuevo Producto</span>
@@ -717,15 +717,15 @@ function AdminProductsPageInner() {
                                     type="button"
                                     onClick={() => { setStatusFilter(stat.status); setCurrentPage(1); }}
                                     aria-pressed={isActive}
-                                    className={`rounded-xl border p-3 text-center transition-all hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#505A4A]/40 ${
+                                    className={`rounded-xl border p-3 text-center transition-all hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#2E4A3A]/40 ${
                                         isActive
-                                            ? 'bg-[#505A4A]/10 dark:bg-[#C4B590]/10 border-[#505A4A] dark:border-[#C4B590]'
-                                            : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-[#505A4A]/40 dark:hover:border-[#C4B590]/40'
+                                            ? 'bg-[#2E4A3A]/10 dark:bg-[#C9A96E]/10 border-[#2E4A3A] dark:border-[#C9A96E]'
+                                            : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-[#2E4A3A]/40 dark:hover:border-[#C9A96E]/40'
                                     }`}
                                 >
-                                    <stat.icon className={`w-4 h-4 mx-auto mb-1 ${isActive ? 'text-[#505A4A] dark:text-[#C4B590]' : 'text-gray-400 dark:text-gray-500'}`} />
-                                    <p className={`text-lg sm:text-xl font-bold ${isActive ? 'text-[#505A4A] dark:text-[#C4B590]' : 'text-gray-900 dark:text-white'}`}>{stat.value}</p>
-                                    <p className={`text-[10px] sm:text-xs ${isActive ? 'text-[#505A4A] dark:text-[#C4B590] font-medium' : 'text-gray-500 dark:text-gray-400'}`}>{stat.label}</p>
+                                    <stat.icon className={`w-4 h-4 mx-auto mb-1 ${isActive ? 'text-[#2E4A3A] dark:text-[#C9A96E]' : 'text-gray-400 dark:text-gray-500'}`} />
+                                    <p className={`text-lg sm:text-xl font-bold ${isActive ? 'text-[#2E4A3A] dark:text-[#C9A96E]' : 'text-gray-900 dark:text-white'}`}>{stat.value}</p>
+                                    <p className={`text-[10px] sm:text-xs ${isActive ? 'text-[#2E4A3A] dark:text-[#C9A96E] font-medium' : 'text-gray-500 dark:text-gray-400'}`}>{stat.label}</p>
                                 </button>
                             );
                         })}
@@ -740,7 +740,7 @@ function AdminProductsPageInner() {
                                 placeholder="Buscar productos..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-9 pr-3 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] transition-all"
+                                className="w-full pl-9 pr-3 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#2E4A3A]/30 focus:border-[#2E4A3A] transition-all"
                             />
                         </div>
                         <div className="flex gap-2">
@@ -761,7 +761,7 @@ function AdminProductsPageInner() {
                                         onClick={() => setDisplayMode(mode)}
                                         className={`flex items-center justify-center w-10 h-[42px] transition-colors ${
                                             displayMode === mode
-                                                ? 'bg-[#505A4A] text-white'
+                                                ? 'bg-[#2E4A3A] text-white'
                                                 : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                                         }`}
                                         title={title}
@@ -781,9 +781,9 @@ function AdminProductsPageInner() {
                                 className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
                             >
                                 {selectedIds.size === filteredProducts.length ? (
-                                    <CheckSquare className="w-4.5 h-4.5 text-[#505A4A]" />
+                                    <CheckSquare className="w-4.5 h-4.5 text-[#2E4A3A]" />
                                 ) : selectedIds.size > 0 ? (
-                                    <Minus className="w-4.5 h-4.5 text-[#505A4A] border border-current rounded-sm" />
+                                    <Minus className="w-4.5 h-4.5 text-[#2E4A3A] border border-current rounded-sm" />
                                 ) : (
                                     <Square className="w-4.5 h-4.5" />
                                 )}
@@ -882,7 +882,7 @@ function AdminProductsPageInner() {
                             {paginatedProducts.map((product) => (
                                 <div
                                     key={product.id}
-                                    className={`bg-white dark:bg-gray-800 rounded-xl border overflow-hidden hover:shadow-md transition-all group ${selectedIds.has(product.id) ? 'border-[#505A4A] ring-1 ring-[#505A4A]/30' : 'border-gray-200 dark:border-gray-700'}`}
+                                    className={`bg-white dark:bg-gray-800 rounded-xl border overflow-hidden hover:shadow-md transition-all group ${selectedIds.has(product.id) ? 'border-[#2E4A3A] ring-1 ring-[#2E4A3A]/30' : 'border-gray-200 dark:border-gray-700'}`}
                                 >
                                     {/* Image */}
                                     <div className="relative aspect-square bg-gray-100 dark:bg-gray-700 overflow-hidden">
@@ -893,7 +893,7 @@ function AdminProductsPageInner() {
                                             className="absolute top-2 left-2 z-10"
                                         >
                                             {selectedIds.has(product.id) ? (
-                                                <CheckSquare className="w-5 h-5 text-[#505A4A] drop-shadow-md" />
+                                                <CheckSquare className="w-5 h-5 text-[#2E4A3A] drop-shadow-md" />
                                             ) : (
                                                 <Square className="w-5 h-5 text-white/70 drop-shadow-md opacity-0 group-hover:opacity-100 transition-opacity" />
                                             )}
@@ -901,7 +901,7 @@ function AdminProductsPageInner() {
                                         {/* Badges */}
                                         <div className="absolute top-2 right-2 flex flex-col gap-1">
                                             {product.featured && (
-                                                <span className="bg-[#C4B590] rounded-full p-1"><Star className="w-3 h-3 text-white fill-current" /></span>
+                                                <span className="bg-[#C9A96E] rounded-full p-1"><Star className="w-3 h-3 text-white fill-current" /></span>
                                             )}
                                             {!product.active && (
                                                 <span className="bg-gray-800/70 text-white text-[9px] px-1.5 py-0.5 rounded-full font-medium">Oculto</span>
@@ -921,7 +921,7 @@ function AdminProductsPageInner() {
                                                 <button onClick={() => toggleProductActive(product.id).then(() => toast.success(product.active ? 'Oculto' : 'Visible'))} className={`p-1 rounded-md transition-colors ${product.active ? 'text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/30' : 'text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'}`} title={product.active ? 'Ocultar' : 'Activar'}>
                                                     {product.active ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
                                                 </button>
-                                                <button onClick={() => handleEdit(product)} className="p-1 rounded-md text-[#505A4A] hover:bg-[#505A4A]/10 transition-colors" title="Editar">
+                                                <button onClick={() => handleEdit(product)} className="p-1 rounded-md text-[#2E4A3A] hover:bg-[#2E4A3A]/10 transition-colors" title="Editar">
                                                     <Pencil className="w-3.5 h-3.5" />
                                                 </button>
                                             </div>
@@ -945,7 +945,7 @@ function AdminProductsPageInner() {
                                 {Array.from(grouped.entries()).map(([catName, catProducts]) => (
                                     <div key={catName}>
                                         <div className="flex items-center gap-2 mb-3">
-                                            <FolderOpen className="w-4 h-4 text-[#505A4A]" />
+                                            <FolderOpen className="w-4 h-4 text-[#2E4A3A]" />
                                             <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{catName}</h3>
                                             <span className="text-xs text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-full">{catProducts.length}</span>
                                         </div>
@@ -953,19 +953,19 @@ function AdminProductsPageInner() {
                                             {catProducts.map((product) => (
                                                 <div
                                                     key={product.id}
-                                                    className={`bg-white dark:bg-gray-800 rounded-xl border overflow-hidden hover:shadow-md transition-all group ${selectedIds.has(product.id) ? 'border-[#505A4A] ring-1 ring-[#505A4A]/30' : 'border-gray-200 dark:border-gray-700'}`}
+                                                    className={`bg-white dark:bg-gray-800 rounded-xl border overflow-hidden hover:shadow-md transition-all group ${selectedIds.has(product.id) ? 'border-[#2E4A3A] ring-1 ring-[#2E4A3A]/30' : 'border-gray-200 dark:border-gray-700'}`}
                                                 >
                                                     <div className="relative aspect-square bg-gray-100 dark:bg-gray-700 overflow-hidden">
                                                         <ProductImage src={product.image} alt={product.name} className="object-cover group-hover:scale-105 transition-transform duration-300" />
                                                         <button onClick={() => toggleSelect(product.id)} className="absolute top-2 left-2 z-10">
                                                             {selectedIds.has(product.id) ? (
-                                                                <CheckSquare className="w-5 h-5 text-[#505A4A] drop-shadow-md" />
+                                                                <CheckSquare className="w-5 h-5 text-[#2E4A3A] drop-shadow-md" />
                                                             ) : (
                                                                 <Square className="w-5 h-5 text-white/70 drop-shadow-md opacity-0 group-hover:opacity-100 transition-opacity" />
                                                             )}
                                                         </button>
                                                         <div className="absolute top-2 right-2 flex flex-col gap-1">
-                                                            {product.featured && <span className="bg-[#C4B590] rounded-full p-1"><Star className="w-3 h-3 text-white fill-current" /></span>}
+                                                            {product.featured && <span className="bg-[#C9A96E] rounded-full p-1"><Star className="w-3 h-3 text-white fill-current" /></span>}
                                                             {!product.active && <span className="bg-gray-800/70 text-white text-[9px] px-1.5 py-0.5 rounded-full font-medium">Oculto</span>}
                                                             {product.out_of_stock && <span className="bg-red-500/90 text-white text-[9px] px-1.5 py-0.5 rounded-full font-medium">Agotado</span>}
                                                         </div>
@@ -978,7 +978,7 @@ function AdminProductsPageInner() {
                                                                 <button onClick={() => toggleProductActive(product.id).then(() => toast.success(product.active ? 'Oculto' : 'Visible'))} className={`p-1 rounded-md transition-colors ${product.active ? 'text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/30' : 'text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'}`} title={product.active ? 'Ocultar' : 'Activar'}>
                                                                     {product.active ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
                                                                 </button>
-                                                                <button onClick={() => handleEdit(product)} className="p-1 rounded-md text-[#505A4A] hover:bg-[#505A4A]/10 transition-colors" title="Editar">
+                                                                <button onClick={() => handleEdit(product)} className="p-1 rounded-md text-[#2E4A3A] hover:bg-[#2E4A3A]/10 transition-colors" title="Editar">
                                                                     <Pencil className="w-3.5 h-3.5" />
                                                                 </button>
                                                             </div>
@@ -1050,14 +1050,14 @@ function AdminProductsPageInner() {
                                 const file = e.target.files?.[0];
                                 if (file) handleFileUpload(file);
                             }}
-                            className="w-full text-sm text-gray-700 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-[#505A4A] file:text-white hover:file:bg-[#414A3C] file:cursor-pointer cursor-pointer"
+                            className="w-full text-sm text-gray-700 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-[#2E4A3A] file:text-white hover:file:bg-[#26402F] file:cursor-pointer cursor-pointer"
                             disabled={isUploading}
                         />
 
                         {isUploading && (
                             <div className="mt-3">
                                 <div className="h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                    <div className="h-full bg-[#505A4A] transition-all duration-300 rounded-full" style={{ width: `${uploadProgress}%` }} />
+                                    <div className="h-full bg-[#2E4A3A] transition-all duration-300 rounded-full" style={{ width: `${uploadProgress}%` }} />
                                 </div>
                                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Subiendo... {Math.round(uploadProgress)}%</p>
                             </div>
@@ -1085,7 +1085,7 @@ function AdminProductsPageInner() {
                                 type="text"
                                 {...register('name')}
                                 placeholder="Ej: Crema Hidratante Natural"
-                                className={`w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white dark:focus:bg-gray-700 transition-all ${errors.name ? 'border-red-400 bg-red-50/30' : 'border-gray-200'}`}
+                                className={`w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#2E4A3A]/30 focus:border-[#2E4A3A] focus:bg-white dark:focus:bg-gray-700 transition-all ${errors.name ? 'border-red-400 bg-red-50/30' : 'border-gray-200'}`}
                             />
                             {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name.message}</p>}
                         </div>
@@ -1097,7 +1097,7 @@ function AdminProductsPageInner() {
                                 {...register('description')}
                                 placeholder="Describe el producto..."
                                 rows={3}
-                                className={`w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white dark:focus:bg-gray-700 transition-all resize-none ${errors.description ? 'border-red-400 bg-red-50/30' : 'border-gray-200'}`}
+                                className={`w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#2E4A3A]/30 focus:border-[#2E4A3A] focus:bg-white dark:focus:bg-gray-700 transition-all resize-none ${errors.description ? 'border-red-400 bg-red-50/30' : 'border-gray-200'}`}
                             />
                             {errors.description && <p className="text-xs text-red-500 mt-1">{errors.description.message}</p>}
                         </div>
@@ -1109,7 +1109,7 @@ function AdminProductsPageInner() {
                                 {...register('usage')}
                                 placeholder="Explica cómo usar el producto..."
                                 rows={3}
-                                className={`w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white dark:focus:bg-gray-700 transition-all resize-none ${errors.usage ? 'border-red-400 bg-red-50/30' : 'border-gray-200'}`}
+                                className={`w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#2E4A3A]/30 focus:border-[#2E4A3A] focus:bg-white dark:focus:bg-gray-700 transition-all resize-none ${errors.usage ? 'border-red-400 bg-red-50/30' : 'border-gray-200'}`}
                             />
                             {errors.usage && <p className="text-xs text-red-500 mt-1">{errors.usage.message}</p>}
                         </div>
@@ -1129,7 +1129,7 @@ function AdminProductsPageInner() {
                                         }
                                     }}
                                     placeholder="0.00"
-                                    className={`w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white dark:focus:bg-gray-700 transition-all ${errors.price ? 'border-red-400 bg-red-50/30' : 'border-gray-200'}`}
+                                    className={`w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#2E4A3A]/30 focus:border-[#2E4A3A] focus:bg-white dark:focus:bg-gray-700 transition-all ${errors.price ? 'border-red-400 bg-red-50/30' : 'border-gray-200'}`}
                                 />
                                 {errors.price && <p className="text-xs text-red-500 mt-1">{errors.price.message}</p>}
                             </div>
@@ -1148,14 +1148,14 @@ function AdminProductsPageInner() {
                                             }
                                         }}
                                         placeholder="0"
-                                        className="flex-1 min-w-0 px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white dark:focus:bg-gray-700 transition-all"
+                                        className="flex-1 min-w-0 px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#2E4A3A]/30 focus:border-[#2E4A3A] focus:bg-white dark:focus:bg-gray-700 transition-all"
                                     />
                                     <Controller
                                         name="weight_unit"
                                         control={control}
                                         render={({ field }) => (
                                             <Select value={field.value || 'g'} onValueChange={field.onChange}>
-                                                <SelectTrigger className="!w-16 shrink-0 px-2 py-2.5 h-auto bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-xs text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white dark:focus:bg-gray-700 transition-all">
+                                                <SelectTrigger className="!w-16 shrink-0 px-2 py-2.5 h-auto bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-xs text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#2E4A3A]/30 focus:border-[#2E4A3A] focus:bg-white dark:focus:bg-gray-700 transition-all">
                                                     <SelectValue />
                                                 </SelectTrigger>
                                                 <SelectContent>
@@ -1180,7 +1180,7 @@ function AdminProductsPageInner() {
                                 control={control}
                                 render={({ field }) => (
                                     <Select value={field.value} onValueChange={field.onChange}>
-                                        <SelectTrigger className={`w-full px-3 py-2.5 h-auto bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white dark:focus:bg-gray-700 transition-all ${errors.category_id ? 'border-red-400 bg-red-50/30' : 'border-gray-200 dark:border-gray-700'}`}>
+                                        <SelectTrigger className={`w-full px-3 py-2.5 h-auto bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#2E4A3A]/30 focus:border-[#2E4A3A] focus:bg-white dark:focus:bg-gray-700 transition-all ${errors.category_id ? 'border-red-400 bg-red-50/30' : 'border-gray-200 dark:border-gray-700'}`}>
                                             <SelectValue placeholder="Seleccionar" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -1266,7 +1266,7 @@ function AdminProductsPageInner() {
                             onChange={(e) => setIngredientsInput(e.target.value)}
                             placeholder="aloe vera, aceite de jojoba, manteca de karité"
                             rows={2}
-                            className="w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] focus:bg-white dark:focus:bg-gray-700 transition-all resize-none"
+                            className="w-full px-3 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#2E4A3A]/30 focus:border-[#2E4A3A] focus:bg-white dark:focus:bg-gray-700 transition-all resize-none"
                         />
                     </div>
 
@@ -1288,7 +1288,7 @@ function AdminProductsPageInner() {
                             <button
                                 type="button"
                                 onClick={() => setValue('active', !formActive)}
-                                className={`relative w-11 h-6 rounded-full transition-colors ${formActive ? 'bg-[#505A4A]' : 'bg-gray-300 dark:bg-gray-600'}`}
+                                className={`relative w-11 h-6 rounded-full transition-colors ${formActive ? 'bg-[#2E4A3A]' : 'bg-gray-300 dark:bg-gray-600'}`}
                             >
                                 <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${formActive ? 'left-[22px]' : 'left-0.5'}`} />
                             </button>
@@ -1298,7 +1298,7 @@ function AdminProductsPageInner() {
 
                         <div className="flex items-center justify-between py-2">
                             <div className="flex items-center gap-2.5">
-                                <Star className={`w-4 h-4 ${formFeatured ? 'text-[#C4B590] fill-current' : 'text-gray-400 dark:text-gray-500'}`} />
+                                <Star className={`w-4 h-4 ${formFeatured ? 'text-[#C9A96E] fill-current' : 'text-gray-400 dark:text-gray-500'}`} />
                                 <p className="text-sm font-medium text-gray-900 dark:text-white">
                                     {formFeatured ? 'Producto destacado' : 'No destacado'}
                                 </p>
@@ -1306,7 +1306,7 @@ function AdminProductsPageInner() {
                             <button
                                 type="button"
                                 onClick={() => setValue('featured', !formFeatured)}
-                                className={`relative w-11 h-6 rounded-full transition-colors ${formFeatured ? 'bg-[#505A4A]' : 'bg-gray-300 dark:bg-gray-600'}`}
+                                className={`relative w-11 h-6 rounded-full transition-colors ${formFeatured ? 'bg-[#2E4A3A]' : 'bg-gray-300 dark:bg-gray-600'}`}
                             >
                                 <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${formFeatured ? 'left-[22px]' : 'left-0.5'}`} />
                             </button>
@@ -1336,7 +1336,7 @@ function AdminProductsPageInner() {
                         <button
                             type="submit"
                             disabled={isSaving}
-                            className="flex-1 flex items-center justify-center gap-2 bg-[#505A4A] text-white py-3 rounded-xl text-sm font-semibold hover:bg-[#414A3C] disabled:opacity-50 transition-colors shadow-sm"
+                            className="flex-1 flex items-center justify-center gap-2 bg-[#2E4A3A] text-white py-3 rounded-xl text-sm font-semibold hover:bg-[#26402F] disabled:opacity-50 transition-colors shadow-sm"
                         >
                             {isSaving ? (
                                 <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
@@ -1366,7 +1366,7 @@ export default function AdminProductsPage() {
         <Suspense
             fallback={
                 <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-                    <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#505A4A] border-t-transparent" />
+                    <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#2E4A3A] border-t-transparent" />
                 </div>
             }
         >

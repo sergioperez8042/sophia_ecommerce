@@ -87,7 +87,7 @@ export default function AdminReviewsPage() {
   if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#505A4A] border-t-transparent" />
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#2E4A3A] border-t-transparent" />
       </div>
     );
   }
@@ -151,13 +151,13 @@ export default function AdminReviewsPage() {
                 placeholder="Buscar por usuario, comentario o producto..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-transparent text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-[#505A4A]"
+                className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-transparent text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-[#2E4A3A]"
               />
             </div>
             <select
               value={filterProduct}
               onChange={(e) => setFilterProduct(e.target.value)}
-              className="px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-transparent text-gray-900 dark:text-white focus:outline-none focus:border-[#505A4A]"
+              className="px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-transparent text-gray-900 dark:text-white focus:outline-none focus:border-[#2E4A3A]"
             >
               <option value="">Todos los productos</option>
               {reviewedProducts.map(p => (
@@ -170,7 +170,7 @@ export default function AdminReviewsPage() {
         {/* Reviews List */}
         {loading ? (
           <div className="flex justify-center py-16">
-            <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#505A4A] border-t-transparent" />
+            <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#2E4A3A] border-t-transparent" />
           </div>
         ) : filteredReviews.length === 0 ? (
           <div className="text-center py-16">
@@ -193,7 +193,7 @@ export default function AdminReviewsPage() {
                         {review.userName}
                       </span>
                       {review.verified && (
-                        <span className="flex items-center gap-0.5 text-[10px] text-[#505A4A] dark:text-green-400 bg-[#505A4A]/10 dark:bg-green-900/30 px-1.5 py-0.5 rounded-full">
+                        <span className="flex items-center gap-0.5 text-[10px] text-[#2E4A3A] dark:text-green-400 bg-[#2E4A3A]/10 dark:bg-green-900/30 px-1.5 py-0.5 rounded-full">
                           <CheckCircle2 className="h-2.5 w-2.5" />
                           Verificada
                         </span>
@@ -204,7 +204,7 @@ export default function AdminReviewsPage() {
                     </div>
                     <Link
                       href={`/products/${review.productId}`}
-                      className="text-xs text-[#505A4A] dark:text-[#C4B590] hover:underline"
+                      className="text-xs text-[#2E4A3A] dark:text-[#C9A96E] hover:underline"
                     >
                       {getProductName(review.productId)}
                     </Link>

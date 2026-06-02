@@ -116,7 +116,7 @@ export default function ContactPage() {
                 ref={heroRef}
                 className="relative pt-24 pb-16 overflow-hidden"
             >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#505A4A]/5 via-transparent to-[#C4B590]/10" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#2E4A3A]/5 via-transparent to-[#C9A96E]/10" />
 
                 <m.div
                     variants={containerVariants}
@@ -137,12 +137,12 @@ export default function ContactPage() {
                         {/* Text Content */}
                         <m.div variants={itemVariants} className="space-y-8">
                             <div>
-                                <Badge className="bg-[#505A4A]/10 text-[#505A4A] font-bold text-base sm:text-lg px-5 sm:px-6 py-2 mb-6">
+                                <Badge className="bg-[#2E4A3A]/10 text-[#2E4A3A] font-bold text-base sm:text-lg px-5 sm:px-6 py-2 mb-6">
                                     Contáctanos
                                 </Badge>
                                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
                                     Estamos Aquí Para
-                                    <span className="text-[#505A4A]"> Ayudarte</span>
+                                    <span className="text-[#2E4A3A]"> Ayudarte</span>
                                 </h1>
                                 <p className="text-lg sm:text-xl text-gray-700 font-medium leading-relaxed">
                                     ¿Tienes preguntas sobre nuestros productos? ¿Quieres conocer más sobre nuestra historia?
@@ -154,9 +154,9 @@ export default function ContactPage() {
                             <div className="grid sm:grid-cols-2 gap-4 sm:gap-5">
                                 {contactInfo.map((info) => {
                                     const cardContent = (
-                                        <Card className="border border-[#E8E2D5] shadow-md bg-white hover:shadow-xl hover:border-[#C4B590] transition-all duration-300 h-full group/card">
+                                        <Card className="border border-[#E8E2D5] shadow-md bg-white hover:shadow-xl hover:border-[#C9A96E] transition-all duration-300 h-full group/card">
                                             <CardContent className="p-6 sm:p-7 flex items-start gap-4">
-                                                <div className="w-12 h-12 bg-[#505A4A] rounded-xl flex items-center justify-center flex-shrink-0 group-hover/card:bg-[#414A3C] transition-colors">
+                                                <div className="w-12 h-12 bg-[#2E4A3A] rounded-xl flex items-center justify-center flex-shrink-0 group-hover/card:bg-[#26402F] transition-colors">
                                                     <info.icon className="h-5 w-5 text-white" />
                                                 </div>
                                                 <div>
@@ -186,7 +186,7 @@ export default function ContactPage() {
                         {/* WhatsApp CTA + Quick Info */}
                         <m.div variants={itemVariants} className="space-y-6">
                             {/* WhatsApp Card */}
-                            <Card className="border-0 shadow-2xl bg-[#505A4A] text-white overflow-hidden">
+                            <Card className="border-0 shadow-2xl bg-[#2E4A3A] text-white overflow-hidden">
                                 <CardContent className="p-8 sm:p-10 relative">
                                     {/* Decorative circles */}
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
@@ -207,7 +207,7 @@ export default function ContactPage() {
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
-                                            <Button className="w-full sm:w-auto bg-white text-[#505A4A] hover:bg-[#F5F1E8] font-bold px-8 py-4 text-lg shadow-lg">
+                                            <Button className="w-full sm:w-auto bg-white text-[#2E4A3A] hover:bg-[#F5F1E8] font-bold px-8 py-4 text-lg shadow-lg">
                                                 <MessageCircle className="h-5 w-5 mr-2" />
                                                 Escribir por WhatsApp
                                             </Button>
@@ -220,8 +220,8 @@ export default function ContactPage() {
                             <div className="grid grid-cols-2 gap-4">
                                 <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
                                     <CardContent className="p-5 sm:p-6 text-center">
-                                        <div className="w-10 h-10 bg-[#C4B590]/15 rounded-xl flex items-center justify-center mx-auto mb-3">
-                                            <Leaf className="h-5 w-5 text-[#505A4A]" />
+                                        <div className="w-10 h-10 bg-[#C9A96E]/15 rounded-xl flex items-center justify-center mx-auto mb-3">
+                                            <Leaf className="h-5 w-5 text-[#2E4A3A]" />
                                         </div>
                                         <p className="text-2xl sm:text-3xl font-bold text-gray-900">100%</p>
                                         <p className="text-sm text-gray-600 font-medium">Natural</p>
@@ -229,8 +229,8 @@ export default function ContactPage() {
                                 </Card>
                                 <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
                                     <CardContent className="p-5 sm:p-6 text-center">
-                                        <div className="w-10 h-10 bg-[#C4B590]/15 rounded-xl flex items-center justify-center mx-auto mb-3">
-                                            <Send className="h-5 w-5 text-[#505A4A]" />
+                                        <div className="w-10 h-10 bg-[#C9A96E]/15 rounded-xl flex items-center justify-center mx-auto mb-3">
+                                            <Send className="h-5 w-5 text-[#2E4A3A]" />
                                         </div>
                                         <p className="text-2xl sm:text-3xl font-bold text-gray-900">&lt;24h</p>
                                         <p className="text-sm text-gray-600 font-medium">Respuesta</p>
@@ -255,7 +255,7 @@ export default function ContactPage() {
                 >
                     <m.div variants={itemVariants} className="text-center mb-12 sm:mb-16">
                         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-                            Envíanos un <span className="text-[#505A4A]">Mensaje</span>
+                            Envíanos un <span className="text-[#2E4A3A]">Mensaje</span>
                         </h2>
                         <p className="text-lg sm:text-xl text-gray-700 max-w-2xl mx-auto font-medium">
                             Cuéntanos cómo podemos ayudarte. Respondemos todos los mensajes en menos de 24 horas.
@@ -278,7 +278,7 @@ export default function ContactPage() {
                                                 id="contact-name"
                                                 type="text"
                                                 {...register('name')}
-                                                className={`border-2 border-gray-200 focus:border-[#505A4A] rounded-lg p-4 text-base sm:text-lg placeholder:text-gray-500 text-gray-800${errors.name ? ' border-red-400' : ''}`}
+                                                className={`border-2 border-gray-200 focus:border-[#2E4A3A] rounded-lg p-4 text-base sm:text-lg placeholder:text-gray-500 text-gray-800${errors.name ? ' border-red-400' : ''}`}
                                                 placeholder="Tu nombre"
                                                 autoComplete="name"
                                                 data-lpignore="true"
@@ -294,7 +294,7 @@ export default function ContactPage() {
                                                 id="contact-email"
                                                 type="email"
                                                 {...register('email')}
-                                                className={`border-2 border-gray-200 focus:border-[#505A4A] rounded-lg p-4 text-base sm:text-lg placeholder:text-gray-500 text-gray-800${errors.email ? ' border-red-400' : ''}`}
+                                                className={`border-2 border-gray-200 focus:border-[#2E4A3A] rounded-lg p-4 text-base sm:text-lg placeholder:text-gray-500 text-gray-800${errors.email ? ' border-red-400' : ''}`}
                                                 placeholder="tu@email.com"
                                                 autoComplete="email"
                                                 data-lpignore="true"
@@ -313,7 +313,7 @@ export default function ContactPage() {
                                             id="contact-subject"
                                             type="text"
                                             {...register('subject')}
-                                            className={`border-2 border-gray-200 focus:border-[#505A4A] rounded-lg p-4 text-base sm:text-lg placeholder:text-gray-500 text-gray-800${errors.subject ? ' border-red-400' : ''}`}
+                                            className={`border-2 border-gray-200 focus:border-[#2E4A3A] rounded-lg p-4 text-base sm:text-lg placeholder:text-gray-500 text-gray-800${errors.subject ? ' border-red-400' : ''}`}
                                             placeholder="¿En qué podemos ayudarte?"
                                             data-lpignore="true"
                                         />
@@ -328,7 +328,7 @@ export default function ContactPage() {
                                             id="contact-message"
                                             {...register('message')}
                                             rows={6}
-                                            className={`w-full border-2 border-gray-200 focus:border-[#505A4A] rounded-lg p-4 text-base sm:text-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#505A4A]/20 placeholder:text-gray-500 text-gray-800${errors.message ? ' border-red-400' : ''}`}
+                                            className={`w-full border-2 border-gray-200 focus:border-[#2E4A3A] rounded-lg p-4 text-base sm:text-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#2E4A3A]/20 placeholder:text-gray-500 text-gray-800${errors.message ? ' border-red-400' : ''}`}
                                             placeholder="Cuéntanos más detalles..."
                                             data-lpignore="true"
                                         />
@@ -339,7 +339,7 @@ export default function ContactPage() {
                                         <Button
                                             type="submit"
                                             disabled={isSubmitting}
-                                            className="bg-[#505A4A] hover:bg-[#414A3C] text-white font-bold px-10 sm:px-12 py-4 text-lg shadow-xl disabled:opacity-60"
+                                            className="bg-[#2E4A3A] hover:bg-[#26402F] text-white font-bold px-10 sm:px-12 py-4 text-lg shadow-xl disabled:opacity-60"
                                         >
                                             {isSubmitting ? (
                                                 <>

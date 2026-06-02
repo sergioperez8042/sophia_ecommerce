@@ -173,7 +173,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                     {/* Info */}
                     <div className="flex flex-col">
                         {categoryName && (
-                            <span className={`text-xs uppercase tracking-[0.15em] mb-2 ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>
+                            <span className={`text-xs uppercase tracking-[0.15em] mb-2 ${isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]'}`}>
                                 {categoryName}
                             </span>
                         )}
@@ -199,7 +199,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                     />
                                 ))}
                             </div>
-                            <span className={`text-[13px] transition-colors ${isDark ? 'text-[#8a8273] group-hover:text-[#C4B590]' : 'text-[#999] group-hover:text-[#505A4A]'}`}>
+                            <span className={`text-[13px] transition-colors ${isDark ? 'text-[#8a8273] group-hover:text-[#C9A96E]' : 'text-[#999] group-hover:text-[#2E4A3A]'}`}>
                                 {dynamicReviewCount > 0
                                     ? `${dynamicRating} · ${dynamicReviewCount} reseña${dynamicReviewCount > 1 ? 's' : ''}`
                                     : 'Sé el primero en opinar'
@@ -262,7 +262,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
 
                         {/* Precio + Peso */}
                         <div className="flex items-baseline gap-4 mb-6">
-                            <span className={`text-3xl font-bold ${isDark ? 'text-[#C4B590]' : 'text-[#505A4A]'}`}>
+                            <span className={`text-3xl font-bold ${isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]'}`}>
                                 {formatPrice(product.price)}
                             </span>
                             {product.weight != null && product.weight > 0 && (
@@ -283,8 +283,8 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                 onClick={handleAddToCart}
                                 className={`w-full py-4 rounded-xl text-base font-medium flex items-center justify-center gap-3 transition-all shadow-md mb-6 ${
                                     addedToCart
-                                        ? 'bg-[#C4B590] text-[#1a1d19]'
-                                        : 'bg-[#505A4A] text-white hover:bg-[#414A3C]'
+                                        ? 'bg-[#C9A96E] text-[#1a1d19]'
+                                        : 'bg-[#2E4A3A] text-white hover:bg-[#26402F]'
                                 }`}
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
@@ -306,7 +306,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                         {/* Back link */}
                         <Link
                             href="/catalog"
-                            className={`inline-flex items-center gap-2 text-sm font-medium transition-colors ${isDark ? 'text-[#C4B590] hover:text-[#e8e4dc]' : 'text-[#505A4A] hover:text-gray-900'}`}
+                            className={`inline-flex items-center gap-2 text-sm font-medium transition-colors ${isDark ? 'text-[#C9A96E] hover:text-[#e8e4dc]' : 'text-[#2E4A3A] hover:text-gray-900'}`}
                         >
                             <ArrowLeft className="w-4 h-4" />
                             Volver al catálogo
@@ -340,7 +340,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                         >
                             {loadingReviews ? (
                                 <div className="flex justify-center py-8">
-                                    <div className="animate-spin rounded-full h-6 w-6 border-2 border-[#505A4A] border-t-transparent" />
+                                    <div className="animate-spin rounded-full h-6 w-6 border-2 border-[#2E4A3A] border-t-transparent" />
                                 </div>
                             ) : (
                                 <div className="space-y-8 pb-8">
@@ -423,13 +423,13 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                                 rows={3}
                                                 className={`w-full border rounded-xl px-4 py-3 text-[14px] bg-transparent focus:outline-none transition-colors resize-none ${
                                                     isDark
-                                                        ? 'border-[#3a3d36] text-[#e8e4dc] placeholder-[#6a6359] focus:border-[#C4B590]'
-                                                        : 'border-[#D5D0C8] text-gray-900 placeholder-[#BBB] focus:border-[#505A4A]'
+                                                        ? 'border-[#3a3d36] text-[#e8e4dc] placeholder-[#6a6359] focus:border-[#C9A96E]'
+                                                        : 'border-[#D5D0C8] text-gray-900 placeholder-[#BBB] focus:border-[#2E4A3A]'
                                                 }`}
                                             />
                                             <div className="flex items-center justify-between mt-3">
                                                 {isVerifiedPurchase && (
-                                                    <span className={`flex items-center gap-1 text-[11px] ${isDark ? 'text-[#8a8273]' : 'text-[#505A4A]'}`}>
+                                                    <span className={`flex items-center gap-1 text-[11px] ${isDark ? 'text-[#8a8273]' : 'text-[#2E4A3A]'}`}>
                                                         <CheckCircle2 className="h-3.5 w-3.5" />
                                                         Compra verificada
                                                     </span>
@@ -437,7 +437,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                                 <button
                                                     onClick={handleSubmitReview}
                                                     disabled={reviewRating === 0 || submittingReview}
-                                                    className="ml-auto px-6 py-2.5 bg-[#505A4A] text-white text-[12px] font-medium tracking-[0.08em] uppercase rounded-xl hover:bg-[#414A3C] disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center gap-2"
+                                                    className="ml-auto px-6 py-2.5 bg-[#2E4A3A] text-white text-[12px] font-medium tracking-[0.08em] uppercase rounded-xl hover:bg-[#26402F] disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center gap-2"
                                                 >
                                                     {submittingReview && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
                                                     Publicar reseña
@@ -453,8 +453,8 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                                 href="/auth"
                                                 className={`inline-block px-6 py-2.5 text-[12px] font-medium tracking-[0.08em] uppercase rounded-xl border transition-all ${
                                                     isDark
-                                                        ? 'border-[#C4B590] text-[#C4B590] hover:bg-[#C4B590] hover:text-[#1a1d19]'
-                                                        : 'border-[#505A4A] text-[#505A4A] hover:bg-[#505A4A] hover:text-white'
+                                                        ? 'border-[#C9A96E] text-[#C9A96E] hover:bg-[#C9A96E] hover:text-[#1a1d19]'
+                                                        : 'border-[#2E4A3A] text-[#2E4A3A] hover:bg-[#2E4A3A] hover:text-white'
                                                 }`}
                                             >
                                                 Iniciar sesión
@@ -471,8 +471,8 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                                     className={`pb-5 border-b last:border-0 ${isDark ? 'border-[#3a3d36]' : 'border-[#E8E4DD]'}`}
                                                 >
                                                     <div className="flex items-start gap-3">
-                                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${isDark ? 'bg-[#505A4A]/20' : 'bg-[#505A4A]/10'}`}>
-                                                            <User className={`h-4 w-4 ${isDark ? 'text-[#8a8273]' : 'text-[#505A4A]'}`} />
+                                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${isDark ? 'bg-[#2E4A3A]/20' : 'bg-[#2E4A3A]/10'}`}>
+                                                            <User className={`h-4 w-4 ${isDark ? 'text-[#8a8273]' : 'text-[#2E4A3A]'}`} />
                                                         </div>
                                                         <div className="flex-1 min-w-0">
                                                             <div className="flex items-center gap-2 flex-wrap">
@@ -480,7 +480,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                                                     {review.userName}
                                                                 </span>
                                                                 {review.verified && (
-                                                                    <span className={`flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded-full ${isDark ? 'text-[#8a8273] bg-[#505A4A]/20' : 'text-[#505A4A] bg-[#505A4A]/8'}`}>
+                                                                    <span className={`flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded-full ${isDark ? 'text-[#8a8273] bg-[#2E4A3A]/20' : 'text-[#2E4A3A] bg-[#2E4A3A]/8'}`}>
                                                                         <CheckCircle2 className="h-2.5 w-2.5" />
                                                                         Verificada
                                                                     </span>

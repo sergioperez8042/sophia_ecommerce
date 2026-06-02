@@ -33,7 +33,7 @@ export default function UserMenu({ compact = false }: { compact?: boolean }) {
     return (
       <Link
         href="/auth"
-        className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:text-[#505A4A] hover:bg-[#505A4A]/5 transition-all"
+        className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:text-[#2E4A3A] hover:bg-[#2E4A3A]/5 transition-all"
       >
         <User className="w-5 h-5" />
         <span className="text-sm font-medium">Iniciar Sesión</span>
@@ -45,7 +45,7 @@ export default function UserMenu({ compact = false }: { compact?: boolean }) {
   if (compact) {
     return (
       <Link href="/profile" className="flex items-center justify-center h-9 w-9 rounded-lg hover:bg-gray-100 transition-colors">
-        <div className={`w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-[10px] ${isAdmin ? 'bg-[#505A4A]' : isManager ? 'bg-amber-600' : 'bg-blue-600'}`}>
+        <div className={`w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-[10px] ${isAdmin ? 'bg-[#2E4A3A]' : isManager ? 'bg-amber-600' : 'bg-blue-600'}`}>
           {user?.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
         </div>
       </Link>
@@ -58,7 +58,7 @@ export default function UserMenu({ compact = false }: { compact?: boolean }) {
   };
 
   const getRoleBadge = () => {
-    if (isAdmin) return { label: 'Admin', color: 'bg-[#505A4A]/20 text-[#505A4A]' };
+    if (isAdmin) return { label: 'Admin', color: 'bg-[#2E4A3A]/20 text-[#2E4A3A]' };
     if (isManager) return { label: 'Gestor', color: 'bg-amber-100 text-amber-800' };
     return { label: 'Cliente', color: 'bg-blue-100 text-blue-800' };
   };
@@ -74,7 +74,7 @@ export default function UserMenu({ compact = false }: { compact?: boolean }) {
         whileTap={{ scale: 0.98 }}
       >
         {/* Avatar */}
-        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm ${isAdmin ? 'bg-[#505A4A]' : isManager ? 'bg-amber-600' : 'bg-blue-600'
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm ${isAdmin ? 'bg-[#2E4A3A]' : isManager ? 'bg-amber-600' : 'bg-blue-600'
           }`}>
           {user?.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
         </div>
@@ -108,7 +108,7 @@ export default function UserMenu({ compact = false }: { compact?: boolean }) {
               className="absolute right-0 top-full mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden"
             >
               {/* User Info Header */}
-              <div className={`px-4 py-4 ${isAdmin ? 'bg-gradient-to-r from-[#505A4A] to-[#414A3C]' :
+              <div className={`px-4 py-4 ${isAdmin ? 'bg-gradient-to-r from-[#2E4A3A] to-[#26402F]' :
                 isManager ? 'bg-gradient-to-r from-amber-600 to-amber-700' :
                   'bg-gradient-to-r from-blue-600 to-blue-700'
                 }`}>

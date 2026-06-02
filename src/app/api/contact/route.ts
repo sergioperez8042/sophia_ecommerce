@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
         subject: `[Contacto Web] ${subject.trim()}`,
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #505A4A;">Nuevo mensaje de contacto</h2>
+            <h2 style="color: #2E4A3A;">Nuevo mensaje de contacto</h2>
             <table style="width: 100%; border-collapse: collapse;">
               <tr><td style="padding: 8px 0; color: #666;"><strong>Nombre:</strong></td><td style="padding: 8px 0;">${name.trim()}</td></tr>
               <tr><td style="padding: 8px 0; color: #666;"><strong>Email:</strong></td><td style="padding: 8px 0;"><a href="mailto:${trimmedEmail}">${trimmedEmail}</a></td></tr>

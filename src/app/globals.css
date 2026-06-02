@@ -5,12 +5,12 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --sage-green: #505A4A; /* Olive sage from logo */
+  --sage-green: #2E4A3A; /* Olive sage from logo */
   --sage-green-light: #6A7363; /* Lighter olive */
   --warm-beige: #F5F1E8;
   --cream-white: #FEFCF7;
-  --eucalyptus: #414A3C; /* Dark olive */
-  --soft-gold: #C4B590; /* Champagne from logo text */
+  --eucalyptus: #26402F; /* Dark olive */
+  --soft-gold: #C9A96E; /* Champagne from logo text */
   --text-muted: #4A4A4A; /* Better contrast than gray-600 */
 }
 

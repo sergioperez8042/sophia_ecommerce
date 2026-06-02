@@ -7,7 +7,7 @@ import { Check, ChevronDown, Search } from 'lucide-react';
  * Selector multi-select con buscador interno.
  *
  * Misma estética que `SearchableDropdown` (paleta Sophia, rounded-xl,
- * focus:ring-[#505A4A]) pero con varios valores seleccionables a la vez —
+ * focus:ring-[#2E4A3A]) pero con varios valores seleccionables a la vez —
  * para casos como provincias, municipios o consejos populares en el admin
  * de gestores donde el usuario marca múltiples opciones.
  *
@@ -115,7 +115,7 @@ export default function MultiSearchableDropdown({
         type="button"
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
-        className="w-full flex items-center justify-between gap-2 px-3 py-2.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white hover:border-gray-300 dark:hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-[#505A4A]/30 focus:border-[#505A4A] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+        className="w-full flex items-center justify-between gap-2 px-3 py-2.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white hover:border-gray-300 dark:hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-[#2E4A3A]/30 focus:border-[#2E4A3A] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
       >
         <span className="flex items-center gap-2 min-w-0">
           {icon && <span className="flex-shrink-0 text-gray-400">{icon}</span>}
@@ -137,7 +137,7 @@ export default function MultiSearchableDropdown({
                 placeholder={searchPlaceholder}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-8 pr-3 py-2 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-[#505A4A]/30 focus:border-[#505A4A] transition-all"
+                className="w-full pl-8 pr-3 py-2 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-[#2E4A3A]/30 focus:border-[#2E4A3A] transition-all"
               />
             </div>
           </div>
@@ -157,14 +157,14 @@ export default function MultiSearchableDropdown({
                     onClick={() => toggle(opt.id)}
                     className={`w-full text-left px-3 py-2 text-sm transition-colors flex items-center gap-2.5 ${
                       isActive
-                        ? 'bg-[#505A4A]/8 text-[#505A4A] dark:text-[#C4B590] font-medium'
+                        ? 'bg-[#2E4A3A]/8 text-[#2E4A3A] dark:text-[#C9A96E] font-medium'
                         : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                     }`}
                   >
                     <span
                       className={`flex items-center justify-center w-4 h-4 rounded border flex-shrink-0 transition-colors ${
                         isActive
-                          ? 'bg-[#505A4A] border-[#505A4A] dark:bg-[#C4B590] dark:border-[#C4B590]'
+                          ? 'bg-[#2E4A3A] border-[#2E4A3A] dark:bg-[#C9A96E] dark:border-[#C9A96E]'
                           : 'border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-700'
                       }`}
                     >
@@ -185,7 +185,7 @@ export default function MultiSearchableDropdown({
               <button
                 type="button"
                 onClick={() => onChange([])}
-                className="text-[#505A4A] dark:text-[#C4B590] hover:underline"
+                className="text-[#2E4A3A] dark:text-[#C9A96E] hover:underline"
               >
                 Limpiar
               </button>

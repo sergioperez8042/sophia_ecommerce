@@ -66,7 +66,7 @@ export default function AboutPage() {
                 className="relative min-h-screen flex items-center justify-center overflow-hidden"
             >
                 {/* Background Pattern */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#505A4A]/5 via-transparent to-[#C4B590]/10" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#2E4A3A]/5 via-transparent to-[#C9A96E]/10" />
 
                 <m.div
                     variants={containerVariants}
@@ -82,12 +82,12 @@ export default function AboutPage() {
                                 animate={heroInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
                                 transition={{ duration: 0.8, delay: 0.2 }}
                             >
-                                <Badge className="bg-[#505A4A]/10 text-[#505A4A] font-bold text-sm sm:text-base lg:text-lg px-4 sm:px-6 py-2 mb-4 sm:mb-6">
+                                <Badge className="bg-[#2E4A3A]/10 text-[#2E4A3A] font-bold text-sm sm:text-base lg:text-lg px-4 sm:px-6 py-2 mb-4 sm:mb-6">
                                     Nuestra Historia
                                 </Badge>
                                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-gray-900 leading-tight">
                                     De Cuba a
-                                    <span className="text-[#505A4A]"> Europa</span>
+                                    <span className="text-[#2E4A3A]"> Europa</span>
                                 </h1>
                             </m.div>
 
@@ -95,17 +95,17 @@ export default function AboutPage() {
                                 variants={itemVariants}
                                 className="text-base sm:text-lg lg:text-xl text-gray-700 font-medium leading-relaxed"
                             >
-                                La historia de <strong className="text-[#505A4A]">Sophia Natural</strong> es la historia de una mujer valiente que transformó su pasión por la belleza natural en un imperio de bienestar que ahora cruza océanos.
+                                La historia de <strong className="text-[#2E4A3A]">Sophia Natural</strong> es la historia de una mujer valiente que transformó su pasión por la belleza natural en un imperio de bienestar que ahora cruza océanos.
                             </m.p>
 
                             <m.div variants={itemVariants} className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
                                 <Link href="/products">
-                                    <Button className="w-full sm:w-auto bg-[#505A4A] hover:bg-[#414A3C] text-white font-bold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg shadow-lg">
+                                    <Button className="w-full sm:w-auto bg-[#2E4A3A] hover:bg-[#26402F] text-white font-bold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg shadow-lg">
                                         Descubre Nuestros Productos
                                     </Button>
                                 </Link>
                                 <Button
-                                    className="w-full sm:w-auto bg-[#505A4A] hover:bg-[#414A3C] text-white font-bold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg shadow-lg"
+                                    className="w-full sm:w-auto bg-[#2E4A3A] hover:bg-[#26402F] text-white font-bold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg shadow-lg"
                                     onClick={() => storyRef.current?.scrollIntoView({ behavior: 'smooth' })}
                                 >
                                     Conoce la Historia
@@ -135,7 +135,7 @@ export default function AboutPage() {
                                         repeat: Infinity,
                                         ease: "linear"
                                     }}
-                                    className="absolute -top-4 -left-4 w-24 h-24 bg-gradient-to-r from-[#505A4A]/20 to-[#C4B590]/20 rounded-full blur-xl"
+                                    className="absolute -top-4 -left-4 w-24 h-24 bg-gradient-to-r from-[#2E4A3A]/20 to-[#C9A96E]/20 rounded-full blur-xl"
                                 />
                                 <m.div
                                     animate={{
@@ -147,7 +147,7 @@ export default function AboutPage() {
                                         repeat: Infinity,
                                         ease: "linear"
                                     }}
-                                    className="absolute -bottom-8 -right-8 w-32 h-32 bg-gradient-to-l from-[#505A4A]/15 to-[#C4B590]/15 rounded-full blur-2xl"
+                                    className="absolute -bottom-8 -right-8 w-32 h-32 bg-gradient-to-l from-[#2E4A3A]/15 to-[#C9A96E]/15 rounded-full blur-2xl"
                                 />
 
                                 <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br from-[#FEFCF7] to-[#F5F1E8] p-4">
@@ -171,7 +171,7 @@ export default function AboutPage() {
                 ref={storyRef}
                 className="py-16 sm:py-24 lg:py-32 relative overflow-hidden"
             >
-                <div className="absolute inset-0 bg-gradient-to-r from-[#505A4A]/5 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#2E4A3A]/5 to-transparent" />
 
                 <m.div
                     variants={containerVariants}
@@ -181,7 +181,7 @@ export default function AboutPage() {
                 >
                     <m.div variants={itemVariants} className="text-center mb-12 sm:mb-16 lg:mb-20">
                         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6">
-                            Una Historia de <span className="text-[#505A4A]">Determinación</span>
+                            Una Historia de <span className="text-[#2E4A3A]">Determinación</span>
                         </h2>
                         <p className="text-base sm:text-lg lg:text-xl text-gray-700 max-w-3xl mx-auto font-medium leading-relaxed">
                             Desde las calles de La Habana hasta las capitales europeas, esta es la historia de cómo la pasión y la perseverancia pueden cambiar el mundo.
@@ -197,8 +197,8 @@ export default function AboutPage() {
                                     animate={storyInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
                                     transition={{ duration: 0.6, delay: 0.2 }}
                                 >
-                                    <h3 className="text-2xl font-bold text-[#505A4A] flex items-center gap-3">
-                                        <Heart className="h-6 w-6 text-[#C4B590]" />
+                                    <h3 className="text-2xl font-bold text-[#2E4A3A] flex items-center gap-3">
+                                        <Heart className="h-6 w-6 text-[#C9A96E]" />
                                         Los Inicios en Cuba
                                     </h3>
                                     <p className="text-gray-700 text-lg leading-relaxed font-medium">
@@ -211,8 +211,8 @@ export default function AboutPage() {
                                     animate={storyInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
                                     transition={{ duration: 0.6, delay: 0.4 }}
                                 >
-                                    <h3 className="text-2xl font-bold text-[#505A4A] flex items-center gap-3">
-                                        <TrendingUp className="h-6 w-6 text-[#505A4A]" />
+                                    <h3 className="text-2xl font-bold text-[#2E4A3A] flex items-center gap-3">
+                                        <TrendingUp className="h-6 w-6 text-[#2E4A3A]" />
                                         El Crecimiento
                                     </h3>
                                     <p className="text-gray-700 text-lg leading-relaxed font-medium">
@@ -225,8 +225,8 @@ export default function AboutPage() {
                                     animate={storyInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
                                     transition={{ duration: 0.6, delay: 0.6 }}
                                 >
-                                    <h3 className="text-2xl font-bold text-[#505A4A] flex items-center gap-3">
-                                        <Globe className="h-6 w-6 text-[#414A3C]" />
+                                    <h3 className="text-2xl font-bold text-[#2E4A3A] flex items-center gap-3">
+                                        <Globe className="h-6 w-6 text-[#26402F]" />
                                         La Conquista Europea
                                     </h3>
                                     <p className="text-gray-700 text-lg leading-relaxed font-medium">
@@ -239,9 +239,9 @@ export default function AboutPage() {
                         {/* Stats Cards */}
                         <m.div variants={itemVariants} className="space-y-6">
                             <m.div variants={cardVariants}>
-                                <Card className="border-0 shadow-xl bg-gradient-to-r from-[#505A4A]/5 to-[#505A4A]/10 backdrop-blur-sm">
+                                <Card className="border-0 shadow-xl bg-gradient-to-r from-[#2E4A3A]/5 to-[#2E4A3A]/10 backdrop-blur-sm">
                                     <CardContent className="p-8 text-center">
-                                        <Award className="h-12 w-12 text-[#505A4A] mx-auto mb-4" />
+                                        <Award className="h-12 w-12 text-[#2E4A3A] mx-auto mb-4" />
                                         <h4 className="text-3xl font-bold text-gray-900 mb-2">7</h4>
                                         <p className="text-gray-700 font-semibold">Años de Experiencia</p>
                                     </CardContent>
@@ -249,9 +249,9 @@ export default function AboutPage() {
                             </m.div>
 
                             <m.div variants={cardVariants}>
-                                <Card className="border-0 shadow-xl bg-gradient-to-r from-[#C4B590]/10 to-[#C4B590]/20 backdrop-blur-sm">
+                                <Card className="border-0 shadow-xl bg-gradient-to-r from-[#C9A96E]/10 to-[#C9A96E]/20 backdrop-blur-sm">
                                     <CardContent className="p-8 text-center">
-                                        <Users className="h-12 w-12 text-[#505A4A] mx-auto mb-4" />
+                                        <Users className="h-12 w-12 text-[#2E4A3A] mx-auto mb-4" />
                                         <h4 className="text-3xl font-bold text-gray-900 mb-2">50,000+</h4>
                                         <p className="text-gray-700 font-semibold">Mujeres Satisfechas</p>
                                     </CardContent>
@@ -261,7 +261,7 @@ export default function AboutPage() {
                             <m.div variants={cardVariants}>
                                 <Card className="border-0 shadow-xl bg-gradient-to-r from-[#F5F1E8] to-[#E8E2D5] backdrop-blur-sm">
                                     <CardContent className="p-8 text-center">
-                                        <Globe className="h-12 w-12 text-[#414A3C] mx-auto mb-4" />
+                                        <Globe className="h-12 w-12 text-[#26402F] mx-auto mb-4" />
                                         <h4 className="text-3xl font-bold text-gray-900 mb-2">15</h4>
                                         <p className="text-gray-700 font-semibold">Países en Europa</p>
                                     </CardContent>
@@ -285,7 +285,7 @@ export default function AboutPage() {
                 >
                     <m.div variants={itemVariants} className="text-center mb-16 sm:mb-20">
                         <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
-                            Nuestros <span className="text-[#505A4A]">Valores</span>
+                            Nuestros <span className="text-[#2E4A3A]">Valores</span>
                         </h2>
                         <p className="text-lg sm:text-xl text-gray-700 max-w-3xl mx-auto font-medium">
                             Los principios que nos guían en cada paso de nuestro viaje hacia la belleza natural y el empoderamiento femenino.
@@ -298,25 +298,25 @@ export default function AboutPage() {
                                 icon: Heart,
                                 title: "Pasión",
                                 description: "Cada producto está hecho con amor y dedicación, siguiendo recetas tradicionales cubanas.",
-                                accent: "bg-[#505A4A]/10"
+                                accent: "bg-[#2E4A3A]/10"
                             },
                             {
                                 icon: Sparkles,
                                 title: "Calidad",
                                 description: "Solo utilizamos ingredientes naturales de la más alta calidad, sin químicos dañinos.",
-                                accent: "bg-[#C4B590]/15"
+                                accent: "bg-[#C9A96E]/15"
                             },
                             {
                                 icon: Users,
                                 title: "Empoderamiento",
                                 description: "Creamos oportunidades para mujeres emprendedoras en Cuba y Europa.",
-                                accent: "bg-[#505A4A]/10"
+                                accent: "bg-[#2E4A3A]/10"
                             },
                             {
                                 icon: ShieldCheck,
                                 title: "Compromiso",
                                 description: "Combinamos tradición cubana con estándares europeos para crear productos únicos.",
-                                accent: "bg-[#C4B590]/15"
+                                accent: "bg-[#C9A96E]/15"
                             }
                         ].map((value) => (
                             <m.div
@@ -328,7 +328,7 @@ export default function AboutPage() {
                                 <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm h-full hover:shadow-2xl transition-all duration-300">
                                     <CardContent className="p-8 text-center h-full flex flex-col">
                                         <div className={`w-16 h-16 ${value.accent} rounded-2xl flex items-center justify-center mx-auto mb-6`}>
-                                            <value.icon className="h-8 w-8 text-[#505A4A]" />
+                                            <value.icon className="h-8 w-8 text-[#2E4A3A]" />
                                         </div>
                                         <h3 className="text-2xl font-bold text-gray-900 mb-4">{value.title}</h3>
                                         <p className="text-gray-700 font-medium leading-relaxed flex-grow">
@@ -343,7 +343,7 @@ export default function AboutPage() {
             </m.section>
 
             {/* CTA Section */}
-            <m.section className="py-24 sm:py-32 bg-[#505A4A] text-white">
+            <m.section className="py-24 sm:py-32 bg-[#2E4A3A] text-white">
                 <m.div
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -351,7 +351,7 @@ export default function AboutPage() {
                     viewport={{ once: true }}
                     className="container mx-auto px-4 text-center"
                 >
-                    <Leaf className="h-12 w-12 text-[#C4B590] mx-auto mb-8" />
+                    <Leaf className="h-12 w-12 text-[#C9A96E] mx-auto mb-8" />
                     <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-6">
                         Únete a Nuestra Historia
                     </h2>
@@ -362,14 +362,14 @@ export default function AboutPage() {
                         <Link href="/products">
                             <Button
                                 size="lg"
-                                className="w-full sm:w-auto bg-white text-[#505A4A] hover:bg-[#F5F1E8] font-bold px-10 sm:px-12 py-4 text-lg sm:text-xl shadow-xl"
+                                className="w-full sm:w-auto bg-white text-[#2E4A3A] hover:bg-[#F5F1E8] font-bold px-10 sm:px-12 py-4 text-lg sm:text-xl shadow-xl"
                             >
                                 Comprar Ahora
                             </Button>
                         </Link>
                         <Link href="/contact">
                             <button
-                                className="w-full sm:w-auto border-2 border-white bg-transparent text-white hover:bg-white hover:text-[#505A4A] font-bold px-10 sm:px-12 py-4 text-lg sm:text-xl rounded-md transition-colors"
+                                className="w-full sm:w-auto border-2 border-white bg-transparent text-white hover:bg-white hover:text-[#2E4A3A] font-bold px-10 sm:px-12 py-4 text-lg sm:text-xl rounded-md transition-colors"
                             >
                                 Contáctanos
                             </button>

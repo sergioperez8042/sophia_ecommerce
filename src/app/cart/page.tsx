@@ -87,7 +87,7 @@ export default function CartPage() {
     if (!isLoaded) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-[#FEFCF7]">
-                <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#505A4A] border-t-transparent" />
+                <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#2E4A3A] border-t-transparent" />
             </div>
         );
     }
@@ -103,16 +103,16 @@ export default function CartPage() {
                         transition={{ duration: 0.6 }}
                         className="text-center pt-28 pb-20"
                     >
-                        <ShoppingBag className="h-10 w-10 text-[#505A4A]/20 dark:text-[#C4B590]/30 mx-auto mb-8" strokeWidth={1} />
+                        <ShoppingBag className="h-10 w-10 text-[#2E4A3A]/20 dark:text-[#C9A96E]/30 mx-auto mb-8" strokeWidth={1} />
                         <h1 className="text-[28px] font-light text-[#333] dark:text-[#e8e0d0] dark:text-[#e8e0d0] tracking-[-0.01em] mb-3">
                             Tu carrito esta vacio
                         </h1>
-                        <p className="text-[15px] text-[#888] dark:text-[#C4B590]/60 font-light leading-relaxed mb-12">
+                        <p className="text-[15px] text-[#888] dark:text-[#C9A96E]/60 font-light leading-relaxed mb-12">
                             Explora nuestra coleccion y encuentra tu rutina ideal.
                         </p>
                         <Link
                             href="/"
-                            className="inline-block border border-[#505A4A] dark:border-[#C4B590] text-[#505A4A] dark:text-[#C4B590] px-10 py-3.5 text-[13px] font-medium tracking-[0.08em] uppercase hover:bg-[#505A4A] hover:text-white dark:hover:bg-[#C4B590] dark:hover:text-[#1a1d19] transition-all duration-300"
+                            className="inline-block border border-[#2E4A3A] dark:border-[#C9A96E] text-[#2E4A3A] dark:text-[#C9A96E] px-10 py-3.5 text-[13px] font-medium tracking-[0.08em] uppercase hover:bg-[#2E4A3A] hover:text-white dark:hover:bg-[#C9A96E] dark:hover:text-[#1a1d19] transition-all duration-300"
                         >
                             Ver Productos
                         </Link>
@@ -135,7 +135,7 @@ export default function CartPage() {
                     <h1 className="text-[32px] sm:text-[38px] font-light text-[#333] dark:text-[#e8e0d0] tracking-[-0.02em] mt-8 mb-2">
                         Tu Carrito
                     </h1>
-                    <p className="text-[14px] text-[#999] dark:text-[#C4B590]/50 font-light mb-12">
+                    <p className="text-[14px] text-[#999] dark:text-[#C9A96E]/50 font-light mb-12">
                         {totalItems} {totalItems === 1 ? 'artículo' : 'artículos'}
                     </p>
 
@@ -167,12 +167,12 @@ export default function CartPage() {
                                                 <div className="flex-1 flex flex-col justify-between min-h-[140px] sm:min-h-[160px]">
                                                     <div>
                                                         {item.product.category && (
-                                                            <span className="text-[11px] uppercase tracking-[0.15em] text-[#999] dark:text-[#C4B590]/50 block mb-1.5">
+                                                            <span className="text-[11px] uppercase tracking-[0.15em] text-[#999] dark:text-[#C9A96E]/50 block mb-1.5">
                                                                 {item.product.category}
                                                             </span>
                                                         )}
                                                         <Link href={`/products/${item.product.id}`}>
-                                                            <h3 className="text-[16px] sm:text-[18px] font-light text-[#333] dark:text-[#e8e0d0] hover:text-[#505A4A] transition-colors tracking-[-0.01em] leading-tight">
+                                                            <h3 className="text-[16px] sm:text-[18px] font-light text-[#333] dark:text-[#e8e0d0] hover:text-[#2E4A3A] transition-colors tracking-[-0.01em] leading-tight">
                                                                 {item.product.name}
                                                             </h3>
                                                         </Link>
@@ -188,7 +188,7 @@ export default function CartPage() {
                                                         <div className="inline-flex items-center border border-[#D5D0C8] h-[38px]">
                                                             <button
                                                                 onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                                                                className="w-[38px] h-full flex items-center justify-center text-[#999] dark:text-[#C4B590]/50 hover:text-[#333] dark:text-[#e8e0d0] transition-colors"
+                                                                className="w-[38px] h-full flex items-center justify-center text-[#999] dark:text-[#C9A96E]/50 hover:text-[#333] dark:text-[#e8e0d0] transition-colors"
                                                                 aria-label="Disminuir cantidad"
                                                             >
                                                                 <Minus className="h-3 w-3" strokeWidth={1.5} />
@@ -198,7 +198,7 @@ export default function CartPage() {
                                                             </span>
                                                             <button
                                                                 onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                                                                className="w-[38px] h-full flex items-center justify-center text-[#999] dark:text-[#C4B590]/50 hover:text-[#333] dark:text-[#e8e0d0] transition-colors"
+                                                                className="w-[38px] h-full flex items-center justify-center text-[#999] dark:text-[#C9A96E]/50 hover:text-[#333] dark:text-[#e8e0d0] transition-colors"
                                                                 aria-label="Aumentar cantidad"
                                                             >
                                                                 <Plus className="h-3 w-3" strokeWidth={1.5} />
@@ -211,7 +211,7 @@ export default function CartPage() {
                                                             </span>
                                                             <button
                                                                 onClick={() => removeItem(item.product.id)}
-                                                                className="text-[#CCC] hover:text-[#999] dark:text-[#C4B590]/50 transition-colors"
+                                                                className="text-[#CCC] hover:text-[#999] dark:text-[#C9A96E]/50 transition-colors"
                                                                 title="Eliminar"
                                                             >
                                                                 <X className="h-[18px] w-[18px]" strokeWidth={1.5} />
@@ -227,7 +227,7 @@ export default function CartPage() {
 
                             <Link
                                 href="/"
-                                className="inline-flex items-center gap-2 mt-8 text-[13px] text-[#505A4A] hover:text-[#333] dark:text-[#e8e0d0] tracking-[0.04em] uppercase font-medium transition-colors group"
+                                className="inline-flex items-center gap-2 mt-8 text-[13px] text-[#2E4A3A] hover:text-[#333] dark:text-[#e8e0d0] tracking-[0.04em] uppercase font-medium transition-colors group"
                             >
                                 <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform duration-200" strokeWidth={1.5} />
                                 Seguir Comprando
@@ -237,7 +237,7 @@ export default function CartPage() {
                         {/* Resumen */}
                         <div className="lg:col-span-5">
                             <div className="sticky top-10">
-                                <div className="bg-[#F5F1E8]/60 dark:bg-[#C4B590]/5 p-8 sm:p-10">
+                                <div className="bg-[#F5F1E8]/60 dark:bg-[#C9A96E]/5 p-8 sm:p-10">
                                     <h2 className="text-[13px] uppercase tracking-[0.15em] text-[#666] font-medium mb-8">
                                         Resumen del pedido
                                     </h2>
@@ -246,15 +246,15 @@ export default function CartPage() {
                                     {location && (
                                         <div className="flex items-start justify-between gap-3 mb-6 pb-6 border-b border-[#D5D0C8]/40">
                                             <div className="flex items-start gap-2 min-w-0">
-                                                <MapPin className="w-4 h-4 text-[#505A4A] mt-0.5 flex-shrink-0" strokeWidth={1.5} />
+                                                <MapPin className="w-4 h-4 text-[#2E4A3A] mt-0.5 flex-shrink-0" strokeWidth={1.5} />
                                                 <div className="min-w-0">
                                                     <p className="text-[13px] text-[#333] dark:text-[#e8e0d0] font-medium truncate">
                                                         {location.municipality}, {location.province}
                                                     </p>
                                                     {gestorLoading ? (
-                                                        <p className="text-[11px] text-[#999] dark:text-[#C4B590]/50 mt-0.5">Buscando repartidor...</p>
+                                                        <p className="text-[11px] text-[#999] dark:text-[#C9A96E]/50 mt-0.5">Buscando repartidor...</p>
                                                     ) : gestor ? (
-                                                        <p className="text-[11px] text-[#505A4A] mt-0.5">
+                                                        <p className="text-[11px] text-[#2E4A3A] mt-0.5">
                                                             Entrega por {gestor.name}
                                                         </p>
                                                     ) : (
@@ -267,7 +267,7 @@ export default function CartPage() {
                                             <button
                                                 type="button"
                                                 onClick={() => setShowLocationEditor(true)}
-                                                className="text-[11px] uppercase tracking-[0.1em] text-[#505A4A] hover:text-[#414A3C] underline underline-offset-2 flex-shrink-0 mt-0.5"
+                                                className="text-[11px] uppercase tracking-[0.1em] text-[#2E4A3A] hover:text-[#26402F] underline underline-offset-2 flex-shrink-0 mt-0.5"
                                             >
                                                 Cambiar
                                             </button>
@@ -297,7 +297,7 @@ export default function CartPage() {
                                     <button
                                         onClick={handleWhatsAppOrder}
                                         disabled={isSending || items.length === 0}
-                                        className="w-full mt-8 bg-[#505A4A] text-white h-[52px] text-[13px] font-medium tracking-[0.1em] uppercase hover:bg-[#414A3C] transition-colors duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
+                                        className="w-full mt-8 bg-[#2E4A3A] text-white h-[52px] text-[13px] font-medium tracking-[0.1em] uppercase hover:bg-[#26402F] transition-colors duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
                                     >
                                         {isSending ? (
                                             <>

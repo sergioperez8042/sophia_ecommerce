@@ -28,7 +28,7 @@ export default function Toggle({
             disabled={disabled}
             onClick={() => onChange(!checked)}
             className={`relative ${dims.track} rounded-full transition-colors ${
-                checked ? 'bg-[#505A4A]' : 'bg-gray-300 dark:bg-gray-600'
+                checked ? 'bg-[#2E4A3A]' : 'bg-gray-300 dark:bg-gray-600'
             } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
         >
             <span

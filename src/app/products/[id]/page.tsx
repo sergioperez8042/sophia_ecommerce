@@ -133,7 +133,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     if (isLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-[#FEFCF7] dark:bg-[#1a1d19]">
-                <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#505A4A] border-t-transparent" />
+                <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#2E4A3A] border-t-transparent" />
             </div>
         );
     }
@@ -146,7 +146,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     <p className="text-[#999] dark:text-[#8a8273] mb-8">El producto que buscas no existe o fue eliminado.</p>
                     <Link
                         href="/products"
-                        className="inline-block border border-[#505A4A] text-[#505A4A] dark:text-[#8a8273] dark:border-[#8a8273] px-8 py-3 text-[13px] font-medium tracking-[0.08em] uppercase hover:bg-[#505A4A] hover:text-white transition-all duration-300"
+                        className="inline-block border border-[#2E4A3A] text-[#2E4A3A] dark:text-[#8a8273] dark:border-[#8a8273] px-8 py-3 text-[13px] font-medium tracking-[0.08em] uppercase hover:bg-[#2E4A3A] hover:text-white transition-all duration-300"
                     >
                         Ver Productos
                     </Link>
@@ -218,7 +218,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                             onClick={() => setSelectedImage(index)}
                                             className={`relative aspect-square overflow-hidden bg-[#F0EDE6] dark:bg-[#2a2e26] transition-all duration-200 ${
                                                 selectedImage === index
-                                                    ? 'ring-2 ring-[#505A4A]'
+                                                    ? 'ring-2 ring-[#2E4A3A]'
                                                     : 'opacity-60 hover:opacity-100'
                                             }`}
                                         >
@@ -254,7 +254,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     {product.tags.map((tag) => (
                                         <span
                                             key={tag}
-                                            className="text-[11px] uppercase tracking-[0.05em] px-2.5 py-1 bg-[#505A4A]/8 text-[#505A4A] dark:bg-[#505A4A]/20 dark:text-[#b8b0a2] rounded-full"
+                                            className="text-[11px] uppercase tracking-[0.05em] px-2.5 py-1 bg-[#2E4A3A]/8 text-[#2E4A3A] dark:bg-[#2E4A3A]/20 dark:text-[#b8b0a2] rounded-full"
                                         >
                                             {tag}
                                         </span>
@@ -290,7 +290,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                         />
                                     ))}
                                 </div>
-                                <span className="text-[13px] text-[#999] dark:text-[#8a8273] group-hover:text-[#505A4A] dark:group-hover:text-[#C4B590] transition-colors">
+                                <span className="text-[13px] text-[#999] dark:text-[#8a8273] group-hover:text-[#2E4A3A] dark:group-hover:text-[#C9A96E] transition-colors">
                                     {product.reviews_count > 0
                                         ? `${product.rating} · ${product.reviews_count} reseñas`
                                         : 'Sé el primero en opinar'
@@ -306,7 +306,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                 <span className="text-[16px] text-[#BBB] dark:text-[#6a6359] line-through">
                                     ${(product.price * 1.2).toFixed(2)}
                                 </span>
-                                <span className="text-[12px] text-[#505A4A] font-medium tracking-wide uppercase">
+                                <span className="text-[12px] text-[#2E4A3A] font-medium tracking-wide uppercase">
                                     -{discount}%
                                 </span>
                             </div>
@@ -351,9 +351,9 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     disabled={!product.active}
                                     className={`flex-1 h-[52px] flex items-center justify-center gap-2 text-[13px] font-medium tracking-[0.1em] uppercase transition-all duration-300 ${
                                         addedToCart
-                                            ? 'bg-[#414A3C] text-white'
+                                            ? 'bg-[#26402F] text-white'
                                             : product.active
-                                                ? 'bg-[#505A4A] text-white hover:bg-[#414A3C]'
+                                                ? 'bg-[#2E4A3A] text-white hover:bg-[#26402F]'
                                                 : 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed'
                                     }`}
                                 >
@@ -364,8 +364,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     onClick={handleToggleWishlist}
                                     className={`w-[52px] h-[52px] flex items-center justify-center border transition-all duration-300 ${
                                         isWishlisted
-                                            ? 'border-[#505A4A] bg-[#505A4A]/5 text-[#505A4A]'
-                                            : 'border-[#D5D0C8] dark:border-[#3a3d36] text-[#999] dark:text-[#8a8273] hover:text-[#505A4A] hover:border-[#505A4A]'
+                                            ? 'border-[#2E4A3A] bg-[#2E4A3A]/5 text-[#2E4A3A]'
+                                            : 'border-[#D5D0C8] dark:border-[#3a3d36] text-[#999] dark:text-[#8a8273] hover:text-[#2E4A3A] hover:border-[#2E4A3A]'
                                     }`}
                                 >
                                     <Heart className={`h-5 w-5 ${isWishlisted ? 'fill-current' : ''}`} strokeWidth={1.5} />
@@ -375,15 +375,15 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                             {/* Trust */}
                             <div className="grid grid-cols-3 gap-4 py-6 border-t border-[#E8E4DD] dark:border-[#3a3d36]">
                                 <div className="flex flex-col items-center text-center">
-                                    <Truck className="h-5 w-5 text-[#505A4A]/50 mb-2" strokeWidth={1.5} />
+                                    <Truck className="h-5 w-5 text-[#2E4A3A]/50 mb-2" strokeWidth={1.5} />
                                     <span className="text-[11px] text-[#999] dark:text-[#8a8273] tracking-[0.03em]">Envío Express</span>
                                 </div>
                                 <div className="flex flex-col items-center text-center">
-                                    <Shield className="h-5 w-5 text-[#505A4A]/50 mb-2" strokeWidth={1.5} />
+                                    <Shield className="h-5 w-5 text-[#2E4A3A]/50 mb-2" strokeWidth={1.5} />
                                     <span className="text-[11px] text-[#999] dark:text-[#8a8273] tracking-[0.03em]">Garantía 30 días</span>
                                 </div>
                                 <div className="flex flex-col items-center text-center">
-                                    <RotateCcw className="h-5 w-5 text-[#505A4A]/50 mb-2" strokeWidth={1.5} />
+                                    <RotateCcw className="h-5 w-5 text-[#2E4A3A]/50 mb-2" strokeWidth={1.5} />
                                     <span className="text-[11px] text-[#999] dark:text-[#8a8273] tracking-[0.03em]">Devolución gratis</span>
                                 </div>
                             </div>
@@ -410,7 +410,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                     {tab.label}
                                     {activeTab === tab.id && (
                                         <m.div
-                                            className="absolute top-0 left-0 right-0 h-[2px] bg-[#505A4A]"
+                                            className="absolute top-0 left-0 right-0 h-[2px] bg-[#2E4A3A]"
                                             layoutId="activeProductTab"
                                         />
                                     )}
@@ -450,7 +450,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                             {product.featured && (
                                                 <div className="flex border-b border-[#E8E4DD] dark:border-[#3a3d36] pb-4">
                                                     <span className="text-[13px] text-[#999] dark:text-[#8a8273] w-36 uppercase tracking-[0.05em]">Destacado</span>
-                                                    <span className="text-[14px] text-[#505A4A]">Producto destacado</span>
+                                                    <span className="text-[14px] text-[#2E4A3A]">Producto destacado</span>
                                                 </div>
                                             )}
                                         </div>
@@ -460,7 +460,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                         <div>
                                             {loadingReviews ? (
                                                 <div className="flex justify-center py-12">
-                                                    <div className="animate-spin rounded-full h-6 w-6 border-2 border-[#505A4A] border-t-transparent" />
+                                                    <div className="animate-spin rounded-full h-6 w-6 border-2 border-[#2E4A3A] border-t-transparent" />
                                                 </div>
                                             ) : (
                                                 <div className="space-y-10">
@@ -544,11 +544,11 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                                 onChange={(e) => setReviewComment(e.target.value)}
                                                                 placeholder="Cuéntanos tu experiencia con este producto..."
                                                                 rows={3}
-                                                                className="w-full border border-[#D5D0C8] dark:border-[#3a3d36] bg-transparent text-[14px] text-[#333] dark:text-[#e8e4dc] placeholder-[#BBB] dark:placeholder-[#6a6359] px-4 py-3 focus:outline-none focus:border-[#505A4A] transition-colors resize-none"
+                                                                className="w-full border border-[#D5D0C8] dark:border-[#3a3d36] bg-transparent text-[14px] text-[#333] dark:text-[#e8e4dc] placeholder-[#BBB] dark:placeholder-[#6a6359] px-4 py-3 focus:outline-none focus:border-[#2E4A3A] transition-colors resize-none"
                                                             />
                                                             <div className="flex items-center justify-between mt-3">
                                                                 {isVerifiedPurchase && (
-                                                                    <span className="flex items-center gap-1 text-[11px] text-[#505A4A] dark:text-[#8a8273]">
+                                                                    <span className="flex items-center gap-1 text-[11px] text-[#2E4A3A] dark:text-[#8a8273]">
                                                                         <CheckCircle2 className="h-3.5 w-3.5" />
                                                                         Compra verificada
                                                                     </span>
@@ -556,7 +556,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                                 <button
                                                                     onClick={handleSubmitReview}
                                                                     disabled={reviewRating === 0 || submittingReview}
-                                                                    className="ml-auto h-[40px] px-6 bg-[#505A4A] text-white text-[12px] font-medium tracking-[0.08em] uppercase hover:bg-[#414A3C] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 flex items-center gap-2"
+                                                                    className="ml-auto h-[40px] px-6 bg-[#2E4A3A] text-white text-[12px] font-medium tracking-[0.08em] uppercase hover:bg-[#26402F] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-300 flex items-center gap-2"
                                                                 >
                                                                     {submittingReview && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
                                                                     Publicar reseña
@@ -570,7 +570,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                             </p>
                                                             <Link
                                                                 href="/auth"
-                                                                className="inline-block border border-[#505A4A] text-[#505A4A] dark:text-[#8a8273] dark:border-[#8a8273] px-6 py-2.5 text-[12px] font-medium tracking-[0.08em] uppercase hover:bg-[#505A4A] hover:text-white transition-all duration-300"
+                                                                className="inline-block border border-[#2E4A3A] text-[#2E4A3A] dark:text-[#8a8273] dark:border-[#8a8273] px-6 py-2.5 text-[12px] font-medium tracking-[0.08em] uppercase hover:bg-[#2E4A3A] hover:text-white transition-all duration-300"
                                                             >
                                                                 Iniciar sesión
                                                             </Link>
@@ -586,8 +586,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                                     className="pb-6 border-b border-[#E8E4DD] dark:border-[#3a3d36] last:border-0"
                                                                 >
                                                                     <div className="flex items-start gap-3">
-                                                                        <div className="w-8 h-8 rounded-full bg-[#505A4A]/10 dark:bg-[#505A4A]/20 flex items-center justify-center flex-shrink-0">
-                                                                            <User className="h-4 w-4 text-[#505A4A] dark:text-[#8a8273]" />
+                                                                        <div className="w-8 h-8 rounded-full bg-[#2E4A3A]/10 dark:bg-[#2E4A3A]/20 flex items-center justify-center flex-shrink-0">
+                                                                            <User className="h-4 w-4 text-[#2E4A3A] dark:text-[#8a8273]" />
                                                                         </div>
                                                                         <div className="flex-1 min-w-0">
                                                                             <div className="flex items-center gap-2 flex-wrap">
@@ -595,7 +595,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                                                     {review.userName}
                                                                                 </span>
                                                                                 {review.verified && (
-                                                                                    <span className="flex items-center gap-0.5 text-[10px] text-[#505A4A] dark:text-[#8a8273] bg-[#505A4A]/8 dark:bg-[#505A4A]/20 px-1.5 py-0.5 rounded-full">
+                                                                                    <span className="flex items-center gap-0.5 text-[10px] text-[#2E4A3A] dark:text-[#8a8273] bg-[#2E4A3A]/8 dark:bg-[#2E4A3A]/20 px-1.5 py-0.5 rounded-full">
                                                                                         <CheckCircle2 className="h-2.5 w-2.5" />
                                                                                         Verificada
                                                                                     </span>

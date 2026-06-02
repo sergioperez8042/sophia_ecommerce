@@ -36,7 +36,7 @@ export function AdminGuard({ children }: AdminGuardProps) {
 function LoadingSpinner() {
     return (
         <div className="min-h-screen flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#505A4A] border-t-transparent" />
+            <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#2E4A3A] border-t-transparent" />
         </div>
     );
 }
@@ -65,7 +65,7 @@ export function PageHeader({
                 {backHref && (
                     <a
                         href={backHref}
-                        className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-[#505A4A] transition-colors mb-2"
+                        className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-[#2E4A3A] transition-colors mb-2"
                     >
                         <svg
                             className="w-5 h-5"
