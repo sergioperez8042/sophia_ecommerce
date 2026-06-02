@@ -51,8 +51,8 @@ export default function RootLayout({
       <html lang="es" suppressHydrationWarning={true}>
         <head>
           <Script id="fouc-prevention" strategy="beforeInteractive">{FOUC_SCRIPT}</Script>
-          <link rel="icon" href="/images/logo-sophia-green.jpeg" type="image/jpeg" />
-          <link rel="apple-touch-icon" href="/images/logo-sophia-green.jpeg" />
+          <link rel="icon" href="/images/sophia_logo_nuevo.jpeg" type="image/jpeg" />
+          <link rel="apple-touch-icon" href="/images/sophia_logo_nuevo.jpeg" />
           <title>Sophia | Productos Naturales Artesanales</title>
           <meta name="description" content="Sophia: productos de belleza natural elaborados artesanalmente con ingredientes orgánicos. Cremas, aceites y tratamientos para piel y cabello. Envíos a toda España." />
           <meta name="keywords" content="cosmética natural, cosmética botánica, productos artesanales, belleza natural, cremas naturales, aceites esenciales, skincare orgánico, Sophia cosmética, cuidado piel natural, cosmética vegana España" />
@@ -135,8 +135,8 @@ export default function RootLayout({
     <html lang="es" suppressHydrationWarning={true}>
       <head>
         <Script id="fouc-prevention-admin" strategy="beforeInteractive">{FOUC_SCRIPT}</Script>
-        <link rel="icon" href="/images/logo-sophia-green.jpeg" type="image/jpeg" />
-        <link rel="apple-touch-icon" href="/images/logo-sophia-green.jpeg" />
+        <link rel="icon" href="/images/sophia_logo_nuevo.jpeg" type="image/jpeg" />
+        <link rel="apple-touch-icon" href="/images/sophia_logo_nuevo.jpeg" />
         {isAdminRoute ? (
           <>
             <title>Sophia | Panel de Administración</title>
