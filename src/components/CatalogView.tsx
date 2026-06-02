@@ -469,7 +469,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                         <div className="flex items-center gap-2.5 mb-3">
                             <div className="relative w-9 h-9 rounded-lg overflow-hidden ring-1 ring-white/15 flex-shrink-0">
                                 <Image
-                                    src="/images/sophia_logo_v2.jpeg"
+                                    src="/images/sophia_logo_v3.jpeg"
                                     alt="Sophia"
                                     fill
                                     sizes="36px"

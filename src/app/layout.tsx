@@ -51,8 +51,8 @@ export default function RootLayout({
       <html lang="es" suppressHydrationWarning={true}>
         <head>
           <Script id="fouc-prevention" strategy="beforeInteractive">{FOUC_SCRIPT}</Script>
-          <link rel="icon" href="/images/sophia_logo_v2.jpeg" type="image/jpeg" />
-          <link rel="apple-touch-icon" href="/images/sophia_logo_v2.jpeg" />
+          <link rel="icon" href="/images/sophia_logo_v3.jpeg" type="image/jpeg" />
+          <link rel="apple-touch-icon" href="/images/sophia_logo_v3.jpeg" />
           <title>Sophia | Productos Naturales Artesanales</title>
           <meta name="description" content="Sophia: productos de belleza natural elaborados artesanalmente con ingredientes orgánicos. Cremas, aceites y tratamientos para piel y cabello. Envíos a toda España." />
           <meta name="keywords" content="cosmética natural, cosmética botánica, productos artesanales, belleza natural, cremas naturales, aceites esenciales, skincare orgánico, Sophia cosmética, cuidado piel natural, cosmética vegana España" />
@@ -67,7 +67,7 @@ export default function RootLayout({
           <meta property="og:title" content="Sophia | Belleza Natural Artesanal" />
           <meta property="og:description" content="Descubre nuestra colección de productos de cosmética natural elaborados artesanalmente con ingredientes orgánicos de la más alta calidad." />
           <meta property="og:url" content="https://sophiacatalog.com" />
-          <meta property="og:image" content="https://sophiacatalog.com/images/sophia_logo_v2.jpeg" />
+          <meta property="og:image" content="https://sophiacatalog.com/images/sophia_logo_v3.jpeg" />
           <meta property="og:image:width" content="1200" />
           <meta property="og:image:height" content="630" />
 
@@ -75,7 +75,7 @@ export default function RootLayout({
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:title" content="Sophia | Belleza Natural Artesanal" />
           <meta name="twitter:description" content="Productos de cosmética natural elaborados artesanalmente con ingredientes orgánicos." />
-          <meta name="twitter:image" content="https://sophiacatalog.com/images/sophia_logo_v2.jpeg" />
+          <meta name="twitter:image" content="https://sophiacatalog.com/images/sophia_logo_v3.jpeg" />
 
           {/* Structured Data - Store */}
           <Script id="structured-data-store" type="application/ld+json">{JSON.stringify({
@@ -84,8 +84,8 @@ export default function RootLayout({
             "name": "Sophia",
             "description": "Tienda de cosmética natural y botánica artesanal con ingredientes orgánicos",
             "url": "https://sophiacatalog.com",
-            "logo": "https://sophiacatalog.com/images/sophia_logo_v2.jpeg",
-            "image": "https://sophiacatalog.com/images/sophia_logo_v2.jpeg",
+            "logo": "https://sophiacatalog.com/images/sophia_logo_v3.jpeg",
+            "image": "https://sophiacatalog.com/images/sophia_logo_v3.jpeg",
             "telephone": "+34642633982",
             "email": "chavesophia1994@gmail.com",
             "foundingDate": "2022",
@@ -135,8 +135,8 @@ export default function RootLayout({
     <html lang="es" suppressHydrationWarning={true}>
       <head>
         <Script id="fouc-prevention-admin" strategy="beforeInteractive">{FOUC_SCRIPT}</Script>
-        <link rel="icon" href="/images/sophia_logo_v2.jpeg" type="image/jpeg" />
-        <link rel="apple-touch-icon" href="/images/sophia_logo_v2.jpeg" />
+        <link rel="icon" href="/images/sophia_logo_v3.jpeg" type="image/jpeg" />
+        <link rel="apple-touch-icon" href="/images/sophia_logo_v3.jpeg" />
         {isAdminRoute ? (
           <>
             <title>Sophia | Panel de Administración</title>
@@ -155,13 +155,13 @@ export default function RootLayout({
             <meta property="og:title" content="Sophia | Belleza Natural Artesanal" />
             <meta property="og:description" content="Descubre nuestra colección de productos de cosmética natural elaborados artesanalmente con ingredientes orgánicos de la más alta calidad." />
             <meta property="og:url" content="https://sophiacatalog.com" />
-            <meta property="og:image" content="https://sophiacatalog.com/images/sophia_logo_v2.jpeg" />
+            <meta property="og:image" content="https://sophiacatalog.com/images/sophia_logo_v3.jpeg" />
             <meta property="og:image:width" content="1200" />
             <meta property="og:image:height" content="630" />
             <meta name="twitter:card" content="summary_large_image" />
             <meta name="twitter:title" content="Sophia | Belleza Natural Artesanal" />
             <meta name="twitter:description" content="Productos de cosmética natural elaborados artesanalmente con ingredientes orgánicos." />
-            <meta name="twitter:image" content="https://sophiacatalog.com/images/sophia_logo_v2.jpeg" />
+            <meta name="twitter:image" content="https://sophiacatalog.com/images/sophia_logo_v3.jpeg" />
           </>
         )}
       </head>

@@ -82,7 +82,7 @@ export default function CatalogHeader({ showBackButton = false }: CatalogHeaderP
                             <Link href="/" className="flex items-center gap-2 sm:gap-3 min-w-0">
                                 <div className="relative w-10 h-10 sm:w-14 sm:h-14 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#2E4A3A]/15 flex-shrink-0">
                                     <Image
-                                        src="/images/sophia_logo_v2.jpeg"
+                                        src="/images/sophia_logo_v3.jpeg"
                                         alt="Sophia"
                                         fill
                                         sizes="(min-width: 640px) 56px, 40px"

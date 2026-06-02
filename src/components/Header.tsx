@@ -77,7 +77,7 @@ export default function Header() {
                             <Link href="/" className="hidden md:flex items-center gap-2">
                                 <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#2E4A3A]/15 flex-shrink-0">
                                     <Image
-                                        src="/images/sophia_logo_v2.jpeg"
+                                        src="/images/sophia_logo_v3.jpeg"
                                         alt="Sophia"
                                         fill
                                         sizes="40px"
@@ -182,7 +182,7 @@ export default function Header() {
                             <Link href="/" className="flex items-center gap-3" onClick={() => setIsMenuOpen(false)}>
                                 <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#2E4A3A]/15 flex-shrink-0">
                                     <Image
-                                        src="/images/sophia_logo_v2.jpeg"
+                                        src="/images/sophia_logo_v3.jpeg"
                                         alt="Sophia"
                                         fill
                                         sizes="40px"
