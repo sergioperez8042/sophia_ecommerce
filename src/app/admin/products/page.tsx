@@ -121,7 +121,7 @@ function ProductListItem({
                         className="object-cover"
                     />
                     {product.featured && (
-                        <div className="absolute top-1 left-1 bg-[#C9A96E] rounded-full p-1">
+                        <div className="absolute top-1 left-1 bg-[#C4AC91] rounded-full p-1">
                             <Star className="w-2.5 h-2.5 text-white fill-current" />
                         </div>
                     )}
@@ -185,8 +185,8 @@ function ProductListItem({
                                         onClick={onToggleFeatured}
                                         className={`p-1.5 rounded-lg transition-colors ${
                                             product.featured
-                                                ? 'text-[#C9A96E] bg-[#C9A96E]/10'
-                                                : 'text-gray-400 hover:text-[#C9A96E] hover:bg-gray-100 dark:hover:bg-gray-700'
+                                                ? 'text-[#C4AC91] bg-[#C4AC91]/10'
+                                                : 'text-gray-400 hover:text-[#C4AC91] hover:bg-gray-100 dark:hover:bg-gray-700'
                                         }`}
                                         title={product.featured ? 'Quitar destacado' : 'Destacar'}
                                     >
@@ -304,7 +304,7 @@ function CategoryFilterDropdown({
                             onClick={() => { onChange('all'); setIsOpen(false); setSearch(''); }}
                             className={`w-full text-left px-3 py-2.5 text-sm transition-colors flex items-center gap-2 ${
                                 value === 'all'
-                                    ? 'bg-[#2E4A3A]/8 text-[#2E4A3A] dark:text-[#C9A96E] font-medium'
+                                    ? 'bg-[#2E4A3A]/8 text-[#2E4A3A] dark:text-[#C4AC91] font-medium'
                                     : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                             }`}
                         >
@@ -327,7 +327,7 @@ function CategoryFilterDropdown({
                                         onClick={() => { onChange(opt.id); setIsOpen(false); setSearch(''); }}
                                         className={`w-full text-left px-3 py-2.5 text-sm transition-colors flex items-center gap-2 ${
                                             isActive
-                                                ? 'bg-[#2E4A3A]/8 text-[#2E4A3A] dark:text-[#C9A96E] font-medium'
+                                                ? 'bg-[#2E4A3A]/8 text-[#2E4A3A] dark:text-[#C4AC91] font-medium'
                                                 : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                                         }`}
                                         style={{ paddingLeft: `${12 + opt.depth * 16}px` }}
@@ -719,13 +719,13 @@ function AdminProductsPageInner() {
                                     aria-pressed={isActive}
                                     className={`rounded-xl border p-3 text-center transition-all hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#2E4A3A]/40 ${
                                         isActive
-                                            ? 'bg-[#2E4A3A]/10 dark:bg-[#C9A96E]/10 border-[#2E4A3A] dark:border-[#C9A96E]'
-                                            : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-[#2E4A3A]/40 dark:hover:border-[#C9A96E]/40'
+                                            ? 'bg-[#2E4A3A]/10 dark:bg-[#C4AC91]/10 border-[#2E4A3A] dark:border-[#C4AC91]'
+                                            : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-[#2E4A3A]/40 dark:hover:border-[#C4AC91]/40'
                                     }`}
                                 >
-                                    <stat.icon className={`w-4 h-4 mx-auto mb-1 ${isActive ? 'text-[#2E4A3A] dark:text-[#C9A96E]' : 'text-gray-400 dark:text-gray-500'}`} />
-                                    <p className={`text-lg sm:text-xl font-bold ${isActive ? 'text-[#2E4A3A] dark:text-[#C9A96E]' : 'text-gray-900 dark:text-white'}`}>{stat.value}</p>
-                                    <p className={`text-[10px] sm:text-xs ${isActive ? 'text-[#2E4A3A] dark:text-[#C9A96E] font-medium' : 'text-gray-500 dark:text-gray-400'}`}>{stat.label}</p>
+                                    <stat.icon className={`w-4 h-4 mx-auto mb-1 ${isActive ? 'text-[#2E4A3A] dark:text-[#C4AC91]' : 'text-gray-400 dark:text-gray-500'}`} />
+                                    <p className={`text-lg sm:text-xl font-bold ${isActive ? 'text-[#2E4A3A] dark:text-[#C4AC91]' : 'text-gray-900 dark:text-white'}`}>{stat.value}</p>
+                                    <p className={`text-[10px] sm:text-xs ${isActive ? 'text-[#2E4A3A] dark:text-[#C4AC91] font-medium' : 'text-gray-500 dark:text-gray-400'}`}>{stat.label}</p>
                                 </button>
                             );
                         })}
@@ -901,7 +901,7 @@ function AdminProductsPageInner() {
                                         {/* Badges */}
                                         <div className="absolute top-2 right-2 flex flex-col gap-1">
                                             {product.featured && (
-                                                <span className="bg-[#C9A96E] rounded-full p-1"><Star className="w-3 h-3 text-white fill-current" /></span>
+                                                <span className="bg-[#C4AC91] rounded-full p-1"><Star className="w-3 h-3 text-white fill-current" /></span>
                                             )}
                                             {!product.active && (
                                                 <span className="bg-gray-800/70 text-white text-[9px] px-1.5 py-0.5 rounded-full font-medium">Oculto</span>
@@ -965,7 +965,7 @@ function AdminProductsPageInner() {
                                                             )}
                                                         </button>
                                                         <div className="absolute top-2 right-2 flex flex-col gap-1">
-                                                            {product.featured && <span className="bg-[#C9A96E] rounded-full p-1"><Star className="w-3 h-3 text-white fill-current" /></span>}
+                                                            {product.featured && <span className="bg-[#C4AC91] rounded-full p-1"><Star className="w-3 h-3 text-white fill-current" /></span>}
                                                             {!product.active && <span className="bg-gray-800/70 text-white text-[9px] px-1.5 py-0.5 rounded-full font-medium">Oculto</span>}
                                                             {product.out_of_stock && <span className="bg-red-500/90 text-white text-[9px] px-1.5 py-0.5 rounded-full font-medium">Agotado</span>}
                                                         </div>
@@ -1298,7 +1298,7 @@ function AdminProductsPageInner() {
 
                         <div className="flex items-center justify-between py-2">
                             <div className="flex items-center gap-2.5">
-                                <Star className={`w-4 h-4 ${formFeatured ? 'text-[#C9A96E] fill-current' : 'text-gray-400 dark:text-gray-500'}`} />
+                                <Star className={`w-4 h-4 ${formFeatured ? 'text-[#C4AC91] fill-current' : 'text-gray-400 dark:text-gray-500'}`} />
                                 <p className="text-sm font-medium text-gray-900 dark:text-white">
                                     {formFeatured ? 'Producto destacado' : 'No destacado'}
                                 </p>

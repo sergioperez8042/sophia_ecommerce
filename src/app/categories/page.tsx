@@ -68,7 +68,7 @@ export default function CategoriesPage() {
                 }}
             />
             <m.div
-                className="absolute bottom-20 right-10 w-48 h-48 rounded-full bg-[#C9A96E]/10 blur-3xl"
+                className="absolute bottom-20 right-10 w-48 h-48 rounded-full bg-[#C4AC91]/10 blur-3xl"
                 animate={{
                     scale: [1.2, 1, 1.2],
                     opacity: [0.2, 0.5, 0.2],
@@ -278,7 +278,7 @@ export default function CategoriesPage() {
                                                                     {[...Array(5)].map((_, i) => (
                                                                         <Star
                                                                             key={`star-${i}`}
-                                                                            className={`w-4 h-4 ${i < Math.round(product.rating || 0) ? 'fill-[#C9A96E] text-[#C9A96E]' : 'text-gray-300'}`}
+                                                                            className={`w-4 h-4 ${i < Math.round(product.rating || 0) ? 'fill-[#C4AC91] text-[#C4AC91]' : 'text-gray-300'}`}
                                                                         />
                                                                     ))}
                                                                     <span className="text-sm text-gray-500 ml-2">

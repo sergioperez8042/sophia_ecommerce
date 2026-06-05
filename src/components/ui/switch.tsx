@@ -47,7 +47,7 @@ export default function Switch({
       onClick={() => !disabled && onChange(!checked)}
       className={`relative inline-flex items-center ${dims.track} rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2E4A3A]/50 dark:focus:ring-offset-gray-900 disabled:opacity-40 disabled:cursor-not-allowed ${
         checked
-          ? 'bg-[#2E4A3A] dark:bg-[#C9A96E]'
+          ? 'bg-[#2E4A3A] dark:bg-[#C4AC91]'
           : 'bg-gray-300 dark:bg-gray-600'
       }`}
     >

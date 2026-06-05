@@ -45,7 +45,7 @@ export default function InlineAccountCreator({ gestor, onSuccess }: InlineAccoun
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-full bg-[#F5F1E8] dark:bg-[#C9A96E]/15 text-[#2E4A3A] dark:text-[#C9A96E] font-medium hover:bg-[#2E4A3A]/15 dark:hover:bg-[#C9A96E]/25 transition-colors"
+        className="inline-flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-full bg-[#F5F1E8] dark:bg-[#C4AC91]/15 text-[#2E4A3A] dark:text-[#C4AC91] font-medium hover:bg-[#2E4A3A]/15 dark:hover:bg-[#C4AC91]/25 transition-colors"
         title="Crear cuenta de acceso para este gestor"
       >
         <UserPlus className="w-3 h-3" />
@@ -90,9 +90,9 @@ export default function InlineAccountCreator({ gestor, onSuccess }: InlineAccoun
   };
 
   return (
-    <div className="border border-[#2E4A3A]/20 dark:border-[#C9A96E]/20 bg-[#F5F1E8]/60 dark:bg-[#C9A96E]/5 rounded-lg p-3 space-y-2 max-w-md">
+    <div className="border border-[#2E4A3A]/20 dark:border-[#C4AC91]/20 bg-[#F5F1E8]/60 dark:bg-[#C4AC91]/5 rounded-lg p-3 space-y-2 max-w-md">
       <div className="flex items-center justify-between">
-        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#2E4A3A] dark:text-[#C9A96E]">
+        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#2E4A3A] dark:text-[#C4AC91]">
           <UserPlus className="w-3.5 h-3.5" />
           Crear cuenta de acceso
         </span>
@@ -100,7 +100,7 @@ export default function InlineAccountCreator({ gestor, onSuccess }: InlineAccoun
           type="button"
           onClick={() => setOpen(false)}
           disabled={submitting}
-          className="p-0.5 rounded text-[#2E4A3A] dark:text-[#C9A96E] hover:bg-[#2E4A3A]/10 dark:hover:bg-[#C9A96E]/15 disabled:opacity-40"
+          className="p-0.5 rounded text-[#2E4A3A] dark:text-[#C4AC91] hover:bg-[#2E4A3A]/10 dark:hover:bg-[#C4AC91]/15 disabled:opacity-40"
           aria-label="Cancelar"
         >
           <X className="w-3.5 h-3.5" />
@@ -115,7 +115,7 @@ export default function InlineAccountCreator({ gestor, onSuccess }: InlineAccoun
           onChange={(e) => setEmail(e.target.value)}
           placeholder="gestor@email.com"
           disabled={submitting}
-          className="w-full pl-8 pr-2.5 py-1.5 text-xs border border-[#2E4A3A]/20 dark:border-[#C9A96E]/20 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#2E4A3A]/30 focus:border-[#2E4A3A] disabled:opacity-60"
+          className="w-full pl-8 pr-2.5 py-1.5 text-xs border border-[#2E4A3A]/20 dark:border-[#C4AC91]/20 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#2E4A3A]/30 focus:border-[#2E4A3A] disabled:opacity-60"
         />
       </div>
 
@@ -128,7 +128,7 @@ export default function InlineAccountCreator({ gestor, onSuccess }: InlineAccoun
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Mín. 6 caracteres"
             disabled={submitting}
-            className="w-full pl-8 pr-7 py-1.5 text-xs border border-[#2E4A3A]/20 dark:border-[#C9A96E]/20 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#2E4A3A]/30 focus:border-[#2E4A3A] disabled:opacity-60"
+            className="w-full pl-8 pr-7 py-1.5 text-xs border border-[#2E4A3A]/20 dark:border-[#C4AC91]/20 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#2E4A3A]/30 focus:border-[#2E4A3A] disabled:opacity-60"
           />
           <button
             type="button"
@@ -144,7 +144,7 @@ export default function InlineAccountCreator({ gestor, onSuccess }: InlineAccoun
           type="button"
           onClick={() => setPassword(generateGestorPassword())}
           disabled={submitting}
-          className="text-[11px] px-2.5 rounded-md bg-[#2E4A3A]/10 dark:bg-[#C9A96E]/15 text-[#2E4A3A] dark:text-[#C9A96E] hover:bg-[#2E4A3A]/20 dark:hover:bg-[#C9A96E]/25 disabled:opacity-50 font-medium transition-colors"
+          className="text-[11px] px-2.5 rounded-md bg-[#2E4A3A]/10 dark:bg-[#C4AC91]/15 text-[#2E4A3A] dark:text-[#C4AC91] hover:bg-[#2E4A3A]/20 dark:hover:bg-[#C4AC91]/25 disabled:opacity-50 font-medium transition-colors"
         >
           Generar
         </button>

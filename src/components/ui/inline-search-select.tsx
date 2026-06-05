@@ -77,31 +77,31 @@ export function InlineSearchSelect({
     return () => document.removeEventListener("mousedown", handle);
   }, [isOpen, onOpenChange]);
 
-  // Paleta Sophia: tonos cálidos #C9A96E (dark) / #2E4A3A (light) con
+  // Paleta Sophia: tonos cálidos #C4AC91 (dark) / #2E4A3A (light) con
   // opacidades. Derivada de `isDark` (boolean estable) — sin useMemo.
   // Estas clases son IDÉNTICAS a las que vivían inline en `LocationPopup`
   // antes de la extracción, mantenidas explícitamente para garantizar
   // zero cambio visual.
-  const labelColor = isDark ? "text-[#C9A96E]/60" : "text-[#2E4A3A]/60";
-  const iconColor = isDark ? "text-[#C9A96E]/40" : "text-[#2E4A3A]/40";
+  const labelColor = isDark ? "text-[#C4AC91]/60" : "text-[#2E4A3A]/60";
+  const iconColor = isDark ? "text-[#C4AC91]/40" : "text-[#2E4A3A]/40";
   const inputBg = isDark ? "bg-white/5" : "bg-gray-50";
-  const inputBorder = isDark ? "border-[#C9A96E]/20" : "border-gray-200";
+  const inputBorder = isDark ? "border-[#C4AC91]/20" : "border-gray-200";
   const inputText = isDark ? "text-[#e8e0d0]" : "text-gray-900";
   const inputPlaceholder = isDark
-    ? "placeholder-[#C9A96E]/30"
+    ? "placeholder-[#C4AC91]/30"
     : "placeholder-gray-400";
   const inputFocus = isDark
-    ? "focus:border-[#C9A96E]/50"
+    ? "focus:border-[#C4AC91]/50"
     : "focus:border-[#2E4A3A]/40";
   const dropdownBg = isDark ? "bg-[#15241B]" : "bg-white";
-  const dropdownBorder = isDark ? "border-[#C9A96E]/20" : "border-gray-200";
-  const emptyText = isDark ? "text-[#C9A96E]/50" : "text-gray-400";
+  const dropdownBorder = isDark ? "border-[#C4AC91]/20" : "border-gray-200";
+  const emptyText = isDark ? "text-[#C4AC91]/50" : "text-gray-400";
   const optionHover = isDark
-    ? "hover:bg-[#C9A96E]/10"
+    ? "hover:bg-[#C4AC91]/10"
     : "hover:bg-[#2E4A3A]/5";
   const optionText = isDark ? "text-[#d4cdc0]" : "text-gray-700";
   const optionActive = isDark
-    ? "text-[#C9A96E] bg-[#C9A96E]/5"
+    ? "text-[#C4AC91] bg-[#C4AC91]/5"
     : "text-[#2E4A3A] bg-[#2E4A3A]/5";
 
   const dropdownVisible = isOpen && !disabled;

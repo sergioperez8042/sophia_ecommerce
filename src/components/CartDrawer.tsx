@@ -237,10 +237,10 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           >
             {/* Header */}
             <div className={`flex items-center justify-between px-5 py-4 border-b ${
-              isDark ? 'border-[#C9A96E]/15' : 'border-[#2E4A3A]/10'
+              isDark ? 'border-[#C4AC91]/15' : 'border-[#2E4A3A]/10'
             }`}>
               <div className="flex items-center gap-2">
-                <ShoppingBag className={`w-5 h-5 ${isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]'}`} />
+                <ShoppingBag className={`w-5 h-5 ${isDark ? 'text-[#C4AC91]' : 'text-[#2E4A3A]'}`} />
                 <h2 className={`text-lg font-semibold ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>
                   Carrito ({totalItems})
                 </h2>
@@ -248,7 +248,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               <button
                 onClick={onClose}
                 className={`p-2 rounded-lg transition-colors ${
-                  isDark ? 'hover:bg-[#C9A96E]/10 text-[#C9A96E]' : 'hover:bg-[#2E4A3A]/5 text-[#2E4A3A]'
+                  isDark ? 'hover:bg-[#C4AC91]/10 text-[#C4AC91]' : 'hover:bg-[#2E4A3A]/5 text-[#2E4A3A]'
                 }`}
               >
                 <X className="w-5 h-5" />
@@ -259,7 +259,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             <div className="flex-1 overflow-y-auto px-5 py-4">
               {items.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center">
-                  <ShoppingBag className={`w-12 h-12 mb-4 ${isDark ? 'text-[#C9A96E]/20' : 'text-[#2E4A3A]/15'}`} />
+                  <ShoppingBag className={`w-12 h-12 mb-4 ${isDark ? 'text-[#C4AC91]/20' : 'text-[#2E4A3A]/15'}`} />
                   <p className={`text-sm ${isDark ? 'text-[#8a8278]' : 'text-[#999]'}`}>
                     Tu carrito esta vacio
                   </p>
@@ -290,7 +290,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                           {item.product.name}
                         </h3>
                         <p className={`text-sm font-semibold mt-0.5 ${
-                          isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]'
+                          isDark ? 'text-[#C4AC91]' : 'text-[#2E4A3A]'
                         }`}>
                           {formatPrice(item.product.price)}
                         </p>
@@ -298,12 +298,12 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                         {/* Quantity controls */}
                         <div className="flex items-center justify-between mt-2">
                           <div className={`flex items-center gap-0 rounded-lg border ${
-                            isDark ? 'border-[#C9A96E]/15' : 'border-[#2E4A3A]/15'
+                            isDark ? 'border-[#C4AC91]/15' : 'border-[#2E4A3A]/15'
                           }`}>
                             <button
                               onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
                               className={`p-1.5 transition-colors ${
-                                isDark ? 'hover:bg-[#C9A96E]/10 text-[#C9A96E]' : 'hover:bg-[#2E4A3A]/5 text-[#2E4A3A]'
+                                isDark ? 'hover:bg-[#C4AC91]/10 text-[#C4AC91]' : 'hover:bg-[#2E4A3A]/5 text-[#2E4A3A]'
                               }`}
                             >
                               <Minus className="w-3 h-3" />
@@ -316,7 +316,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                             <button
                               onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
                               className={`p-1.5 transition-colors ${
-                                isDark ? 'hover:bg-[#C9A96E]/10 text-[#C9A96E]' : 'hover:bg-[#2E4A3A]/5 text-[#2E4A3A]'
+                                isDark ? 'hover:bg-[#C4AC91]/10 text-[#C4AC91]' : 'hover:bg-[#2E4A3A]/5 text-[#2E4A3A]'
                               }`}
                             >
                               <Plus className="w-3 h-3" />
@@ -347,13 +347,13 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   exit={{ opacity: 0, y: 10 }}
                   className={`mx-5 mb-3 p-4 rounded-xl border relative ${
                     isDark
-                      ? 'bg-[#C9A96E]/5 border-[#C9A96E]/20'
-                      : 'bg-[#F5F1E8] border-[#C9A96E]/30'
+                      ? 'bg-[#C4AC91]/5 border-[#C4AC91]/20'
+                      : 'bg-[#F5F1E8] border-[#C4AC91]/30'
                   }`}
                 >
                   <div className="flex items-start gap-3">
                     <AlertTriangle className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
-                      isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]'
+                      isDark ? 'text-[#C4AC91]' : 'text-[#2E4A3A]'
                     }`} />
                     <div>
                       <p className={`text-sm font-medium ${
@@ -382,7 +382,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   </div>
                   <button
                     onClick={() => setNoGestorMessage(false)}
-                    className={`absolute top-2 right-2 p-1 ${isDark ? 'text-[#C9A96E]/50' : 'text-[#2E4A3A]/40'}`}
+                    className={`absolute top-2 right-2 p-1 ${isDark ? 'text-[#C4AC91]/50' : 'text-[#2E4A3A]/40'}`}
                   >
                     <X className="w-3 h-3" />
                   </button>
@@ -393,7 +393,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             {/* Footer */}
             {items.length > 0 && (
               <div className={`px-5 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] border-t ${
-                isDark ? 'border-[#C9A96E]/15' : 'border-[#2E4A3A]/10'
+                isDark ? 'border-[#C4AC91]/15' : 'border-[#2E4A3A]/10'
               }`}>
                 {/* Location info */}
                 {location && (
@@ -406,14 +406,14 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                       type="button"
                       onClick={() => setShowLocationEditor(true)}
                       className={`ml-1 underline underline-offset-2 text-[10px] uppercase tracking-wide ${
-                        isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]'
+                        isDark ? 'text-[#C4AC91]' : 'text-[#2E4A3A]'
                       }`}
                     >
                       Cambiar
                     </button>
                     {gestor && !gestorLoading && (
                       <span className={`ml-auto px-2 py-0.5 rounded-full text-[10px] font-medium ${
-                        isDark ? 'bg-[#C9A96E]/10 text-[#C9A96E]' : 'bg-[#2E4A3A]/10 text-[#2E4A3A]'
+                        isDark ? 'bg-[#C4AC91]/10 text-[#C4AC91]' : 'bg-[#2E4A3A]/10 text-[#2E4A3A]'
                       }`}>
                         Entrega disponible
                       </span>
@@ -427,7 +427,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     <span className={`text-sm font-medium ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>
                       Total productos
                     </span>
-                    <span className={`text-xl font-bold ${isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]'}`}>
+                    <span className={`text-xl font-bold ${isDark ? 'text-[#C4AC91]' : 'text-[#2E4A3A]'}`}>
                       {formatPrice(subtotal)}
                     </span>
                   </div>
@@ -439,9 +439,9 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 {/* Checkout form - appears when user clicks the button */}
                 {showCheckout && (
                   <div className={`mb-3 space-y-2 p-3 rounded-xl border ${
-                    isDark ? 'bg-[#15241B] border-[#C9A96E]/15' : 'bg-[#F5F1E8]/50 border-[#2E4A3A]/10'
+                    isDark ? 'bg-[#15241B] border-[#C4AC91]/15' : 'bg-[#F5F1E8]/50 border-[#2E4A3A]/10'
                   }`}>
-                    <p className={`text-xs font-medium mb-2 ${isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]'}`}>
+                    <p className={`text-xs font-medium mb-2 ${isDark ? 'text-[#C4AC91]' : 'text-[#2E4A3A]'}`}>
                       Datos para tu pedido
                     </p>
                     <input
@@ -451,7 +451,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                       placeholder="Tu nombre *"
                       className={`w-full px-3 py-2 rounded-lg text-sm border ${
                         isDark
-                          ? 'bg-[#15241B] border-[#C9A96E]/15 text-[#e8e4dc] placeholder-[#7a7568]'
+                          ? 'bg-[#15241B] border-[#C4AC91]/15 text-[#e8e4dc] placeholder-[#7a7568]'
                           : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
                       }`}
                     />
@@ -462,7 +462,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                       placeholder="Tu email (para seguimiento)"
                       className={`w-full px-3 py-2 rounded-lg text-sm border ${
                         isDark
-                          ? 'bg-[#15241B] border-[#C9A96E]/15 text-[#e8e4dc] placeholder-[#7a7568]'
+                          ? 'bg-[#15241B] border-[#C4AC91]/15 text-[#e8e4dc] placeholder-[#7a7568]'
                           : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
                       }`}
                     />
@@ -473,7 +473,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                       placeholder="Tu teléfono (opcional)"
                       className={`w-full px-3 py-2 rounded-lg text-sm border ${
                         isDark
-                          ? 'bg-[#15241B] border-[#C9A96E]/15 text-[#e8e4dc] placeholder-[#7a7568]'
+                          ? 'bg-[#15241B] border-[#C4AC91]/15 text-[#e8e4dc] placeholder-[#7a7568]'
                           : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
                       }`}
                     />
@@ -484,7 +484,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                       placeholder="Notas (opcional)"
                       className={`w-full px-3 py-2 rounded-lg text-sm border ${
                         isDark
-                          ? 'bg-[#15241B] border-[#C9A96E]/15 text-[#e8e4dc] placeholder-[#7a7568]'
+                          ? 'bg-[#15241B] border-[#C4AC91]/15 text-[#e8e4dc] placeholder-[#7a7568]'
                           : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
                       }`}
                     />

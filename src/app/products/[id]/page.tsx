@@ -284,13 +284,13 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                             key={`star-${i}`}
                                             className={`h-4 w-4 ${
                                                 i < Math.floor(product.rating)
-                                                    ? 'text-[#C9A96E] fill-[#C9A96E]'
+                                                    ? 'text-[#C4AC91] fill-[#C4AC91]'
                                                     : 'text-gray-200 fill-gray-200 dark:text-gray-700 dark:fill-gray-700'
                                             }`}
                                         />
                                     ))}
                                 </div>
-                                <span className="text-[13px] text-[#999] dark:text-[#8a8273] group-hover:text-[#2E4A3A] dark:group-hover:text-[#C9A96E] transition-colors">
+                                <span className="text-[13px] text-[#999] dark:text-[#8a8273] group-hover:text-[#2E4A3A] dark:group-hover:text-[#C4AC91] transition-colors">
                                     {product.reviews_count > 0
                                         ? `${product.rating} · ${product.reviews_count} reseñas`
                                         : 'Sé el primero en opinar'
@@ -477,7 +477,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                                             key={`avg-${i}`}
                                                                             className={`h-4 w-4 ${
                                                                                 i < Math.round(product.rating)
-                                                                                    ? 'text-[#C9A96E] fill-[#C9A96E]'
+                                                                                    ? 'text-[#C4AC91] fill-[#C4AC91]'
                                                                                     : 'text-gray-200 fill-gray-200 dark:text-gray-700 dark:fill-gray-700'
                                                                             }`}
                                                                         />
@@ -494,10 +494,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                                     return (
                                                                         <div key={stars} className="flex items-center gap-2">
                                                                             <span className="text-[12px] text-[#999] dark:text-[#8a8273] w-3 text-right">{stars}</span>
-                                                                            <Star className="h-3 w-3 text-[#C9A96E] fill-[#C9A96E]" />
+                                                                            <Star className="h-3 w-3 text-[#C4AC91] fill-[#C4AC91]" />
                                                                             <div className="flex-1 h-[6px] bg-[#E8E4DD] dark:bg-[#36473B] rounded-full overflow-hidden">
                                                                                 <div
-                                                                                    className="h-full bg-[#C9A96E] rounded-full transition-all duration-500"
+                                                                                    className="h-full bg-[#C4AC91] rounded-full transition-all duration-500"
                                                                                     style={{ width: `${pct}%` }}
                                                                                 />
                                                                             </div>
@@ -527,7 +527,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                                         <Star
                                                                             className={`h-6 w-6 transition-colors ${
                                                                                 star <= (reviewHover || reviewRating)
-                                                                                    ? 'text-[#C9A96E] fill-[#C9A96E]'
+                                                                                    ? 'text-[#C4AC91] fill-[#C4AC91]'
                                                                                     : 'text-gray-200 dark:text-gray-700'
                                                                             }`}
                                                                         />
@@ -608,7 +608,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                                                                                             key={`r-${review.id}-${i}`}
                                                                                             className={`h-3 w-3 ${
                                                                                                 i < review.rating
-                                                                                                    ? 'text-[#C9A96E] fill-[#C9A96E]'
+                                                                                                    ? 'text-[#C4AC91] fill-[#C4AC91]'
                                                                                                     : 'text-gray-200 fill-gray-200 dark:text-gray-700 dark:fill-gray-700'
                                                                                             }`}
                                                                                         />

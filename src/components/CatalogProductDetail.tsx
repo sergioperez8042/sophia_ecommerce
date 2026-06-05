@@ -173,7 +173,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                     {/* Info */}
                     <div className="flex flex-col">
                         {categoryName && (
-                            <span className={`text-xs uppercase tracking-[0.15em] mb-2 ${isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]'}`}>
+                            <span className={`text-xs uppercase tracking-[0.15em] mb-2 ${isDark ? 'text-[#C4AC91]' : 'text-[#2E4A3A]'}`}>
                                 {categoryName}
                             </span>
                         )}
@@ -193,13 +193,13 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                         key={`star-${i}`}
                                         className={`h-4 w-4 ${
                                             i < Math.floor(dynamicRating)
-                                                ? 'text-[#C9A96E] fill-[#C9A96E]'
+                                                ? 'text-[#C4AC91] fill-[#C4AC91]'
                                                 : isDark ? 'text-gray-700 fill-gray-700' : 'text-gray-200 fill-gray-200'
                                         }`}
                                     />
                                 ))}
                             </div>
-                            <span className={`text-[13px] transition-colors ${isDark ? 'text-[#8a8273] group-hover:text-[#C9A96E]' : 'text-[#999] group-hover:text-[#2E4A3A]'}`}>
+                            <span className={`text-[13px] transition-colors ${isDark ? 'text-[#8a8273] group-hover:text-[#C4AC91]' : 'text-[#999] group-hover:text-[#2E4A3A]'}`}>
                                 {dynamicReviewCount > 0
                                     ? `${dynamicRating} · ${dynamicReviewCount} reseña${dynamicReviewCount > 1 ? 's' : ''}`
                                     : 'Sé el primero en opinar'
@@ -262,7 +262,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
 
                         {/* Precio + Peso */}
                         <div className="flex items-baseline gap-4 mb-6">
-                            <span className={`text-3xl font-bold ${isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]'}`}>
+                            <span className={`text-3xl font-bold ${isDark ? 'text-[#C4AC91]' : 'text-[#2E4A3A]'}`}>
                                 {formatPrice(product.price)}
                             </span>
                             {product.weight != null && product.weight > 0 && (
@@ -283,7 +283,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                 onClick={handleAddToCart}
                                 className={`w-full py-4 rounded-xl text-base font-medium flex items-center justify-center gap-3 transition-all shadow-md mb-6 ${
                                     addedToCart
-                                        ? 'bg-[#C9A96E] text-[#15241B]'
+                                        ? 'bg-[#C4AC91] text-[#15241B]'
                                         : 'bg-[#2E4A3A] text-white hover:bg-[#26402F]'
                                 }`}
                                 whileHover={{ scale: 1.02 }}
@@ -306,7 +306,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                         {/* Back link */}
                         <Link
                             href="/catalog"
-                            className={`inline-flex items-center gap-2 text-sm font-medium transition-colors ${isDark ? 'text-[#C9A96E] hover:text-[#e8e4dc]' : 'text-[#2E4A3A] hover:text-gray-900'}`}
+                            className={`inline-flex items-center gap-2 text-sm font-medium transition-colors ${isDark ? 'text-[#C4AC91] hover:text-[#e8e4dc]' : 'text-[#2E4A3A] hover:text-gray-900'}`}
                         >
                             <ArrowLeft className="w-4 h-4" />
                             Volver al catálogo
@@ -357,7 +357,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                                             key={`avg-${i}`}
                                                             className={`h-4 w-4 ${
                                                                 i < Math.round(reviews.reduce((s, r) => s + r.rating, 0) / reviews.length)
-                                                                    ? 'text-[#C9A96E] fill-[#C9A96E]'
+                                                                    ? 'text-[#C4AC91] fill-[#C4AC91]'
                                                                     : isDark ? 'text-gray-700 fill-gray-700' : 'text-gray-200 fill-gray-200'
                                                             }`}
                                                         />
@@ -374,9 +374,9 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                                     return (
                                                         <div key={stars} className="flex items-center gap-2">
                                                             <span className={`text-[12px] w-3 text-right ${isDark ? 'text-[#8a8273]' : 'text-[#999]'}`}>{stars}</span>
-                                                            <Star className="h-3 w-3 text-[#C9A96E] fill-[#C9A96E]" />
+                                                            <Star className="h-3 w-3 text-[#C4AC91] fill-[#C4AC91]" />
                                                             <div className={`flex-1 h-[6px] rounded-full overflow-hidden ${isDark ? 'bg-[#36473B]' : 'bg-[#E8E4DD]'}`}>
-                                                                <div className="h-full bg-[#C9A96E] rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
+                                                                <div className="h-full bg-[#C4AC91] rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
                                                             </div>
                                                             <span className={`text-[11px] w-6 text-right ${isDark ? 'text-[#6a6359]' : 'text-[#BBB]'}`}>{count}</span>
                                                         </div>
@@ -404,7 +404,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                                         <Star
                                                             className={`h-6 w-6 transition-colors ${
                                                                 star <= (reviewHover || reviewRating)
-                                                                    ? 'text-[#C9A96E] fill-[#C9A96E]'
+                                                                    ? 'text-[#C4AC91] fill-[#C4AC91]'
                                                                     : isDark ? 'text-gray-700' : 'text-gray-200'
                                                             }`}
                                                         />
@@ -423,7 +423,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                                 rows={3}
                                                 className={`w-full border rounded-xl px-4 py-3 text-[14px] bg-transparent focus:outline-none transition-colors resize-none ${
                                                     isDark
-                                                        ? 'border-[#36473B] text-[#e8e4dc] placeholder-[#6a6359] focus:border-[#C9A96E]'
+                                                        ? 'border-[#36473B] text-[#e8e4dc] placeholder-[#6a6359] focus:border-[#C4AC91]'
                                                         : 'border-[#D5D0C8] text-gray-900 placeholder-[#BBB] focus:border-[#2E4A3A]'
                                                 }`}
                                             />
@@ -453,7 +453,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                                 href="/auth"
                                                 className={`inline-block px-6 py-2.5 text-[12px] font-medium tracking-[0.08em] uppercase rounded-xl border transition-all ${
                                                     isDark
-                                                        ? 'border-[#C9A96E] text-[#C9A96E] hover:bg-[#C9A96E] hover:text-[#15241B]'
+                                                        ? 'border-[#C4AC91] text-[#C4AC91] hover:bg-[#C4AC91] hover:text-[#15241B]'
                                                         : 'border-[#2E4A3A] text-[#2E4A3A] hover:bg-[#2E4A3A] hover:text-white'
                                                 }`}
                                             >
@@ -493,7 +493,7 @@ export default function CatalogProductDetail({ product, categoryName }: CatalogP
                                                                             key={`r-${review.id}-${i}`}
                                                                             className={`h-3 w-3 ${
                                                                                 i < review.rating
-                                                                                    ? 'text-[#C9A96E] fill-[#C9A96E]'
+                                                                                    ? 'text-[#C4AC91] fill-[#C4AC91]'
                                                                                     : isDark ? 'text-gray-700 fill-gray-700' : 'text-gray-200 fill-gray-200'
                                                                             }`}
                                                                         />

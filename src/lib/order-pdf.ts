@@ -2,7 +2,7 @@
  * Generación del PDF de pedido de Sophia (jsPDF, client-side).
  *
  * Diseño profesional alineado a la marca: cabecera verde (#2E4A3A) con
- * crema (#FEFCF7) y dorado (#C9A96E), tipografía legible, tabla de
+ * crema (#FEFCF7) y dorado (#C4AC91), tipografía legible, tabla de
  * productos clara, total destacado y tarjeta del gestor de zona.
  *
  * Helper ÚNICO compartido por CartDrawer y /cart (antes estaba duplicado
@@ -37,7 +37,7 @@ export interface OrderPdfData {
 
 // ── Paleta de marca (RGB) ───────────────────────────────────────────────────
 const GREEN: [number, number, number] = [46, 74, 58]; // #2E4A3A
-const GOLD: [number, number, number] = [201, 169, 110]; // #C9A96E
+const GOLD: [number, number, number] = [196, 172, 145]; // #C4AC91
 const CREAM: [number, number, number] = [254, 252, 247]; // #FEFCF7
 const INK: [number, number, number] = [45, 45, 42];
 const MUTED: [number, number, number] = [120, 116, 108];
@@ -70,7 +70,7 @@ async function loadBrandLogo(): Promise<{ dataUrl: string; ratio: number } | nul
         }
       };
       img.onerror = () => resolve(null);
-      img.src = '/images/sophia_logo_v3.jpeg';
+      img.src = '/images/sophia_logo_v4.jpeg';
     } catch {
       resolve(null);
     }

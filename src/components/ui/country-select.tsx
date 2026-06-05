@@ -148,7 +148,7 @@ export default function CountrySelect({
                     onClick={() => select(opt.value)}
                     className={`w-full text-left px-3 py-2 text-sm flex items-center gap-2.5 transition-colors ${
                       isActive
-                        ? 'bg-[#2E4A3A]/8 text-[#2E4A3A] dark:text-[#C9A96E] font-medium'
+                        ? 'bg-[#2E4A3A]/8 text-[#2E4A3A] dark:text-[#C4AC91] font-medium'
                         : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                     }`}
                   >

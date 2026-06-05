@@ -222,11 +222,11 @@ export default function LocationPopup({ open, onOpenChange }: LocationPopupProps
   // ahora en InlineSearchSelect; aquí quedan solo los colores del modal
   // wrapper y los banners de status)
   const bg = isDark ? 'bg-[#15241B]' : 'bg-white';
-  const border = isDark ? 'border-[#C9A96E]/20' : 'border-[#2E4A3A]/15';
-  const accent = isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]';
-  const accentBg = isDark ? 'bg-[#C9A96E]/10' : 'bg-[#2E4A3A]/10';
+  const border = isDark ? 'border-[#C4AC91]/20' : 'border-[#2E4A3A]/15';
+  const accent = isDark ? 'text-[#C4AC91]' : 'text-[#2E4A3A]';
+  const accentBg = isDark ? 'bg-[#C4AC91]/10' : 'bg-[#2E4A3A]/10';
   const textSecondary = isDark ? 'text-[#d4cdc0]/80' : 'text-gray-500';
-  const btnBg = isDark ? 'bg-[#C9A96E] hover:bg-[#b5a680] text-[#15241B]' : 'bg-[#2E4A3A] hover:bg-[#26402F] text-white';
+  const btnBg = isDark ? 'bg-[#C4AC91] hover:bg-[#b5a680] text-[#15241B]' : 'bg-[#2E4A3A] hover:bg-[#26402F] text-white';
   // Colores del feedback de gestor (success verde, warning ámbar)
   const successBg = isDark ? 'bg-green-500/10' : 'bg-green-50';
   const successBorder = isDark ? 'border-green-500/30' : 'border-green-200';
@@ -294,7 +294,7 @@ export default function LocationPopup({ open, onOpenChange }: LocationPopupProps
                       type="button"
                       onClick={() => setIsOpen(false)}
                       aria-label="Cerrar"
-                      className={`absolute top-3 right-3 sm:top-4 sm:right-4 flex items-center justify-center h-10 w-10 rounded-xl transition-colors z-10 ${isDark ? 'text-[#C9A96E]/60 hover:text-[#C9A96E] hover:bg-[#C9A96E]/10' : 'text-[#2E4A3A]/60 hover:text-[#2E4A3A] hover:bg-[#2E4A3A]/10'}`}
+                      className={`absolute top-3 right-3 sm:top-4 sm:right-4 flex items-center justify-center h-10 w-10 rounded-xl transition-colors z-10 ${isDark ? 'text-[#C4AC91]/60 hover:text-[#C4AC91] hover:bg-[#C4AC91]/10' : 'text-[#2E4A3A]/60 hover:text-[#2E4A3A] hover:bg-[#2E4A3A]/10'}`}
                     >
                       <X className="w-5 h-5" />
                     </button>
@@ -319,7 +319,7 @@ export default function LocationPopup({ open, onOpenChange }: LocationPopupProps
                   <div
                     className={`flex items-start gap-2.5 mb-5 px-3 py-2.5 rounded-lg border ${
                       isDark
-                        ? 'bg-[#C9A96E]/8 border-[#C9A96E]/25 text-[#d4cdc0]'
+                        ? 'bg-[#C4AC91]/8 border-[#C4AC91]/25 text-[#d4cdc0]'
                         : 'bg-[#2E4A3A]/5 border-[#2E4A3A]/20 text-[#2E4A3A]'
                     }`}
                     role="note"

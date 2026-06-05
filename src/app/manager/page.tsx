@@ -220,7 +220,7 @@ export default function GestorDashboard() {
             <Link href="/manager" className="flex items-center gap-2">
               <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#2E4A3A]/15 flex-shrink-0">
                 <Image
-                  src="/images/sophia_logo_v3.jpeg"
+                  src="/images/sophia_logo_v4.jpeg"
                   alt="Sophia"
                   fill
                   sizes="40px"

@@ -98,8 +98,8 @@ export function PhoneInput({
           color: rgb(255 255 255); /* white */
         }
         :global(.dark) .phone-input-wrapper :global(.PhoneInput:focus-within) {
-          outline-color: rgb(196 181 144 / 0.3); /* #C9A96E/30 */
-          border-color: rgb(196 181 144); /* #C9A96E */
+          outline-color: rgb(196 181 144 / 0.3); /* #C4AC91/30 */
+          border-color: rgb(196 181 144); /* #C4AC91 */
         }
         .phone-input-wrapper :global(.PhoneInputCountry) {
           display: flex;

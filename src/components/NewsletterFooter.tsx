@@ -45,10 +45,10 @@ export default function NewsletterFooter() {
   if (isSuccess) {
     return (
       <div className="flex items-center gap-2 py-2">
-        <div className="w-8 h-8 rounded-full bg-[#C9A96E]/20 flex items-center justify-center">
-          <Check className="w-4 h-4 text-[#C9A96E]" />
+        <div className="w-8 h-8 rounded-full bg-[#C4AC91]/20 flex items-center justify-center">
+          <Check className="w-4 h-4 text-[#C4AC91]" />
         </div>
-        <p className="text-sm text-[#C9A96E]">¡Gracias por suscribirte! Revisa tu email 🌿</p>
+        <p className="text-sm text-[#C4AC91]">¡Gracias por suscribirte! Revisa tu email 🌿</p>
       </div>
     );
   }
@@ -56,9 +56,9 @@ export default function NewsletterFooter() {
   return (
     <div className="py-4">
       <div className="flex items-center gap-2 mb-3">
-        <Mail className="w-4 h-4 text-[#C9A96E]/60" />
+        <Mail className="w-4 h-4 text-[#C4AC91]/60" />
         <p className="text-sm text-[#d4cdc0]/80">
-          Recibe novedades y un <span className="text-[#C9A96E] font-medium">10% de descuento</span>
+          Recibe novedades y un <span className="text-[#C4AC91] font-medium">10% de descuento</span>
         </p>
       </div>
       <form onSubmit={handleSubmit} className="flex gap-2">
@@ -72,13 +72,13 @@ export default function NewsletterFooter() {
           placeholder="Tu email"
           required
           aria-label="Email para suscribirte al newsletter"
-          className="flex-1 min-w-0 min-h-[44px] px-4 py-2.5 bg-white/15 border border-white/25 rounded-xl text-white placeholder-white/55 text-base sm:text-sm focus:outline-none focus:border-[#C9A96E]/60 focus:bg-white/20 transition-colors"
+          className="flex-1 min-w-0 min-h-[44px] px-4 py-2.5 bg-white/15 border border-white/25 rounded-xl text-white placeholder-white/55 text-base sm:text-sm focus:outline-none focus:border-[#C4AC91]/60 focus:bg-white/20 transition-colors"
         />
         <button
           type="submit"
           disabled={isSubmitting}
           aria-label="Suscribirme al newsletter"
-          className="flex items-center justify-center min-h-[44px] min-w-[44px] bg-[#C9A96E] hover:bg-[#b5a680] text-[#15241B] px-4 py-2.5 rounded-xl transition-colors disabled:opacity-50 flex-shrink-0"
+          className="flex items-center justify-center min-h-[44px] min-w-[44px] bg-[#C4AC91] hover:bg-[#b5a680] text-[#15241B] px-4 py-2.5 rounded-xl transition-colors disabled:opacity-50 flex-shrink-0"
         >
           {isSubmitting ? (
             <Loader2 className="w-4 h-4 animate-spin" />

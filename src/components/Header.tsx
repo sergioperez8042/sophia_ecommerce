@@ -77,7 +77,7 @@ export default function Header() {
                             <Link href="/" className="hidden md:flex items-center gap-2">
                                 <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#2E4A3A]/15 flex-shrink-0">
                                     <Image
-                                        src="/images/sophia_logo_v3.jpeg"
+                                        src="/images/sophia_logo_v4.jpeg"
                                         alt="Sophia"
                                         fill
                                         sizes="40px"
@@ -182,14 +182,14 @@ export default function Header() {
                             <Link href="/" className="flex items-center gap-3" onClick={() => setIsMenuOpen(false)}>
                                 <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-sm ring-1 ring-[#2E4A3A]/15 flex-shrink-0">
                                     <Image
-                                        src="/images/sophia_logo_v3.jpeg"
+                                        src="/images/sophia_logo_v4.jpeg"
                                         alt="Sophia"
                                         fill
                                         sizes="40px"
                                         className="object-cover"
                                     />
                                 </div>
-                                <span className="text-base font-semibold text-[#2E4A3A] dark:text-[#C9A96E] leading-tight">Sophia</span>
+                                <span className="text-base font-semibold text-[#2E4A3A] dark:text-[#C4AC91] leading-tight">Sophia</span>
                             </Link>
                         </div>
 
@@ -204,12 +204,12 @@ export default function Header() {
                                         href={item.href}
                                         className={`flex items-center gap-3 px-5 py-3.5 text-sm font-medium transition-colors ${
                                             isActive
-                                                ? 'bg-[#2E4A3A]/8 text-[#2E4A3A] dark:text-[#C9A96E] border-l-3 border-[#2E4A3A]'
+                                                ? 'bg-[#2E4A3A]/8 text-[#2E4A3A] dark:text-[#C4AC91] border-l-3 border-[#2E4A3A]'
                                                 : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50 border-l-3 border-transparent'
                                         }`}
                                         onClick={() => setIsMenuOpen(false)}
                                     >
-                                        <Icon className={`w-5 h-5 ${isActive ? 'text-[#2E4A3A] dark:text-[#C9A96E]' : 'text-gray-400 dark:text-gray-500'}`} />
+                                        <Icon className={`w-5 h-5 ${isActive ? 'text-[#2E4A3A] dark:text-[#C4AC91]' : 'text-gray-400 dark:text-gray-500'}`} />
                                         {item.name}
                                     </Link>
                                 );

@@ -157,7 +157,7 @@ function DropdownItem({
 }) {
     const base = 'w-full text-left px-3 py-2.5 text-sm transition-colors flex items-center gap-2';
     const state = isActive
-        ? 'bg-[#2E4A3A]/8 text-[#2E4A3A] dark:text-[#C9A96E] font-medium'
+        ? 'bg-[#2E4A3A]/8 text-[#2E4A3A] dark:text-[#C4AC91] font-medium'
         : disabled
             ? 'text-gray-900 dark:text-white font-semibold cursor-default'
             : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50';

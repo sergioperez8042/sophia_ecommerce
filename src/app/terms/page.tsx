@@ -8,7 +8,7 @@ export default function TermsPage() {
         <BackButton />
 
         <div className="flex items-center gap-3 mb-8">
-          <Image src="/images/sophia_logo_v3.jpeg" alt="Sophia" width={40} height={40} className="rounded-2xl" />
+          <Image src="/images/sophia_logo_v4.jpeg" alt="Sophia" width={40} height={40} className="rounded-2xl" />
           <h1 className="text-2xl font-semibold text-gray-900" style={{ fontFamily: 'Cinzel, serif' }}>
             Términos de Servicio
           </h1>

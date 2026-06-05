@@ -66,7 +66,7 @@ export default function AboutPage() {
                 className="relative min-h-screen flex items-center justify-center overflow-hidden"
             >
                 {/* Background Pattern */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#2E4A3A]/5 via-transparent to-[#C9A96E]/10" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#2E4A3A]/5 via-transparent to-[#C4AC91]/10" />
 
                 <m.div
                     variants={containerVariants}
@@ -135,7 +135,7 @@ export default function AboutPage() {
                                         repeat: Infinity,
                                         ease: "linear"
                                     }}
-                                    className="absolute -top-4 -left-4 w-24 h-24 bg-gradient-to-r from-[#2E4A3A]/20 to-[#C9A96E]/20 rounded-full blur-xl"
+                                    className="absolute -top-4 -left-4 w-24 h-24 bg-gradient-to-r from-[#2E4A3A]/20 to-[#C4AC91]/20 rounded-full blur-xl"
                                 />
                                 <m.div
                                     animate={{
@@ -147,7 +147,7 @@ export default function AboutPage() {
                                         repeat: Infinity,
                                         ease: "linear"
                                     }}
-                                    className="absolute -bottom-8 -right-8 w-32 h-32 bg-gradient-to-l from-[#2E4A3A]/15 to-[#C9A96E]/15 rounded-full blur-2xl"
+                                    className="absolute -bottom-8 -right-8 w-32 h-32 bg-gradient-to-l from-[#2E4A3A]/15 to-[#C4AC91]/15 rounded-full blur-2xl"
                                 />
 
                                 <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br from-[#FEFCF7] to-[#F5F1E8] p-4">
@@ -198,7 +198,7 @@ export default function AboutPage() {
                                     transition={{ duration: 0.6, delay: 0.2 }}
                                 >
                                     <h3 className="text-2xl font-bold text-[#2E4A3A] flex items-center gap-3">
-                                        <Heart className="h-6 w-6 text-[#C9A96E]" />
+                                        <Heart className="h-6 w-6 text-[#C4AC91]" />
                                         Los Inicios en Cuba
                                     </h3>
                                     <p className="text-gray-700 text-lg leading-relaxed font-medium">
@@ -249,7 +249,7 @@ export default function AboutPage() {
                             </m.div>
 
                             <m.div variants={cardVariants}>
-                                <Card className="border-0 shadow-xl bg-gradient-to-r from-[#C9A96E]/10 to-[#C9A96E]/20 backdrop-blur-sm">
+                                <Card className="border-0 shadow-xl bg-gradient-to-r from-[#C4AC91]/10 to-[#C4AC91]/20 backdrop-blur-sm">
                                     <CardContent className="p-8 text-center">
                                         <Users className="h-12 w-12 text-[#2E4A3A] mx-auto mb-4" />
                                         <h4 className="text-3xl font-bold text-gray-900 mb-2">50,000+</h4>
@@ -304,7 +304,7 @@ export default function AboutPage() {
                                 icon: Sparkles,
                                 title: "Calidad",
                                 description: "Solo utilizamos ingredientes naturales de la más alta calidad, sin químicos dañinos.",
-                                accent: "bg-[#C9A96E]/15"
+                                accent: "bg-[#C4AC91]/15"
                             },
                             {
                                 icon: Users,
@@ -316,7 +316,7 @@ export default function AboutPage() {
                                 icon: ShieldCheck,
                                 title: "Compromiso",
                                 description: "Combinamos tradición cubana con estándares europeos para crear productos únicos.",
-                                accent: "bg-[#C9A96E]/15"
+                                accent: "bg-[#C4AC91]/15"
                             }
                         ].map((value) => (
                             <m.div
@@ -351,7 +351,7 @@ export default function AboutPage() {
                     viewport={{ once: true }}
                     className="container mx-auto px-4 text-center"
                 >
-                    <Leaf className="h-12 w-12 text-[#C9A96E] mx-auto mb-8" />
+                    <Leaf className="h-12 w-12 text-[#C4AC91] mx-auto mb-8" />
                     <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-6">
                         Únete a Nuestra Historia
                     </h2>

@@ -116,7 +116,7 @@ export default function ContactPage() {
                 ref={heroRef}
                 className="relative pt-24 pb-16 overflow-hidden"
             >
-                <div className="absolute inset-0 bg-gradient-to-br from-[#2E4A3A]/5 via-transparent to-[#C9A96E]/10" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#2E4A3A]/5 via-transparent to-[#C4AC91]/10" />
 
                 <m.div
                     variants={containerVariants}
@@ -154,7 +154,7 @@ export default function ContactPage() {
                             <div className="grid sm:grid-cols-2 gap-4 sm:gap-5">
                                 {contactInfo.map((info) => {
                                     const cardContent = (
-                                        <Card className="border border-[#E8E2D5] shadow-md bg-white hover:shadow-xl hover:border-[#C9A96E] transition-all duration-300 h-full group/card">
+                                        <Card className="border border-[#E8E2D5] shadow-md bg-white hover:shadow-xl hover:border-[#C4AC91] transition-all duration-300 h-full group/card">
                                             <CardContent className="p-6 sm:p-7 flex items-start gap-4">
                                                 <div className="w-12 h-12 bg-[#2E4A3A] rounded-xl flex items-center justify-center flex-shrink-0 group-hover/card:bg-[#26402F] transition-colors">
                                                     <info.icon className="h-5 w-5 text-white" />
@@ -220,7 +220,7 @@ export default function ContactPage() {
                             <div className="grid grid-cols-2 gap-4">
                                 <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
                                     <CardContent className="p-5 sm:p-6 text-center">
-                                        <div className="w-10 h-10 bg-[#C9A96E]/15 rounded-xl flex items-center justify-center mx-auto mb-3">
+                                        <div className="w-10 h-10 bg-[#C4AC91]/15 rounded-xl flex items-center justify-center mx-auto mb-3">
                                             <Leaf className="h-5 w-5 text-[#2E4A3A]" />
                                         </div>
                                         <p className="text-2xl sm:text-3xl font-bold text-gray-900">100%</p>
@@ -229,7 +229,7 @@ export default function ContactPage() {
                                 </Card>
                                 <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
                                     <CardContent className="p-5 sm:p-6 text-center">
-                                        <div className="w-10 h-10 bg-[#C9A96E]/15 rounded-xl flex items-center justify-center mx-auto mb-3">
+                                        <div className="w-10 h-10 bg-[#C4AC91]/15 rounded-xl flex items-center justify-center mx-auto mb-3">
                                             <Send className="h-5 w-5 text-[#2E4A3A]" />
                                         </div>
                                         <p className="text-2xl sm:text-3xl font-bold text-gray-900">&lt;24h</p>

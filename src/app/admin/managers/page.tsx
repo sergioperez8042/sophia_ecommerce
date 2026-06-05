@@ -772,7 +772,7 @@ export default function GestoresAdminPage() {
                       key={key}
                       className={`flex items-center gap-2 px-3 py-2.5 rounded-lg border cursor-pointer transition-colors ${
                         permissions.includes(key)
-                          ? 'border-[#2E4A3A]/30 bg-[#2E4A3A]/5 dark:border-[#C9A96E]/30 dark:bg-[#C9A96E]/5'
+                          ? 'border-[#2E4A3A]/30 bg-[#2E4A3A]/5 dark:border-[#C4AC91]/30 dark:bg-[#C4AC91]/5'
                           : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
                       }`}
                     >
@@ -790,7 +790,7 @@ export default function GestoresAdminPage() {
                       />
                       <span className={`text-xs font-medium ${
                         permissions.includes(key)
-                          ? 'text-[#2E4A3A] dark:text-[#C9A96E]'
+                          ? 'text-[#2E4A3A] dark:text-[#C4AC91]'
                           : 'text-gray-600 dark:text-gray-400'
                       }`}>
                         {label}
@@ -802,7 +802,7 @@ export default function GestoresAdminPage() {
                   <button
                     type="button"
                     onClick={() => setPermissions(Object.keys(GESTOR_PERMISSIONS) as GestorPermission[])}
-                    className="text-[10px] text-[#2E4A3A] dark:text-[#C9A96E] hover:underline"
+                    className="text-[10px] text-[#2E4A3A] dark:text-[#C4AC91] hover:underline"
                   >
                     Seleccionar todos
                   </button>
@@ -987,7 +987,7 @@ export default function GestoresAdminPage() {
                           </h3>
                           <span className={`text-[10px] font-medium ${
                             gestor.active
-                              ? 'text-[#2E4A3A] dark:text-[#C9A96E]'
+                              ? 'text-[#2E4A3A] dark:text-[#C4AC91]'
                               : 'text-gray-400'
                           }`}>
                             {gestor.active ? 'Activo' : 'Inactivo'}
@@ -1029,7 +1029,7 @@ export default function GestoresAdminPage() {
                     <div className="flex flex-col gap-1 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-1 text-xs text-gray-500 dark:text-gray-400 mb-2 pl-12">
                       <a
                         href={`tel:+${gestor.whatsapp}`}
-                        className="flex items-center gap-1.5 hover:text-[#2E4A3A] dark:hover:text-[#C9A96E] hover:underline transition-colors"
+                        className="flex items-center gap-1.5 hover:text-[#2E4A3A] dark:hover:text-[#C4AC91] hover:underline transition-colors"
                       >
                         <Phone className="w-3.5 h-3.5" />
                         +{gestor.whatsapp}
@@ -1042,7 +1042,7 @@ export default function GestoresAdminPage() {
                       {gestor.email && (
                         <a
                           href={`mailto:${gestor.email}`}
-                          className="flex items-center gap-1.5 hover:text-[#2E4A3A] dark:hover:text-[#C9A96E] hover:underline transition-colors"
+                          className="flex items-center gap-1.5 hover:text-[#2E4A3A] dark:hover:text-[#C4AC91] hover:underline transition-colors"
                         >
                           <Mail className="w-3.5 h-3.5" />
                           {gestor.email}
@@ -1071,7 +1071,7 @@ export default function GestoresAdminPage() {
                       {gestor.municipalities.map((m) => (
                         <span
                           key={m}
-                          className="text-[11px] px-2.5 py-1 rounded-lg bg-[#F5F1E8] text-[#2E4A3A] dark:bg-[#C9A96E]/10 dark:text-[#C9A96E]"
+                          className="text-[11px] px-2.5 py-1 rounded-lg bg-[#F5F1E8] text-[#2E4A3A] dark:bg-[#C4AC91]/10 dark:text-[#C4AC91]"
                         >
                           {m}
                         </span>

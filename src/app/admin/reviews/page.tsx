@@ -119,7 +119,7 @@ export default function AdminReviewsPage() {
           <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
             <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Promedio</p>
             <div className="flex items-center gap-1.5 mt-1">
-              <Star className="h-5 w-5 text-[#C9A96E] fill-[#C9A96E]" />
+              <Star className="h-5 w-5 text-[#C4AC91] fill-[#C4AC91]" />
               <span className="text-2xl font-semibold text-gray-900 dark:text-white">
                 {reviews.length > 0
                   ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)
@@ -204,7 +204,7 @@ export default function AdminReviewsPage() {
                     </div>
                     <Link
                       href={`/products/${review.productId}`}
-                      className="text-xs text-[#2E4A3A] dark:text-[#C9A96E] hover:underline"
+                      className="text-xs text-[#2E4A3A] dark:text-[#C4AC91] hover:underline"
                     >
                       {getProductName(review.productId)}
                     </Link>
@@ -214,7 +214,7 @@ export default function AdminReviewsPage() {
                           key={i}
                           className={`h-3.5 w-3.5 ${
                             i < review.rating
-                              ? 'text-[#C9A96E] fill-[#C9A96E]'
+                              ? 'text-[#C4AC91] fill-[#C4AC91]'
                               : 'text-gray-200 fill-gray-200 dark:text-gray-700 dark:fill-gray-700'
                           }`}
                         />

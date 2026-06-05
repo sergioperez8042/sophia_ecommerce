@@ -157,14 +157,14 @@ export default function MultiSearchableDropdown({
                     onClick={() => toggle(opt.id)}
                     className={`w-full text-left px-3 py-2 text-sm transition-colors flex items-center gap-2.5 ${
                       isActive
-                        ? 'bg-[#2E4A3A]/8 text-[#2E4A3A] dark:text-[#C9A96E] font-medium'
+                        ? 'bg-[#2E4A3A]/8 text-[#2E4A3A] dark:text-[#C4AC91] font-medium'
                         : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                     }`}
                   >
                     <span
                       className={`flex items-center justify-center w-4 h-4 rounded border flex-shrink-0 transition-colors ${
                         isActive
-                          ? 'bg-[#2E4A3A] border-[#2E4A3A] dark:bg-[#C9A96E] dark:border-[#C9A96E]'
+                          ? 'bg-[#2E4A3A] border-[#2E4A3A] dark:bg-[#C4AC91] dark:border-[#C4AC91]'
                           : 'border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-700'
                       }`}
                     >
@@ -185,7 +185,7 @@ export default function MultiSearchableDropdown({
               <button
                 type="button"
                 onClick={() => onChange([])}
-                className="text-[#2E4A3A] dark:text-[#C9A96E] hover:underline"
+                className="text-[#2E4A3A] dark:text-[#C4AC91] hover:underline"
               >
                 Limpiar
               </button>

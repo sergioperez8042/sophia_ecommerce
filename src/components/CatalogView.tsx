@@ -193,7 +193,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
             </section>
 
             {/* Sellos de Calidad */}
-            <section className={`border-b transition-colors duration-300 ${isDark ? 'bg-[#15241B] border-[#C9A96E]/10' : 'bg-white border-[#2E4A3A]/10'}`}>
+            <section className={`border-b transition-colors duration-300 ${isDark ? 'bg-[#15241B] border-[#C4AC91]/10' : 'bg-white border-[#2E4A3A]/10'}`}>
                 <div className="max-w-7xl mx-auto px-4 py-4">
                     <div className="flex items-center justify-center gap-4 sm:gap-10">
                         {[
@@ -215,7 +215,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                                     animate={{ y: [0, -3, 0] }}
                                     transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.4, ease: "easeInOut" }}
                                 >
-                                    <badge.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]'}`} />
+                                    <badge.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${isDark ? 'text-[#C4AC91]' : 'text-[#2E4A3A]'}`} />
                                 </m.div>
                                 <span className={`text-[10px] sm:text-xs font-medium text-center leading-tight ${isDark ? 'text-[#b8b0a2]' : 'text-[#2E4A3A]'}`}>{badge.label}</span>
                             </m.div>
@@ -238,7 +238,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                             aria-label="Buscar productos"
                             className={`w-full pl-10 pr-4 py-2 rounded-full text-sm focus:outline-none transition-all ${
                                 isDark
-                                    ? 'bg-[#15241B] text-[#e8e4dc] placeholder-[#7a7568] focus:ring-1 focus:ring-[#C9A96E]/30'
+                                    ? 'bg-[#15241B] text-[#e8e4dc] placeholder-[#7a7568] focus:ring-1 focus:ring-[#C4AC91]/30'
                                     : 'bg-[#f5f3ef] text-gray-900 placeholder-[#999] focus:ring-1 focus:ring-[#2E4A3A]/20'
                             }`}
                         />
@@ -248,8 +248,8 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                             onClick={() => setViewMode("grid")}
                             className={`p-2 rounded-lg transition-colors ${
                                 viewMode === "grid"
-                                    ? (isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]')
-                                    : (isDark ? 'text-[#7a7568] hover:text-[#C9A96E]' : 'text-[#ccc] hover:text-[#2E4A3A]')
+                                    ? (isDark ? 'text-[#C4AC91]' : 'text-[#2E4A3A]')
+                                    : (isDark ? 'text-[#7a7568] hover:text-[#C4AC91]' : 'text-[#ccc] hover:text-[#2E4A3A]')
                             }`}
                             aria-label="Vista mosaico"
                         >
@@ -259,8 +259,8 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                             onClick={() => { setViewMode("list"); setBrowsingCategory(null); }}
                             className={`p-2 rounded-lg transition-colors ${
                                 viewMode === "list"
-                                    ? (isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]')
-                                    : (isDark ? 'text-[#7a7568] hover:text-[#C9A96E]' : 'text-[#ccc] hover:text-[#2E4A3A]')
+                                    ? (isDark ? 'text-[#C4AC91]' : 'text-[#2E4A3A]')
+                                    : (isDark ? 'text-[#7a7568] hover:text-[#C4AC91]' : 'text-[#ccc] hover:text-[#2E4A3A]')
                             }`}
                             aria-label="Vista lista"
                         >
@@ -271,12 +271,12 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
 
                 {/* Category tabs - horizontal scroll, underline style */}
                 <div className="overflow-x-auto scrollbar-hide -mx-4 px-4">
-                    <div className={`flex items-center gap-1 border-b ${isDark ? 'border-[#C9A96E]/10' : 'border-[#e8e4dd]'}`}>
+                    <div className={`flex items-center gap-1 border-b ${isDark ? 'border-[#C4AC91]/10' : 'border-[#e8e4dd]'}`}>
                         <button
                             onClick={() => { setSelectedCategory("all"); setVisibleCount(5); setBrowsingCategory(null); }}
                             className={`relative px-4 py-2.5 text-[13px] whitespace-nowrap transition-colors ${
                                 selectedCategory === "all"
-                                    ? (isDark ? 'text-[#C9A96E] font-medium' : 'text-[#2E4A3A] font-medium')
+                                    ? (isDark ? 'text-[#C4AC91] font-medium' : 'text-[#2E4A3A] font-medium')
                                     : (isDark ? 'text-[#7a7568] hover:text-[#b8b0a2]' : 'text-[#999] hover:text-[#666]')
                             }`}
                         >
@@ -284,7 +284,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                             {selectedCategory === "all" && (
                                 <m.div
                                     layoutId="categoryUnderline"
-                                    className={`absolute bottom-0 left-0 right-0 h-[2px] ${isDark ? 'bg-[#C9A96E]' : 'bg-[#2E4A3A]'}`}
+                                    className={`absolute bottom-0 left-0 right-0 h-[2px] ${isDark ? 'bg-[#C4AC91]' : 'bg-[#2E4A3A]'}`}
                                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                                 />
                             )}
@@ -298,7 +298,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                                     onClick={() => { setSelectedCategory(cat.id); setVisibleCount(5); setBrowsingCategory(null); }}
                                     className={`relative px-4 py-2.5 text-[13px] whitespace-nowrap transition-colors ${
                                         selectedCategory === cat.id
-                                            ? (isDark ? 'text-[#C9A96E] font-medium' : 'text-[#2E4A3A] font-medium')
+                                            ? (isDark ? 'text-[#C4AC91] font-medium' : 'text-[#2E4A3A] font-medium')
                                             : (isDark ? 'text-[#7a7568] hover:text-[#b8b0a2]' : 'text-[#999] hover:text-[#666]')
                                     }`}
                                 >
@@ -306,7 +306,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                                     {selectedCategory === cat.id && (
                                         <m.div
                                             layoutId="categoryUnderline"
-                                            className={`absolute bottom-0 left-0 right-0 h-[2px] ${isDark ? 'bg-[#C9A96E]' : 'bg-[#2E4A3A]'}`}
+                                            className={`absolute bottom-0 left-0 right-0 h-[2px] ${isDark ? 'bg-[#C4AC91]' : 'bg-[#2E4A3A]'}`}
                                             transition={{ type: "spring", stiffness: 300, damping: 30 }}
                                         />
                                     )}
@@ -333,7 +333,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                                 <m.button
                                     key={cat.id}
                                     onClick={() => setBrowsingCategory(cat.id)}
-                                    className={`relative aspect-[4/3] rounded-2xl overflow-hidden group ${isDark ? 'ring-1 ring-[#C9A96E]/10' : 'ring-1 ring-[#2E4A3A]/10'}`}
+                                    className={`relative aspect-[4/3] rounded-2xl overflow-hidden group ${isDark ? 'ring-1 ring-[#C4AC91]/10' : 'ring-1 ring-[#2E4A3A]/10'}`}
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: i * 0.08 }}
@@ -370,12 +370,12 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                         >
                             <button
                                 onClick={() => setBrowsingCategory(null)}
-                                className={`flex items-center gap-2 text-sm font-medium mb-4 transition-colors ${isDark ? 'text-[#C9A96E] hover:text-[#e8e4dc]' : 'text-[#2E4A3A] hover:text-gray-900'}`}
+                                className={`flex items-center gap-2 text-sm font-medium mb-4 transition-colors ${isDark ? 'text-[#C4AC91] hover:text-[#e8e4dc]' : 'text-[#2E4A3A] hover:text-gray-900'}`}
                             >
                                 <ArrowLeft className="w-4 h-4" />
                                 Volver a categorías
                             </button>
-                            <h2 className={`text-lg sm:text-xl font-bold mb-4 ${isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]'}`}>
+                            <h2 className={`text-lg sm:text-xl font-bold mb-4 ${isDark ? 'text-[#C4AC91]' : 'text-[#2E4A3A]'}`}>
                                 {browsingCategoryData.name}
                             </h2>
                             <div className={viewMode === "grid" ? "grid grid-cols-2 gap-3 sm:gap-4" : "flex flex-col gap-4"}>
@@ -401,7 +401,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                         >
                             {groupedProducts.map((group) => (
                                 <div key={group.category.id}>
-                                    <h2 className={`text-lg sm:text-xl font-bold mb-4 ${isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]'}`}>
+                                    <h2 className={`text-lg sm:text-xl font-bold mb-4 ${isDark ? 'text-[#C4AC91]' : 'text-[#2E4A3A]'}`}>
                                         {group.category.name}
                                     </h2>
                                     <div className="flex flex-col gap-4">
@@ -426,7 +426,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.9 }}
                         >
-                            <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${isDark ? 'bg-[#C9A96E]/15' : 'bg-gray-200'}`}>
+                            <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${isDark ? 'bg-[#C4AC91]/15' : 'bg-gray-200'}`}>
                                 <Search className={`w-8 h-8 ${isDark ? 'text-[#7a7568]' : 'text-gray-400'}`} />
                             </div>
                             <h3 className={`text-lg font-medium mb-2 ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>No se encontraron productos</h3>
@@ -469,7 +469,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                         <div className="flex items-center gap-2.5 mb-3">
                             <div className="relative w-9 h-9 rounded-lg overflow-hidden ring-1 ring-white/15 flex-shrink-0">
                                 <Image
-                                    src="/images/sophia_logo_v3.jpeg"
+                                    src="/images/sophia_logo_v4.jpeg"
                                     alt="Sophia"
                                     fill
                                     sizes="36px"
@@ -622,7 +622,7 @@ function ProductCard({
                         />
                     </Link>
                     {product.featured && !product.out_of_stock && (
-                        <div className="absolute top-1.5 left-1.5 bg-[#C9A96E] text-white p-1 rounded-full">
+                        <div className="absolute top-1.5 left-1.5 bg-[#C4AC91] text-white p-1 rounded-full">
                             <Star className="w-3 h-3 fill-current" />
                         </div>
                     )}
@@ -643,7 +643,7 @@ function ProductCard({
                     </button>
                 </div>
                 <div className="p-2.5 sm:p-3">
-                    {categoryName && <span className={`text-[10px] font-medium ${isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]'}`}>{categoryName}</span>}
+                    {categoryName && <span className={`text-[10px] font-medium ${isDark ? 'text-[#C4AC91]' : 'text-[#2E4A3A]'}`}>{categoryName}</span>}
                     <Link href={`/catalog/${product.id}`}>
                         <h3 className={`font-semibold text-sm mt-0.5 line-clamp-1 ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>{product.name}</h3>
                     </Link>
@@ -655,7 +655,7 @@ function ProductCard({
                                         key={`card-${product.id}-${i}`}
                                         className={`h-2.5 w-2.5 ${
                                             i < Math.round(product.rating)
-                                                ? 'text-[#C9A96E] fill-[#C9A96E]'
+                                                ? 'text-[#C4AC91] fill-[#C4AC91]'
                                                 : isDark ? 'text-gray-700 fill-gray-700' : 'text-gray-200 fill-gray-200'
                                         }`}
                                     />
@@ -665,7 +665,7 @@ function ProductCard({
                         </div>
                     )}
                     <div className="flex items-center justify-between mt-2">
-                        <span className={`text-base font-bold ${product.out_of_stock ? (isDark ? 'text-[#7a7568]' : 'text-gray-400') : isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]'}`}>{formatPrice(product.price)}</span>
+                        <span className={`text-base font-bold ${product.out_of_stock ? (isDark ? 'text-[#7a7568]' : 'text-gray-400') : isDark ? 'text-[#C4AC91]' : 'text-[#2E4A3A]'}`}>{formatPrice(product.price)}</span>
                         {product.out_of_stock ? (
                             <span className="bg-gray-300 text-gray-500 px-2 py-1 rounded-full text-[10px] cursor-not-allowed">
                                 Agotado
@@ -675,7 +675,7 @@ function ProductCard({
                                 onClick={handleAddToCart}
                                 className={`p-1.5 rounded-full transition-all ${
                                     addedToCart
-                                        ? 'bg-[#C9A96E] text-[#15241B] scale-110'
+                                        ? 'bg-[#C4AC91] text-[#15241B] scale-110'
                                         : 'bg-[#2E4A3A] text-white hover:bg-[#26402F]'
                                 }`}
                             >
@@ -713,7 +713,7 @@ function ProductCard({
                     />
                 </Link>
                 {product.featured && !product.out_of_stock && (
-                    <div className="absolute top-1.5 left-1.5 bg-[#C9A96E] text-white p-1 rounded-full">
+                    <div className="absolute top-1.5 left-1.5 bg-[#C4AC91] text-white p-1 rounded-full">
                         <Star className="w-3 h-3 fill-current" />
                     </div>
                 )}
@@ -735,7 +735,7 @@ function ProductCard({
             </div>
             <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between">
                 <Link href={`/catalog/${product.id}`}>
-                    {categoryName && <span className={`text-[10px] sm:text-xs font-medium ${isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]'}`}>{categoryName}</span>}
+                    {categoryName && <span className={`text-[10px] sm:text-xs font-medium ${isDark ? 'text-[#C4AC91]' : 'text-[#2E4A3A]'}`}>{categoryName}</span>}
                     <h3 className={`font-semibold mt-1 line-clamp-1 ${isDark ? 'text-[#e8e4dc]' : 'text-gray-900'}`}>{product.name}</h3>
                     {product.rating > 0 && (
                         <div className="flex items-center gap-1 mt-0.5">
@@ -745,7 +745,7 @@ function ProductCard({
                                         key={`list-${product.id}-${i}`}
                                         className={`h-3 w-3 ${
                                             i < Math.round(product.rating)
-                                                ? 'text-[#C9A96E] fill-[#C9A96E]'
+                                                ? 'text-[#C4AC91] fill-[#C4AC91]'
                                                 : isDark ? 'text-gray-700 fill-gray-700' : 'text-gray-200 fill-gray-200'
                                         }`}
                                     />
@@ -757,7 +757,7 @@ function ProductCard({
                     <p className={`text-sm mt-1 line-clamp-2 ${isDark ? 'text-[#8a8278]' : 'text-gray-600'}`}>{product.description}</p>
                 </Link>
                 <div className="flex items-center justify-between mt-3">
-                    <span className={`text-xl font-bold ${product.out_of_stock ? (isDark ? 'text-[#7a7568]' : 'text-gray-400') : isDark ? 'text-[#C9A96E]' : 'text-[#2E4A3A]'}`}>{formatPrice(product.price)}</span>
+                    <span className={`text-xl font-bold ${product.out_of_stock ? (isDark ? 'text-[#7a7568]' : 'text-gray-400') : isDark ? 'text-[#C4AC91]' : 'text-[#2E4A3A]'}`}>{formatPrice(product.price)}</span>
                     {product.out_of_stock ? (
                         <span className="bg-gray-300 text-gray-500 px-3 py-1.5 rounded-full text-sm cursor-not-allowed">
                             Agotado
@@ -767,7 +767,7 @@ function ProductCard({
                             onClick={handleAddToCart}
                             className={`px-3 py-1.5 rounded-full text-sm flex items-center gap-1.5 transition-all ${
                                 addedToCart
-                                    ? 'bg-[#C9A96E] text-[#15241B]'
+                                    ? 'bg-[#C4AC91] text-[#15241B]'
                                     : 'bg-[#2E4A3A] text-white hover:bg-[#26402F]'
                             }`}
                         >

@@ -103,16 +103,16 @@ export default function CartPage() {
                         transition={{ duration: 0.6 }}
                         className="text-center pt-28 pb-20"
                     >
-                        <ShoppingBag className="h-10 w-10 text-[#2E4A3A]/20 dark:text-[#C9A96E]/30 mx-auto mb-8" strokeWidth={1} />
+                        <ShoppingBag className="h-10 w-10 text-[#2E4A3A]/20 dark:text-[#C4AC91]/30 mx-auto mb-8" strokeWidth={1} />
                         <h1 className="text-[28px] font-light text-[#333] dark:text-[#e8e0d0] dark:text-[#e8e0d0] tracking-[-0.01em] mb-3">
                             Tu carrito esta vacio
                         </h1>
-                        <p className="text-[15px] text-[#888] dark:text-[#C9A96E]/60 font-light leading-relaxed mb-12">
+                        <p className="text-[15px] text-[#888] dark:text-[#C4AC91]/60 font-light leading-relaxed mb-12">
                             Explora nuestra coleccion y encuentra tu rutina ideal.
                         </p>
                         <Link
                             href="/"
-                            className="inline-block border border-[#2E4A3A] dark:border-[#C9A96E] text-[#2E4A3A] dark:text-[#C9A96E] px-10 py-3.5 text-[13px] font-medium tracking-[0.08em] uppercase hover:bg-[#2E4A3A] hover:text-white dark:hover:bg-[#C9A96E] dark:hover:text-[#15241B] transition-all duration-300"
+                            className="inline-block border border-[#2E4A3A] dark:border-[#C4AC91] text-[#2E4A3A] dark:text-[#C4AC91] px-10 py-3.5 text-[13px] font-medium tracking-[0.08em] uppercase hover:bg-[#2E4A3A] hover:text-white dark:hover:bg-[#C4AC91] dark:hover:text-[#15241B] transition-all duration-300"
                         >
                             Ver Productos
                         </Link>
@@ -135,7 +135,7 @@ export default function CartPage() {
                     <h1 className="text-[32px] sm:text-[38px] font-light text-[#333] dark:text-[#e8e0d0] tracking-[-0.02em] mt-8 mb-2">
                         Tu Carrito
                     </h1>
-                    <p className="text-[14px] text-[#999] dark:text-[#C9A96E]/50 font-light mb-12">
+                    <p className="text-[14px] text-[#999] dark:text-[#C4AC91]/50 font-light mb-12">
                         {totalItems} {totalItems === 1 ? 'artículo' : 'artículos'}
                     </p>
 
@@ -167,7 +167,7 @@ export default function CartPage() {
                                                 <div className="flex-1 flex flex-col justify-between min-h-[140px] sm:min-h-[160px]">
                                                     <div>
                                                         {item.product.category && (
-                                                            <span className="text-[11px] uppercase tracking-[0.15em] text-[#999] dark:text-[#C9A96E]/50 block mb-1.5">
+                                                            <span className="text-[11px] uppercase tracking-[0.15em] text-[#999] dark:text-[#C4AC91]/50 block mb-1.5">
                                                                 {item.product.category}
                                                             </span>
                                                         )}
@@ -188,7 +188,7 @@ export default function CartPage() {
                                                         <div className="inline-flex items-center border border-[#D5D0C8] h-[38px]">
                                                             <button
                                                                 onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                                                                className="w-[38px] h-full flex items-center justify-center text-[#999] dark:text-[#C9A96E]/50 hover:text-[#333] dark:text-[#e8e0d0] transition-colors"
+                                                                className="w-[38px] h-full flex items-center justify-center text-[#999] dark:text-[#C4AC91]/50 hover:text-[#333] dark:text-[#e8e0d0] transition-colors"
                                                                 aria-label="Disminuir cantidad"
                                                             >
                                                                 <Minus className="h-3 w-3" strokeWidth={1.5} />
@@ -198,7 +198,7 @@ export default function CartPage() {
                                                             </span>
                                                             <button
                                                                 onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                                                                className="w-[38px] h-full flex items-center justify-center text-[#999] dark:text-[#C9A96E]/50 hover:text-[#333] dark:text-[#e8e0d0] transition-colors"
+                                                                className="w-[38px] h-full flex items-center justify-center text-[#999] dark:text-[#C4AC91]/50 hover:text-[#333] dark:text-[#e8e0d0] transition-colors"
                                                                 aria-label="Aumentar cantidad"
                                                             >
                                                                 <Plus className="h-3 w-3" strokeWidth={1.5} />
@@ -211,7 +211,7 @@ export default function CartPage() {
                                                             </span>
                                                             <button
                                                                 onClick={() => removeItem(item.product.id)}
-                                                                className="text-[#CCC] hover:text-[#999] dark:text-[#C9A96E]/50 transition-colors"
+                                                                className="text-[#CCC] hover:text-[#999] dark:text-[#C4AC91]/50 transition-colors"
                                                                 title="Eliminar"
                                                             >
                                                                 <X className="h-[18px] w-[18px]" strokeWidth={1.5} />
@@ -237,7 +237,7 @@ export default function CartPage() {
                         {/* Resumen */}
                         <div className="lg:col-span-5">
                             <div className="sticky top-10">
-                                <div className="bg-[#F5F1E8]/60 dark:bg-[#C9A96E]/5 p-8 sm:p-10">
+                                <div className="bg-[#F5F1E8]/60 dark:bg-[#C4AC91]/5 p-8 sm:p-10">
                                     <h2 className="text-[13px] uppercase tracking-[0.15em] text-[#666] font-medium mb-8">
                                         Resumen del pedido
                                     </h2>
@@ -252,7 +252,7 @@ export default function CartPage() {
                                                         {location.municipality}, {location.province}
                                                     </p>
                                                     {gestorLoading ? (
-                                                        <p className="text-[11px] text-[#999] dark:text-[#C9A96E]/50 mt-0.5">Buscando repartidor...</p>
+                                                        <p className="text-[11px] text-[#999] dark:text-[#C4AC91]/50 mt-0.5">Buscando repartidor...</p>
                                                     ) : gestor ? (
                                                         <p className="text-[11px] text-[#2E4A3A] mt-0.5">
                                                             Entrega por {gestor.name}

@@ -58,17 +58,17 @@ export async function POST(request: NextRequest) {
         `
         <div style="font-family: 'Georgia', serif; max-width: 600px; margin: 0 auto; background: #15241B; color: #e8e0d0; padding: 40px;">
           <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #C9A96E; font-size: 24px; margin: 0;">Sophia</h1>
-            <p style="color: #C9A96E; font-size: 14px; margin: 5px 0 0;">Productos Naturales</p>
+            <h1 style="color: #C4AC91; font-size: 24px; margin: 0;">Sophia</h1>
+            <p style="color: #C4AC91; font-size: 14px; margin: 5px 0 0;">Productos Naturales</p>
           </div>
-          <h2 style="color: #C9A96E; font-size: 20px;">¡Gracias por suscribirte!</h2>
+          <h2 style="color: #C4AC91; font-size: 20px;">¡Gracias por suscribirte!</h2>
           <p style="line-height: 1.6; color: #d4cdc0;">
             Ahora formas parte de nuestra comunidad de belleza natural.
             Recibirás tips de cuidado, novedades y ofertas exclusivas.
           </p>
-          <div style="background: #213529; border: 1px solid #C9A96E; border-radius: 12px; padding: 20px; text-align: center; margin: 25px 0;">
-            <p style="margin: 0 0 8px; color: #C9A96E; font-size: 14px;">Tu código de descuento:</p>
-            <p style="margin: 0; font-size: 28px; font-weight: bold; color: #C9A96E; letter-spacing: 3px;">BIENVENIDA10</p>
+          <div style="background: #213529; border: 1px solid #C4AC91; border-radius: 12px; padding: 20px; text-align: center; margin: 25px 0;">
+            <p style="margin: 0 0 8px; color: #C4AC91; font-size: 14px;">Tu código de descuento:</p>
+            <p style="margin: 0; font-size: 28px; font-weight: bold; color: #C4AC91; letter-spacing: 3px;">BIENVENIDA10</p>
             <p style="margin: 8px 0 0; color: #a09880; font-size: 13px;">10% de descuento en tu primer pedido</p>
           </div>
           <p style="color: #a09880; font-size: 12px; text-align: center; margin-top: 30px;">
