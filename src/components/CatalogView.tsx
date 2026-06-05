@@ -460,10 +460,11 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
             {/* Footer */}
             <footer className={`py-10 sm:py-12 px-4 pb-24 sm:pb-12 transition-colors duration-300 ${isDark ? 'bg-[#141613]' : 'bg-[#26402F]'}`}>
                 <div className="max-w-lg mx-auto text-center">
-                    {/* Bloque logo + contactos: una sola columna inline-flex para que
-                        TODOS los items (logo, teléfono, email, Instagram, Facebook)
-                        compartan el mismo borde izquierdo cuando la columna se
-                        centra dentro del contenedor con text-center. */}
+                    {/* Footer centrado: el logo y CADA línea de contacto se centran
+                        individualmente (items-center), de modo que todos comparten el
+                        mismo eje vertical central. Antes era inline-flex (caja centrada
+                        con items alineados a la izquierda) → los items cortos se veían
+                        "tirados a la izquierda" respecto al logo. */}
                     {/* Logo centrado */}
                     <div className="flex justify-center mb-5">
                         <div className="relative w-14 h-14 rounded-xl overflow-hidden ring-1 ring-[#C4AC91]/15">
@@ -477,8 +478,8 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                         </div>
                     </div>
 
-                    {/* Contactos (columna centrada) */}
-                    <div className="inline-flex flex-col gap-2.5 mb-6">
+                    {/* Contactos (cada línea centrada en su propio eje) */}
+                    <div className="flex flex-col items-center gap-2.5 mb-6">
                         {/* Contacto */}
                         <a
                             href="tel:+34642633982"
