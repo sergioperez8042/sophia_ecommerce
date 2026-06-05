@@ -489,13 +489,6 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                             <span>+34 642 63 39 82</span>
                         </a>
                         <a
-                            href="mailto:chavesophia1994@gmail.com"
-                            className="flex items-center gap-2.5 text-[#C4AC91]/70 hover:text-[#C4AC91] transition-colors text-xs"
-                        >
-                            <Mail className="w-3.5 h-3.5 flex-shrink-0" />
-                            <span>chavesophia1994@gmail.com</span>
-                        </a>
-                        <a
                             href="https://www.instagram.com/sophia.products_/"
                             target="_blank"
                             rel="noopener noreferrer"
@@ -512,6 +505,13 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                         >
                             <Facebook className="w-3.5 h-3.5 flex-shrink-0" />
                             <span>Sophia en Facebook</span>
+                        </a>
+                        <a
+                            href="mailto:chavesophia1994@gmail.com"
+                            className="flex items-center gap-2.5 text-[#C4AC91]/70 hover:text-[#C4AC91] transition-colors text-xs"
+                        >
+                            <Mail className="w-3.5 h-3.5 flex-shrink-0" />
+                            <span>chavesophia1994@gmail.com</span>
                         </a>
                     </div>
 
