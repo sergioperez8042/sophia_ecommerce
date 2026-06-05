@@ -58,7 +58,7 @@ export default function NewsletterFooter() {
       <div className="flex items-center gap-2 mb-3">
         <Mail className="w-4 h-4 text-[#C4AC91]/60" />
         <p className="text-sm text-[#d4cdc0]/80">
-          Recibe novedades y un <span className="text-[#C4AC91] font-medium">10% de descuento</span>
+          Recibe novedades
         </p>
       </div>
       <form onSubmit={handleSubmit} className="flex gap-2">
