@@ -464,24 +464,21 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                         TODOS los items (logo, teléfono, email, Instagram, Facebook)
                         compartan el mismo borde izquierdo cuando la columna se
                         centra dentro del contenedor con text-center. */}
-                    <div className="inline-flex flex-col gap-2.5 mb-6">
-                        {/* Logo + Marca */}
-                        <div className="flex items-center gap-2.5 mb-3">
-                            <div className="relative w-9 h-9 rounded-lg overflow-hidden ring-1 ring-[#C4AC91]/15 flex-shrink-0">
-                                <Image
-                                    src="/images/sophia_logo_v4.jpeg"
-                                    alt="Sophia"
-                                    fill
-                                    sizes="36px"
-                                    className="object-cover"
-                                />
-                            </div>
-                            <div className="text-left">
-                                <p className="text-[#C4AC91] text-sm font-semibold leading-tight">Sophia</p>
-                                <p className="text-[#C4AC91]/50 text-[10px] leading-tight">Sophia</p>
-                            </div>
+                    {/* Logo centrado */}
+                    <div className="flex justify-center mb-5">
+                        <div className="relative w-14 h-14 rounded-xl overflow-hidden ring-1 ring-[#C4AC91]/15">
+                            <Image
+                                src="/images/sophia_logo_v4.jpeg"
+                                alt="Sophia"
+                                fill
+                                sizes="56px"
+                                className="object-cover"
+                            />
                         </div>
+                    </div>
 
+                    {/* Contactos (columna centrada) */}
+                    <div className="inline-flex flex-col gap-2.5 mb-6">
                         {/* Contacto */}
                         <a
                             href="tel:+34642633982"
