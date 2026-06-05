@@ -467,7 +467,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                     <div className="inline-flex flex-col gap-2.5 mb-6">
                         {/* Logo + Marca */}
                         <div className="flex items-center gap-2.5 mb-3">
-                            <div className="relative w-9 h-9 rounded-lg overflow-hidden ring-1 ring-white/15 flex-shrink-0">
+                            <div className="relative w-9 h-9 rounded-lg overflow-hidden ring-1 ring-[#C4AC91]/15 flex-shrink-0">
                                 <Image
                                     src="/images/sophia_logo_v4.jpeg"
                                     alt="Sophia"
@@ -477,22 +477,22 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                                 />
                             </div>
                             <div className="text-left">
-                                <p className="text-white text-sm font-semibold leading-tight">Sophia</p>
-                                <p className="text-white/50 text-[10px] leading-tight">Sophia</p>
+                                <p className="text-[#C4AC91] text-sm font-semibold leading-tight">Sophia</p>
+                                <p className="text-[#C4AC91]/50 text-[10px] leading-tight">Sophia</p>
                             </div>
                         </div>
 
                         {/* Contacto */}
                         <a
                             href="tel:+34642633982"
-                            className="flex items-center gap-2.5 text-white/70 hover:text-white transition-colors text-xs"
+                            className="flex items-center gap-2.5 text-[#C4AC91]/70 hover:text-[#C4AC91] transition-colors text-xs"
                         >
                             <Phone className="w-3.5 h-3.5 flex-shrink-0" />
                             <span>+34 642 63 39 82</span>
                         </a>
                         <a
                             href="mailto:chavesophia1994@gmail.com"
-                            className="flex items-center gap-2.5 text-white/70 hover:text-white transition-colors text-xs"
+                            className="flex items-center gap-2.5 text-[#C4AC91]/70 hover:text-[#C4AC91] transition-colors text-xs"
                         >
                             <Mail className="w-3.5 h-3.5 flex-shrink-0" />
                             <span>chavesophia1994@gmail.com</span>
@@ -501,7 +501,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                             href="https://www.instagram.com/sophia.products_/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2.5 text-white/70 hover:text-white transition-colors text-xs"
+                            className="flex items-center gap-2.5 text-[#C4AC91]/70 hover:text-[#C4AC91] transition-colors text-xs"
                         >
                             <Instagram className="w-3.5 h-3.5 flex-shrink-0" />
                             <span>@sophia.products_</span>
@@ -510,7 +510,7 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                             href="https://www.facebook.com/share/18dBKXnxDt/?mibextid=wwXIfr"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2.5 text-white/70 hover:text-white transition-colors text-xs"
+                            className="flex items-center gap-2.5 text-[#C4AC91]/70 hover:text-[#C4AC91] transition-colors text-xs"
                         >
                             <Facebook className="w-3.5 h-3.5 flex-shrink-0" />
                             <span>Sophia en Facebook</span>
@@ -518,13 +518,13 @@ export default function CatalogView({ initialProducts, initialCategories, groupB
                     </div>
 
                     {/* Newsletter */}
-                    <div className="border-t border-white/10 pt-4 mb-4">
+                    <div className="border-t border-[#C4AC91]/10 pt-4 mb-4">
                         <NewsletterFooter />
                     </div>
 
                     {/* Copyright */}
-                    <div className="border-t border-white/10 pt-5">
-                        <p className="text-white/40 text-[11px]">
+                    <div className="border-t border-[#C4AC91]/10 pt-5">
+                        <p className="text-[#C4AC91]/40 text-[11px]">
                             2022 - {new Date().getFullYear()} Sophia
                         </p>
                     </div>
